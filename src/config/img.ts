@@ -9,7 +9,7 @@ export const meijuImgDir = `${ossDomain}/homlux/meiju`
 
 export const sceneImgDir = `${ossDomain}/homlux/auto-scene`
 
-export const defaultImgDir = `${ossDomain}/homlux/default-img`
+export const defaultImgDir = `${ossDomain}/nelond/default-img`
 
 export const productImgDir = `${ossDomain}/homlux/product-icon` // 产品图
 

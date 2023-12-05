@@ -4,7 +4,7 @@ page {
   --button-default-border-color: #a2a2a2;
   --button-info-border-color: #555659;
   --button-info-background-color: #555659;
-  --button-primary-background-color: linear-gradient(165deg, #468cfb 0%, #6ba3fc 100%);
+  --button-primary-background-color: linear-gradient(-90deg, #7cd06a 0%, #20b86c 96%);
   --button-danger-background-color: linear-gradient(270deg, #f68aa9 13%, #ef6586 92%);
   --button-plain-background-color: transparent;
   --button-small-font-size: 26rpx;
@@ -99,6 +99,7 @@ page {
   background-color: #fff !important;
   color: #ff3849 !important;
 }
+
 .switch-index--btn-class-fix {
   background-color: #488fff !important;
   border-radius: 32rpx !important;
@@ -142,6 +143,7 @@ page {
 .van-toast--text {
   text-align: justify;
 }
+
 .van-dialog__header {
   font-size: 36rpx;
   color: #27282a;
@@ -206,4 +208,5 @@ page {
 .van-checkbox__icon-wrap {
   display: inline-flex;
 }
+
 /* checkbox end */

@@ -1,97 +1,259 @@
-<wxs module="handler" src="./index.wxs"></wxs>
+<wxs
+  module="handler"
+  src="./index.wxs"
+></wxs>
 
 <!-- 背景 -->
-<view class="bg-z-index fixed left-0 top-0 w-100vw h-100vh" bind:touchstart="hideMenu">
-  <image src="{{defaultImgDir}}/bg.jpg" class="bg-image"></image>
+<view
+  class="bg-z-index fixed left-0 top-0 w-100vw h-100vh"
+  bind:touchstart="hideMenu"
+>
+  <image
+    src="{{defaultImgDir}}/bg.jpg"
+    class="bg-image"
+  ></image>
 </view>
 
-<view style="height: calc(120rpx + {{navigationBarAndStatusBarHeight}});" class="fixed left-0 top-0 z-110 overflow-hidden w-750rpx" bind:tap="hideMenu">
-  <image src="{{defaultImgDir}}/bg.jpg" class="bg-image absolute z-111"></image>
-  <view class="w-750rpx flex justify-between pt-28rpx left-0 absolute z-112" style="top: {{navigationBarAndStatusBarHeight}};">
-    <!-- 全屋开关 -->
-    <view class="ml-24rpx">
-      <view class="bg-hex-ffffff_42 w-180rpx h-80rpx rounded-40rpx flex items-center text-hex-2b4067 flex-center" wx:if="{{isShowHomeControl}}" bindtap="{{handler.handleAllOff}}" id="all-off">
-        <text class="text-28rpx font-semibold">一键关灯</text>
+<block wx:if="{{isLogin}}">
+  <view
+    style="height: calc(120rpx + {{navigationBarAndStatusBarHeight}});"
+    class="fixed left-0 top-0 z-110 overflow-hidden w-750rpx"
+    bind:tap="hideMenu"
+  >
+    <image
+      src="{{defaultImgDir}}/bg.jpg"
+      class="bg-image absolute z-111"
+    ></image>
+    <view
+      class="w-750rpx flex justify-between pt-28rpx left-0 absolute z-112"
+      style="top: {{navigationBarAndStatusBarHeight}};"
+    >
+      <!-- 全屋开关 -->
+      <view class="ml-24rpx">
+        <view
+          class="bg-hex-ffffff_42 w-180rpx h-80rpx rounded-40rpx flex items-center text-hex-2b4067 flex-center"
+          wx:if="{{isShowHomeControl}}"
+          bindtap="{{handler.handleAllOff}}"
+          id="all-off"
+        >
+          <text class="text-28rpx font-semibold">一键关灯</text>
+        </view>
+      </view>
+
+      <view
+        wx:if="{{isCreator || isAdmin}}"
+        class="mr-36rpx mt-8rpx"
+        data-mark="addIcon"
+        id="addIcon"
+        catch:tap="showAddMenu"
+      >
+        <image
+          src="/assets/img/home/add.png"
+          class="w-64rpx h-64rpx"
+        ></image>
       </view>
     </view>
-
-    <view wx:if="{{isCreator || isAdmin}}" class="mr-36rpx mt-8rpx" data-mark="addIcon" id="addIcon" catch:tap="showAddMenu">
-      <image src="/assets/img/home/add.png" class="w-64rpx h-64rpx"></image>
-    </view>
   </view>
-</view>
-<!-- 导航栏 -->
-<nav-bar z-index="{{113}}">
-  <view catch:tap="handleShowHomeSelectMenu" wx:if="{{currentHomeName}}">
-    <view class="absolute top-8rpx left-32rpx">
-      <text class="text-hex-1e2c46 text-48rpx font-semibold">{{currentHomeName}}</text>
-      <svg-icon id="homeSelectArrow" class="absolute home-select-arrow" color="#1E2C46" name="material-symbols:arrow-drop-down-rounded" width="48rpx" height="48rpx" />
+  <!-- 导航栏 -->
+  <nav-bar z-index="{{113}}">
+    <view
+      catch:tap="handleShowHomeSelectMenu"
+      wx:if="{{currentHomeName}}"
+    >
+      <view class="absolute top-8rpx left-32rpx">
+        <text class="text-hex-1e2c46 text-48rpx font-semibold">{{currentHomeName}}</text>
+        <svg-icon
+          id="homeSelectArrow"
+          class="absolute home-select-arrow"
+          color="#1E2C46"
+          name="material-symbols:arrow-drop-down-rounded"
+          width="48rpx"
+          height="48rpx"
+        />
+      </view>
     </view>
-  </view>
-</nav-bar>
-<view class="h-114rpx"></view>
-<view class="flex flex-col" bind:tap="hideMenu">
-  <!-- 主体内容 -->
-  <view class="flex flex-1 w-full box-border" id="content">
-    <!-- 有设备时显示 FIXME 拖拽时不能滚动 -->
-    <scroll-view enhanced="{{true}}" scroll-y="{{!isMoving}}" show-scrollbar="{{false}}" class="flex flex-col items-between mx-24rpx" wx:if="{{hasDevice}}" style="height: {{scrollViewHeight}}px;" scroll-top="{{scrollTop}}" scroll-with-animation="{{true}}" bind:scroll="onPageScroll">
-      <!-- 顶开上面的内容高度 -->
-      <view class="h-24rpx"></view>
-      <!-- 房间卡片列表 -->
-      <movable-area style="height: {{accumulatedY}}px; width: 702rpx;">
-        <movable-view out-of-bounds wx:for="{{roomList}}" wx:key="roomId" data-index="{{index}}" data-rid="{{item.roomId}}" class="w-702rpx {{item.sceneList.length && !isMoving ? 'h-336rpx' : 'h-152rpx'}}" y="{{roomPos[item.roomId].y}}" direction="vertical" friction="{{999}}" damping="{{100}}" bind:longpress="movableLongpress" bind:touchend="movableTouchEnd" bind:touchmove="movableTouchMove" class="{{ roomPos[item.roomId].index === placeholder.index ? 'z-100' : (isMoving ? 'opacity-50' : 'opacity-100 z-1') }}" disabled="{{!isMoving}}">
-          <room-card room-info="{{item}}" data-room="{{item.roomId}}" isMoving="{{isMoving}}" bind:sceneSelect="handleSceneSelect"></room-card>
-        </movable-view>
-      </movable-area>
-      <view class="w-full flex-center mt-12rpx">
-        <van-button type="default" color="rgba(255,255,255,0.60)" size="small" custom-class="round-btn-border" round bind:click="goTo" data-url="/package-mine/room-manage/index">
-          <text class="text-26rpx text-hex-555659">房间管理</text>
+  </nav-bar>
+  <view class="h-114rpx"></view>
+  <view
+    class="flex flex-col"
+    bind:tap="hideMenu"
+  >
+    <!-- 主体内容 -->
+    <view
+      class="flex flex-1 w-full box-border"
+      id="content"
+    >
+      <!-- 有设备时显示 FIXME 拖拽时不能滚动 -->
+      <scroll-view
+        enhanced="{{true}}"
+        scroll-y="{{!isMoving}}"
+        show-scrollbar="{{false}}"
+        class="flex flex-col items-between mx-24rpx"
+        wx:if="{{hasDevice}}"
+        style="height: {{scrollViewHeight}}px;"
+        scroll-top="{{scrollTop}}"
+        scroll-with-animation="{{true}}"
+        bind:scroll="onPageScroll"
+      >
+        <!-- 顶开上面的内容高度 -->
+        <view class="h-24rpx"></view>
+        <!-- 房间卡片列表 -->
+        <movable-area style="height: {{accumulatedY}}px; width: 702rpx;">
+          <movable-view
+            out-of-bounds
+            wx:for="{{roomList}}"
+            wx:key="roomId"
+            data-index="{{index}}"
+            data-rid="{{item.roomId}}"
+            class="w-702rpx {{item.sceneList.length && !isMoving ? 'h-336rpx' : 'h-152rpx'}}"
+            y="{{roomPos[item.roomId].y}}"
+            direction="vertical"
+            friction="{{999}}"
+            damping="{{100}}"
+            bind:longpress="movableLongpress"
+            bind:touchend="movableTouchEnd"
+            bind:touchmove="movableTouchMove"
+            class="{{ roomPos[item.roomId].index === placeholder.index ? 'z-100' : (isMoving ? 'opacity-50' : 'opacity-100 z-1') }}"
+            disabled="{{!isMoving}}"
+          >
+            <room-card
+              room-info="{{item}}"
+              data-room="{{item.roomId}}"
+              isMoving="{{isMoving}}"
+              bind:sceneSelect="handleSceneSelect"
+            ></room-card>
+          </movable-view>
+        </movable-area>
+        <view class="w-full flex-center mt-12rpx">
+          <van-button
+            type="default"
+            color="rgba(255,255,255,0.60)"
+            size="small"
+            custom-class="round-btn-border"
+            round
+            bind:click="goTo"
+            data-url="/package-mine/room-manage/index"
+          >
+            <text class="text-26rpx text-hex-555659">房间管理</text>
+          </van-button>
+        </view>
+        <!-- 顶开下面的内容高度 -->
+        <view class="h-64rpx"></view>
+      </scroll-view>
+      <!-- 无设备时显示 -->
+      <view
+        wx:else
+        class="w-full mt-68rpx flex flex-col items-center"
+      >
+        <image
+          src="{{defaultImgDir}}/no-device.png"
+          class="w-300rpx h-300rpx"
+        ></image>
+        <text class="text-32rpx text-black-59 mt-44rpx mb-32rpx">尚未添加设备</text>
+        <text class="text-24rpx text-black-59 mb-224rpx opacity-40">立即添加设备，开启智慧照明</text>
+        <van-button
+          bind:click="goToWhenConnected"
+          data-url="/package-distribution/choose-device/index"
+          color="linear-gradient(165deg, #468CFB 0%, #6BA3FC 100%)"
+          custom-class="add-immediately-btn"
+          wx:if="{{isInit && !hasDevice && (isCreator || isAdmin)}}"
+        >
+          <text class="text-white text-36rpx font-normal">添加智能设备</text>
         </van-button>
       </view>
-      <!-- 顶开下面的内容高度 -->
-      <view class="h-64rpx"></view>
-    </scroll-view>
-    <!-- 无设备时显示 -->
-    <view wx:else class="w-full mt-68rpx flex flex-col items-center">
-      <image src="{{defaultImgDir}}/no-device.png" class="w-300rpx h-300rpx"></image>
-      <text class="text-32rpx text-black-59 mt-44rpx mb-32rpx">尚未添加设备</text>
-      <text class="text-24rpx text-black-59 mb-224rpx opacity-40">立即添加设备，开启智慧照明</text>
-      <van-button bind:click="goToWhenConnected" data-url="/package-distribution/choose-device/index" color="linear-gradient(165deg, #468CFB 0%, #6BA3FC 100%)" custom-class="add-immediately-btn" wx:if="{{isInit && !hasDevice && (isCreator || isAdmin)}}"> <text class="text-white text-36rpx font-normal">添加智能设备</text> </van-button>
     </view>
   </view>
-</view>
+</block>
+
 <view class="tabbar-placeholder"></view>
 
 <!-- 加载中 -->
-<view wx:if="{{isLogin && loading}}" id="skeleton">
+<view
+  wx:if="{{isLogin && loading}}"
+  id="skeleton"
+>
   <view class="fixed left-0 top-0 w-100vw h-100vh bg-hex-eef2f7 z-200"></view>
-  <view class="fixed z-201 left-0 w-750rpx flex flex-col" style="top: {{statusBarHeight}};">
-    <van-skeleton row="1" row-width="40%" row-class="rounded-28rpx h-76rpx_el_" />
-    <van-skeleton class="mt-22rpx" row="1" row-width="240rpx" row-class="rounded-999 h-78rpx_el_" />
-    <van-skeleton class="mt-36rpx" row="1" row-class="rounded-32rpx h-304rpx_el_" />
-    <van-skeleton class="mt-32rpx" row="1" row-class="rounded-32rpx h-304rpx_el_" />
-    <van-skeleton class="mt-32rpx" row="1" row-class="rounded-32rpx h-304rpx_el_" />
+  <view
+    class="fixed z-201 left-0 w-750rpx flex flex-col"
+    style="top: {{statusBarHeight}};"
+  >
+    <van-skeleton
+      row="1"
+      row-width="40%"
+      row-class="rounded-28rpx h-76rpx_el_"
+    />
+    <van-skeleton
+      class="mt-22rpx"
+      row="1"
+      row-width="240rpx"
+      row-class="rounded-999 h-78rpx_el_"
+    />
+    <van-skeleton
+      class="mt-36rpx"
+      row="1"
+      row-class="rounded-32rpx h-304rpx_el_"
+    />
+    <van-skeleton
+      class="mt-32rpx"
+      row="1"
+      row-class="rounded-32rpx h-304rpx_el_"
+    />
+    <van-skeleton
+      class="mt-32rpx"
+      row="1"
+      row-class="rounded-32rpx h-304rpx_el_"
+    />
   </view>
 </view>
 
 <!-- 未登录 -->
 <view wx:if="{{!isLogin}}">
-  <image src="{{defaultImgDir}}/bg.jpg" class="bg-image fixed z-200 left-0 top-0"></image>
-  <view class="fixed z-201 left-0 w-750rpx flex flex-col" style="top: {{statusBarHeight}};">
+  <image
+    src="{{defaultImgDir}}/bg.jpg"
+    class="bg-image fixed z-200 left-0 top-0"
+  ></image>
+  <view
+    class="fixed z-201 left-0 w-750rpx flex flex-col"
+    style="top: {{statusBarHeight}};"
+  >
     <text class="text-hex-1e2c46 text-48rpx font-semibold single-text block ml-32rpx mt-8rpx">我的家庭</text>
     <view class="flex items-center flex-col w-750rpx mt-66rpx">
-      <image src="{{defaultImgDir}}/no-device.png" class="w-300rpx h-300rpx"></image>
+      <image
+        src="{{defaultImgDir}}/no-device.png"
+        class="w-300rpx h-300rpx"
+      ></image>
       <text class="text-32rpx text-black-59 mt-44rpx mb-32rpx">尚未登录</text>
       <text class="text-24rpx text-black-59 mb-224rpx opacity-40">登录即可控制设备，开启智慧照明</text>
-      <van-button bind:click="goToWhenConnected" data-url="/pages/login/index" color="linear-gradient(165deg, #468CFB 0%, #6BA3FC 100%)" custom-class="add-immediately-btn">
+      <van-button
+        type="primary"
+        bind:click="goToWhenConnected"
+        data-url="/pages/login/index"
+        custom-class="add-immediately-btn"
+      >
         <text class="text-white text-36rpx font-normal">前往登录</text>
       </van-button>
     </view>
   </view>
 </view>
 
-<home-select-menu x="{{selectHomeMenu.x}}" y="{{selectHomeMenu.y}}" isShow="{{selectHomeMenu.isShow}}" bind:select="handleHomeSelect" bind:afterSelected="renewRoomPos"></home-select-menu>
-<add-menu right="{{addMenu.right}}" y="{{addMenu.y}}" isShow="{{addMenu.isShow}}"></add-menu>
-<add-room show="{{showAddNewRoom}}" bind:close="handleHideAddNewRoom"></add-room>
+<home-select-menu
+  x="{{selectHomeMenu.x}}"
+  y="{{selectHomeMenu.y}}"
+  isShow="{{selectHomeMenu.isShow}}"
+  bind:select="handleHomeSelect"
+  bind:afterSelected="renewRoomPos"
+></home-select-menu>
+<add-menu
+  right="{{addMenu.right}}"
+  y="{{addMenu.y}}"
+  isShow="{{addMenu.isShow}}"
+></add-menu>
+<add-room
+  show="{{showAddNewRoom}}"
+  bind:close="handleHideAddNewRoom"
+></add-room>
 <van-toast id="van-toast" />
-<van-dialog id="van-dialog" confirm-button-color="#488FFF" />
+<van-dialog
+  id="van-dialog"
+  confirm-button-color="#488FFF"
+/>

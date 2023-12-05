@@ -34,22 +34,22 @@
       <text class="text-24rpx">
         <text>我已阅读并同意</text>
         <text
-          style="color: #169bd5"
+          class="link"
           data-value="privacyPolicy"
           catchtap="toPage"
           >《美的照明隐私协议》</text
         ><text
-          style="color: #169bd5"
+          class="link"
           data-value="userService"
           catchtap="toPage"
           >《软件许可及用户服务协议》</text
         ><text
-          style="color: #169bd5"
+          class="link"
           data-value="userInfoList"
           catchtap="toPage"
           >《已收集个人信息清单》</text
         >和<text
-          style="color: #169bd5"
+          class="link"
           data-value="authList"
           catchtap="toPage"
           >《美的照明权限列表》</text
