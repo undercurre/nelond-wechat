@@ -17,8 +17,7 @@ Component({
   methods: {
     handleTap(e: WechatMiniprogram.TouchEvent) {
       const item = e.currentTarget.dataset.value
-      const helpPage =
-        item.type === 'remoterHelp' ? '/package-mine/help/show/index' : '/package-mine/help/webview/index'
+      const helpPage = '/package-mine/help/webview/index'
       const url = strUtil.getUrlWithParams(helpPage, item)
       wx.navigateTo({
         url,

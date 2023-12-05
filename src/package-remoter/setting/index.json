@@ -1,7 +1,0 @@
-{
-  "component": true,
-  "usingComponents": {
-    "edit-name-popup": "./components/edit-name-popup/index",
-    "van-action-sheet": "@vant/weapp/action-sheet/index"
-  }
-}

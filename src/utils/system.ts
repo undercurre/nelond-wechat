@@ -1,8 +1,6 @@
 import { envMap, setEnv } from '../config/index'
 import { storage } from './storage'
 import { Logger } from './log'
-// import QQMapWX from '../lib/qqmap-wx-jssdk'
-// import { QQMapConfig } from '../config/index'
 
 const deviceInfo = wx.getDeviceInfo()
 Logger.debug('deviceInfo', deviceInfo)
@@ -15,8 +13,7 @@ Logger.debug('accountInfo', accountInfo)
  * FIXME wx.switchTab 在IOS下会出现中间页面
  */
 export function goHome() {
-  const defaultPage = (storage.get<string>('defaultPage') ?? '') as string
-  wx.switchTab({ url: `/pages/${defaultPage}/index` })
+  wx.switchTab({ url: `/pages/index/index` })
 }
 
 export function setNavigationBarAndBottomBarHeight() {
@@ -65,48 +62,6 @@ export function getCurrentPageParams() {
 
   return currentPage.options as IAnyObject
 }
-
-// export function getPosition() {
-//   return new Promise<{ lat: number; lng: number; address: string }>((resolve) => {
-//     const myQQMapWX = new QQMapWX({
-//       key: QQMapConfig.key,
-//     })
-
-//     wx.getFuzzyLocation({
-//       type: 'wgs84',
-//       success(res) {
-//         console.log('getFuzzyLocation', res)
-//         const latitude = res.latitude
-//         const longitude = res.longitude
-//         myQQMapWX.reverseGeocoder({
-//           sig: QQMapConfig.sig,
-//           location: {
-//             latitude: latitude,
-//             longitude: longitude,
-//           },
-//           success(geoCoderRes: IAnyObject) {
-//             console.log('reverseGeocoder', geoCoderRes)
-//             const addr = geoCoderRes.result.address_component
-//             const result = addr.province + addr.city + addr.district
-//             storage.set('position_location', result)
-
-//             resolve({
-//               lat: res.latitude,
-//               lng: res.longitude,
-//               address: result,
-//             })
-//           },
-//           fail: function () {
-//             console.log('reverseGeocoder:获取地理位置失败')
-//           },
-//         })
-//       },
-//       fail() {
-//         console.log('getFuzzyLocation::微信定位失败')
-//       },
-//     })
-//   })
-// }
 
 let loadingNum = 0 // 正在等待loading的个数
 /**

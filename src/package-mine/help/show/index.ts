@@ -1,5 +1,4 @@
 import { storage } from '../../../utils/index'
-import { remoterHelp } from '../help-doc'
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { ComponentWithComputed } from 'miniprogram-computed'
 
@@ -16,7 +15,6 @@ ComponentWithComputed({
     doc: '',
     title: '',
     url: '',
-    remoterHelp,
   },
 
   /**

@@ -132,12 +132,6 @@ ComponentWithComputed({
   methods: {
     // 生命周期或者其他钩子
     onLoad() {
-      // 若未设置过默认页，则跳转到start页选择首页
-      if (!othersStore.defaultPage) {
-        wx.reLaunch({
-          url: `/pages/start/index`,
-        })
-      }
       // 更新tabbar状态
       if (typeof this.getTabBar === 'function' && this.getTabBar()) {
         this.getTabBar().setData({

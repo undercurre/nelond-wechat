@@ -47,7 +47,6 @@ HomLux小程序
     ├── package-distribution-meiju // 美居配网相关页面分包
     ├── package-auth // 第三方授权相关页面分包
     ├── package-automation // 场景模块相关页面分包
-    ├── package-remoter // 蓝牙遥控器模块相关页面分包
     ├── pages // 主包的页面（小程序主页、登录）
     └── utils // 公用方法
 └── typings // 类型声明文件

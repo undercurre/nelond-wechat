@@ -1,5 +1,5 @@
 {
-  "pages": ["pages/start/index", "pages/index/index", "pages/login/index", "pages/mine/index", "pages/remoter/index"],
+  "pages": ["pages/index/index", "pages/login/index", "pages/mine/index"],
   "subpackages": [
     {
       "root": "package-distribution",
@@ -70,10 +70,6 @@
       ]
     },
     {
-      "root": "package-remoter",
-      "pages": ["pannel/index", "setting/index"]
-    },
-    {
       "root": "package-distribution-meiju",
       "pages": [
         "pages/check-auth/index",
@@ -105,10 +101,6 @@
       {
         "pagePath": "pages/index/index",
         "text": "首页"
-      },
-      {
-        "pagePath": "pages/remoter/index",
-        "text": "遥控器"
       },
       {
         "pagePath": "pages/mine/index",

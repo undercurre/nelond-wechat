@@ -12,11 +12,6 @@ Component({
         title: '固件升级',
         url: '/package-mine/ota/index',
       },
-      {
-        icon: 'homepage.png',
-        title: '默认主页',
-        url: '/pages/start/index',
-      },
     ],
   },
 

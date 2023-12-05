@@ -28,12 +28,6 @@ ComponentWithComputed({
         path: '/pages/index/index',
       },
       {
-        text: '遥控器',
-        selectedIcon: '/assets/img/tabbar/remoter-selected.png',
-        unSelectedIcon: '/assets/img/tabbar/remoter-unselected.png',
-        path: '/pages/remoter/index',
-      },
-      {
         text: '我的',
         selectedIcon: '/assets/img/tabbar/mine-selected.png',
         unSelectedIcon: '/assets/img/tabbar/mine-unselected.png',

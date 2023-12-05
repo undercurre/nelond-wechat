@@ -1,6 +1,5 @@
 import {
   setNavigationBarAndBottomBarHeight,
-  storage,
   startWebsocketService,
   closeWebSocket,
   setCurrentEnv,
@@ -32,13 +31,6 @@ App<IAppOption>({
     setNavigationBarAndBottomBarHeight()
 
     homOs.init({ mqttLib: mqtt, isDebug: true })
-
-    // 从缓存中读取默认首页
-    const defaultPage = (storage.get<string>('defaultPage') ?? '') as string
-    console.log({ defaultPage })
-    if (defaultPage) {
-      othersStore.setDefaultPage(defaultPage)
-    }
 
     // 如果用户已经登录，开始请求数据[用户][家庭列表、全屋房间、全屋设备]
     if (isLogon()) {

@@ -1,7 +1,6 @@
 import Toast from '@vant/weapp/toast/toast'
 import { BehaviorWithComputed } from 'miniprogram-computed'
 import { userRole } from '../config/home'
-import { othersStore } from '../store/index'
 import { ossDomain } from '../config/index'
 
 export default BehaviorWithComputed({
@@ -22,9 +21,8 @@ export default BehaviorWithComputed({
      * 返回首页
      */
     goBackHome: function () {
-      const { defaultPage } = othersStore
       wx.switchTab({
-        url: `/pages/${defaultPage}/index`,
+        url: `/pages/index/index`,
       })
     },
     /**
