@@ -310,14 +310,6 @@ ComponentWithComputed({
         }
 
         if (e.result.eventType === WSEventType.device_property) {
-          // 房间状态上报，只响应开关状态的变更 // 已由msgPush触发更新，此处可删除
-          // if (e.result.eventData.deviceId === roomStore.currentRoom.groupId) {
-          //   const { event } = e.result.eventData
-          //   console.log('[房间状态上报]', roomStore.currentRoom.groupId, event.power)
-          //   this.setData({
-          //     'roomLight.power': event.power,
-          //   })
-          // }
           // 如果有传更新的状态数据过来，直接更新store
           const deviceInHouse = deviceStore.allRoomDeviceMap[e.result.eventData.deviceId]
 
@@ -647,13 +639,6 @@ ComponentWithComputed({
       // 整个列表更新
       else {
         const flattenList = deviceStore.deviceFlattenList
-
-        // 如果为空则不初始化
-        // if (!flattenList.length) {
-        //   this.data._updating = false
-        //   return
-        // }
-
         const _list = flattenList
           // 接口返回开关面板数据以设备为一个整体，需要前端拆开后排序
           // 不再排除灯组
@@ -779,14 +764,6 @@ ComponentWithComputed({
       await deviceStore.updateAllRoomDeviceList()
       this.updateQueue({ isRefresh: true })
     },
-    // updateRoomListOnCloud: throttle(
-    //   async function (this: IAnyObject) {
-    //     await deviceStore.updateSubDeviceList()
-    //     this.updateQueue({ isRefresh: true })
-    //   },
-    //   4000,
-    //   false,
-    // ),
 
     /**
      * @description 更新选中状态并渲染
@@ -986,7 +963,6 @@ ComponentWithComputed({
 
     handleSceneTap() {
       wx.navigateTo({
-        //  url: '/package-room-control/scene-list/index',
         url: '/package-automation/automation/index',
       })
     },
@@ -996,87 +972,6 @@ ComponentWithComputed({
         Toast('仅创建者与管理员可创建场景')
         return
       }
-
-      // 逻辑已过时，可删除，暂时保留一段时间
-      // // 补充actions
-      // const addSceneActions = [] as Device.ActionItem[]
-
-      // // 排除已经是场景开关的开关或者离线的设备
-      // // ButtonMode 0 普通面板或者关联开关 2 场景 3 关联灯
-      // let deviceList = [] as Device.DeviceItem[]
-
-      // for (const list of this.data.devicePageList) {
-      //   deviceList = deviceList.concat(list)
-      // }
-
-      // const selectList = deviceList.filter((device) => {
-      //   let [, switchId] = device.uniId.split(':')
-
-      //   switchId = switchId ?? MODEL_NAME[device.proType]
-
-      //   return device.mzgdPropertyDTOList[switchId]?.ButtonMode !== 2 && device.onLineStatus
-      // })
-
-      // if (!selectList.length) {
-      //   Toast('所有设备已离线，无法创建场景')
-      //   return
-      // }
-
-      // selectList.forEach((device) => {
-      //   if (device.proType === PRO_TYPE.switch) {
-      //     // 开关
-      //     const modelName = device.uniId.split(':')[1]
-      //     console.log(Boolean(device.mzgdPropertyDTOList[modelName]))
-      //     console.log(modelName)
-      //     let power
-      //     if (device.mzgdPropertyDTOList[modelName]) {
-      //       power = device.mzgdPropertyDTOList[modelName].power
-      //     } else {
-      //       power = false
-      //     }
-      //     const desc = toPropertyDesc(device.proType, device.mzgdPropertyDTOList[modelName])
-
-      //     addSceneActions.push({
-      //       uniId: device.uniId,
-      //       name: device.switchInfoDTOList[0].switchName + ' | ' + device.deviceName,
-      //       desc: desc,
-      //       pic: device.switchInfoDTOList[0].pic,
-      //       proType: device.proType,
-      //       deviceType: device.deviceType,
-      //       value: {
-      //         modelName,
-      //         power,
-      //       },
-      //     })
-      //   } else {
-      //     const modelName = MODEL_NAME[device.proType]
-      //     const properties = device.mzgdPropertyDTOList[modelName]
-      //     const desc = toPropertyDesc(device.proType, properties)
-
-      //     const action = {
-      //       uniId: device.uniId,
-      //       name: device.deviceName,
-      //       desc,
-      //       pic: device.pic,
-      //       proType: device.proType,
-      //       deviceType: device.deviceType,
-      //       value: {
-      //         modelName,
-      //         ...properties,
-      //       } as IAnyObject,
-      //     }
-
-      //     addSceneActions.push(action)
-      //   }
-      // })
-      // runInAction(() => {
-      //   sceneStore.addSceneActions = addSceneActions
-      // })
-      // this.setData({
-      //   editSelectMode: false,
-      //   editSelectList: [],
-      //   showBeforeAddScenePopup: true,
-      // })
 
       wx.navigateTo({
         url: strUtil.getUrlWithParams('/package-automation/automation-add/index', {
