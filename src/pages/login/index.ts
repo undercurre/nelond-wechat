@@ -2,6 +2,7 @@ import Toast from '@vant/weapp/toast/toast'
 import { login } from '../../apis/index'
 import { homeStore, othersStore, userStore } from '../../store/index'
 import { storage, showLoading, hideLoading, Logger } from '../../utils/index'
+import { defaultImgDir } from '../../config/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 
 // pages/login/index.ts
@@ -15,6 +16,7 @@ Component({
     checkImg: '/assets/img/base/check.png',
     uncheckImg: '/assets/img/base/uncheck.png',
     marginTop: 0,
+    defaultImgDir,
   },
 
   methods: {

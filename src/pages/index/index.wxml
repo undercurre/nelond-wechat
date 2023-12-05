@@ -9,7 +9,7 @@
   bind:touchstart="hideMenu"
 >
   <image
-    src="{{defaultImgDir}}/bg.jpg"
+    src="{{defaultImgDir}}/bg-login.png"
     class="bg-image"
   ></image>
 </view>

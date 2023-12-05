@@ -1,8 +1,11 @@
 <!--pages/login/index.wxml-->
-<view
-  class="fixed left-0 top-0 w-100vw h-100vh bg-hex-eef2f7"
-  style="z-index: -1"
-></view>
+<view class="fixed left-0 top-0 w-100vw h-100vh">
+  <image
+    src="{{defaultImgDir}}/bg-login.png"
+    class="w-100vw h-100vh"
+  ></image>
+</view>
+
 <nav-bar
   left-arrow
   bind:leftTap="goBack"
@@ -18,62 +21,60 @@
   <text
     class="text-48rpx font-semibold mt-48rpx ml-12rpx"
     style="letter-spacing: 8.8rpx"
-    >美的照明</text
+    >美的商照</text
   >
 </view>
 
-<view class="fixed left-0 bottom-0">
-  <view class="mx-74rpx">
-    <van-checkbox
-      custom-class="items-start_el_"
-      use-icon-slot
-      class="text-24rpx"
-      value="{{ isAgree }}"
-      bind:change="onAgreeClick"
-    >
-      <text class="text-24rpx">
-        <text>我已阅读并同意</text>
-        <text
-          class="link"
-          data-value="privacyPolicy"
-          catchtap="toPage"
-          >《美的照明隐私协议》</text
-        ><text
-          class="link"
-          data-value="userService"
-          catchtap="toPage"
-          >《软件许可及用户服务协议》</text
-        ><text
-          class="link"
-          data-value="userInfoList"
-          catchtap="toPage"
-          >《已收集个人信息清单》</text
-        >和<text
-          class="link"
-          data-value="authList"
-          catchtap="toPage"
-          >《美的照明权限列表》</text
-        >
-      </text>
-      <image
-        class="h-36 w-36"
-        slot="icon"
-        src="{{ isAgree ? checkImg : uncheckImg }}"
-      />
-    </van-checkbox>
-  </view>
-  <view class="px-32rpx mt-50rpx mb-128rpx">
-    <van-button
-      open-type="getPhoneNumber|agreePrivacyAuthorization"
-      bindtap="handleLoginTap"
-      bindgetphonenumber="handleLoginClick"
-      block
-      disabled="{{!isAgree}}"
-      type="primary"
-      size="large"
-      >快速登录</van-button
-    >
-  </view>
+<view class="mx-74rpx mt-140rpx">
+  <van-checkbox
+    custom-class="items-start_el_"
+    use-icon-slot
+    class="text-24rpx"
+    value="{{ isAgree }}"
+    bind:change="onAgreeClick"
+  >
+    <text class="text-24rpx">
+      <text>我已阅读并同意</text>
+      <text
+        class="link"
+        data-value="privacyPolicy"
+        catchtap="toPage"
+        >《美的照明隐私协议》</text
+      ><text
+        class="link"
+        data-value="userService"
+        catchtap="toPage"
+        >《软件许可及用户服务协议》</text
+      ><text
+        class="link"
+        data-value="userInfoList"
+        catchtap="toPage"
+        >《已收集个人信息清单》</text
+      >和<text
+        class="link"
+        data-value="authList"
+        catchtap="toPage"
+        >《美的照明权限列表》</text
+      >
+    </text>
+    <image
+      class="h-36 w-36"
+      slot="icon"
+      src="{{ isAgree ? checkImg : uncheckImg }}"
+    />
+  </van-checkbox>
+</view>
+<view class="px-32rpx mt-50rpx mb-128rpx">
+  <van-button
+    open-type="getPhoneNumber|agreePrivacyAuthorization"
+    bindtap="handleLoginTap"
+    bindgetphonenumber="handleLoginClick"
+    block
+    disabled="{{!isAgree}}"
+    type="primary"
+    size="large"
+    >快速登录</van-button
+  >
 </view>
 
 <van-toast id="van-toast" />
