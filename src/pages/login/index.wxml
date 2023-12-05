@@ -1,5 +1,5 @@
 <!--pages/login/index.wxml-->
-<view class="fixed left-0 top-0 w-100vw h-100vh">
+<view class="-z-1 fixed left-0 top-0 w-100vw h-100vh">
   <image
     src="{{defaultImgDir}}/bg-login.png"
     class="w-100vw h-100vh"
