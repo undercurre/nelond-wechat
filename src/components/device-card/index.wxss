@@ -1,0 +1,60 @@
+.card-shadow {
+  box-shadow: 0px 4px 16px 0px rgba(97, 109, 136, 0.1);
+}
+
+.card-clip {
+  clip-path: border-box;
+}
+
+.show-control-bg {
+  background-image: linear-gradient(180deg, #f2f5fc 10%, #ffffff 74%);
+}
+.show-group-bg {
+  background-image: linear-gradient(180deg, #fffaef 10%, #ffffff 74%);
+}
+
+.select-border {
+  border: 4rpx solid #488fff;
+}
+
+.white-border {
+  border: 3rpx solid #fff;
+}
+
+.ripple-off {
+  background-image: linear-gradient(180deg, #858892 0%, #a0a2ab 96%);
+}
+
+.ripple-on {
+  background-image: linear-gradient(155deg, #468cfb 6%, #6ba3fc 96%);
+}
+
+@keyframes ripple-on {
+  0% {
+    transform: translateY(250rpx) translateX(-50%);
+    opacity: 0.8;
+  }
+  80% {
+    transform: translateY(0) translateX(-50%);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(0) translateX(-50%);
+    opacity: 0;
+  }
+}
+
+@keyframes ripple-off {
+  0% {
+    transform: translateY(250rpx) translateX(-50%);
+    opacity: 0.8;
+  }
+  80% {
+    transform: translateY(0) translateX(-50%);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(0) translateX(-50%);
+    opacity: 0;
+  }
+}

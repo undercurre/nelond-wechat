@@ -1,0 +1,170 @@
+<import src="./templates.wxml" />
+
+<wxs
+  module="handler"
+  src="./index.wxs"
+></wxs>
+
+<view
+  class="fixed left-0 top-0 w-100vw h-100vh bg-hex-eef2f7"
+  style="z-index: -1"
+></view>
+<nav-bar bind:longpress="toggleDebug">
+  <view class="flex-1">
+    <text class="ml-24rpx text-48rpx font-semibold">遥控器</text>
+    <text
+      wx:if="{{isDebugMode}}"
+      class="ml-4rpx px-8rpx text-18rpx text-debug text-white"
+      >{{debugStr}}</text
+    >
+  </view>
+</nav-bar>
+
+<!-- 背景 -->
+<view
+  style="z-index: -1"
+  class="fixed left-0 top-0 w-100vw h-100vh"
+>
+  <image
+    src="{{defaultImgDir}}/bg.jpg"
+    style="width: 100vw; height: 100vh"
+  ></image>
+</view>
+
+<view
+  wx:if="{{foundList.length === 0 && !hasRemoter}}"
+  class="mt-80rpx flex flex-col items-center"
+>
+  <tips-box
+    text="没有发现新设备～"
+    icon="{{defaultImgDir}}/no-found.png"
+  ></tips-box>
+
+  <block wx:if="{{canShowNotFound}}">
+    <template is="notFoundMsg"></template>
+
+    <view class="bottom-btn">
+      <template
+        is="btn"
+        data="{{ isSeeking: isSeeking }}"
+      ></template>
+    </view>
+  </block>
+  <block wx:else>
+    <view class="mt-20rpx text-center">
+      <text class="text-26rpx text-hex-a2a2a2">立即搜索设备，使用遥控器</text>
+    </view>
+    <view class="mt-140rpx flex-center">
+      <van-button
+        color="linear-gradient(165deg, #468CFB 0%, #6BA3FC 100%)"
+        custom-class="large-btn"
+        loading="{{isSeeking}}"
+        loading-text="搜索设备"
+        loading-type="spinner"
+        bind:click="toSeek"
+      >
+        搜索设备
+      </van-button>
+    </view>
+  </block>
+</view>
+
+<scroll-view
+  wx:else
+  enhanced
+  scroll-y
+  show-scrollbar="{{false}}"
+  style="height: {{scrollViewHeight}}px;"
+  bind:scroll="onPageScroll"
+>
+  <view
+    class="pt-16rpx foundTitle"
+    wx:if="{{foundList.length || foundListHolder}}"
+  >
+    <text class="ml-40rpx text-hex-6e6f74 text-28">发现设备</text>
+  </view>
+
+  <view
+    class="placeholder foundListHolder"
+    wx:if="{{!foundList.length && foundListHolder}}"
+  >
+    <image
+      src="../../assets/img/remoter/no-device.png"
+      class="w-80rpx h-80rpx mr-26rpx"
+    />
+    <text class="text-hex-b6b7bb text-28rpx">暂无设备</text>
+  </view>
+
+  <card
+    wx:for="{{foundList}}"
+    item="{{item}}"
+    wx:key="index"
+    bind:touchstart="{{handler.touchstart}}"
+    bind:cardTap="handleCardTap"
+    bind:controlTap="handleControlTap"
+    data-count="{{foundList.length}}"
+  ></card>
+
+  <view class="pt-48rpx">
+    <text class="ml-40rpx text-hex-6e6f74 text-28">我的设备</text>
+  </view>
+
+  <view
+    class="placeholder"
+    wx:if="{{!remoterViewList.length}}"
+  >
+    <image
+      src="../../assets/img/remoter/no-device.png"
+      class="w-80rpx h-80rpx mr-26rpx"
+    />
+    <text class="text-hex-b6b7bb text-28rpx">暂无设备</text>
+  </view>
+
+  <!-- <movable-area style="height: {{accumulatedY}}px; width: 702rpx;">
+    <movable-view out-of-bounds wx:for="{{remoterViewList}}" wx:key="deviceId" data-index="{{index}}" data-rid="{{item.roomId}}" class="w-702rpx h-216rpx" y="{{roomPos[item.roomId].y}}" direction="vertical" friction="{{999}}" damping="{{100}}" bind:longpress="movableLongpress" bind:touchend="movableTouchEnd" bind:touchmove="movableTouchMove" class="{{ roomPos[item.roomId].index === placeholder.index ? 'z-100' : (isMoving ? 'opacity-50' : 'opacity-100 z-1') }}" disabled="{{!isMoving}}">
+      <card room-info="{{item}}" data-room="{{item.roomId}}" isMoving="{{isMoving}}" bind:sceneSelect="handleSceneSelect"></card>
+    </movable-view>
+  </movable-area> -->
+
+  <drag
+    id="drag"
+    list-data="{{remoterViewList}}"
+    item-height="{{216}}"
+    scroll-top="{{scrollTop}}"
+    generic:item="card"
+    bind:cardTap="handleCardTap"
+    bind:controlTap="handleControlTap"
+    bind:sortend="handleSortEnd"
+  ></drag>
+
+  <view class="w-full flex-center pb-40rpx mt-20rpx">
+    <template
+      is="btn"
+      data="{{ isSeeking: isSeeking }}"
+    ></template>
+  </view>
+  <view class="list-bottom-placeholder"> </view>
+</scroll-view>
+
+<view
+  wx:if="{{isDebugMode}}"
+  class="rssiToggle text-debug"
+  catch:tap="rssiToggle"
+>
+  <text class="text-18rpx text-white">{{'搜索阈值\n >' + MIN_RSSI}}dBm</text>
+</view>
+
+<!-- 新手使用提示 -->
+<template
+  wx:if="{{showTips}}"
+  is="tips"
+  data="{{ tipsStep: tipsStep, statusBarHeight: statusBarHeight }}"
+></template>
+
+<van-dialog
+  id="van-dialog"
+  confirm-button-color="#488FFF"
+  cancel-button-color="#27282A"
+/>
+
+<van-toast id="van-toast" />

@@ -1,0 +1,9 @@
+<view class="handle-onoff-wrapper overflow-hidden w-full h-full flex relative rounded-32rpx bg-hex-EFF0F3 flex-col">
+  <view id="slider" class="w-full onoff-slider-wrapper h-96rpx z-1 p-8rpx" style="top:{{checkedIndex*96}}rpx;">
+    <view class="onoff-slider bg-white h-full"></view>
+  </view>
+
+  <view wx:for="{{list}}" wx:key="index" bindtap="handleOnOffChange" data-index="{{index}}" data-item="{{item}}" class="w-full h-96rpx z-2 text-center button">
+    <text class="text-32rpx  leading-96rpx font-medium {{index === checkedIndex?'text-blue':'text-hex-555659'}}">{{item.name}}</text>
+  </view>
+</view>

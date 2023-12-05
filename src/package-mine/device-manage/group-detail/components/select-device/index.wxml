@@ -1,0 +1,21 @@
+<import src="/commons/templates/popup.wxml" />
+<van-popup show="{{ show }}" z-index="10000" position="bottom" round bind:close="handleClose" closeable safe-area-inset-bottom="{{false}}">
+  <view class="flex flex-col px-32rpx text-black-2a">
+    <view class="flex-center pb-32rpx">
+      <template is="title" data="{{ title: popupTitle }}" />
+    </view>
+    <view class="py-10rpx pl-10rpx">
+      <text class="text-32rpx text-black-59 font-semibold">{{currentRoom.roomName}}</text>
+    </view>
+    <scroll-view enhanced show-scrollbar="{{false}}" scroll-y class="list-wrapper" enable-flex>
+      <view wx:if="{{lightList.length}}" class="grid grid-cols-4 gap-16rpx mt-16rpx">
+        <device-card wx:for="{{lightList}}" wx:key="deviceId" bind:cardTap="handleCardTap" bind:offlineTap="handleCardTap" device-info="{{item}}" select="{{item.select}}" data-index="{{index}}" />
+      </view>
+      <view wx:else class="list-empty flex-1">
+        <text class="block text-center text-24 text-black-tips">该房间暂无未分组的智能灯</text>
+      </view>
+    </scroll-view>
+
+    <template is="bottom-btn" data="{{disabled: !checkedList.length}}" />
+  </view>
+</van-popup>

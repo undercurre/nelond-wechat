@@ -1,0 +1,10 @@
+.value-class {
+  flex: none !important;
+}
+.cell-border::after {
+  border-width: 2px !important;
+  border-color: #ffffff !important;
+}
+.cell-title {
+  font-size: 14rpx !important;
+}

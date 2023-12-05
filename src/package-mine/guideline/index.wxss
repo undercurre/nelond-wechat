@@ -1,0 +1,4 @@
+.image-intro {
+  width: 702rpx;
+  height: auto;
+}

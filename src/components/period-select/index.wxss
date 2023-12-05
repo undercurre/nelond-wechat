@@ -1,0 +1,14 @@
+.value-class {
+  flex: none !important;
+}
+.cell-border::after {
+  border-width: 2px !important;
+  border-color: #ffffff !important;
+}
+.cell-title {
+  font-size: 14rpx !important;
+}
+
+.week-background {
+  background-image: linear-gradient(165deg, #468cfb 0%, #6ba3fc 100%);
+}

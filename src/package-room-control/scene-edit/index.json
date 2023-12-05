@@ -1,0 +1,11 @@
+{
+  "component": true,
+  "usingComponents": {
+    "select-card-popup": "/components/select-card-popup/index",
+    "edit-icon-popup": "./components/edit-icon-popup/index",
+    "edit-name-popup": "./components/edit-name-popup/index",
+    "curtain-control-popup": "/components/curtain-control-popup/index",
+    "light-control-popup": "/components/light-control-popup/index",
+    "switch-control-popup": "/components/switch-control-popup/index"
+  }
+}

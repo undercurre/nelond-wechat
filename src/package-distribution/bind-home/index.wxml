@@ -1,0 +1,17 @@
+<view class="page-container flex flex-col h-screen">
+  <nav-bar background="transparent" title="添加设备"></nav-bar>
+
+  <scroll-view class="box-border h-1000 grow flex flex-col justify-between pt-100rpx" scroll-y>
+    <tips-box text="设备添加成功！" icon="{{defaultImgDir}}/success.png" size="{{isSwitch ? 200 : 300}}" text-style="{{isSwitch && 'margin-top: 24rpx;'}}"></tips-box>
+
+    <view class="grow px-24rpx mt-28rpx">
+      <edit-device-form device-name="{{deviceInfo.deviceName}}" room-id="{{deviceInfo.roomId}}" switch-list="{{deviceInfo.switchList}}" bind:change="changeDeviceInfo"></edit-device-form>
+    </view>
+  </scroll-view>
+
+  <view class="flex flex-col items-center pt-24rpx px-32rpx">
+    <van-button class="w-full" block type="primary" size="large" bind:click="finish" disabled="{{!deviceInfo.roomId || !deviceInfo.deviceName}}">完成</van-button>
+  </view>
+</view>
+
+<van-toast id="van-toast" />

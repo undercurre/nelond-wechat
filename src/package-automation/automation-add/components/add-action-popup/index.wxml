@@ -1,0 +1,16 @@
+<import src="/commons/templates/popup.wxml" />
+<van-popup show="{{ show }}" z-index="1002" round position="bottom" bind:close="handleClose" closeable catchtouchmove="blank">
+  <view class="w-750rpx h-796rpx relative flex flex-col items-center">
+    <template is="title" data="{{title: '执行动作'}}" />
+    <view class="flex-1 w-718rpx">
+      <view class="h-32rpx"></view>
+      <van-cell-group inset border="{{ false }}" wx:for="{{actionList}}" wx:key="index" data-key="{{item.key}}" bindtap="onConditionClicked" custom-class="{{index === 0 ? 'mt-0_el_' : ''}}">
+        <van-cell title="{{item.title}}" label="{{item.desc}}" center title-style="font-weight: 500;" border="{{false}}" clickable="{{true}}" custom-class="cell">
+          <view slot="icon" class="rounded-32rpx p-16rpx mr-32rpx">
+            <image class="w-72 h-72" src="{{item.icon}}"></image>
+          </view>
+        </van-cell>
+      </van-cell-group>
+    </view>
+  </view>
+</van-popup>

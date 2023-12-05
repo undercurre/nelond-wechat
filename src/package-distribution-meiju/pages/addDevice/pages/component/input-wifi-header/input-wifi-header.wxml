@@ -1,0 +1,6 @@
+<view class="header" style="top:{{statusBarHeight+ 6}}px">
+  <text wx:if="{{isNavCancel}}" class="app-name" style="color: {{buttonColor}};" bindtap="clickCancel">取消</text>
+  <view wx:else class="back" bindtap="back">
+    <mx-icon name="arrow-left" bind:click="clickBack" color="{{buttonColor}}" size="20px" />
+  </view>
+</view>

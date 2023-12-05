@@ -1,0 +1,7 @@
+node_modules
+miniprogram_npm
+build
+src/lib
+.eslintrc.js
+prettier.config.js
+commitlint.config.js

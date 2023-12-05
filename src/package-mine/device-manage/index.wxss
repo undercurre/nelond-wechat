@@ -1,0 +1,9 @@
+/* package-mine/device-manage/index.wxss */
+.list-bottom-placeholder {
+  height: calc(env(safe-area-inset-bottom) + 32rpx);
+}
+
+.dropdown-btn {
+  height: 72rpx !important;
+  margin-right: 28rpx !important;
+}

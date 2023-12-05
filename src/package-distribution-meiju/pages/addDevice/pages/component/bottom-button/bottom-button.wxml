@@ -1,0 +1,6 @@
+<view class="bottom-button2">
+  <view class="flex flex-row gap-x-46rpx px-32rpx">
+    <van-button wx:if="{{buttomButonData.cancelText}}" custom-style="background-color: transparent;" class="w-full" size="large" bind:click="clickCancel">{{buttomButonData.cancelText}}</van-button>
+    <van-button wx:if="{{buttomButonData.comfirmText}}" class="w-full" type="primary" size="large" bind:click="clickConfirm">{{buttomButonData.comfirmText}}</van-button>
+  </view>
+</view>

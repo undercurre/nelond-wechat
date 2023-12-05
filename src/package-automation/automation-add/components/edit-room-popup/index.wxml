@@ -1,0 +1,25 @@
+<import src="/commons/templates/popup.wxml" />
+<van-popup show="{{ show }}" z-index="1002" round position="bottom" bind:close="handleClose" safe-area-inset-bottom="{{false}}" closeable catchtouchmove="blank">
+  <view class="w-750rpx h-924rpx relative flex flex-col items-center">
+    <template is="title" data="{{title: '选择房间'}}" />
+    <view class="h-full flex flex-col items-center justify-between">
+      <scroll-view enhanced show-scrollbar="{{true}}" scroll-y="{{true}}" style="height: 496rpx; margin-top: 32rpx">
+        <view class="h-18rpx"></view>
+        <view>
+          <view class="flex flex-wrap justify-between px-24rpx">
+            <view wx:for="{{roomList}}" wx:key="roomId" data-id="{{item.roomId}}" catch:tap="handleRoomSelect" class="w-338rpx h-144rpx box-border bg-hex-F9FBFE rounded-32rpx flex flex-center mb-32rpx {{item.roomId === roomSelect ? 'bg-select border-3rpx' : ''}}">
+              <image class="w-64 h-64 mr-44rpx" src="/assets/img/room/{{item.roomIcon}}.png"></image>
+              <text class="text-28rpx text-normal text-black-59">{{item.roomName}}</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+
+      <view class="flex w-686rpx mb-96rpx">
+        <van-button class="flex-1" size="large" bind:click="handleCancel">取消</van-button>
+        <view class="w-46rpx"></view>
+        <van-button disabled="{{roomSelect === ''}}" type="primary" class="flex-1" size="large" bind:click="handleConfirm">确定</van-button>
+      </view>
+    </view>
+  </view>
+</van-popup>

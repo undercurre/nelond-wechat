@@ -1,0 +1,11 @@
+.card:active {
+  background-color: #f4f8ff;
+}
+
+.img-tag {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 150rpx;
+  height: 84rpx;
+}

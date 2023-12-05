@@ -1,0 +1,88 @@
+<van-popup
+  show="{{ show }}"
+  z-index="1002"
+  round
+  position="bottom"
+  bind:close="handleClose"
+  closeable
+  lock-scroll="{{true}}"
+>
+  <view class="w-full bg-white flex-col flex items-center py-20rpx">
+    <view class="flex justify-evenly w-686rpx mt-10rpx relative">
+      <view class="flex-col-center">
+        <text class="mx-24rpx mt-16rpx tab-title">{{title || deviceInfo.deviceName}}</text>
+      </view>
+      <!-- 设置、关闭按钮 -->
+      <view
+        wx:if="{{isShowSetting}}"
+        class="absolute left-20rpx top-16rpx"
+        bind:tap="toDetail"
+      >
+        <image
+          class="w-48 h-48"
+          src="/assets/img/home-manage/setting.png"
+        ></image>
+      </view>
+    </view>
+
+    <view class="w-686rpx">
+      <block wx:if="{{!isSceneSetting}}">
+        <view class="flex flex-row justify-center items-end mt-64rpx">
+          <text class="text-28rpx text-hex-fff leading-none">cm</text>
+          <text class="text-124rpx text-hex-495264 leading-none">{{deviceInfo.custom_height}}</text>
+          <text class="text-28rpx text-hex-515d75">cm</text>
+        </view>
+
+        <view class="text-center mt-30rpx">
+          <text class="text-24 text-hex-a2a2a2">一键晾衣高度</text>
+        </view>
+      </block>
+
+      <view class="flex flex-row justify-evenly rounded-32rpx bg-hex-f7f8f9 mt-30rpx py-24rpx">
+        <mz-icon-button
+          wx:for="{{btnList}}"
+          wx:key="key"
+          icon="{{item.icon}}"
+          iconActive="{{item.iconActive}}"
+          text="{{item.text}}"
+          data-key="{{item.key}}"
+          data-disabled="{{item.disabled}}"
+          isOn="{{item.on}}"
+          size="{{80}}"
+          round="{{20}}"
+          textColor="#a2a2a2"
+          bind:touchstart="handleBtnTap"
+        ></mz-icon-button>
+      </view>
+
+      <view class="flex flex-row justify-between mt-32rpx mb-64rpx">
+        <mz-round-button
+          wx:for="{{largeBtnList}}"
+          wx:key="key"
+          icon="{{item.icon}}"
+          iconActive="{{item.iconActive}}"
+          text="{{item.text}}"
+          data-key="{{item.key}}"
+          data-disabled="{{item.disabled}}"
+          isOn="{{item.on}}"
+          btnStyle="{{largeBtnStyle}}"
+          size="{{64}}"
+          textColor="#a2a2a2"
+          textWidth="{{item.textWidth || '50rpx'}}"
+          bind:touchstart="handleBtnTap"
+        ></mz-round-button>
+      </view>
+
+      <view wx:if="{{isShowConfirm}}">
+        <van-button
+          type="primary"
+          size="large"
+          bind:click="handleConfirm"
+          >确定</van-button
+        >
+      </view>
+    </view>
+  </view>
+</van-popup>
+
+<van-toast id="van-toast" />

@@ -1,0 +1,29 @@
+function touchstart(event, ownerInstance) {
+  console.log('touchstart in wxs', JSON.stringify(event.target.dataset))
+  var count = event.target.dataset.count
+
+  ownerInstance.setTimeout(function () {
+    var iTitle = ownerInstance.selectComponent('.foundTitle')
+    var iHolder = ownerInstance.selectComponent('.foundListHolder')
+    if (iTitle && count <= 1) {
+      iTitle.setStyle({
+        opacity: 0,
+        height: 0,
+        padding: 0,
+        transition: 'all 0.5s',
+      })
+    }
+    if (iHolder) {
+      iHolder.setStyle({
+        opacity: 0,
+        height: 0,
+        margin: 0,
+        transition: 'all 0.5s',
+      })
+    }
+  }, 1500) // 2000ms后直接移除
+}
+
+module.exports = {
+  touchstart: touchstart,
+}

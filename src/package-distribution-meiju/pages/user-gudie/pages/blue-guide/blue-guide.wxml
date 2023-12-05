@@ -1,0 +1,33 @@
+<view class="page">
+  <block wx:if="{{system=='iOS'}}">
+    <view class="item" wx:for="{{loactionTextList}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+      <view class="title">
+        <text class="num">{{'0'+(index+1)}}</text>
+        <text class="title-text">{{item.title}}</text>
+      </view>
+      <view class="guide">
+        <view class="step {{(index2%2)?'':'MR9'}}" wx:for="{{item.stepes}}" wx:key="index2" wx:for-index="index2" wx:for-item="stepItem">
+          <image class="guide-img" src="{{stepItem.img}}"></image>
+          <text class="img-text">{{stepItem.text}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="no-more">- 没有更多内容了-</view>
+  </block>
+
+  <block wx:if="{{system=='Android'}}">
+    <view class="item" wx:for="{{loactionTextList}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+      <view class="title">
+        <text class="num">{{'0'+(index+1)}}</text>
+        <text class="title-text">{{item.title}}</text>
+      </view>
+      <view class="guide">
+        <view class="step {{(index2%2)?'':'MR9'}}" wx:for="{{item.stepes}}" wx:key="index2" wx:for-index="index2" wx:for-item="stepItem">
+          <image class="guide-img" src="{{stepItem.img}}"></image>
+          <text class="img-text">{{stepItem.text}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="no-more">- 没有更多内容了-</view>
+  </block>
+</view>

@@ -1,0 +1,9 @@
+<view id="card" class="relative w-300rpx h-264rpx rounded-32rpx flex-col-center overflow-hidden bg-hex-fff card box-border border-2rpx border-hex-fff border-solid" catchtap="handleCardTap">
+  <!-- 设备图标 -->
+  <image src="{{deviceInfo.icon}}" class="w-96rpx h-96rpx"></image>
+
+  <!-- 标题 -->
+  <text class="text-32rpx text-hex-555659 font-medium mt-32rpx">{{deviceInfo.name}}</text>
+
+  <image wx:if="{{deviceInfo.tag}}" class="img-tag" src="/package-distribution/assets/tag/{{ deviceInfo.tag }}.png"></image>
+</view>

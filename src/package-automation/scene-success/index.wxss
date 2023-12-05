@@ -1,0 +1,5 @@
+/* package-automation/scene-success/index.wxss */
+.single-btn {
+  width: 686rpx !important;
+  height: 88rpx !important;
+}

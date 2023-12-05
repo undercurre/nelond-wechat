@@ -1,0 +1,4 @@
+/* pages/mine/index.wxss */
+.menu-item-button::after {
+  border: 0;
+}

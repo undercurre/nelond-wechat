@@ -1,0 +1,53 @@
+<view class="w-750rpx flex flex-col">
+  <view class="flex">
+    <text class="ml-48rpx text-black-59 font-normal text-28rpx">功能设置</text>
+  </view>
+  <view>
+    <van-cell-group inset>
+      <van-cell
+        wx:if="{{!deviceInfo.isScreenGateway && isManager}}"
+        title="更改Wi-Fi"
+        bind:click="toChangeWifi"
+        is-link
+      ></van-cell>
+
+      <van-cell
+        title="信道"
+        bind:click="toggleActionSheet"
+        is-link="{{!isRelease && isManager}}"
+        value="{{channelText}}"
+      ></van-cell>
+
+      <van-cell
+        wx:if="{{isManager}}"
+        title="网关日志"
+        border="{{false}}"
+        bind:click="uploadDeviceLog"
+      >
+        <text
+          slot="right-icon"
+          class="right-btn"
+          >日志上传</text
+        >
+      </van-cell>
+    </van-cell-group>
+  </view>
+</view>
+
+<van-popup
+  show="{{ isShowChannelList }}"
+  bind:close="toggleActionSheet"
+  round
+  position="bottom"
+>
+  <van-picker
+    class="mt-40rpx"
+    columns="{{ columns }}"
+    bind:cancel="toggleActionSheet"
+    bind:confirm="onSelectChannel"
+    show-toolbar
+    title="信道选择"
+  />
+</van-popup>
+
+<van-toast id="van-toast" />

@@ -1,0 +1,56 @@
+<view class="page-container flex flex-col">
+  <nav-bar
+    leftArrow="{{true}}"
+    bind:leftTap="goBack"
+    title="添加设备"
+  ></nav-bar>
+
+  <view class="grow flex flex-col pt-100rpx">
+    <block wx:if="{{status === 'linking'}}">
+      <tips-box
+        text="请将设备尽量靠近智能网关"
+        icon="{{productImgDir}}/subdevice.png"
+        size="160"
+      ></tips-box>
+
+      <mz-progress
+        show-progress="{{true}}"
+        active-index="{{activeIndex}}"
+      ></mz-progress>
+    </block>
+
+    <block wx:if="{{status === 'error'}}">
+      <tips-box
+        text="添加失败！"
+        icon="{{defaultImgDir}}/no-found.png"
+      ></tips-box>
+
+      <view class="grow px-88rpx pt-180rpx">
+        <view class="text-28 text-black-2a">
+          <text>请排查以下情况：</text>
+        </view>
+
+        <view class="py-30rpx text-26 text-hex-666 leading-46rpx">
+          <view>
+            <text>1、家庭网络是否正常</text>
+          </view>
+          <view>
+            <text>2、网关是否正常供电，且已连接家庭网络</text>
+          </view>
+          <view>
+            <text>3、子设备是否离网关过远，或被障碍物遮挡</text>
+          </view>
+        </view>
+      </view>
+
+      <van-button
+        class="mt-32rpx mx-32rpx"
+        block
+        type="primary"
+        size="large"
+        bind:click="finish"
+        >完成</van-button
+      >
+    </block>
+  </view>
+</view>

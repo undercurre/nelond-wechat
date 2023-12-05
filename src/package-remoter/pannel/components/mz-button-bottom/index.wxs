@@ -1,0 +1,56 @@
+var btn = require('../../../../commons/wxs/btn.wxs')
+
+var isPressed = false // 当前是否点击状态
+var timerId // 计时器
+
+function touchStart(event, ownerInstance) {
+  ownerInstance.callMethod('handleTouchStart', event)
+
+  var iWrapper = ownerInstance.selectComponent('.icon-wrapper')
+  var iIcon = ownerInstance.selectComponent('.icon')
+  var iIconActive = ownerInstance.selectComponent('.iconActive')
+
+  isPressed = true
+
+  btn.bgTransition(iWrapper)
+  if (iIconActive) {
+    btn.opacityTransition(iIcon, iIconActive)
+  }
+
+  timerId = ownerInstance.setTimeout(function () {
+    ownerInstance.clearTimeout(timerId)
+    timerId = null
+
+    // 如果超时仍未松手
+    if (isPressed) {
+      return
+    }
+
+    // 如果未被点击，则反转状态
+    btn.bgTransition(iWrapper, false)
+    if (iIconActive) {
+      btn.opacityTransition(iIcon, iIconActive, false)
+    }
+  }, btn._INTERVAL)
+}
+
+function touchEnd(event, ownerInstance) {
+  var iWrapper = ownerInstance.selectComponent('.icon-wrapper')
+  var iIcon = ownerInstance.selectComponent('.icon')
+  var iIconActive = ownerInstance.selectComponent('.iconActive')
+
+  isPressed = false
+
+  if (timerId) {
+    return
+  }
+  btn.bgTransition(iWrapper, false)
+  if (iIconActive) {
+    btn.opacityTransition(iIcon, iIconActive, false)
+  }
+}
+
+module.exports = {
+  touchStart: touchStart,
+  touchEnd: touchEnd,
+}

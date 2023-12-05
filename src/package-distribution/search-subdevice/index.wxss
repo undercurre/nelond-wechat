@@ -1,0 +1,10 @@
+.edit-btn {
+  background-image: linear-gradient(134deg, #468cfb 32%, #6ba3fc 93%);
+}
+
+.signal-box {
+  position: absolute;
+  bottom: -14rpx;
+  left: 50%;
+  transform: translateX(-50%);
+}

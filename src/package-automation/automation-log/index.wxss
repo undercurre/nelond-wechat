@@ -1,0 +1,11 @@
+/* package-mine/ota/index.wxss */
+.no-margin-top {
+  margin-top: 0rpx !important;
+}
+
+.cell-value {
+  font-size: 28rpx !important;
+  color: #555659 !important;
+  margin-right: 16rpx !important;
+  font-weight: 400 !important;
+}

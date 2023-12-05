@@ -1,0 +1,19 @@
+<view class="page-container flex flex-col">
+  <nav-bar background="transparent" leftArrow="{{true}}" bind:leftTap="goBack" title="语音控制"></nav-bar>
+
+  <view>
+    <van-cell-group inset>
+      <van-cell title="小度音箱" center data-url="{{urls.duerIntro}}" bind:click="goTo" use-label-slot="{{true}}">
+        <image slot="icon" class="w-96rpx h-96rpx mr-32rpx" src="/assets/img/mine/duer.png" />
+        <text slot="right-icon" class="text-label">操作步骤 ></text>
+      </van-cell>
+    </van-cell-group>
+
+    <van-cell-group inset>
+      <van-cell title="小爱音箱" center data-url="{{urls.miIntro}}" bind:click="goTo" use-label-slot="{{true}}">
+        <image slot="icon" class="w-100rpx h-100rpx mr-32rpx" src="/assets/img/mine/mi.png" />
+        <text slot="right-icon" class="text-label">操作步骤 ></text>
+      </van-cell>
+    </van-cell-group>
+  </view>
+</view>

@@ -1,0 +1,10 @@
+{
+  "component": true,
+  "styleIsolation": "apply-shared",
+  "usingComponents": {
+    "select-card-popup": "../../../../components/select-card-popup/index",
+    "mz-slider": "/components/mz-slider/index",
+    "curtain-slider": "/components/curtain-slider/index",
+    "tips-box": "/components/tips-box/index"
+  }
+}

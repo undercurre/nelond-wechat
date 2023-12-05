@@ -1,0 +1,20 @@
+<!--pages/protoShow/index.wxml-->
+<view class="fixed left-0 top-0 w-100vw h-100vh bg-hex-eef2f7" style="z-index: -1"></view>
+<!-- 标题 -->
+<nav-bar title="添加虚拟设备" left-arrow bind:leftTap="goBack"></nav-bar>
+<view class="h-24rpx"> </view>
+<van-cell-group>
+  <van-cell icon="/assets/img/mine/about.png" title="添加网关" is-link center bind:click="scanCode" />
+
+  <van-cell title="添加子设备" is-link center bind:click="addSubDevice" />
+
+  <van-cell title="打开美居Lite" is-link center bind:click="toMeiju" />
+</van-cell-group>
+
+<text class="block py-50rpx">添加的设备</text>
+
+<scroll-view class="mt-40rpx h-600">
+  <view class="flex flex-col">
+    <text wx:for="{{deviceList}}" wx:key="deviceId">{{item.name}}: {{item.deviceId}}</text>
+  </view>
+</scroll-view>

@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "mx-icon": "/miniprogram_npm/m-ui/mx-icon/index"
+  },
+  "component": true
+}

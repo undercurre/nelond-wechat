@@ -1,0 +1,21 @@
+<!-- <import src="/commons/templates/popup.wxml" />
+<view class="h-full flex flex-col">
+  <view class="w-750rpx flex mt-16rpx">
+    <text class="ml-48rpx text-black-59 font-normal text-28rpx">参数设置</text>
+  </view>
+  <view class="mt-24rpx w-750rpx" class="{{!deviceInfo.onLineStatus?'opacity-50':''}}">
+    <van-cell-group inset>
+      <van-cell is-link="{{deviceInfo.onLineStatus}}" bind:click="handleDurationPopupShow" data-title="渐变时长" title="渐亮时长" value="{{deviceInfo.onLineStatus ? pickerColumns[lightUpDefaultValue] : ''}}"></van-cell>
+    </van-cell-group>
+  </view>
+</view>
+
+<van-popup show="{{ showPopup }}" round position="bottom" bind:close="handleClose" safe-area-inset-bottom="{{false}}">
+  <view class="w-750rpx flex flex-col items-center">
+    <template is="title" data="{{title: title}}" />
+    <view class="mt-98rpx w-750rpx">
+      <van-picker columns="{{ pickerColumns }}" default-index="{{ value }}" bind:change="handlePickerChange" />
+    </view>
+    <template is="bottom-btn" />
+  </view>
+</van-popup> -->

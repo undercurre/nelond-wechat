@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "van-checkbox": "@vant/weapp/checkbox/index",
+    "tips-box": "/components/tips-box/index",
+    "mz-loading": "/components/mz-loading/index",
+    "mz-progress": "/components/mz-progress/index",
+    "edit-device-info": "./components/edit-device-info/index"
+  }
+}

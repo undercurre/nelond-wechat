@@ -1,0 +1,4 @@
+.tab-title {
+  color: #27282a;
+  font-weight: 600;
+}

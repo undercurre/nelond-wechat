@@ -1,0 +1,79 @@
+.tips-view {
+  background-color: rgba(255, 255, 255, 0.72);
+}
+
+.block {
+  display: block;
+  text-align: center;
+}
+
+.tip-box {
+  display: flex;
+  align-items: center;
+  margin-right: 8rpx;
+}
+.tip-icon {
+  width: 32rpx;
+  height: 32rpx;
+}
+
+.blue {
+  color: #488fff;
+}
+
+.title {
+  text-align: center;
+  font-size: 48rpx;
+  color: #000000;
+  letter-spacing: 0;
+  margin-top: 30rpx;
+  line-height: 48rpx;
+  font-weight: 500;
+}
+
+.scan-desc {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.link-flow {
+  width: 100%;
+  margin: 112rpx auto 48rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.device-img {
+  display: inline-block;
+  max-width: 196rpx;
+  max-height: 196rpx;
+  z-index: 100;
+}
+
+.progressBar {
+  margin: 68rpx auto 40rpx;
+  width: 284rpx;
+  height: 8rpx;
+  background: #e5e5e8;
+  border-radius: 26px;
+}
+
+.finish {
+  width: 10%;
+  height: 8rpx;
+  background: #488fff;
+  border-radius: 36px 0 0 36px;
+}
+
+.progress-list {
+  height: 150rpx;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

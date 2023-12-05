@@ -1,0 +1,21 @@
+<import src="/commons/templates/popup.wxml" />
+<van-popup show="{{ show }}" z-index="1002" round position="bottom" bind:close="handleClose" closeable catchtouchmove="blank">
+  <view class="w-750rpx h-1200rpx relative flex flex-col items-center">
+    <template is="title" data="{{title: '选择时间'}}" />
+
+    <scroll-view enhanced show-scrollbar="{{true}}" scroll-y="{{true}}" style="height: 990rpx">
+      <view class="h-18rpx"></view>
+      <time-picker-view value="{{timeValue}}" bind:change="timeChange"></time-picker-view>
+      <view class="mt-38rpx w-750rpx px-11rpx box-border py-1rpx">
+        <text class="ml-58rpx text-32rpx font-medium text-hex-27282a">重复设置</text>
+        <period-select week="{{week}}" radio="{{periodType}}" bind:periodChange="periodChange" bind:weekChange="weekChange"></period-select>
+      </view>
+    </scroll-view>
+
+    <view class="flex w-686rpx gap-x-46rpx">
+      <van-button class="flex-1" size="large" bind:click="handleCancel">上一步</van-button>
+
+      <van-button type="primary" class="flex-1" size="large" bind:click="handleConfirm">确定</van-button>
+    </view>
+  </view>
+</van-popup>

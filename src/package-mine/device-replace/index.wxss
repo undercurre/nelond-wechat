@@ -1,0 +1,4 @@
+/* package-mine/hoom-manage/index.wxss */
+.van-button--default .van-button__text {
+  color: #a2a2a2;
+}

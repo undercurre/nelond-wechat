@@ -1,0 +1,7 @@
+/* package-remoter/setting/index.wxss */
+.delete-btn {
+  width: 686rpx !important;
+  height: 88rpx !important;
+  background-image: linear-gradient(270deg, #f68aa9 13%, #ef6586 92%) !important;
+  border-radius: 24rpx !important;
+}

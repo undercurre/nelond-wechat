@@ -1,0 +1,8 @@
+{
+  "component": true,
+  "usingComponents": {
+    "tips-box": "/components/tips-box/index",
+    "edit-device-form": "/components/edit-device-form/index",
+    "mz-progress": "/components/mz-progress/index"
+  }
+}

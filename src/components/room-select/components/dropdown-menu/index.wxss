@@ -1,0 +1,13 @@
+/* pages/index/components/dropdown-menu/index.wxss */
+.bg {
+  background: rgba(0, 0, 0, 0.72);
+  box-shadow: 0px 8px 26px 0px rgba(0, 0, 0, 0.33);
+  opacity: 0;
+}
+.arrow {
+  border-bottom: 16rpx solid rgba(0, 0, 0, 0.72);
+  border-top: 16rpx solid transparent;
+  border-left: 16rpx solid transparent;
+  border-right: 16rpx solid transparent;
+  top: -32rpx;
+}

@@ -1,0 +1,61 @@
+<import src="/commons/templates/popup.wxml" />
+<view class="flex flex-col">
+  <view class="w-750rpx flex mt-16rpx">
+    <text class="ml-48rpx text-black-59 font-normal text-28rpx">按键设置</text>
+  </view>
+  <view class="w-750rpx">
+    <van-cell-group inset>
+      <van-cell
+        center
+        is-link="{{canEditDevice}}"
+        wx:for="{{switchList}}"
+        wx:key="switchId"
+        bind:click="handleSwitchClick"
+        data-index="{{index}}"
+        title="{{item.switchName}}"
+        border="{{switchList.length - 1 > index}}"
+      >
+        <view slot="icon">
+          <image
+            class="w-96rpx h-96rpx bg-hex-f6fafd mr-32rpx rounded-999"
+            src="{{item.pic}}"
+          />
+        </view>
+      </van-cell>
+    </van-cell-group>
+    <view class="h-8rpx"></view>
+  </view>
+</view>
+
+<van-toast id="van-toast" />
+<van-popup
+  show="{{ showPopup }}"
+  round
+  position="bottom"
+  bind:close="handleClose"
+  closeable
+  safe-area-inset-bottom="{{true}}"
+  root-portal="true"
+>
+  <view class="w-750rpx flex flex-col items-center">
+    <template
+      is="title"
+      data="{{title: '按键设置'}}"
+    />
+    <view class="mt-98rpx w-686rpx">
+      <text class="block pl-16rpx pb-32rpx text-28">按键名称</text>
+      <van-field
+        custom-style="padding: 32rpx 32rpx;background-color: #F6FAFD;border-radius: 24rpx;"
+        model:value="{{ switchName }}"
+        border="{{ false }}"
+        placeholder="请输入按键名称"
+        clearable
+      ></van-field>
+    </view>
+
+    <template
+      is="bottom-btn"
+      data="{{disabled:!switchName}}"
+    />
+  </view>
+</van-popup>

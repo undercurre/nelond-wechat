@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "van-picker": "@vant/weapp/picker/index",
+    "tips-box": "/components/tips-box/index"
+  }
+}

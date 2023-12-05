@@ -1,0 +1,73 @@
+/* addDevice//pages/afterCheckout/afterCheckout.wxss */
+.block {
+  display: block;
+  text-align: center;
+}
+
+.thick {
+  font-weight: 600;
+}
+
+.blue {
+  color: rgb(52, 106, 224);
+}
+
+.orange-display-txt {
+  color: #ff8225;
+  font-size: 32rpx;
+  font-weight: 600;
+}
+
+.title {
+  margin-top: 30rpx;
+  font-family: PingFangSC-Medium;
+  font-size: 48rpx;
+  color: #000000;
+  letter-spacing: 0;
+  text-align: center;
+  line-height: 48rpx;
+  font-weight: 500;
+}
+
+.guide-img-box {
+  position: relative;
+  width: 686rpx;
+  height: 384rpx;
+  margin: 40rpx auto;
+  background-color: #e5e5e8;
+}
+
+.device-img {
+  width: 196rpx;
+  height: 196rpx;
+  position: absolute;
+  top: 50%;
+  right: 100rpx;
+  transform: translateY(-50%);
+}
+
+.guide-img {
+  width: 686rpx;
+  height: 384rpx;
+  display: block;
+}
+
+.guide-desc {
+  margin: auto;
+  margin-top: 25rpx;
+  width: 91.5%;
+  font-size: 32rpx;
+}
+
+/* .desc-list {
+    margin-top: 44rpx;
+    padding:0rpx 4%;
+    align-items: center;
+} */
+
+.mode5-img {
+  width: 686rpx;
+  height: 384rpx;
+  display: block;
+  margin: 40rpx auto;
+}

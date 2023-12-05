@@ -1,0 +1,91 @@
+var isTouchRight = false
+var windowWidth = 375
+var curtainContainerInfo = null
+var leftCurtains = null
+var rightCurtains = null
+var value = 0
+var timer = null
+
+function onTouchstart(event, ownerInstance) {
+  var touch = event.touches[0] || event.changedTouches[0]
+  var clientX = touch.clientX
+  curtainContainerInfo = ownerInstance.selectComponent('.curtain-container').getBoundingClientRect()
+  leftCurtains = ownerInstance.selectAllComponents('.left-curtain')
+  rightCurtains = ownerInstance.selectAllComponents('.right-curtain')
+  if (touch.clientX > windowWidth / 2) {
+    isTouchRight = true
+  } else {
+    isTouchRight = false
+  }
+
+  var offsetX = Math.min(
+    Math.abs(windowWidth / 2 - clientX),
+    (curtainContainerInfo.width - curtainContainerInfo.width / 10) / 2,
+  )
+  changeCurtainStyle(offsetX)
+  ownerInstance.callMethod('touchstart', { value })
+}
+function onTouchmove(event, ownerInstance) {
+  var touch = event.touches[0] || event.changedTouches[0]
+  var clientX = touch.clientX
+
+  if (isTouchRight) {
+    //触控右边
+    changeCurtainStyle(
+      calcDragDis(clientX - windowWidth / 2, 0, (curtainContainerInfo.width - curtainContainerInfo.width / 10) / 2),
+    )
+  } else {
+    //触控左边
+    changeCurtainStyle(
+      calcDragDis(windowWidth / 2 - clientX, 0, (curtainContainerInfo.width - curtainContainerInfo.width / 10) / 2),
+    )
+  }
+  if (timer) return
+  timer = ownerInstance.setTimeout(function () {
+    ownerInstance.callMethod('valueChange', { value })
+    timer = null
+  }, 150)
+}
+
+function onTouchend(event, ownerInstance) {
+  if (timer) {
+    ownerInstance.clearTimeout(timer)
+    timer = null
+  }
+  ownerInstance.callMethod('handleEnd', { value })
+}
+
+function changeCurtainStyle(dragDis) {
+  leftCurtains.forEach(function (item, index) {
+    item.setStyle({
+      transform: 'translateX(-' + dragDis + 'px)',
+    })
+  })
+  rightCurtains.forEach(function (item, index) {
+    item.setStyle({
+      transform: 'translateX(' + dragDis + 'px)',
+    })
+  })
+  value = parseInt(((dragDis * 4) / (curtainContainerInfo.width - curtainContainerInfo.width / 10) / 2) * 100)
+}
+
+function calcDragDis(value, min, max) {
+  if (value >= min) {
+    if (value < max) {
+      return value
+    } else {
+      return max
+    }
+  } else {
+    return min
+  }
+}
+
+module.exports = {
+  onTouchstart: onTouchstart,
+  onTouchmove: onTouchmove,
+  onTouchend: onTouchend,
+  windowWidthObserver: function (newValue, oldValue, ownerInstance, instance) {
+    windowWidth = newValue
+  },
+}

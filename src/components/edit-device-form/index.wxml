@@ -1,0 +1,107 @@
+<view
+  class="form-box"
+  style="{{customStyle}}"
+>
+  <text class="label">设备名称</text>
+
+  <van-field
+    value="{{ deviceInfo.deviceName }}"
+    placeholder="请输入设备名称"
+    custom-style="padding: 32rpx 32rpx;border-radius: 24rpx;background-color: #F6FAFD;"
+    clearable="{{true}}"
+    bind:clear="changeDeviceName"
+    bind:blur="changeDeviceName"
+    border="{{false}}"
+  >
+  </van-field>
+
+  <block wx:if="{{deviceInfo.switchList.length > 1}}">
+    <text class="label">按键名称</text>
+
+    <view class="grid grid-flow-col gap-18rpx {{deviceInfo.switchList.length !== 3 ? 'grid-cols-2' : 'grid-cols-3'}} {{deviceInfo.switchList.length === 4 && 'grid-rows-2'}}">
+      <view
+        wx:for="{{deviceInfo.switchList}}"
+        wx:key="switchId"
+        class="p-24rpx rounded-32rpx bg-hex-F6FAFD flex flex-col items-center"
+        bind:tap="editSwitchName"
+        data-index="{{index}}"
+      >
+        <text class="pb-44rpx text-28 text-black-2a leading-40rpx single-text w-max-150rpx">{{item.switchName}}</text>
+        <image
+          class="w-24 h-28"
+          src="/assets/img/base/edit-blue.png"
+        ></image>
+      </view>
+    </view>
+  </block>
+
+  <text class="label">选择房间</text>
+
+  <view class="flex flex-row flex-wrap gap-32rpx">
+    <text
+      wx:for="{{roomList}}"
+      wx:key="roomId"
+      class="px-32rpx rounded-28rpx text-28 leading-56rpx {{ item.roomId === deviceInfo.roomId ? 'room-checked text-white' : 'bg-hex-DFE1E5 text-black-59'}}"
+      bind:tap="selectRoom"
+      data-index="{{index}}"
+      >{{ item.roomName }}</text
+    >
+
+    <view
+      class="px-46rpx bg-hex-DFE1E5 rounded-28rpx text-28 leading-56rpx text-black-59"
+      bind:tap="addRoom"
+    >
+      <svg-icon
+        name="icon-park-outline:plus"
+        color="#555659"
+        height="56rpx"
+      ></svg-icon>
+    </view>
+  </view>
+</view>
+
+<add-room
+  show="{{ isAddRoom }}"
+  bind:close="closeAddRoom"
+></add-room>
+
+<import src="/commons/templates/popup.wxml" />
+<van-popup
+  show="{{ isShowEditSwitch }}"
+  z-index="200"
+  position="bottom"
+  round
+  bind:close="handleClose"
+  lock-scroll="{{true}}"
+  closeable
+  catchtouchmove="true"
+  safe-area-inset-bottom="{{false}}"
+>
+  <view class="px-32rpx text-black-2a relative">
+    <view class="flex-center pb-64rpx">
+      <template
+        is="title"
+        data="{{title: '按键名称'}}"
+      />
+    </view>
+
+    <text class="block pl-16rpx pb-32rpx text-28">按键名称</text>
+
+    <van-field
+      custom-style="padding: 32rpx 32rpx;background-color: #F6FAFD;border-radius: 24rpx;"
+      value="{{ switchInfo.switchName }}"
+      placeholder="请输入按键名称"
+      clearable="{{true}}"
+      bind:clear="changeSwitchName"
+      bind:blur="changeSwitchName"
+      border="{{false}}"
+    ></van-field>
+
+    <template
+      is="bottom-btn"
+      data="{{disabled: !switchInfo.switchName}}"
+    />
+  </view>
+</van-popup>
+
+<van-toast id="van-toast" />

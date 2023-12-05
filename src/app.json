@@ -1,0 +1,162 @@
+{
+  "pages": ["pages/start/index", "pages/index/index", "pages/login/index", "pages/mine/index", "pages/remoter/index"],
+  "subpackages": [
+    {
+      "root": "package-distribution",
+      "pages": [
+        "scan/index",
+        "link-gateway/index",
+        "wifi-connect/index",
+        "add-subdevice/index",
+        "search-subdevice/index",
+        "bind-home/index",
+        "change-wifi-success/index",
+        "choose-device/index",
+        "choose-sensor/index",
+        "choose-light/index",
+        "connect-guide/index"
+      ]
+    },
+    {
+      "root": "package-mine",
+      "pages": [
+        "home-manage/index",
+        "home-transfer/index",
+        "room-manage/index",
+        "room-detail/index",
+        "member-manage/index",
+        "device-replace/index",
+        "ota/index",
+        "setting/index",
+        "device-manage/index",
+        "device-manage/device-detail/index",
+        "device-manage/group-detail/index",
+        "voice-control/index",
+        "guideline/index",
+        "device-category/index",
+        "help/list/index",
+        "help/show/index",
+        "help/webview/index"
+      ]
+    },
+    {
+      "root": "package-room-control",
+      "pages": ["index/index", "scene-edit/index", "scene-request-list/index", "scene-list/index", "group/index"]
+    },
+    {
+      "root": "package-protocol",
+      "pages": ["protocol-show/index", "protocol-list/index", "add-virtual-device/index"]
+    },
+    {
+      "root": "package-auth",
+      "pages": [
+        "pages/auth-screen/index",
+        "pages/index/index",
+        "pages/meiju/index",
+        "pages/home-list/index",
+        "pages/confirm-auth/index",
+        "pages/device-list/index"
+      ]
+    },
+    {
+      "root": "package-automation",
+      "pages": [
+        "automation/index",
+        "automation-log/index",
+        "automation-add/index",
+        "automation-edit-yijian/index",
+        "scene-request-list-yijian/index",
+        "scene-success/index"
+      ]
+    },
+    {
+      "root": "package-remoter",
+      "pages": ["pannel/index", "setting/index"]
+    },
+    {
+      "root": "package-distribution-meiju",
+      "pages": [
+        "pages/check-auth/index",
+        "pages/inputWifiInfo/inputWifiInfo",
+        "pages/addGuide/addGuide",
+        "pages/location-guide/location-guide",
+        "pages/addDevice/pages/localNetGuide/localNetGuide",
+        "pages/addFail/addFail",
+        "pages/linkDevice/linkDevice",
+        "pages/linkNetFail/linkNetFail",
+        "pages/webView/webView",
+        "pages/linkAp/linkAp"
+      ]
+    }
+  ],
+  "preloadRule": {
+    "pages/index/index": {
+      "network": "all",
+      "packages": ["package-room-control", "package-distribution", "package-mine", "package-automation"]
+    },
+    "package-distribution/choose-device/index": {
+      "network": "all",
+      "packages": ["package-distribution-meiju", "package-auth"]
+    }
+  },
+  "tabBar": {
+    "custom": true,
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/remoter/index",
+        "text": "遥控器"
+      },
+      {
+        "pagePath": "pages/mine/index",
+        "text": "我的"
+      }
+    ]
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "usingComponents": {
+    "van-button": "@vant/weapp/button/index",
+    "van-overlay": "@vant/weapp/overlay/index",
+    "van-cell": "@vant/weapp/cell/index",
+    "van-slider": "@vant/weapp/slider/index",
+    "van-popup": "@vant/weapp/popup/index",
+    "van-cell-group": "@vant/weapp/cell-group/index",
+    "van-dialog": "@vant/weapp/dialog/index",
+    "van-toast": "@vant/weapp/toast/index",
+    "nav-bar": "./components/custom-nav-bar/index",
+    "home-select-menu": "./components/home-select-menu/index",
+    "add-room": "./components/add-room/index",
+    "svg-icon": "./components/svg-icon/index",
+    "van-field": "@vant/weapp/field/index",
+    "device-card": "./components/device-card/index"
+  },
+  "window": {
+    "navigationStyle": "custom",
+    "backgroundTextStyle": "light",
+    "backgroundColor": "#eef2f7",
+    "navigationBarTextStyle": "black"
+  },
+  "sitemapLocation": "sitemap.json",
+  "networkTimeout": {
+    "request": 15000,
+    "downloadFile": 10000
+  },
+  "debug": true,
+  "permission": {
+    "scope.userLocation": {
+      "desc": "本应用访问位置信息，用于发现附近设备及WLAN列表等功能"
+    },
+    "scope.userFuzzyLocation": {
+      "desc": "本应用访问位置信息，用于获取天气信息提示等功能"
+    }
+  },
+  "requiredPrivateInfos": ["getFuzzyLocation"],
+  "rendererOptions": {
+    "skyline": {
+      "defaultDisplayBlock": true
+    }
+  }
+}

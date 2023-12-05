@@ -1,0 +1,8 @@
+.popup-control-btn {
+  width: 320rpx !important;
+  height: 88rpx !important;
+}
+
+.text-tip-scene {
+  color: rgba(55, 60, 223, 0.8);
+}

@@ -1,0 +1,94 @@
+var btn = require('../../commons/wxs/btn.wxs')
+
+var isPressed = {} // 当前是否点击状态
+var timerId = {} // 计时器
+var isOn = {}
+
+// 处理属性初始化，以及变更
+function propObserver(newValue, oldValue, ownerInstance) {
+  if (newValue === oldValue) {
+    return
+  }
+  var key = ownerInstance.getDataset().key
+  isOn[key] = newValue
+  console.log(key, 'propObserver: isOn', newValue)
+
+  var iWrapper = ownerInstance.selectComponent('.icon-wrapper')
+  var iIcon = ownerInstance.selectComponent('.icon')
+  var iIconActive = ownerInstance.selectComponent('.iconActive')
+
+  btn.bgTransition(iWrapper, newValue)
+  if (iIconActive) {
+    btn.opacityTransition(iIcon, iIconActive, newValue)
+  }
+}
+
+function touchStart(event, ownerInstance) {
+  var key = ownerInstance.getDataset().key
+  var rebound = ownerInstance.getDataset().rebound
+  var disabled = ownerInstance.getDataset().disabled
+  if (disabled) {
+    return
+  }
+  ownerInstance.callMethod('handleTouchStart', event)
+
+  var iWrapper = ownerInstance.selectComponent('.icon-wrapper')
+  var iIcon = ownerInstance.selectComponent('.icon')
+  var iIconActive = ownerInstance.selectComponent('.iconActive')
+
+  isPressed[key] = true
+
+  btn.bgTransition(iWrapper, !isOn[key])
+  if (iIconActive) {
+    btn.opacityTransition(iIcon, iIconActive, !isOn[key])
+  }
+
+  if (!rebound) {
+    return
+  }
+
+  timerId[key] = ownerInstance.setTimeout(function () {
+    timerId[key] = null
+
+    // 如果超时仍未松手
+    if (isPressed[key]) {
+      return
+    }
+
+    // 如果未被点击，则反转状态
+    btn.bgTransition(iWrapper, isOn[key])
+    if (iIconActive) {
+      btn.opacityTransition(iIcon, iIconActive, isOn[key])
+    }
+  }, btn._INTERVAL)
+}
+
+function touchEnd(event, ownerInstance) {
+  var disabled = ownerInstance.getDataset().disabled
+  if (disabled) {
+    return
+  }
+  var key = ownerInstance.getDataset().key
+  var rebound = ownerInstance.getDataset().rebound
+
+  var iWrapper = ownerInstance.selectComponent('.icon-wrapper')
+  var iIcon = ownerInstance.selectComponent('.icon')
+  var iIconActive = ownerInstance.selectComponent('.iconActive')
+
+  isPressed[key] = false
+
+  if (timerId[key] || !rebound) {
+    return
+  }
+
+  btn.bgTransition(iWrapper, isOn[key])
+  if (iIconActive) {
+    btn.opacityTransition(iIcon, iIconActive, isOn[key])
+  }
+}
+
+module.exports = {
+  touchStart: touchStart,
+  touchEnd: touchEnd,
+  propObserver: propObserver,
+}

@@ -1,0 +1,17 @@
+<view class="fixed left-0 top-0 w-100vw h-100vh bg-hex-eef2f7" style="z-index: -1"></view>
+<!-- 遮住顶部 -->
+<view style="height: {{navigationBarAndStatusBarHeight}};" class="fixed left-0 top-0 z-110 overflow-hidden w-750rpx">
+  <view class="w-100vw h-100vh absolute left-0 top-0 bg-hex-eef2f7 z-111"></view>
+</view>
+<nav-bar title="{{title}}" z-index="{{113}}" left-arrow show-go-home bind:leftTap="goBack"></nav-bar>
+<view class="h-24rpx"> </view>
+
+<!-- 遥控器用户指引 -->
+<view class="w-750rpx flex-center">
+  <scroll-view scroll-x scroll-y style="width: 100vw; height: calc(100vh - navigationBarAndStatusBarHeight)">
+    <view style="width: calc(100vw - 96rpx); margin-left: 48rpx">
+      <rich-text wx:if="{{type === 'doc'}}" nodes="{{doc}}"></rich-text>
+    </view>
+    <image bindtap="handleImgTap" show-menu-by-longpress v-elif="{{type === 'img'}}" src="{{url}}" style="width: {{width}};height: {{height}};" />
+  </scroll-view>
+</view>

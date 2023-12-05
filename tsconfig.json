@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "module": "CommonJS",
+    "target": "ES2021",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "alwaysStrict": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
+    "strictPropertyInitialization": true,
+    "skipLibCheck": true,
+    "lib": ["ES2020"],
+    "types": ["miniprogram-api-typings", "crypto-js"],
+    "typeRoots": ["./typings"],
+    "paths": {
+      "@vant/weapp/*": ["./node_modules/@vant/weapp/dist/*"]
+    }
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules", "miniprogram_npm", "unocss.config.ts", "./src/lib/*.js"]
+}

@@ -1,0 +1,188 @@
+<view class="page-container flex flex-col">
+  <nav-bar
+    leftArrow="{{true}}"
+    bind:leftTap="goBack"
+    title="{{pageTitle}}"
+  ></nav-bar>
+
+  <view class="grow flex flex-col justify-between">
+    <!--    由于当前页面流程一般处于连接网关热点状态，不能使用网络图片-->
+    <tips-box
+      icon="/package-distribution/assets/wifi-connect/link-wifi.png"
+      text="仅支持2.4GHZ的Wi-Fi"
+    ></tips-box>
+
+    <view class="grow px-48rpx pt-100rpx">
+      <van-field
+        value="{{ wifiInfo.SSID }}"
+        placeholder="请选择Wi-Fi"
+        custom-style="margin-bottom: 32rpx;margin-top: 40rpx;padding: 32rpx 32rpx;border-radius: 24rpx;"
+        clearable="{{true}}"
+        bind:blur="changeWifiName"
+        border="{{false}}"
+      >
+        <van-button
+          slot="button"
+          type="primary"
+          size="mini"
+          custom-style="font-size: 28rpx"
+          plain
+          bind:click="toggleWifi"
+          loading="{{isRequestSystemWifiList}}"
+          disabled="{{isRequestSystemWifiList}}"
+        >
+          切换Wi-Fi
+        </van-button>
+      </van-field>
+
+      <van-field
+        value="{{ wifiInfo.pw }}"
+        placeholder="请输入Wi-Fi密码"
+        password="{{!isShowPw}}"
+        custom-style="padding: 24rpx 32rpx;border-radius: 24rpx;"
+        bind:blur="changePw"
+        use-button-slot
+        border="{{false}}"
+      >
+        <van-button
+          slot="button"
+          bind:click="togglePw"
+          custom-style="border: 0;"
+          type="default"
+          plain
+        >
+          <svg-icon
+            name="icon-park-outline:preview-{{!isShowPw ? 'close-one' : 'open'}}"
+            color="#555659"
+            height="56rpx"
+          ></svg-icon>
+        </van-button>
+      </van-field>
+    </view>
+
+    <view class="flex flex-col">
+      <van-button
+        class="mx-32rpx"
+        block
+        type="primary"
+        size="large"
+        bind:click="next"
+        disabled="{{!wifiInfo.SSID || !wifiInfo.pw}}"
+        >下一步</van-button
+      >
+    </view>
+  </view>
+</view>
+
+<van-popup
+  show="{{ isShowWifiList }}"
+  bind:close="toggleWifiListPopup"
+  position="bottom"
+  round
+  safe-area-inset-bottom
+>
+  <view class="flex flex-col items-stretch">
+    <text class="block py-40rpx leading-50rpx text-center text-36 opacity-90 text-black-2a font-medium">请选择无线网络</text>
+
+    <scroll-view
+      class="h-500"
+      scroll-y
+    >
+      <view class="pt-20rpx px-32rpx">
+        <view
+          wx:for="{{wifiList}}"
+          wx:key="SSID"
+          class="flex flex-row items-center border-bottom py-32rpx pr-40rpx"
+          data-index="{{index}}"
+          bind:tap="selectWifi"
+        >
+          <view class="w-32 h-32">
+            <image
+              wx:if="{{selectWifi.SSID === item.SSID}}"
+              class="w-32 h-32"
+              src="/package-distribution/assets/wifi-connect/checked.png"
+            ></image>
+          </view>
+          <text class="grow px-32rpx leading-40rpx text-28 text-black-2a font-medium">{{ item.SSID }}</text>
+
+          <view class="flex flex-row">
+            <image
+              wx:if="{{!item.pw}}"
+              class="w-20 h-24 mr-32rpx"
+              src="/package-distribution/assets/wifi-connect/lock.png"
+            ></image>
+
+            <image
+              wx:if="{{item.signalStrength >= 80}}"
+              class="w-30 h-22"
+              src="/package-distribution/assets/wifi-connect/wifi-signal-full.png"
+            ></image>
+            <image
+              wx:if="{{item.signalStrength >= 40 && item.signalStrength < 80}}"
+              class="w-30 h-22"
+              src="/package-distribution/assets/wifi-connect/wifi-signal-full.png"
+            ></image>
+            <image
+              wx:if="{{item.signalStrength < 40}}"
+              class="w-30 h-22"
+              src="/package-distribution/assets/wifi-connect/wifi-signal-full.png"
+            ></image>
+          </view>
+        </view>
+      </view>
+
+      <van-button
+        wx:if="{{systemWifiList.length === 0}}"
+        class="mt-40rpx"
+        type="primary"
+        plain
+        block
+        bind:click="getWifiList"
+        loading="{{isRequestSystemWifiList}}"
+        disabled="{{isRequestSystemWifiList}}"
+        >加载更多</van-button
+      >
+    </scroll-view>
+
+    <view class="flex flex-row gap-46rpx pb-40rpx pt-80rpx px-24rpx">
+      <van-button
+        class="grow"
+        size="large"
+        bind:click="toggleWifiListPopup"
+        >取消</van-button
+      >
+
+      <van-button
+        class="grow"
+        size="large"
+        type="primary"
+        bind:click="confirmWifi"
+        >确定</van-button
+      >
+    </view>
+  </view>
+</van-popup>
+
+<van-dialog
+  use-slot
+  show="{{ isShowWifiTips }}"
+  show-cancel-button
+  bind:close="toggleWifiTips"
+  confirm-button-color="#488FFF"
+  confirm-button-text="立即前往"
+  bind:confirm="getWifiList"
+  width="654rpx"
+>
+  <view class="flex flex-col items-center">
+    <view class="px-40rpx pt-40rpx pb-16rpx">
+      <image
+        class="w-564 h-364"
+        src="/package-distribution/assets/wifi-connect/wifi-tips.png"
+      />
+    </view>
+
+    <text class="px-26rpx pb-30rpx text-28 leading-48rpx text-hex-666 text-center">为获取您的家庭WIFI列表，请进入手机系统的无线局域网页面，再返回本页面</text>
+  </view>
+</van-dialog>
+
+<van-dialog id="van-dialog" />

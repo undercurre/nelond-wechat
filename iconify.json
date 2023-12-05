@@ -1,0 +1,18 @@
+{
+  "discript": "这里定义需要生成的svg名字,名称查看：https://icones.js.org/",
+  "iconList": [
+    "ion:close-circled",
+    "icon-park:close",
+    "icon-park:check",
+    "icon-park:left",
+    "icon-park:right",
+    "icon-park:down",
+    "icon-park:power",
+    "icon-park-outline:plus",
+    "icon-park-outline:preview-open",
+    "icon-park-outline:preview-close-one",
+    "icon-park-solid:check-one",
+    "material-symbols:arrow-drop-down-rounded",
+    "material-symbols:arrow-drop-up-rounded"
+  ]
+}

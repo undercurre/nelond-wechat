@@ -1,0 +1,188 @@
+<view class="relative bg-hex-000">
+  <!-- 相机没初始化好的情况下，该组件渲染跟随页面显示状态，便于授权成功后重新渲染相机组件，无需重进页面 -->
+  <camera
+    wx:if="{{isShowPage}}"
+    mode="scanCode"
+    device-position="back"
+    flash="{{isFlash? 'on' : 'off'}}"
+    bind:scancode="getQrCodeInfo"
+    bind:error="getCameraError"
+    bind:initdone="initCameraDone"
+    class="w-750rpx h-screen"
+  ></camera>
+
+  <nav-bar
+    class="absolute"
+    background="transparent"
+    leftArrow="{{true}}"
+    left-icon="/package-distribution/assets/scan/back.png"
+    bind:leftTap="goBack"
+  ></nav-bar>
+
+  <view class="fixed left-0 right-0 top-0 bottom-0 flex flex-col">
+    <view class="grow shrink h-200 camera-mask flex flex-col justify-end items-center">
+      <text class="leading-44rpx text-32 text-hex-F4F8FF pb-20rpx">扫描{{scanType === 'screen' ? '智慧屏' : '机身或说明书'}}上的二维码</text>
+    </view>
+
+    <view class="grow-0 flex flex-row items-stretch leading-0">
+      <view class="camera-mask grow"></view>
+      <view class="relative">
+        <image
+          class="w-586 h-585 opacity-65"
+          src="/package-distribution/assets/scan/scan-area.png"
+        ></image>
+        <image
+          src="/package-distribution/assets/scan/scan-line.png"
+          class="scan-line {{ isScan && 'pause'}}"
+        ></image>
+      </view>
+      <view class="camera-mask grow"></view>
+    </view>
+
+    <view class="pt-80rpx h-300 grow shrink camera-mask flex flex-col items-center justify-between">
+      <view
+        wx:if="{{isShowTips}}"
+        class="inline-block flex flex-row items-center bg-hex-5A5A5A rounded-32rpx leading-74rpx px-28rpx w-min-380"
+      >
+        <image
+          wx:if="{{scanType === 'subdevice' && discovering}}"
+          class="w-28 h-28 rotate"
+          src="/package-distribution/assets/scan/scaning.png"
+        ></image>
+
+        <text
+          class="grow text-hex-F4F8FF px-16rpx"
+          bind:tap="checkSystemBleSwitch"
+          >{{tipsText}}</text
+        >
+
+        <van-button
+          class="ml-24rpx"
+          type="primary"
+          size="small"
+          bind:click="addNearSubdevice"
+          wx:if="{{scanType === 'subdevice' && discovering && bleDeviceList.length}}"
+          custom-style="height: 52rpx;margin-top: -8rpx;"
+          >立即添加</van-button
+        >
+
+        <van-button
+          class="ml-24rpx"
+          type="primary"
+          size="small"
+          bind:click="addGatewayManually"
+          wx:if="{{scanType === 'gateway'}}"
+          custom-style="height: 52rpx;margin-top: -8rpx;"
+          >立即添加</van-button
+        >
+      </view>
+
+      <view></view>
+
+      <view class="box-border w-full pb-80rpx px-120rpx flex flex-row items-center justify-between text-28 text-hex-F4F8FF leading-40rpx">
+        <view
+          class="flex flex-col items-center"
+          bind:tap="chooseAlbum"
+        >
+          <image
+            class="w-96 h-96 mb-28rpx"
+            src="/package-distribution/assets/scan/album.png"
+          ></image>
+
+          <text>相册</text>
+        </view>
+
+        <view
+          class="flex flex-col items-center"
+          bind:tap="toggleFlash"
+        >
+          <image
+            class="w-96 h-96 mb-28rpx"
+            src="/package-distribution/assets/scan/light-{{ isFlash ? 'on' : 'off'}}.png"
+          ></image>
+
+          <text>轻触{{ isFlash ? '关闭' : '照亮'}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<van-popup
+  show="{{ isShowGatewayList }}"
+  bind:close="onCloseGwList"
+  position="bottom"
+  round
+  closeable
+>
+  <view class="flex flex-col items-stretch">
+    <text class="block pt-40rpx pb-16rpx leading-46rpx text-center text-36 opacity-90 text-black-2a font-medium">选择智能网关</text>
+
+    <text class="block text-center leading-36rpx text-26 text-black-tips">选择子设备要关联的智能网关</text>
+
+    <view class="pt-48rpx px-48rpx">
+      <view
+        wx:for="{{gatewayList}}"
+        wx:key="deviceId"
+        class="flex flex-row items-center py-24rpx {{gatewayList.length -1 > index && 'border-bottom'}} {{item.onLineStatus === 0 && 'opacity-50'}}"
+        data-index="{{index}}"
+        bind:tap="selectGateway"
+      >
+        <view class="box-border rounded-full bg-hex-F6F6F8 mr-48rpx w-92 h-92 flex items-center justify-center">
+          <image
+            class="w-72 h-72"
+            src="{{item.pic}}"
+          ></image>
+        </view>
+
+        <view class="grow">
+          <text class="block leading-44rpx text-32 text-black-2a font-medium">{{ item.deviceName }} | {{ item.roomName }}</text>
+
+          <text class="block leading-36rpx text-26 text-black-tips pt-8rpx">{{ item.onLineStatus === 1 ? '在线' : '离线' }}</text>
+        </view>
+
+        <image
+          class="w-32 h-32"
+          src="{{ item.deviceId === selectGateway.deviceId ? '/assets/img/base/check.png' : '/assets/img/base/uncheck.png' }}"
+        />
+      </view>
+    </view>
+
+    <view class="h-96"></view>
+
+    <view class="flex flex-row gap-46rpx px-24rpx">
+      <van-button
+        class="grow"
+        size="large"
+        bind:click="onCloseGwList"
+        >取消</van-button
+      >
+
+      <van-button
+        class="grow"
+        size="large"
+        type="primary"
+        bind:click="confirmGateway"
+        disabled="{{!selectGateway.deviceId}}"
+        >确定</van-button
+      >
+    </view>
+
+    <view class="h-96"></view>
+  </view>
+</van-popup>
+
+<van-dialog
+  id="van-dialog"
+  use-slot="{{isShowNoGatewayTips}}"
+  confirm-button-color="#488FFF"
+>
+  <view class="flex flex-col items-center px-40rpx py-48rpx leading-48rpx">
+    <text class="w-full block text-28 text-hex-666 pb-24rpx">添加此类网关子设备前，请先在家庭中添加智能网关或智慧屏，支持的型号有：</text>
+
+    <text class="block w-full text-32 text-black-2a">1、智能网关MSGW-15</text>
+    <text class="block w-full text-32 text-black-2a">2、智慧屏D3ZZKP-Z</text>
+  </view>
+</van-dialog>
+
+<van-toast id="van-toast" />

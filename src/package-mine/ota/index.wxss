@@ -1,0 +1,4 @@
+/* package-mine/ota/index.wxss */
+.no-margin-top {
+  margin-top: 0rpx !important;
+}

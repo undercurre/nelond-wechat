@@ -1,0 +1,19 @@
+.select-card {
+  background: #ffffff;
+  border: 3px solid rgba(72, 143, 255, 1);
+  box-shadow: 0px 4px 24px 0px rgba(97, 109, 136, 0.15);
+}
+
+.unselect-card {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.slider {
+  background: #ffffff;
+  box-shadow: 0px 2px 12px 0px rgba(97, 109, 136, 0.15);
+  border-radius: 32rpx;
+  width: 686rpx;
+  height: 96rpx;
+  position: absolute;
+  left: 0;
+}

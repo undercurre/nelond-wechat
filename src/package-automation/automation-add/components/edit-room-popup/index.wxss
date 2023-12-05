@@ -1,0 +1,5 @@
+/* package-mine/device-manage/components/edit-room-popup/index.wxss */
+.bg-select {
+  border-color: #507fff;
+  border-style: solid;
+}

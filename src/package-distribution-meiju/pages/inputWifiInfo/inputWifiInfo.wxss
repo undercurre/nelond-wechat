@@ -1,0 +1,198 @@
+/* addDevice//pages/inputWifiInfo/inputWifiInfo.wxss */
+.container {
+  /* text-align: center; */
+  padding-top: 80rpx;
+}
+
+.warn {
+  display: inline-block;
+  width: 30rpx;
+  height: 30rpx;
+  vertical-align: top;
+}
+
+.tips {
+  width: 685rpx;
+  display: flex;
+  align-items: top;
+  margin: 30rpx auto;
+  padding-left: 30rpx;
+}
+
+.tip-text {
+  text-align: left;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #ff8225;
+  vertical-align: top;
+  margin-left: 10rpx;
+}
+
+.check-guide {
+  padding-bottom: 300rpx;
+  box-sizing: border-box;
+}
+
+.input-wifi {
+  text-align: center;
+}
+
+.blue-after-wifi {
+  font-size: 23px;
+  font-weight: 600;
+  color: #262628;
+  line-height: 32px;
+  margin-top: 30px;
+}
+
+.switch-wifi-btn {
+  margin-top: 30rpx;
+}
+
+.skip {
+  margin-top: 46rpx;
+}
+
+.skip-text {
+  font-size: 32rpx;
+  color: #488fff;
+  text-align: center;
+  line-height: 32rpx;
+  font-weight: 500;
+}
+
+.switch-wifi {
+  z-index: 100;
+  font-size: 14px;
+  color: #488fff;
+  line-height: 24px;
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+}
+
+.show-psw {
+  z-index: 100;
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+}
+
+.block {
+  display: block;
+  text-align: center;
+}
+
+.thick {
+  font-size: 36rpx;
+  font-weight: 600;
+}
+
+.blue {
+  color: rgb(52, 106, 224);
+}
+
+.guide-desc {
+  margin: auto;
+  width: 91.5%;
+  font-size: 32rpx;
+}
+
+.guide-title {
+  display: flex;
+  line-height: 60rpx;
+  flex-wrap: wrap;
+}
+
+.num {
+  width: 36rpx;
+  height: 36rpx;
+  line-height: 36rpx;
+  text-align: center;
+  margin-top: 12rpx;
+  margin-right: 16rpx;
+  border-radius: 50%;
+  color: #458bff;
+  background: #e9f1ff;
+  font-size: 24rpx;
+}
+
+.porint {
+  display: inline-block;
+  height: 10rpx;
+  width: 10rpx;
+  border-radius: 50%;
+  background-color: #8a8a8f;
+}
+
+.desc {
+  margin: 16rpx 0rpx;
+}
+
+.desc-item {
+  width: 86%;
+  margin: auto;
+  display: flex;
+  align-items: center;
+}
+
+.desc-item-text {
+  font-size: 12px;
+  color: #8a8a8f;
+  letter-spacing: 0;
+  line-height: 18px;
+  font-weight: 400;
+  margin-left: 20rpx;
+}
+
+.text {
+  width: 80%;
+  font-size: 32rpx;
+  font-weight: 500;
+}
+
+.msmart-skip {
+  width: 686rpx;
+  height: 92rpx;
+  margin: 24rpx auto 0rpx;
+  color: #488fff;
+  line-height: 92rpx;
+  border: 1rpx solid #488fff;
+  border-radius: 46rpx;
+  text-align: center;
+}
+
+.locationOpenNotice {
+  padding: 0rpx 40rpx;
+  margin-bottom: 40rpx;
+}
+
+.bluetoothOpenNotice {
+  padding: 0rpx 40rpx;
+  margin-bottom: 40rpx;
+}
+
+.spaceTips {
+  width: 685rpx;
+  height: 32rpx;
+  display: flex;
+  align-items: top;
+  margin: 30rpx auto 80rpx;
+  padding-left: 30rpx;
+}
+
+.noSpace {
+  margin-bottom: 80rpx;
+}
+
+.dialog-content {
+  padding-bottom: 40rpx;
+}
+
+.slot-style {
+  padding: 10rpx;
+}

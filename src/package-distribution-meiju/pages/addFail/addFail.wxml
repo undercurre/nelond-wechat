@@ -1,0 +1,62 @@
+<view class="page">
+  <nav-bar
+    leftArrow
+    bind:leftTap="goBack"
+  ></nav-bar>
+
+  <view
+    class="scan-desc"
+    style="padding-top:{{statusBarHeight+40}}px"
+  >
+    <view class="link-flow">
+      <image
+        src="{{imgBaseUrl+imges.meiPhone}}"
+        class="phone-img"
+      ></image>
+      <image
+        src="{{imgBaseUrl+imges.zhuyi}}"
+        class="blue-tooth-img"
+      ></image>
+      <image
+        src="{{deviceImg}}"
+        class="device-img"
+      ></image>
+    </view>
+    <view
+      wx:if="{{!errorCode}}"
+      class="noErrorCode"
+    >
+      <text class="block thick">{{deviceName}}连接失败</text>
+      <text class="reason">失败原因手机没有靠近{{deviecName}}</text>
+    </view>
+    <view
+      wx:if="{{errorCode=='9011301'}}"
+      class="noErrorCode"
+    >
+      <text class="block thick">绑定失败</text>
+      <text class="reason">9011301</text>
+    </view>
+    <view
+      wx:if="{{errorCode}}"
+      class="noDoCheck"
+    >
+      <view class="fail-title">{{deviceName}}联网失败</view>
+      <view class="fail-code">{{errorCode}}</view>
+      <text
+        wx:if="{{errorCode=='9014200'}}"
+        class="reason"
+        >未进行安全性验证</text
+      >
+    </view>
+  </view>
+  <view
+    class="retry"
+    bindtap="retry"
+    >重试</view
+  >
+  <view
+    class="back-to-index"
+    bindtap="backToIndex"
+    >返回首页</view
+  >
+</view>

@@ -1,0 +1,21 @@
+<import src="/commons/templates/popup.wxml" />
+<van-popup show="{{ show }}" z-index="10000" position="bottom" round bind:close="handleClose" closeable safe-area-inset-bottom="{{false}}">
+  <view class="flex flex-col px-32rpx text-black-2a">
+    <view class="flex-center pb-32rpx">
+      <template is="title" data="{{ title: popupTitle }}" />
+    </view>
+
+    <room-tabs sDeviceList="{{allDeviceList}}" bind:roomSelect="handleRoomSelect"></room-tabs>
+
+    <scroll-view enhanced show-scrollbar="{{false}}" scroll-y class="list-wrapper" enable-flex>
+      <view wx:if="{{showDeviceList.length}}" class="grid grid-cols-4 gap-16rpx mt-16rpx">
+        <device-card wx:for="{{showDeviceList}}" wx:key="deviceId" showBtnDetail="{{false}}" bind:cardTap="handleCardTap" bind:offlineTap="handleCardTap" device-type="light" device-info="{{item}}" select="{{checkedDevice.deviceId === item.deviceId}}" />
+      </view>
+      <view wx:else class="list-empty flex-1">
+        <text class="block text-center text-24 text-black-tips">该房间暂无设备</text>
+      </view>
+    </scroll-view>
+
+    <template is="bottom-btn" data="{{disabled: !checkedDevice || !checkedDevice.deviceId}}" />
+  </view>
+</van-popup>

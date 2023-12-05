@@ -1,0 +1,25 @@
+<van-popup show="{{ show }}" position="bottom" round bind:close="close" bind:before-enter="queryHomeUsers" closeable>
+  <view class="px-32rpx pt-48rpx text-black-2a flex-col box-border">
+    <text class="block pb-100rpx font-medium text-center text-36 leading-48rpx">选择转移对象</text>
+
+    <view class="max-h-45vh overflow-auto px-16rpx">
+      <view wx:for="{{userList}}" wx:key="userId" class="flex flex-row items-center py-40rpx border-0 {{index + 1 === userList.length ? '' : 'border-solid border-b-1rpx border-hex-ddd'}}" bind:tap="selectUser" data-index="{{index}}">
+        <image class="w-92rpx h-92rpx rounded-full" src="{{ item.headImageUrl ? item.headImageUrl : defaultImgDir + '/default-avatar.png'}}"></image>
+
+        <view class="px-48rpx grow flex flex-col">
+          <text class="text-32 leading-44rpx text-black-2a pb-8rpx">{{ item.userName }}</text>
+
+          <text class="text-32 text-black-59 leading-36rpx">{{ item.userHouseAuthName }}</text>
+        </view>
+
+        <image class="w-48 h-48" src="{{ index === selectIndex ? '/assets/img/base/check.png' : '/assets/img/base/uncheck.png' }}" />
+      </view>
+    </view>
+
+    <view class="flex justify-center w-full py-96rpx box-border">
+      <van-button type="primary" class="grow" size="large" disabled="{{selectIndex < 0}}" bind:click="handleConfirm">确认转移</van-button>
+    </view>
+  </view>
+</van-popup>
+
+<van-dialog id="van-dialog" confirm-button-color="#27282A" />

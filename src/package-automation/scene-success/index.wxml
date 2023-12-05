@@ -1,0 +1,27 @@
+<!-- 背景 -->
+<view class="w-100vw h-100vh fixed left-0 top-0 bg-hex-f4f8ff bg-z-index-1"></view>
+<view class="fixed left-0 top-0 w-100vw h-50vh bg-z-index" style="background: linear-gradient(180deg, rgba(87, 105, 255, 0.1) 0%, rgba(87, 105, 255, 0) 100%)"></view>
+<!-- 遮住顶部 -->
+<view style="height: {{navigationBarAndStatusBarHeight}};" class="fixed left-0 top-0 z-110 overflow-hidden w-750rpx">
+  <view class="w-100vw h-100vh absolute left-0 top-0 bg-hex-f4f8ff z-111"></view>
+  <view class="absolute left-0 top-0 w-100vw h-50vh z-112" style="background: linear-gradient(180deg, rgba(87, 105, 255, 0.1) 0%, rgba(87, 105, 255, 0) 100%)"></view>
+</view>
+<nav-bar title="创建场景" z-index="{{113}}" left-arrow bind:leftTap="goBack"></nav-bar>
+
+<view class="flex flex-col items-center">
+  <!-- 标题 -->
+  <view class="flex-1 w-750rpx" id="content">
+    <view class="h-32rpx"></view>
+    <scroll-view enable-flex scroll-y enhanced show-scrollbar="{{false}}" class="w-full flex flex-col">
+      <view class="flex flex-col flex-1 justify-start items-center">
+        <image class="w-300rpx h-300rpx" src="../assets/imgs/automation/success.png"></image>
+        <text class="text-32rpx font-medium text-hex-555659">创建场景成功！</text>
+      </view>
+    </scroll-view>
+  </view>
+  <view class="fixed bottom-0 flex flex-row pt-30rpx justify-between w-750rpx px-32rpx box-border z-400 bg-hex-f4f8ff" style="height: calc(146rpx + env(safe-area-inset-bottom))">
+    <van-button type="primary" custom-class="single-btn" bind:click="go2SceneIndex">
+      <text class="text-36rpx">完成</text>
+    </van-button>
+  </view>
+</view>

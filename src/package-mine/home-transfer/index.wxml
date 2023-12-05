@@ -1,0 +1,27 @@
+<view class="page-container flex flex-col">
+  <nav-bar background="transparent" leftArrow="{{true}}" bind:leftTap="goBack" title="转让家庭" showGoHome></nav-bar>
+
+  <view class="grow flex flex-col justify-between">
+    <view>
+      <van-cell-group inset>
+        <van-cell title="转让给家庭成员" is-link center border="{{false}}" bind:click="toTransferHomeMember" />
+      </van-cell-group>
+
+      <button class="bg-white m-24rpx rounded-32rpx overflow-hidden text-left p-0 border-0" open-type="share">
+        <van-cell title="转让给微信好友" is-link center border="{{false}}" bind:click="toTransferByWx" />
+      </button>
+
+      <view class="bg-white m-24rpx rounded-32rpx overflow-hidden">
+        <van-cell title="通过二维码转让" label="微信扫码完成家庭转让" center border="{{false}}" />
+
+        <view class="flex items-center justify-center pt-10rpx pb-64rpx">
+          <canvas type="2d" class="w-520rpx h-520rpx" id="myQrcode"></canvas>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<transfer-home-popup wx:if="{{currentHomeDetail.houseUserAuth === 1}}" show="{{isTransferHome}}" bind:close="closeTransferHome"></transfer-home-popup>
+
+<van-toast id="van-toast" />

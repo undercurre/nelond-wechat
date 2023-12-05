@@ -1,0 +1,262 @@
+<!--addDevice//pages/addGuide/addGuide.wxml-->
+<view id="{{brand}}">
+  <view class="container">
+    <nav-bar
+      leftArrow
+      bind:leftTap="goBack"
+    ></nav-bar>
+    <!-- ble guide -->
+    <!--  -->
+    <view
+      wx:if="{{guideType==='set'&&!noFound}}"
+      class="grow shrink check-guide h-600"
+    >
+      <view class="grow overflow-auto">
+        <view class="addGuide-title addGuide-thick">
+          <block>
+            <text
+              class="addGuide-title theme-font-color"
+              wx:if="{{mode==9||mode==10}}"
+              >{{deviceName}}</text
+            >
+            <text
+              class="addGuide-title theme-font-color"
+              wx:else
+              >设置{{deviceName}}</text
+            >
+          </block>
+        </view>
+        <image
+          class="addGuide-mode5-img"
+          src="{{checkGuideInfo.connectUrlA}}"
+        ></image>
+        <view
+          wx:if="{{mode==0 || mode==9 || mode==10 || mode==100 || mode==103}}"
+          class="add-guide-desc theme-font-color"
+          >请按步骤完成以下操作
+        </view>
+        <view
+          wx:else
+          class="add-guide-desc theme-font-color"
+          >请在<text class="blue2">{{time}}</text>秒内完成以下操作
+        </view>
+        <view class="desc-list-guide">
+          <rich-text
+            class="add-guide-desc-content"
+            nodes="{{currGuideInfo.currConnectDesc}}"
+          ></rich-text>
+        </view>
+
+        <view
+          class="check-finish"
+          wx:if="{{mode == 9 || mode == 10}}"
+        >
+          <van-button
+            class="w-full"
+            block
+            type="primary"
+            size="large"
+            bind:click="openPlugin"
+            >下载并打开{{deviceName}}插件
+          </van-button>
+        </view>
+      </view>
+
+      <view
+        wx:if="{{mode==0 || mode==100}}"
+        class="check-finish pb-96rpx pt-20rpx"
+      >
+        <view
+          class="finish-sel flex-r"
+          bindtap="finish"
+        >
+          <image
+            class="sel"
+            src="{{isFinishUpAp?sel:noSel}}"
+          ></image>
+          <text class="sel-text {{isFinishUpAp?'theme-font-color':''}}">已完成上述步骤</text>
+          <text
+            wx:if="{{readingTimer}}"
+            class="sel-text"
+            >({{readingTimer}}s)</text
+          >
+        </view>
+
+        <view class="px-32rpx box-border">
+          <van-button
+            wx:if="{{mode == 0}}"
+            class="w-full mt-20rpx"
+            block
+            type="primary"
+            disabled="{{!isFinishUpAp}}"
+            size="large"
+            bind:click="next"
+            >下一步</van-button
+          >
+
+          <van-button
+            wx:if="{{mode == 100}}"
+            class="w-full mt-20rpx"
+            block
+            type="primary"
+            disabled="{{!isFinishUpAp}}"
+            size="large"
+            bind:click="touchScanCode"
+            >扫描二维码
+          </van-button>
+        </view>
+      </view>
+
+      <!-- -->
+      <view
+        wx:if="{{bigScreenBind  && mode == '103'}}"
+        class="check-finish"
+        style="margin-bottom: 40rpx"
+      >
+        <view
+          class="finish-sel flex-r"
+          bindtap="finish"
+        >
+          <image
+            class="sel"
+            src="{{isFinishUpAp?sel:noSel}}"
+          ></image>
+          <text class="sel-text {{isFinishUpAp?'theme-font-color':''}}">已完成上述步骤</text>
+          <text
+            wx:if="{{readingTimer}}"
+            class="sel-text"
+            >({{readingTimer}}s)</text
+          >
+        </view>
+        <block>
+          <view
+            class="link-btn2 {{isFinishUpAp?'':'add-guide-btn'}}"
+            bindtap="iseeBtn"
+            >我知道了</view
+          >
+        </block>
+      </view>
+      <!-- 切换主-新配网指引 -->
+      <view
+        wx:if="{{ showSwitchFlag }}"
+        class="switch-set"
+      >
+        <text>操作遇阻，</text>
+        <view
+          class="switch-section"
+          bindtap="switchSet"
+        >
+          <text class="blue-text">更换设置方式</text>
+          <image
+            class="add_guide_right_icon"
+            src="{{ blueArrowImg }}"
+          ></image>
+        </view>
+      </view>
+    </view>
+    <!-- ble+wifi guide -->
+    <view wx:if="{{isShowBleWifiguide}}">
+      <view class="addGuide-title thick">靠近{{deviceName}}</view>
+      <view class="add-guide-img-box">
+        <image
+          class="device-img"
+          src="{{deviceImg?deviceImg:imgBaseUrl+imges.blueCD}}"
+        ></image>
+        <image
+          class="add-guide-img"
+          src="{{imgBaseUrl+imges.nearby}}"
+        ></image>
+      </view>
+      <view class="near-guide-desc">请将手机靠近{{deviceName}}{{distance}}米内，将自动开始连接设备 <text class="blue">{{time}}秒</text> </view>
+      <view
+        wx:if="{{ifAllowSkipNear && time<=50}}"
+        class="guide-skip"
+      >
+        <text
+          class="guide-skip-text blue"
+          bindtap="skipNear"
+          >无法靠近设备，暂时跳过</text
+        >
+      </view>
+    </view>
+
+    <!-- onfound -->
+    <view
+      wx:if="{{noFound}}"
+      class="on-found"
+    >
+      <view class="addGuide-title">没有发现{{deviceName}}</view>
+      <image
+        class="addGuide-no-device"
+        src="{{noFoundImg}}"
+      ></image>
+      <view class="descList">
+        <view class="addGuide-r">
+          <view class="num-guide">1</view>
+          <view class="text">确保{{deviceName}}已接通电源</view>
+        </view>
+        <view class="addGuide-r">
+          <view class="num-guide">2</view>
+          <view class="text">请将手机靠近{{deviceName}}</view>
+        </view>
+        <view class="addGuide-r">
+          <view class="num-guide">3</view>
+          <view class="text">若以上内容确认无误，可点击下方按钮重试，请注意在倒计时结束前按照指引完成设置</view>
+        </view>
+      </view>
+      <view class="btnView">
+        <view
+          class="retry-guide"
+          bindtap="retry"
+          >重试</view
+        >
+      </view>
+    </view>
+
+    <sure-center-dialog
+      isShowSureDialog="{{ isSureDialog }}"
+      bind:makeSure="makeSure"
+      bind:clickLink="clickLink"
+      title="{{ dialogMixinsTitle }}"
+      content="{{ dialogMixinsContent }}"
+      dialogMixinsBtns="{{ dialogMixinsBtns }}"
+      dialogMixinsContentLinks="{{dialogMixinsContentLinks}}"
+    >
+      <view wx:if="{{isBluetoothMixinNotOpen}}">
+        <view class="bluetoothOpenNotice">添加设备需开启手机蓝牙，并授权微信使用蓝牙权限</view>
+      </view>
+    </sure-center-dialog>
+  </view>
+  <mx-dialog id="mx-dialog" />
+
+  <mx-dialog
+    id="mx-blueRes"
+    show="{{ishowBlueRes}}"
+    useSlot="{{ishowBlueRes}}"
+    showCancelButton="true"
+    cancelButtonColor="{{dialogStyle.cancelButtonColor3}}"
+    confirmButtonColor="{{dialogStyle.confirmButtonColor2}}"
+    bind:confirm="hasFinish"
+    bind:cancel="goHome"
+    confirmButtonText="已完成操作"
+    cancelButtonText="放弃"
+    onClickOverlay="closeBlueRes"
+    custom-style=""
+    message-align="left"
+    messageSize="16"
+  >
+    <useSlot>
+      <view class="addGuide-dialog-content">
+        <view class="check-addGuide-title">请开启蓝牙权限</view>
+        <view class="check-addGuide-content">{{bluePermissionTextAll ? bluePermissionTextAll : '开启手机蓝牙'}}</view>
+        <view
+          class="check-addGuide"
+          bindtap="checkGuide"
+          >查看详细指引</view
+        >
+      </view>
+    </useSlot>
+  </mx-dialog>
+</view>
+
+<van-toast id="van-toast" />

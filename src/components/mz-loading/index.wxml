@@ -1,0 +1,18 @@
+<view class="flex flex-col items-center">
+  <view class="sk-circle" style="width: {{ size * 2}}rpx;height: {{ size * 2}}rpx;">
+    <view class="sk-circle1 sk-child"></view>
+    <view class="sk-circle2 sk-child"></view>
+    <view class="sk-circle3 sk-child"></view>
+    <view class="sk-circle4 sk-child"></view>
+    <view class="sk-circle5 sk-child"></view>
+    <view class="sk-circle6 sk-child"></view>
+    <view class="sk-circle7 sk-child"></view>
+    <view class="sk-circle8 sk-child"></view>
+    <view class="sk-circle9 sk-child"></view>
+    <view class="sk-circle10 sk-child"></view>
+    <view class="sk-circle11 sk-child"></view>
+    <view class="sk-circle12 sk-child"></view>
+  </view>
+
+  <text wx:if="{{text}}" class="mt-80rpx text-28 text-black-59">{{ text }}</text>
+</view>

@@ -1,0 +1,6 @@
+/* custom-tab-bar/index.wxss */
+.tab-bar {
+  border-top: 1rpx solid #eeeeee;
+  border-top-left-radius: 48rpx;
+  border-top-right-radius: 48rpx;
+}

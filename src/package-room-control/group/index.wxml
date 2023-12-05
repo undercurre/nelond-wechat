@@ -1,0 +1,161 @@
+<!-- 背景 -->
+<view class="w-100vw h-100vh fixed left-0 top-0 bg-hex-f4f8ff bg-z-index-1"></view>
+<view
+  class="fixed left-0 top-0 w-100vw h-50vh bg-z-index"
+  style="background: linear-gradient(180deg, rgba(87, 105, 255, 0.1) 0%, rgba(87, 105, 255, 0) 100%)"
+></view>
+
+<view
+  class="h-100vh flex flex-col"
+  bindtap="handleFullPageTap"
+>
+  <!-- 标题 -->
+  <nav-bar title="创建分组"></nav-bar>
+
+  <!-- 设备列表 -->
+  <view
+    id="content"
+    class="flex-1"
+  >
+    <view wx:if="{{status === 'naming'}}">
+      <view class="mx-32rpx my-20rpx">
+        <text class="text-40rpx">设置名称</text>
+      </view>
+      <view class="mx-32rpx mb-32rpx">
+        <van-field
+          value="{{ groupName }}"
+          placeholder="请输入分组名称"
+          custom-style="padding: 32rpx 40rpx;border-radius: 24rpx;"
+          clearable="{{true}}"
+          focus="{{isFocus}}"
+          bind:change="changeGroupName"
+          border="{{false}}"
+        >
+        </van-field>
+
+        <view class="flex flex-wrap mt-32rpx">
+          <view
+            wx:for="{{presetNames}}"
+            wx:key="index"
+            bindtap="handlePreset"
+            class="mt-16rpx mr-32rpx rounded-999 px-40rpx py-10rpx flex flex-center {{groupName === item ? 'bg-select' : 'bg-hex-dfe1e5'}}"
+            data-value="{{item}}"
+          >
+            <text class="text-28rpx text-normal {{groupName === item ? 'text-white' : 'text-black-59'}}">{{item}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+    <scroll-view
+      wx:else
+      enhanced
+      scroll-y
+      show-scrollbar="{{false}}"
+    >
+      <view class="ml-32rpx mb-32rpx">
+        <text class="text-hex-555659 text-28">{{tips}}</text>
+      </view>
+      <van-cell-group
+        inset
+        wx:for="{{deviceList}}"
+        wx:key="deviceId"
+      >
+        <van-cell data-device-id="{{item.deviceId}}">
+          <view class="flex item-center">
+            <view class="w-96rpx h-96rpx bg-hex-F6FAFD rounded-999 flex-center">
+              <image
+                src="{{item.pic}}"
+                class="w-72rpx h-72rpx"
+              />
+            </view>
+            <view class="h-96rpx flex flex-col justify-center items-start ml-32rpx">
+              <text class="text-black-2a text-32rpx">{{item.deviceName}}</text>
+              <view>
+                <text class="text-black-tips text-28rpx mt-8rpx">{{item.roomName}}{{item.onLineStatus ? '' : ' | '}}</text>
+                <text
+                  wx:if="{{!item.onLineStatus}}"
+                  class="text-28rpx text-hex-fbbb32"
+                  >离线</text
+                >
+              </view>
+            </view>
+          </view>
+
+          <view
+            slot="right-icon"
+            class="h-96rpx flex-center"
+          >
+            <image
+              wx:if="{{item.status === 'failed'}}"
+              class="w-48 h-48"
+              src="/assets/img/base/error.png"
+            />
+            <image
+              wx:elif="{{item.status === 'success'}}"
+              class="w-48 h-48"
+              src="/assets/img/base/check.png"
+            />
+            <mz-loading
+              wx:else
+              size="24"
+            ></mz-loading>
+          </view>
+        </van-cell>
+      </van-cell-group>
+    </scroll-view>
+  </view>
+  <view class="flex flex-row">
+    <van-button
+      wx:if="{{status === 'hasFailure'}}"
+      class="flex-1 mx-24rpx"
+      size="large"
+      block
+      bind:click="endGroup"
+      >跳过</van-button
+    >
+    <van-button
+      wx:if="{{status === 'hasFailure'}}"
+      class="flex-1 mx-24rpx"
+      size="large"
+      block
+      bind:click="retryGroup"
+      type="primary"
+      >重试</van-button
+    >
+    <van-button
+      wx:if="{{status === 'allSuccess'}}"
+      class="flex-1 mx-24rpx"
+      size="large"
+      block
+      bind:click="toRename"
+      type="primary"
+      >下一步</van-button
+    >
+    <van-button
+      wx:if="{{status === 'naming'}}"
+      disabled="{{!groupName}}"
+      class="flex-1 mx-24rpx"
+      size="large"
+      block
+      bind:click="finishBtn"
+      type="primary"
+      >完成</van-button
+    >
+  </view>
+
+  <view class="list-bottom-placeholder"> </view>
+</view>
+
+<van-dialog
+  z-index="1003"
+  use-slot
+  title="分组失败"
+  show="{{ showGroupFailTips }}"
+  confirmButtonColor="#488FFF"
+  confirmButtonText="我知道了"
+  bind:close="handleCloseDialog"
+>
+  <view class="flex-col-center w-full">
+    <text class="text-28rpx text-hex-555659 py-30rpx text-center">{{'部分灯具添加分组失败，请确保\n所有灯具在线后重试'}}</text>
+  </view>
+</van-dialog>

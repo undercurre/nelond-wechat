@@ -1,0 +1,19 @@
+.icon-wrapper {
+  position: relative;
+}
+
+.icon,
+.iconActive {
+  position: absolute;
+  width: 64rpx;
+  height: 64rpx;
+  left: 50%;
+  top: 50%;
+  margin-left: -32rpx;
+  margin-top: -32rpx;
+}
+
+.text {
+  margin-top: 16rpx;
+  font-size: 24rpx;
+}

@@ -1,0 +1,19 @@
+<van-radio-group value="{{ radio }}">
+  <van-cell-group inset border="{{false}}">
+    <van-cell wx:for="{{periodList}}" wx:key="radio" border="{{index !== periodList.length - 1}}" custom-class="cell-border" custom-style="background-color:#f9fbfe;" clickable data-radio="{{item.radio}}" bind:click="onClick">
+      <view class="flex flex-col">
+        <view class="w-full flex justify-between items-center">
+          <view class="ml-12rpx"><text class="text-28rpx text-hex-27282a">{{item.title}}</text></view>
+          <van-radio name="{{item.radio}}" use-icon-slot>
+            <view class="flex items-center justify-center">
+              <image class="w-48rpx h-48rpx" slot="icon" src="{{ radio === item.radio ? '/assets/img/base/checked.png' : '' }}" />
+            </view>
+          </van-radio>
+        </view>
+        <view class="flex justify-between mt-32rpx" slot="label" wx:if="{{index === periodList.length - 1 && radio === item.radio}}">
+          <view class="w-72rpx h-72rpx rounded-16rpx leading-72rpx text-center text-28rpx {{item.checked ? 'text-hex-ffffff week-background':'text-hex-666666 bg-hex-EFF0F3'}}" wx:for="{{weekList}}" wx:key="key" data-index="{{index}}" catch:tap="weekSelect"> {{item.title}} </view>
+        </view>
+      </view>
+    </van-cell>
+  </van-cell-group>
+</van-radio-group>

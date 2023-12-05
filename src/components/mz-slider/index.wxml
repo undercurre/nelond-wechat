@@ -1,0 +1,20 @@
+<wxs module="handler" src="./index.wxs"></wxs>
+
+<view id="mz-slider" class="relative custom-class mz-slider {{ disabled ? 'mz-slider--disabled' : '' }}" style="background:{{ inactiveColor }}; height: {{barHeight}}rpx;" bind:touchstart="{{disabled ? '': handler.onTouchstart}}" catch:touchmove="{{disabled ? '': handler.onTouchmove}}" bind:touchend="{{disabled ? '': handler.onTouchend}}" value="{{value}}" change:value="{{handler.propObserver}}">
+  <view class="mz-slider-bar" style="background:{{activeColor}}">
+    <view id="button" wx:if="{{isBtnInset}}" class="button px-12rpx">
+      <slot wx:if="{{ useButtonSlot }}" name="button"></slot>
+      <view wx:else class="mz-slider-button"></view>
+    </view>
+  </view>
+
+  <view id="button" wx:if="{{!isBtnInset}}" class="button button-outset" style="top: {{btnTop}}">
+    <slot wx:if="{{ useButtonSlot }}" name="button"></slot>
+    <view wx:else class="mz-slider-button"></view>
+  </view>
+
+  <view wx:if="{{showToast}}" id="slider-toast" class="slider-toast" style="opacity: 0; pointer-events: none">
+    <text class="text-white text-26">{{ formattedValue }}</text>
+    <view class="arrow absolute w-0 h-0"></view>
+  </view>
+</view>

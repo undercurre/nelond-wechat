@@ -1,0 +1,5 @@
+.orange-display-txt {
+  color: #ff8225;
+  font-size: 32rpx;
+  font-weight: 600;
+}

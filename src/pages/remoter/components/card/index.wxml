@@ -1,0 +1,19 @@
+<view class="card-wrapper" bind:tap="handleCardTap">
+  <view class="flex item-center flex-1">
+    <view class="w-96rpx h-96rpx rounded-999 flex-center" bind:tap="handlePicTap">
+      <image src="{{device.devicePic}}" class="wh-full" />
+    </view>
+    <view class="h-96rpx flex flex-col justify-center items-start ml-32rpx">
+      <view class="flex flex-row flex-center">
+        <text class="text-black-2a text-32rpx">{{device.deviceName}}</text>
+        <image src="{{bleIcon}}" class="w-30 h-40 ml-16rpx" />
+      </view>
+      <view>
+        <text class="text-black-tips text-28rpx mt-10rpx">{{desc}}</text>
+      </view>
+    </view>
+  </view>
+  <view class="flex-col-center">
+    <mz-button icon="/assets/img/base/power-stroke.png" iconActive="/assets/img/base/power-stroke2.png" text="{{action.name || ''}}" bind:touchstart="handleControlTap"></mz-button>
+  </view>
+</view>

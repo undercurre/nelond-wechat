@@ -1,0 +1,15 @@
+<van-popup show="{{ show }}" z-index="1002" round position="bottom" bind:close="handleClose" closeable lock-scroll="{{true}}" catchtouchmove="true">
+  <view class="w-750rpx relative flex flex-col">
+    <view class="mt-44rpx text-center">
+      <text class="h-50rpx text-36rpx text-black-2a font-medium">{{title}}</text>
+    </view>
+
+    <view class="mt-64rpx px-32rpx">
+      <handle-onoff vertical="{{true}}" power="{{power === 1}}" bind:change="handleOnOffChange"></handle-onoff>
+    </view>
+
+    <view class="h-96rpx"></view>
+  </view>
+</van-popup>
+
+<van-toast id="van-toast" />

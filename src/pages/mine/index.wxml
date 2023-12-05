@@ -1,0 +1,148 @@
+<!--pages/mine/index.wxml-->
+<nav-bar background="transparent"></nav-bar>
+
+<view
+  style="z-index: -1"
+  class="fixed left-0 top-0 w-100vw h-100vh"
+>
+  <image
+    src="{{defaultImgDir}}/bg.jpg"
+    style="width: 100vw; height: 100vh"
+  ></image>
+</view>
+
+<scroll-view
+  scroll-y
+  enhanced
+  show-scrollbar="{{false}}"
+  style="height: {{scrollViewHeight}}"
+>
+  <view class="mt-32rpx mb-42rpx px-48rpx flex flex-row items-center">
+    <image
+      class="w-96rpx h-96rpx rounded-full border-white border-8rpx border-solid"
+      src="{{userInfo.headImageUrl ? userInfo.headImageUrl : defaultImgDir + '/default-avatar.png'}}"
+      style="background-image: linear-gradient(141deg, #ffffff 0%, rgba(255, 255, 255, 0.61) 100%)"
+    ></image>
+
+    <view
+      class="flex flex-col pl-40rpx grow"
+      bindtap="handleUserInfoTap"
+    >
+      <text class="text-40 text-hex-000 font-medium">{{isLogin?userInfo.nickName:'未登录'}}</text>
+    </view>
+  </view>
+
+  <view class="pb-140rpx">
+    <van-cell-group inset>
+      <van-cell
+        icon="/assets/img/mine/home.png"
+        title="家庭管理"
+        is-link
+        center
+        data-url="{{urls.homeControl}}"
+        border="{{false}}"
+        bind:click="toPage"
+      />
+    </van-cell-group>
+
+    <van-cell-group inset>
+      <van-cell
+        wx:if="{{!isVisitor}}"
+        icon="/assets/img/mine/automation.png"
+        title="全屋场景"
+        is-link
+        center
+        data-url="{{urls.automation}}"
+        bind:click="toPage"
+      />
+      <van-cell
+        icon="/assets/img/mine/voiceControl.png"
+        title="语音控制"
+        is-link
+        center
+        data-url="{{urls.voiceControl}}"
+        bind:click="toPage"
+      />
+      <van-cell
+        icon="/assets/img/mine/link.png"
+        title="连接其他平台"
+        is-link
+        center
+        data-url="{{urls.auth}}"
+        bind:click="toPage"
+      />
+      <van-cell
+        wx:if="{{!isVisitor}}"
+        icon="/assets/img/mine/deviceReplace.png"
+        title="设备替换"
+        is-link
+        center
+        data-url="{{urls.deviceReplace}}"
+        bind:click="toPage"
+      />
+      <van-cell
+        icon="/assets/img/mine/setting.png"
+        title="设置"
+        is-link
+        center
+        data-url="{{urls.setting}}"
+        bind:click="toPage"
+      />
+    </van-cell-group>
+
+    <van-cell-group inset>
+      <van-cell
+        icon="/assets/img/mine/help.png"
+        title="帮助中心"
+        is-link
+        center
+        data-url="{{urls.help}}"
+        data-auth="no"
+        bind:click="toPage"
+      />
+
+      <van-cell is-link>
+        <button
+          icon="/assets/img/mine/advise.png"
+          open-type="feedback"
+          class="bg-transparent rounded-none p-0 menu-item-button"
+        >
+          <view class="flex flex-row items-center justify-between">
+            <view class="flex flex-row items-center">
+              <image
+                class="w-48 h-48 mr-26rpx"
+                src="/assets/img/mine/advise.png"
+              ></image>
+              <text class="text-32 text-black leading-none">建议反馈</text>
+            </view>
+          </view>
+        </button>
+      </van-cell>
+
+      <van-cell
+        icon="/assets/img/mine/about.png"
+        title="关于"
+        is-link
+        center
+        data-url="{{urls.about}}"
+        data-auth="no"
+        bind:click="toPage"
+        border="{{false}}"
+      />
+    </van-cell-group>
+
+    <view
+      class="px-24rpx mt-24rpx"
+      wx:if="{{isLogin}}"
+    >
+      <van-button
+        block
+        type="danger"
+        plain
+        size="large"
+        bind:click="loginOut"
+        >退出登录</van-button
+      >
+    </view>
+  </view>
+</scroll-view>

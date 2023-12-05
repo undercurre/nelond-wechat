@@ -1,0 +1,103 @@
+<view wx:if="{{flag}}">
+  <view
+    class="wrap {{wrapAnimate}}"
+    style="background:rgba(0,0,0,{{bgOpacity}});"
+  ></view>
+  <view
+    catchtap="hideFrame"
+    class="frame-wrapper {{frameAnimate}}"
+  >
+    <view
+      catchtap="catchNone"
+      class="frame pb-96rpx"
+    >
+      <image
+        class="close"
+        bindtap="hideFrame"
+        src="{{closeImg}}"
+      ></image>
+      <block wx:if="{{system==='Android'&&isSearching}}">
+        <block wx:if="{{!ifFoundWiFi}}">
+          <view class="searching">
+            <image
+              class="searching-img"
+              src="{{noFoundApDiscover}}"
+            ></image>
+            <view class="searching-text-no-found">正在分析…（{{searchingCountdown}}s）</view>
+          </view>
+        </block>
+        <block wx:else>
+          <view class="popup-title">
+            <text>已找到设备无线网络</text>
+          </view>
+          <view class="foundAp">
+            <view> 请尝试关闭WLAN开关后，再打开，刷新列表，找到“{{wifi+'_xxxx'}}”，进行连接。 </view>
+            <view class="foundAp-img">
+              <image
+                style="width: 400rpx; height: 360rpx"
+                class="wifiImg"
+                wx:if="{{system==='Android'}}"
+                src="{{android_checkwifi}}"
+              ></image>
+              <image
+                style="width: 400rpx; height: 360rpx"
+                class="wifiImg"
+                wx:if="{{system==='iOS'}}"
+                src="{{noFoundApSwitch}}"
+              ></image>
+            </view>
+
+            <view class="w-full flex flex-row gap-x-46rpx mt-32rpx">
+              <van-button
+                class="w-full"
+                type="primary"
+                size="large"
+                bind:click="onConfirmFoundWiFi"
+                >去连接</van-button
+              >
+            </view>
+          </view>
+        </block>
+      </block>
+      <block wx:else>
+        <view class="popup-title">
+          <text>请按如下步骤检查</text>
+        </view>
+        <view class="main">
+          <view class="step">
+            <text class="step-text">1、请尝试关闭{{system==='Android'?'WLAN开关':'无线局域网开关'}}，再打开，刷新列表，找到“{{wifi+'_xxxx'}}”，进行连接。</text
+            ><text
+              class="btn"
+              bindtap="goLinkDeviceWifi"
+              >去连接</text
+            >
+          </view>
+          <view class="wifiSetting">
+            <view class="wifiView">
+              <image
+                class="wifiImg"
+                style="width: 400rpx; height: 360rpx"
+                wx:if="{{system==='Android'}}"
+                src="{{android_checkwifi}}"
+              ></image>
+              <image
+                class="wifiImg"
+                style="width: 400rpx; height: 360rpx"
+                wx:if="{{system==='iOS'}}"
+                src="{{img_wifi}}"
+              ></image>
+            </view>
+          </view>
+          <view class="step">
+            <text class="step-text">2、若仍无法找到“{{wifi+'_xxxx'}}”，尝试重新操作设备，请注意按照指引进行操作，确保正确开启设备无线网络。</text
+            ><text
+              class="btn"
+              bindtap="confirm"
+              >去重新操作</text
+            >
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>

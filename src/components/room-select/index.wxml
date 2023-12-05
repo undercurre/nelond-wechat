@@ -1,0 +1,11 @@
+<!-- 下拉菜单按钮 -->
+<view class="inline-block relative">
+  <van-button round color="#dfe1e5" custom-class="dropdown-btn" id="selectRoomBtn" bind:click="showSelectRoomMenu">
+    <view class="flex-center">
+      <text class="text-black-2a text-28rpx mr-10rpx">{{currentRoomName}}</text>
+      <svg-icon id="selectRoomArrow" name="icon-park:down" color="#555659" width="32rpx" height="32rpx"></svg-icon>
+    </view>
+  </van-button>
+
+  <dropdown-menu x="{{roomSelectMenu.x}}" y="{{roomSelectMenu.y}}" isShow="{{roomSelectMenu.isShow}}" list="{{roomSelectMenuList}}" bind:select="handleRoomSelect"></dropdown-menu>
+</view>

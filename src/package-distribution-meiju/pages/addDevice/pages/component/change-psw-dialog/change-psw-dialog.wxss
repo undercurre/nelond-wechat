@@ -1,0 +1,85 @@
+.dialog {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+}
+.dialog-mask {
+  width: 100%;
+  height: 100%;
+  opacity: 0.4;
+  background: #000000;
+}
+/* .dialog-main {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 540rpx;
+  background: #ffffff;
+  border-radius: 24rpx;
+  transform: translate(-50%, -50%);
+  padding: 34rpx 0 48rpx;
+} */
+.dialog-main-close {
+  width: 32rpx;
+  height: 32rpx;
+  position: absolute;
+  right: 32rpx;
+  top: 40rpx;
+}
+/* .dialog-main-title {
+  font-family: PingFangSC-Medium;
+  font-size: 32rpx;
+  color: #000000;
+  text-align: center;
+  line-height: 44rpx;
+  font-weight: bold;
+} */
+.dialog-main-desc {
+  font-family: PingFangSC-Medium;
+  font-size: 28rpx;
+  line-height: 40rpx;
+  text-align: center;
+  color: #ff8835;
+}
+.dialog-main-content {
+  font-family: PingFangSC-Regular;
+  font-size: 16rpx;
+  color: #666363;
+  letter-spacing: 0;
+  text-align: center;
+}
+/* .dialog-main-input {
+  margin: 50rpx auto 0;
+  padding: 0 32rpx;
+  box-sizing: border-box;
+  width: 476rpx;
+  height: 84rpx;
+  border: 1px solid #c7c7cc;
+  border-radius: 48rpx;
+  font-family: PingFangSC-Regular;
+  font-size: 30rpx;
+  color: #c7c7cc;
+  letter-spacing: 0;
+  line-height: 84rpx;
+}
+.dialog-main-input.psw {
+  margin: 16rpx auto 0;
+  color: #333333;
+} */
+/* .dialog-main-confirm {
+  margin: 64rpx auto 0;
+  width: 476rpx;
+  height: 84rpx;
+  background: #488FFF;
+  border-radius: 46rpx;
+  font-family: PingFangSC-Medium;
+  font-size: 32rpx;
+  color: #ffffff;
+  letter-spacing: 0;
+  text-align: center;
+  font-weight: bold;
+  line-height: 84rpx;
+} */

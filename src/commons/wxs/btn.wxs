@@ -1,0 +1,51 @@
+var _TRANSITION = 'opacity 0.3s' // 样式变化 Hard code
+
+module.exports = {
+  /**
+   * 激活样式持续时长
+   */
+  _INTERVAL: 300,
+  /**
+   * @description 通过按钮元素透明度渐变，实现过渡变化
+   * @param _inst 非激活状态实例
+   * @param _instActive 激活状态实例
+   * @param toActive 是否要激活
+   */
+  opacityTransition: function (_inst, _instActive, toActive = true) {
+    // 如果未设置激活样式，则为静态按钮
+    if (!_instActive) {
+      return
+    }
+
+    _inst.setStyle({
+      opacity: toActive ? 0 : 1,
+      transition: _TRANSITION,
+    })
+
+    _instActive.setStyle({
+      opacity: toActive ? 1 : 0,
+      transition: _TRANSITION,
+    })
+  },
+  /**
+   * @description 按钮背景渐变
+   * @param _inst 按钮实例
+   * @param toActive 是否要激活
+   */
+  bgTransition: function (_inst, toActive = true) {
+    if (!_inst) {
+      return
+    }
+
+    var bgColor = '#f7f8f9'
+    var bgImage = 'none'
+    var bgColorActive = '#488fff'
+    var bgImageActive = 'linear-gradient(155deg, #468CFB 6%, #6BA3FC 96%)'
+
+    _inst.setStyle({
+      'background-color': toActive ? bgColorActive : bgColor,
+      'background-image': toActive ? bgImageActive : bgImage,
+      transition: _TRANSITION,
+    })
+  },
+}

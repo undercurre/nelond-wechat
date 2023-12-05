@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "操作指引",
+  "navigationStyle": "default",
+  "backgroundTextStyle": "dark",
+  "navigationBarBackgroundColor": "#fff",
+  "navigationBarTextStyle": "black",
+  "backgroundColor": "#fff",
+  "usingComponents": {}
+}

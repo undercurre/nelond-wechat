@@ -1,0 +1,31 @@
+<view class="page-container flex flex-col">
+  <nav-bar
+    leftArrow="{{true}}"
+    bind:leftTap="goBack"
+    title="连接其它平台"
+  ></nav-bar>
+
+  <view class="px-40rpx mt-20rpx">
+    <text class="text-hex-555659 text-28">通过绑定其他平台账号，将您在其他平台的设备同步至美的照明进行控制</text>
+  </view>
+  <van-cell-group inset>
+    <van-cell
+      title="美的美居"
+      center
+      bind:click="toAuth"
+    >
+      <image
+        slot="icon"
+        class="w-96rpx h-96rpx mr-32rpx"
+        src="/assets/img/mine/meiju.png"
+      />
+      <text
+        slot="right-icon"
+        class="text-label text-24"
+        >{{meijuLinkText}} ></text
+      >
+    </van-cell>
+  </van-cell-group>
+</view>
+
+<van-toast id="van-toast" />

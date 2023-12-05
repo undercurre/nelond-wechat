@@ -1,0 +1,13 @@
+<view id="addMenu" class="bg fixed flex flex-col items-stretch py-10rpx px-24rpx rounded-32rpx z-120" style="right: {{right}}; top: {{y}};" wx:if="{{isRender}}" catchtouchmove="black">
+  <view class="flex flex-col items-start" bindtap="addMenuTap" wx:for="{{menuList}}" wx:key="key" data-url="{{item.url}}">
+    <view class="h-96rpx flex items-center">
+      <image src="/assets/img/base/{{item.icon}}.png" class="w-48rpx h-48rpx"></image>
+      <text class="p-10rpx text-white text-28rpx leading-none">{{item.title}}</text>
+    </view>
+    <view class="bg-hex-717171 w-full h-1rpx" wx:if="{{index != menuList.length - 1}}"></view>
+  </view>
+
+  <view class="arrow absolute right-32rpx top-0 w-0 h-0"></view>
+</view>
+
+<van-toast id="van-toast" />

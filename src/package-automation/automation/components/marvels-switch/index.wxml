@@ -1,0 +1,10 @@
+<!--components/marvels-switch.wxml-->
+
+<view class="container">
+  <view class="{{ checked ? 'active-button' : '' }} button" bindtap="onSwitchChange">
+    <text class="text {{ checked ? 'active-text' : '' }}">一键场景</text>
+  </view>
+  <view class="{{ !checked ? 'active-button' : '' }} button" bindtap="onSwitchChange">
+    <text class="text {{ !checked ? 'active-text' : '' }}">自动场景</text>
+  </view>
+</view>

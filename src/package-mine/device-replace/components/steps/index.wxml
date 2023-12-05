@@ -1,0 +1,8 @@
+<!--package-mine/device-replace/components/steps/index.wxml-->
+<view class="flex flex-row items-center justify-center gap-16rpx">
+  <view wx:for="{{steps}}" wx:for-index="stepIndex" wx:key="*this" class="flex flex-row items-center gap-16rpx">
+    <view class="w-8 h-8 rounded-full  {{active < stepIndex ? 'bg-gray-dd' : 'bg-blue'}}" wx:for="{{[1,2,3]}}" wx:key="*this" wx:if="{{stepIndex !== 0}}"></view>
+
+    <text class="flex justify-center w-48 h-48 rounded-full text-32 text-white font-medium leading-44rpx {{active < stepIndex ? 'bg-gray-dd' : 'bg-blue'}}">{{item}}</text>
+  </view>
+</view>

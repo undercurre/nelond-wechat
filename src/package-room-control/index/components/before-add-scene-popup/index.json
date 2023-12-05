@@ -1,0 +1,9 @@
+{
+  "component": true,
+  "styleIsolation": "apply-shared",
+  "usingComponents": {
+    "curtain-control-popup": "../../../../components/curtain-control-popup/index",
+    "light-control-popup": "../../../../components/light-control-popup/index",
+    "switch-control-popup": "../../../../components/switch-control-popup/index"
+  }
+}

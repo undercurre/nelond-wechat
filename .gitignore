@@ -1,0 +1,10 @@
+node_modules
+miniprogram_npm
+.idea
+yalc.lock
+.yalc
+project.private.config.json
+
+# 自动生成的文件
+src/meta.ts
+/pnpm-lock.yaml

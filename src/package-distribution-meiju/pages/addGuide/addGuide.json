@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "sure-center-dialog": "/package-distribution-meiju/component/sure-center-dialog/sure-center-dialog",
+    "mx-dialog": "/miniprogram_npm/m-ui/mx-dialog/index"
+  }
+}

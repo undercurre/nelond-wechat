@@ -1,0 +1,46 @@
+<wxs
+  module="handler"
+  src="./index.wxs"
+></wxs>
+
+<view
+  class="mz-button"
+  bind:touchstart="{{handler.touchStart}}"
+  bind:touchend="{{handler.touchEnd}}"
+  style="{{btnStyle}}"
+  isOn="{{isOn}}"
+  change:isOn="{{handler.propObserver}}"
+>
+  <view
+    class="icon-wrapper"
+    style="{{wrapperStyle}}"
+  >
+    <image
+      class="icon"
+      src="{{icon}}"
+    ></image>
+    <image
+      wx:if="{{iconActive}}"
+      class="iconActive"
+      src="{{iconActive}}"
+      style="opacity: 0"
+    ></image>
+  </view>
+  <view
+    class="text-wrapper"
+    style="width: {{textWidth}};"
+    wx:if="{{text}}"
+  >
+    <text
+      class="text"
+      style="color: {{textColor}};"
+      >{{text}}</text
+    >
+    <text
+      class="textActive"
+      style="opacity: 0"
+      >{{text}}</text
+    >
+  </view>
+  <slot></slot>
+</view>

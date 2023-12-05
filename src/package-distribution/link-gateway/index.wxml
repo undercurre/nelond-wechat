@@ -1,0 +1,136 @@
+<view class="page-container flex flex-col">
+  <nav-bar
+    leftArrow="{{true}}"
+    bind:leftTap="goBack"
+    title="{{pageTitle}}"
+  ></nav-bar>
+
+  <!-- 仅检测当前是手动连接方式或者安卓10+还没去连接网关wifi时显示-->
+  <view
+    wx:if="{{hasInit && !hasLinkDevice && (isManual || isAndroid10Plus)}}"
+    class="grow px-32rpx flex flex-col justify-between"
+  >
+    <view>
+      <text class="block text-40 text-black-2a pt-60rpx">请用手机连接智能网关无线网络</text>
+
+      <image
+        class="mt-48rpx mb-70rpx w-664 h-372"
+        src="/package-distribution/assets/link-gateway/wifi-tips.png"
+      ></image>
+
+      <view class="flex flex-row items-center">
+        <image
+          class="w-30 h-30"
+          src="/assets/img/distribution/icon-wifi.png"
+        ></image>
+
+        <text class="px-30rpx leading-56rpx text-40 text-black-2a font-semibold">{{ showApSSID }}</text>
+      </view>
+
+      <view class="flex flex-row items-center pt-40rpx">
+        <image
+          class="w-36 h-36"
+          src="/assets/img/distribution/icon-pw.png"
+        ></image>
+
+        <text class="px-30rpx leading-56rpx text-40 text-black-2a font-semibold">12345678</text>
+
+        <van-button
+          plain
+          block
+          type="primary"
+          size="small"
+          custom-style="height: 52rpx;background: rgba(72,143,255,0.10);font-size: 24rpx;"
+          bind:click="copy"
+          >复制</van-button
+        >
+      </view>
+    </view>
+
+    <van-button
+      wx:if="{{apSSID}}"
+      class="w-full mt-32rpx"
+      block
+      type="primary"
+      size="large"
+      bind:click="connectWifi"
+      >前往连接</van-button
+    >
+  </view>
+
+  <view
+    wx:else
+    class="grow flex flex-col"
+  >
+    <view
+      wx:if="{{hasInit && (!isManual && !isAndroid10Plus) && !hasLinkDevice && apSSID}}"
+      class="absolute w-full flex flex-row items-center justify-center py-30rpx tips-view"
+    >
+      <image
+        class="w-36 h-36 mr-16rpx"
+        src="/assets/img/distribution/icon-info.png"
+      ></image>
+
+      <text class="text-24 leading-34rpx text-black-2a">请允许微信加入“{{showApSSID}}”，以便自动连接设备</text>
+    </view>
+
+    <block wx:if="{{type === 'query'}}">
+      <mz-loading
+        class="mt-240rpx"
+        text="正在连接设备，请将手机尽量靠近设备"
+      ></mz-loading>
+    </block>
+
+    <block wx:if="{{type === 'bind' || type === 'changeWifi'}}">
+      <mz-loading
+        class="mt-140rpx"
+        text="请将设备尽量靠近路由器"
+      ></mz-loading>
+
+      <mz-progress
+        show-progress="{{true}}"
+        active-index="{{activeIndex}}"
+        step-list="{{stepList}}"
+      ></mz-progress>
+    </block>
+  </view>
+</view>
+
+<van-dialog
+  use-slot
+  title="此设备已绑定"
+  show="{{ isShowForceBindTips }}"
+  show-cancel-button="{{false}}"
+  confirm-button-text="退出"
+  confirm-button-color="#488FFF"
+  bind:confirm="reScan"
+>
+  <view class="text-center pt-20rpx">
+    <image
+      class="w-411 h-411"
+      src="/package-distribution/assets/link-gateway/force-bind.png"
+    ></image>
+  </view>
+  <text class="block pb-60rpx text-center leading-48rpx text-28 text-hex-666">如需绑定至新的家庭，请单击网关最右侧按键</text>
+</van-dialog>
+
+<van-dialog
+  use-slot
+  title="设备连接失败"
+  show="{{ status === 'error' }}"
+  show-cancel-button="{{false}}"
+  confirm-button-text="我知道了"
+  confirm-button-color="#488FFF"
+  bind:confirm="goBack"
+>
+  <view class="flex flex-col items-center py-46rpx text-28 text-hex-666 leading-48rpx">
+    <view class="flex flex-col">
+      <text>1.请确定网关是否已通电</text>
+      <text>2.请检查WIFI账号密码是否正确</text>
+      <text>3.请确认路由器是否正常工作</text>
+      <text>4.请确认手机网络是否正常</text>
+    </view>
+  </view>
+</van-dialog>
+
+<van-dialog id="van-dialog" />

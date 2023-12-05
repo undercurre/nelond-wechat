@@ -1,0 +1,145 @@
+<page-meta page-style="{{ showEditNamePopup || showEditRoomPopup ? 'overflow: hidden;' : '' }}" />
+
+<view
+  class="fixed left-0 top-0 w-100vw h-100vh bg-hex-eef2f7"
+  style="z-index: -1"
+></view>
+
+<view class="h-100vh flex flex-col items-center">
+  <!-- 标题 -->
+  <nav-bar
+    title="{{deviceInfo.deviceName}}"
+    left-arrow
+    show-go-home
+    bind:leftTap="goBack"
+  ></nav-bar>
+
+  <view
+    class="flex-1"
+    id="content"
+  >
+    <scroll-view
+      enhanced
+      show-scrollbar="{{false}}"
+      style="height: {{contentHeight}}px"
+      scroll-y="{{true}}"
+    >
+      <!-- 上半部分 -->
+      <view class="mt-24rpx w-750rpx">
+        <van-cell-group inset>
+          <van-cell
+            is-link="{{canEditDevice}}"
+            bind:click="handleDeviceNameEditPopup"
+            title="设备名称"
+            value="{{deviceName}}"
+          ></van-cell>
+          <van-cell
+            is-link="{{canEditDevice}}"
+            bind:click="handleDeviceRoomEditPopup"
+            title="所在房间"
+            value="{{roomName}}"
+          ></van-cell>
+          <van-cell
+            wx:if="{{isSubDevice}}"
+            title="所属网关"
+            value="{{belongsToGateway}}"
+            value-class="longValue"
+            title-class="shortTitle"
+          ></van-cell>
+          <van-cell
+            wx:if="{{isSubDeviceOrGateway}}"
+            is-link="{{canEditDevice}}"
+            bind:click="handleToOTA"
+            value="{{deviceInfo.version}}"
+          >
+            <view
+              slot="title"
+              class="flex items-center"
+            >
+              <text class="text-32rpx">固件版本</text>
+              <view
+                class="rounded-999 bg-red flex-center px-10rpx py-6rpx ml-20rpx"
+                wx:if="{{hasOtaUpdate}}"
+              >
+                <text class="text-18rpx text-white leading-none">NEW</text>
+              </view>
+            </view>
+          </van-cell>
+
+          <van-cell
+            wx:if="{{isSubDeviceOrGateway}}"
+            title="Mac 地址"
+            value="{{mac}}"
+            border="{{false}}"
+            bind:click="clickMac"
+          ></van-cell>
+
+          <van-cell
+            wx:if="{{isLaundry}}"
+            bind:click="toSetLaundry"
+            title="一键晾衣高度"
+            value="{{laundryHeight}}cm"
+            is-link
+          ></van-cell>
+        </van-cell-group>
+      </view>
+
+      <!-- 下半部分 -->
+      <setting-light
+        can-edit-device="{{canEditDevice}}"
+        device-info="{{deviceInfo}}"
+        wx:if="{{prodType === 'light'}}"
+        bind:update="updateDeviceInfo"
+      />
+      <setting-switch
+        can-edit-device="{{canEditDevice}}"
+        device-info="{{deviceInfo}}"
+        wx:if="{{hasSwitchSetting}}"
+        bind:update="updateDeviceInfo"
+      />
+      <setting-gateway
+        isManager="{{canEditDevice}}"
+        device-info="{{deviceInfo}}"
+        wx:if="{{prodType === 'gateway'}}"
+        bind:update="updateDeviceInfo"
+      />
+    </scroll-view>
+  </view>
+
+  <!-- 隔开一点距离 -->
+  <view class="h-24rpx"></view>
+  <!-- 底部按钮 -->
+  <van-button
+    wx:if="{{canEditDevice}}"
+    size="large"
+    type="warning"
+    custom-class="delete-btn"
+    bind:click="handleDeviceDelete"
+    >删除设备</van-button
+  >
+</view>
+
+<van-toast id="van-toast" />
+<van-dialog
+  id="van-dialog"
+  confirm-button-color="#27282A"
+  cancel-button-color="#27282A"
+/>
+<edit-name-popup
+  value="{{deviceName}}"
+  show="{{showEditNamePopup}}"
+  bind:close="handleDeviceNameEditCancel"
+  bind:confirm="handleDeviceNameEditConfirm"
+/>
+<edit-room-popup
+  value="{{roomId}}"
+  show="{{showEditRoomPopup}}"
+  bind:close="handleDeviceRoomEditCancel"
+  bind:confirm="handleDeviceRoomEditConfirm"
+/>
+<edit-laundry-popup
+  value="{{laundryHeight}}"
+  show="{{showEditLaundryPopup}}"
+  bind:close="handleLaundryEditCancel"
+  bind:confirm="handleLaundryEditConfirm"
+/>

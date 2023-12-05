@@ -1,0 +1,51 @@
+/**app.wxss**/
+@import './unocss.wxss';
+@import './vantReset.wxss';
+@import 'meiju.wxss';
+
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 200rpx 0;
+  box-sizing: border-box;
+}
+
+/* 页面容器公共样式 */
+.page-container {
+  min-height: 100vh;
+  background-color: #eef2f7;
+  box-sizing: border-box;
+  padding-bottom: 96rpx;
+}
+
+.bg-z-index {
+  z-index: -500;
+}
+
+.bg-z-index-1 {
+  z-index: -600;
+}
+
+.border-bottom {
+  border-bottom: 1rpx solid #eee;
+}
+
+.single-text {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.absolute-center {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.test {
+  background-color: aliceblue;
+}

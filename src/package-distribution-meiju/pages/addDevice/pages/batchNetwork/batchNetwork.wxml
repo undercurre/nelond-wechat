@@ -1,0 +1,45 @@
+<view class="container" style="padding-top:{{statusBarHeight+40}}px;">
+  <view class="header" style="top:{{statusBarHeight+ 6}}px">
+    <view wx:if="{{!showFinishBtn}}" class="back" bindtap="cancelNetwork">取消</view>
+    <image wx:if="{{showFinishBtn}}" class="backIcon" src="{{baseImgUrl}}/scan-device/findFriend/ic_back.png" bindtap="backToIndex"></image>
+    <text class="title">设备联网</text>
+  </view>
+  <view class="notice">提示：联网过程中“{{masterDevices[0]['name']}}”等设备可能会短暂离线</view>
+  <scroll-view scroll-y="true" class="scrollView">
+    <view wx:for="{{devices}}" wx:key="index" wx:for-index="index" wx:for-item="device">
+      <view class="item">
+        <image class="deviceImg" src="{{device.deviceImg}}"></image>
+        <view class="info">
+          <view class="name">
+            <view class="deviceName">{{device.deviceName}}</view>
+            <block wx:if="{{device.network=='success'}}">
+              <view class="split"></view>
+              <view class="room">{{device.room}}</view>
+            </block>
+          </view>
+          <view class="result">
+            <block wx:if="{{device.network=='success'}}">
+              <view class="noticeIcon" style="background-image:url({{ baseImgUrl }}/scan-device/findFriend/command_ic_sucess_s@2x.png);background-size:100% 100%;"> </view>
+              <view class="noticeTxt">联网成功</view>
+            </block>
+            <block wx:if="{{device.network=='fail'}}">
+              <view class="noticeIcon" style="background-image:url({{ baseImgUrl }}/scan-device/findFriend/command_ic_fail_s@2x.png);background-size:100% 100%;"> </view>
+              <view class="noticeTxt">{{device.fail}}</view>
+            </block>
+            <block wx:if="{{device.network=='loading'}}">
+              <view class="roll" style="background-image:url({{ baseImgUrl }}/scan-device/findFriend/command_ic_loading_s@2x.png);background-size:100% 100%;"> </view>
+              <view class="noticeTxt">正在连接</view>
+            </block>
+          </view>
+        </view>
+        <view class="setting" wx:if="{{device.network=='success'}}" data-index="{{index}}" bindtap="goEdit">
+          <view class="settingTxt">设置</view>
+          <image class="nextIcon" src="{{baseImgUrl}}/ic_next.png"></image>
+        </view>
+      </view>
+      <view class="line"></view>
+    </view>
+  </scroll-view>
+  <view class="{{showFinishBtn?'btn':'btn unfinish'}}" bindtap="goBackIndex">完成</view>
+</view>
+<sure-center-dialog isShowSureDialog="{{ isSureDialog }}" bind:makeSure="makeSure" title="{{ dialogMixinsTitle }}" content="{{ dialogMixinsContent }}" dialogMixinsBtns="{{ dialogMixinsBtns }}"> </sure-center-dialog>

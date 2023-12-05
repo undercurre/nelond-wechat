@@ -1,0 +1,4 @@
+<view class="page">
+  <image class="center-image" src="{{centerImg}}"></image>
+  <view class="desc"> <text class="desc-text">程序正在升级中，暂不支持添加设备\n升级期间可到</text><text class="other-chancel" bindtap="goToOtherChancel">其他官方渠道</text><text>进行添加</text> </view>
+</view>

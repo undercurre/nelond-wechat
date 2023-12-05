@@ -1,0 +1,8 @@
+{
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "",
+  "navigationBarTextStyle": "black",
+  "usingComponents": {
+    "sure-center-dialog": "/package-distribution-meiju/component/sure-center-dialog/sure-center-dialog"
+  }
+}

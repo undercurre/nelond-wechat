@@ -1,0 +1,50 @@
+/* @import '../common/index.wxss'; */
+.mz-slider {
+  background-color: #eff0f3;
+  border-radius: 24rpx;
+}
+
+.mz-slider-bar {
+  background-color: rgb(80, 127, 255);
+  border-radius: 24rpx;
+  width: 2rpx;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.mz-slider-button {
+  background-color: #fff;
+  border-radius: 8rpx;
+  height: 40rpx;
+  width: 8rpx;
+}
+
+.mz-slider--disabled {
+  opacity: 0.5;
+}
+
+.button-outset {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.slider-toast {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.72);
+  padding: 10rpx 16rpx;
+  top: -80rpx;
+  border-radius: 18rpx;
+}
+
+.arrow {
+  border-top: 8rpx solid #454546;
+  border-bottom: 8rpx solid transparent;
+  border-left: 8rpx solid transparent;
+  border-right: 8rpx solid transparent;
+  top: 62rpx;
+  left: 50%;
+  margin-left: -4rpx;
+}

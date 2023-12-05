@@ -1,0 +1,58 @@
+<view class="page-container flex flex-col">
+  <nav-bar
+    leftArrow
+    bind:leftTap="goBack"
+  ></nav-bar>
+
+  <view class="grow">
+    <view class="px-64rpx pt-30rpx">
+      <text class="text-56rpx text-hex-27282A leading-none">授权美的美居</text>
+    </view>
+
+    <view class="flex flex-row gap-x-36rpx items-center justify-center py-170rpx">
+      <image
+        src="/assets/img/login/logo.png"
+        class="w-128 h-128"
+      ></image>
+
+      <image
+        src="/package-auth/assets/confirm-check/arrow.png"
+        class="w-64 h-64"
+      ></image>
+
+      <image
+        src="/assets/img/logo/meiju.png"
+        class="w-128 h-128"
+      ></image>
+    </view>
+
+    <view class="px-48rpx pt-30rpx">
+      <text class="block pb-40rpx text-hex-27282A text-32rpx leading-none">请按照以下步骤操作：</text>
+
+      <text class="block text-28rpx text-hex-555659 leading-48rpx text-justify">{{tips}}</text>
+    </view>
+  </view>
+
+  <view class="flex flex-col items-center px-32rpx">
+    <mz-checkbox
+      class="pb-32rpx"
+      checked="{{isAgree}}"
+      disabled="{{seconds > 0}}"
+      bind:change="toAgree"
+      label="{{tipsText}}"
+    ></mz-checkbox>
+    <van-button
+      class="w-full"
+      type="primary"
+      block
+      size="large"
+      bind:click="toBindMeijuHome"
+      disabled="{{!isAgree}}"
+      >确定</van-button
+    >
+  </view>
+</view>
+
+<van-toast id="van-toast" />
+
+<van-dialog id="van-dialog" />

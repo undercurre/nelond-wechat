@@ -1,0 +1,8 @@
+{
+  "component": true,
+  "styleIsolation": "apply-shared",
+  "usingComponents": {
+    "mz-slider": "/components/mz-slider/index",
+    "handle-onoff": "/components/handle-onoff/index"
+  }
+}

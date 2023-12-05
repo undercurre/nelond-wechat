@@ -1,0 +1,77 @@
+var btn = require('../../../../commons/wxs/btn.wxs')
+
+var isPressed = {} // 当前是否点击状态
+var timerId = {} // 计时器
+
+function touchStart(event, ownerInstance) {
+  var key = ownerInstance.getDataset().key
+  console.log(key)
+  ownerInstance.callMethod('handleTouchStart', event)
+
+  var instant = ownerInstance.selectComponent('.preset') || ownerInstance.selectComponent('.img')
+  var instantActive = ownerInstance.selectComponent('.presetActive') || ownerInstance.selectComponent('.imgActive')
+  var iIcon = ownerInstance.selectComponent('.icon')
+  var iIconActive = ownerInstance.selectComponent('.iconActive')
+  var iText = ownerInstance.selectComponent('.text')
+  var iTextActive = ownerInstance.selectComponent('.textActive')
+
+  isPressed[key] = true
+
+  btn.opacityTransition(instant, instantActive)
+  if (iText) {
+    btn.opacityTransition(iText, iTextActive)
+  }
+  if (iIconActive) {
+    btn.opacityTransition(iIcon, iIconActive)
+  }
+
+  timerId[key] = ownerInstance.setTimeout(function () {
+    ownerInstance.clearTimeout(timerId[key])
+    timerId[key] = null
+
+    // 如果超时仍未松手
+    if (isPressed[key]) {
+      return
+    }
+
+    // 如果未被点击，则反转状态
+    btn.opacityTransition(instant, instantActive, false)
+    if (iText) {
+      btn.opacityTransition(iText, iTextActive, false)
+    }
+    if (iIconActive) {
+      btn.opacityTransition(iIcon, iIconActive, false)
+    }
+  }, btn._INTERVAL)
+}
+
+function touchEnd(event, ownerInstance) {
+  var key = ownerInstance.getDataset().key
+  var instant = ownerInstance.selectComponent('.preset') || ownerInstance.selectComponent('.img')
+  var instantActive = ownerInstance.selectComponent('.presetActive') || ownerInstance.selectComponent('.imgActive')
+  var iIcon = ownerInstance.selectComponent('.icon')
+  var iIconActive = ownerInstance.selectComponent('.iconActive')
+  var iText = ownerInstance.selectComponent('.text')
+  var iTextActive = ownerInstance.selectComponent('.textActive')
+
+  isPressed = false
+
+  if (timerId[key]) {
+    return
+  }
+
+  btn.opacityTransition(instant, instantActive, false)
+
+  if (iText) {
+    btn.opacityTransition(iText, iTextActive, false)
+  }
+
+  if (iIconActive) {
+    btn.opacityTransition(iIcon, iIconActive, false)
+  }
+}
+
+module.exports = {
+  touchStart: touchStart,
+  touchEnd: touchEnd,
+}

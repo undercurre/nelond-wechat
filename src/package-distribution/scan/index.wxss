@@ -1,0 +1,67 @@
+.rotate {
+  animation: rotating linear 2s infinite;
+}
+
+@keyframes rotating {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.ble-tips-box {
+  top: -460rpx;
+  animation: tips-show ease-in-out 0.5s 1 forwards;
+}
+
+@keyframes tips-show {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(460rpx);
+  }
+}
+
+.camera-mask {
+  background-color: rgba(0, 0, 0, 0.65);
+}
+
+.scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  width: 100%;
+  height: 92rpx;
+  animation: scaning ease-in-out 3s infinite;
+}
+
+.pause {
+  animation-play-state: paused;
+}
+
+@keyframes scaning {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(480rpx);
+  }
+}

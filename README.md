@@ -1,92 +1,165 @@
-# NELOND-wechat
+# HomLux
 
-美的商照，微信小程序
+## 特性
 
-## Getting started
+项目已经自带下面的依赖：
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+- [UnoCSS](https://github.com/MellowCo/unocss-preset-weapp) 功能强大且性能极高的 CSS 引擎
+- [Tailwind](https://tailwindcss.com/)
+- [MobX](https://github.com/wechat-miniprogram/mobx-miniprogram-bindings) 官方推荐的全局状态管理库
+- [computed](https://github.com/wechat-miniprogram/computed) 像写 Vue 一样写 computed 和 watch 吧
+- [Vant](https://vant-contrib.gitee.io/vant-weapp) 轻量、可靠的微信小程序组件库
+- SvgIcon 自实现 svg 动态加载组件，使用脚本自动从 iconify 拉取 svg 标签
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+项目配置了一个分包示例，可以按需求进行修改。
 
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+## 📁 代码结构
 
 ```
-cd existing_repo
-git remote add origin https://git.midea.com/MideaIntelligentLighting/FrontEnd/NELOND/nelond-wechat.git
-git branch -M main
-git push -uf origin main
+HomLux小程序
+├── .husky // git hooks
+├── build // 一些自动化脚本
+├── docs // 项目文档
+├── ossFile // OSS静态资源文件备份目录,对应地址：https://mzgd-oss-bucket.oss-cn-shenzhen.aliyuncs.com/homlux
+├── src // 小程序源码
+    ├── apis // 后端接口封装
+    ├── assets // 资源目录
+          ├── svg // 存放svg文件
+          ├── img // 存放图片文件
+          └── lottie // 存放动画资源
+    ├── components // 公用组件
+    ├── behaviors // behaviors共享代码
+          ├── pageBehaviors // 页面层级公共代码
+          └──  //
+    ├── config // 一些全局公用的配置、数据
+          ├── index // 配置文件入口；环境、云端地址相关配置
+          └── meta.ts // 自动生成的数据文件，记录当前版本编译、预览、上传的时间点
+    ├── commons // 公共代码
+          ├── templates // 公共wxml模板
+          └── wxs // 公共wxs module
+    ├── lib // 第三库源码文件
+    ├── custom-tab-bar // 自定义tabbar（必须在这个目录，不能放别的目录）
+    ├── store // 全局状态
+    ├── package-distribution // 配网相关页面分包（添加设备、附近设备、连接wifi等）
+    ├── package-mine // 我的相关页面分包（家庭管理、房间管理、设备管理、OTA、语音控制、设备替换）
+    ├── package-room-protocol // 用户协议列表和协议展示分包
+    ├── package-room-control // 房间相关页面分包（房间页面控制设备、场景列表、场景管理）
+    ├── package-distribution-meiju // 美居配网相关页面分包
+    ├── package-auth // 第三方授权相关页面分包
+    ├── package-automation // 场景模块相关页面分包
+    ├── package-remoter // 蓝牙遥控器模块相关页面分包
+    ├── pages // 主包的页面（小程序主页、登录）
+    └── utils // 公用方法
+└── typings // 类型声明文件
 ```
 
-## Integrate with your tools
+## 环境定义
 
-- [ ] [Set up project integrations](http://git.midea.com/MideaIntelligentLighting/FrontEnd/NELOND/nelond-wechat/-/settings/integrations)
+微信的环境名称，与代码中美智云的对应名称有所出入，映射关系如下：
 
-## Collaborate with your team
+```json
+{
+  "develop": "dev",
+  "trial": "sit",
+  "release": "prod"
+}
+```
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+具体地址配置，详见：~/src/config/index.ts
 
-## Test and Deploy
+## 版本管理
 
-Use the built-in continuous integration in GitLab.
+生产环境：暂无定义
+体验/开发环境：一般高于生产环境，在 patch 版本号（第三位）上递增
+云端环境切换：我的>关于
+发布时间：我的>关于
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+> 由于版本号只能在生产环境查询，故在体验、开发环境增加发布时间显示，该时间为上一次手动点编译、真机预览、git commit 的时间点
 
-***
+## 使用方法
 
-# Editing this README
+1. 使用`npm i`或者`pnpm i`安装依赖
+2. 运行`npm run unocss`或者`pnpm unocss`监听 wxml 文件并生成对应 wxss
+3. 在微信开发者工具，点击：工具-构建 npm
+4. 开始编写代码
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+## 组件文档
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+- [自定义导航栏](docs/components/custom-nav-bar.md)
+- [家庭选择下拉菜单](docs/components/home-select-menu.md)
+- [SVG 图标渲染](docs/components/svg-icon.md)
+- [van-button](docs/components/van-button.md)
+- [设备或者场景选择弹窗](docs/components/select-card-popup.md)
 
-## Name
-Choose a self-explaining name for your project.
+## 项目规范
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+1. 主包页面存放在 pages 目录下，分包页面存放在 packages 目录下，如果分包内容非常多，可以按照 packageXXX 再进行区分。
+2. 全局状态模型定义存放在 store 目录下，按照业务拆分模块。
+3. 接口调用方式封装在 apis 目录下，可以按照业务区分模块，如果项目比较大有多个后端接口地址，可以归类到不同文件夹进行区分。
+4. 接口通用的请求处理、响应处理、失败处理都封装在 utils/request 目录下，参考`utils/request/defaultRequest.ts`
+   ，不通用的数据和逻辑操作通过参数传入。[参考文档](docs/request使用说明.md)
+5. 无论页面和组件都统一使用 Component 进行构造。
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+### CSS 样式
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+1. 请尽量避免将静态的样式写进 `style` 中，以免影响渲染速度
+2. 公共样式
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+| 样式名           | 描述             |
+| ---------------- | ---------------- |
+| `page-container` | 用于一般页面容器 |
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+3. Unocss 用法和 Tailwind 基本一致，可以查看[Tailwind](https://tailwindcss.com/)官方文档进行使用，微信小程序的 class
+   不支持写`%`，所以要用`/`来代替，比如 w-50%可以用 w-1/2 表示，不支持`!`，要用`_el_`代替，比如：`w-50rpx!`可以用`w-50rpx_el_`
+   表示
+4. `Vant`的`Cell 单元格`样式已根据 UI 稿调整。可直接使用
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+### svg 图标
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+> SvgIcon 用法：SvgIcon 组件会从 globalData 读取 svg 标签，然后动态生成 url，并使用 css 渲染。项目在 build/getIconify.js
+> 实现了读取一个 `/iconify.json` 文件里的`iconList`列表，然后生成 js/ts 文件，然后导入到 globalData 即可根据 svg 的名字加载
+> svg。使用
+> svg
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+### 静态资源
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+> 由于小程序代码包大小限制，需要将部分静态资源放到 OSS。详情可参考`src/config/img.ts`
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+请优先使用图标库：https://icon-sets.iconify.design/icon-park-outline/
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+### JS
 
-## License
-For open source projects, say how it is licensed.
+1. 接口命名首字母大写，建议接口前可以加上 I
+2. TS 类型规范，业务相关的类型定义在 typings 目录下，按需使用 namespace 和不同的 d.ts 进行拆分，如果业务复杂，还可以归类到不同文件夹进行区分。
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+### 跨页面通信
+
+> 使用 mobx-miniprogram 包，使用 reaction 监听 store 里的状态变化即可，使用示例：
+
+```
+import { reaction } from 'mobx-miniprogram'
+import { store } from './store/index'
+component({
+    data: {
+        _clean: ()=>{}
+    },
+    methods: {
+        onLoad() {
+            this.data._clean = reaction(()=>store.xxx, (data, reaction)=>{...}) // 监听store里的xxx
+        },
+        onUnload() {
+            // 页面离开时需要执行clean清除副作用，防止内存泄漏
+            this.data._clean()
+        }
+    }
+)
+```
+
+## 注意点
+
+1. [computed 使用注意点](./docs/computed使用说明.md)
+2. [lottie 使用注意点](./docs/lottie使用说明.md)
+3. [mitt 使用注意点](./docs/mitt使用说明.md)
+4. [mobx 使用注意点](./docs/mobx使用说明.md)
+5. [request 使用注意点](./docs/request使用说明.md)
+6. [storage 使用注意点](./docs/storage使用说明.md)

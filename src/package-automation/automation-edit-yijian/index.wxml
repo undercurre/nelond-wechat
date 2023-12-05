@@ -1,0 +1,353 @@
+<!-- 背景 -->
+<view class="w-100vw h-100vh fixed left-0 top-0 bg-hex-f4f8ff bg-z-index-1"></view>
+<view
+  class="fixed left-0 top-0 w-100vw h-50vh bg-z-index"
+  style="background: linear-gradient(180deg, rgba(87, 105, 255, 0.1) 0%, rgba(87, 105, 255, 0) 100%)"
+></view>
+<!-- 遮住顶部 -->
+<view
+  style="height: {{navigationBarAndStatusBarHeight}};"
+  class="fixed left-0 top-0 z-110 overflow-hidden w-750rpx"
+>
+  <view class="w-100vw h-100vh absolute left-0 top-0 bg-hex-f4f8ff z-111"></view>
+  <view
+    class="absolute left-0 top-0 w-100vw h-50vh z-112"
+    style="background: linear-gradient(180deg, rgba(87, 105, 255, 0.1) 0%, rgba(87, 105, 255, 0) 100%)"
+  ></view>
+</view>
+<nav-bar
+  title="编辑场景"
+  z-index="{{113}}"
+  left-arrow
+  bind:leftTap="goBack"
+></nav-bar>
+
+<view class="flex flex-col items-center">
+  <!-- 标题 -->
+  <view
+    class="flex-1 w-750rpx"
+    id="content"
+  >
+    <view class="h-32rpx"></view>
+    <view class="flex flex-row items-center justify-between mx-32rpx">
+      <view
+        class="h-110rpx w-110rpx relative bg-hex-fff rounded-55rpx"
+        bindtap="handleEditIconShow"
+      >
+        <image
+          class="absolute top-15 left-16 h-80rpx w-80rpx bg-hex-F5F5F5 rounded-full"
+          src="{{sceneImgDir}}/{{sceneIcon}}.png"
+        />
+        <view class="absolute bottom-0 left-15 h-32rpx w-80rpx border-1rpx border-solid border-hex-488FFF bg-white leading-28rpx text-center rounded-18rpx">
+          <text class="text-22rpx text-hex-488FFF">编辑</text>
+        </view>
+      </view>
+      <van-field
+        name="sceneNameInput"
+        value="{{sceneName}}"
+        size="large"
+        maxlength="15"
+        placeholder="给场景取个名字"
+        placeholder-style="text-align: center;"
+        clearable="{{true}}"
+        custom-style="padding: 24rpx 40rpx;border-radius: 32rpx;width:530rpx;height:96rpx;text-align:center;"
+        bind:input="inputAutoSceneName"
+        border="{{false}}"
+      >
+      </van-field>
+    </view>
+    <view class="h-32rpx"></view>
+    <scroll-view
+      enable-flex
+      scroll-x
+      enhanced
+      show-scrollbar="{{false}}"
+      class="w-full h-56rpx flex"
+    >
+      <view class="flex flex-1 justify-start">
+        <view class="w-32rpx"></view>
+        <view
+          class="w-120rpx h-56rpx round-28rpx bg-white flex-center text-28rpx text-hex-555659 mr-32rpx rounded-28rpx"
+          wx:for="{{adviceSceneNameList}}"
+          wx:key="item"
+          data-text="{{item}}"
+          bind:tap="selectAdviceName"
+        >
+          <text>{{item}}</text>
+        </view>
+      </view>
+    </scroll-view>
+    <van-cell-group
+      inset
+      wx:if="{{sceneDeviceConditionsFlatten.length && !timeCondition.time && !roomId}}"
+    >
+      <van-cell
+        border="{{false}}"
+        clickable="{{true}}"
+        bind:click="handleEffectiveTimeShow"
+      >
+        <view class="flex items-center justify-between">
+          <text class="text-32rpx text-hex-27282A text-left">生效时间</text>
+          <view class="flex flex-col items-end">
+            <text
+              wx:if="{{!isAllday}}"
+              class="text-28rpx text-hex-555659 text-right"
+              >{{effectiveTime.startTime+'-'+endTimeDesc}}</text
+            >
+            <text class="{{!isAllday || timePeriodDesc.length > 14  ? 'text-24rpx' : 'text-32rpx'}} text-hex-a2a2a2 text-right">{{timePeriodDesc}}</text>
+          </view>
+        </view>
+        <view
+          slot="right-icon"
+          class="flex items-center ml-12rpx"
+        >
+          <image
+            class="w-32rpx h-32rpx"
+            src="../../assets/img/base/arrow-right.png"
+          />
+        </view>
+      </van-cell>
+    </van-cell-group>
+    <view class="h-48rpx mt-64rpx mb-36rpx mx-48rpx flex justify-between align-center">
+      <text class="text-40rpx font-medium text-hex-1a1a1c leading-48rpx">如果</text>
+      <!-- <image wx:if="{{sceneDeviceConditionsFlatten.length && !timeCondition.time}}" class="w-48 h-48" src="/package-automation/assets/imgs/automation/add.png" bindtap="addSensorPopup"></image> -->
+    </view>
+    <van-cell-group inset>
+      <van-cell
+        border="{{false}}"
+        clickable="{{true}}"
+        bind:click="handleConditionShow"
+        wx:if="{{!sceneDeviceConditionsFlatten.length}}"
+      >
+        <view class="flex items-center justify-center">
+          <view class="flex flex-row items-center h-96rpx">
+            <image
+              class="w-56 h-56 mr-38rpx"
+              src="/package-automation/assets/imgs/automation/add.png"
+            ></image>
+            <text class="text-32rpx text-hex-555659">添加条件</text>
+          </view>
+        </view>
+      </van-cell>
+      <view wx:else>
+        <view
+          class="flex flex-row items-center bg-hex-fff rounded-32rpx px-40rpx py-32rpx mb-24rpx relative"
+          wx:for="{{sceneDeviceConditionsFlatten}}"
+          bindtap="handleSceneConditionEdit"
+          data-productId="{{item.productId}}"
+          data-index="{{index}}"
+          wx:key="uniId"
+        >
+          <view class="w-72 h-72 rounded-full">
+            <image
+              src="{{item.pic}}"
+              class="w-72 h-72"
+            />
+          </view>
+
+          <view class="flex flex-col items-start ml-32rpx">
+            <text class="text-32rpx text-black-2a font-medium leading-none mt-10rpx">{{item.name}}</text>
+            <view class="flex flex-row gap-x-20rpx text-26 text-black-tips mt-22rpx leading-56rpx">
+              <text
+                class="px-24rpx bg-hex-F4F5F8 rounded-32rpx"
+                wx:for="{{item.desc}}"
+                wx:key="index"
+                >{{item}}</text
+              >
+            </view>
+          </view>
+
+          <!-- <view class="px-24rpx py-16rpx absolute right-0 top-0" catchtap="handleConditionDelete" data-index="{{index}}" data-info="{{item}}">
+            <image src="/assets/img/base/delete.png" class="w-40 h-40" />
+          </view> -->
+        </view>
+      </view>
+    </van-cell-group>
+    <view class="h-48rpx mt-64rpx mb-36rpx mx-48rpx flex justify-between align-center">
+      <text class="text-40rpx font-medium text-hex-1a1a1c leading-48rpx">就执行</text>
+      <image
+        wx:if="{{sceneDeviceActionsFlatten.length && !isDefault}}"
+        class="w-48 h-48"
+        src="/package-automation/assets/imgs/automation/add.png"
+        bindtap="handleActionShow"
+      ></image>
+    </view>
+    <van-cell-group
+      inset
+      wx:if="{{!sceneDeviceActionsFlatten.length}}"
+    >
+      <van-cell
+        border="{{false}}"
+        clickable="{{true}}"
+        bind:click="handleActionShow"
+      >
+        <view class="flex items-center justify-center">
+          <view class="flex flex-row items-center h-96rpx">
+            <image
+              class="w-56 h-56 mr-38rpx"
+              src="/package-automation/assets/imgs/automation/add.png"
+            ></image>
+            <text class="text-32rpx text-hex-555659">执行动作</text>
+          </view>
+        </view>
+      </van-cell>
+    </van-cell-group>
+
+    <view wx:else>
+      <drag
+        wx:if="{{!isDefault}}"
+        id="drag"
+        list-data="{{sceneDeviceActionsFlatten}}"
+        scroll-top="{{scrollTop}}"
+        item-height="{{208}}"
+        generic:item="cell"
+        bind:actionEdit="handleSceneActionEdit"
+        bind:actionDelete="handleActionDelete"
+        bind:sortend="handleSortEnd"
+      ></drag>
+      <drag
+        wx:if="{{isDefault}}"
+        id="drag"
+        list-data="{{sceneDeviceActionsFlatten}}"
+        scroll-top="{{scrollTop}}"
+        item-height="{{208}}"
+        generic:item="cell-default"
+        bind:actionEdit="handleSceneActionEdit"
+        bind:actionDelete="handleActionDelete"
+        bind:sortend="handleSortEnd"
+      ></drag>
+      <view style="height: calc(116rpx + env(safe-area-inset-bottom))"></view>
+    </view>
+  </view>
+  <view
+    class="fixed bottom-0 flex flex-row pt-30rpx justify-between w-750rpx px-32rpx box-border z-400 bg-hex-f4f8ff"
+    style="height: calc(146rpx + env(safe-area-inset-bottom))"
+  >
+    <van-button
+      custom-class="double-btn"
+      custom-style="border: 2rpx solid #A2A2A2;"
+      color="transparent"
+      bind:click="handleAutoSceneDelete"
+    >
+      <text class="text-36rpx text-black-tips">删除</text>
+    </van-button>
+    <van-button
+      type="primary"
+      custom-class="double-btn"
+      disabled="{{!autoSceneId &&(sceneDeviceActionsLength === 0 || sceneDeviceConditionsFlatten.length === 0)}}"
+      bind:click="handleSave"
+    >
+      <text class="text-36rpx">确定</text>
+    </van-button>
+  </view>
+</view>
+
+<edit-effectiveTime-popup
+  show="{{showEffectiveTimePopup}}"
+  startTime="{{effectiveTime.startTime}}"
+  endTime="{{effectiveTime.endTime}}"
+  periodType="{{effectiveTime.timeType}}"
+  week="{{effectiveTime.timePeriod}}"
+  bind:close="handleEffectiveTimeClose"
+  bind:confirm="handleEffectiveTimeConfirm"
+/>
+<!-- <add-condition-popup show="{{showEditConditionPopup}}" bind:close="handleConditionClose" bind:cancel="handleTimeConditionReturn" bind:confirm="handleEffectiveTimeConfirm" bind:conditionClicked="onConditionClicked" /> -->
+<edit-room-popup
+  value="{{roomId}}"
+  show="{{showEditRoomPopup}}"
+  bind:close="handleSceneRoomEditCancel"
+  bind:cancel="handleRoomReturn"
+  bind:confirm="handleSceneRoomEditConfirm"
+/>
+<add-action-popup
+  show="{{showEditActionPopup}}"
+  bind:close="handleActionClose"
+  bind:actionClicked="onActionClicked"
+/>
+<edit-icon-popup
+  value="{{sceneIcon}}"
+  show="{{showEditIconPopup}}"
+  bind:close="handleEditIconClose"
+  bind:confirm="handleEditIconConfirm"
+/>
+<edit-timeConditions-popup
+  show="{{showTimeConditionPopup}}"
+  time="{{timeCondition.time || '10:00'}}"
+  periodType="{{timeCondition.timeType || '1'}}"
+  week="{{timeCondition.timePeriod || '1,2,3,4,5,6,7'}}"
+  bind:close="handleTimeConditionClose"
+  bind:cancel="handleTimeConditionReturn"
+  bind:confirm="handleTimeConditionConfirm"
+/>
+<edit-delay-popup
+  show="{{showDelayPopup}}"
+  value="{{delay}}"
+  bind:close="handleDelayClose"
+  bind:confirm="handleDelayConfirm"
+  bind:cancel="handleDelayReturn"
+/>
+<select-card-popup
+  show="{{showSelectCardPopup}}"
+  title="{{selectCardType === 'device'? '选择设备': selectCardType === 'scene' ?'选择场景':'选择传感器'}}"
+  cardType="{{cardType}}"
+  list="{{list}}"
+  selectList="{{tempSceneDevicelinkSelectedList}}"
+  showCancel="{{selectCardType !== 'sensor'||!sceneDeviceConditionsFlatten.length}}"
+  bind:select="handleSelectCardSelect"
+  bind:close="handleSelectCardClose"
+  bind:confirm="handleSelectCardConfirm"
+  bind:cancel="handleSelectCardReturn"
+></select-card-popup>
+<light-control-popup
+  show="{{showEditPopup === '0x13'}}"
+  title="{{sceneEditTitle}}"
+  lightInfo="{{sceneEditInfo}}"
+  bind:confirm="handleSceneEditConfirm"
+  bind:close="handleEditPopupClose"
+></light-control-popup>
+<switch-control-popup
+  show="{{showEditPopup === '0x21'}}"
+  title="{{sceneEditTitle}}"
+  switchInfo="{{sceneEditInfo}}"
+  bind:confirm="handleSceneEditConfirm"
+  bind:close="handleEditPopupClose"
+></switch-control-popup>
+<curtain-control-popup
+  show="{{showEditPopup === '0x14'}}"
+  title="{{sceneEditTitle}}"
+  deviceInfo="{{sceneEditInfo}}"
+  bind:confirm="handleSceneEditConfirm"
+  bind:close="handleEditPopupClose"
+></curtain-control-popup>
+<bath-control-popup
+  show="{{showEditPopup === '0x26'}}"
+  title="{{sceneEditTitle}}"
+  isShowConfirm="{{true}}"
+  isSceneSetting="{{true}}"
+  deviceInfo="{{sceneEditInfo}}"
+  bind:confirm="handleSceneEditConfirm"
+  bind:close="handleEditPopupClose"
+></bath-control-popup>
+<dryer-control-popup
+  show="{{showEditPopup === '0x17'}}"
+  title="{{sceneEditTitle}}"
+  isShowConfirm="{{true}}"
+  isSceneSetting="{{true}}"
+  deviceInfo="{{sceneEditInfo}}"
+  bind:confirm="handleSceneEditConfirm"
+  bind:close="handleEditPopupClose"
+></dryer-control-popup>
+<edit-sensor-popup
+  show="{{showEditSensorPopup}}"
+  productId="{{editingSensorType}}"
+  checkList="{{editingSensorAbility}}"
+  controlAction="{{editingSensorProperty}}"
+  bind:confirm="handleEditSensorConfirm"
+  bind:close="handleEditSensorClose"
+></edit-sensor-popup>
+<van-toast id="van-toast" />
+<van-dialog
+  id="van-dialog"
+  confirm-button-color="#27282A"
+  cancel-button-color="#27282A"
+/>

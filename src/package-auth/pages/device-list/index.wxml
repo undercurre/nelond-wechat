@@ -1,0 +1,95 @@
+<view class="page-container flex flex-col">
+  <nav-bar
+    leftArrow="{{true}}"
+    bind:leftTap="goBackHome"
+    title="美的美居"
+  ></nav-bar>
+
+  <view class="px-32rpx">
+    <van-cell
+      title="我的家庭"
+      label="已同步{{deviceList.length}}个设备"
+      center
+      data-url="{{urls.meiju}}"
+      bind:click="goTo"
+      border="{{false}}"
+      custom-class="title-wrapper"
+    >
+      <image
+        slot="icon"
+        class="w-96rpx h-96rpx mr-32rpx"
+        src="/assets/img/mine/meiju.png"
+      />
+      <text
+        slot="right-icon"
+        class="right-btn"
+        bindtap="syncMeijuDevice"
+        >重新同步</text
+      >
+    </van-cell>
+  </view>
+
+  <view
+    id="content"
+    class="flex-1"
+  >
+    <view
+      wx:if="{{deviceList.length === 0}}"
+      class="w-750rpx h-400rpx mt-80rpx flex flex-col items-center"
+    >
+      <image
+        src="{{defaultImgDir}}/no-device.png"
+        class="w-300rpx h-300rpx"
+      ></image>
+      <text class="text-28rpx text-black-59 mt-48rpx mb-64rpx">暂无可同步设备</text>
+    </view>
+    <scroll-view
+      wx:else
+      enhanced
+      scroll-y
+      show-scrollbar="{{false}}"
+      style="height: {{listHeight}}px;"
+    >
+      <van-cell-group
+        wx:for="{{deviceList}}"
+        wx:key="deviceId"
+        inset
+      >
+        <van-cell
+          title="{{item.deviceName}}"
+          label="{{item.roomName}}"
+          title-class="py-16rpx pl-16rpx"
+          center
+          border="{{false}}"
+        >
+        </van-cell>
+      </van-cell-group>
+    </scroll-view>
+  </view>
+
+  <view class="list-bottom-placeholder"> </view>
+</view>
+
+<view
+  class="fixed bottom-0 flex flex-col pt-30rpx w-750rpx px-32rpx box-border"
+  style="height: calc(212rpx + env(safe-area-inset-bottom))"
+>
+  <view
+    class="text-center pb-32rpx"
+    bindtap="debindMeiju"
+  >
+    <text class="text-32rpx text-hex-555659">解除绑定</text>
+  </view>
+  <van-button
+    class="w-full"
+    size="large"
+    type="primary"
+    block
+    bind:click="goBackHome"
+    >返回首页</van-button
+  >
+</view>
+
+<van-toast id="van-toast" />
+
+<van-dialog id="van-dialog" />

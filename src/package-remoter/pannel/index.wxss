@@ -1,0 +1,63 @@
+.page-container {
+  position: relative;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 220rpx);
+}
+
+.tool-bar {
+  display: flex;
+  position: absolute;
+  flex-direction: row;
+  top: 60rpx;
+  right: 20rpx;
+}
+.img-wrapper {
+  padding: 20rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.joystick {
+  position: relative;
+  width: 480rpx;
+  height: 480rpx;
+}
+.up {
+  top: 0;
+  left: 88rpx;
+}
+.left {
+  left: 0;
+  top: 88rpx;
+}
+.down {
+  bottom: 0;
+  left: 88rpx;
+}
+.right {
+  right: 0;
+  top: 88rpx;
+}
+.middle {
+  left: 162rpx;
+  top: 162rpx;
+}
+
+.main-control {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 64rpx 64rpx 0 0;
+  padding-top: 16rpx;
+  padding-bottom: calc(env(safe-area-inset-bottom) + 16rpx);
+}
+
+.text-temp {
+  font-size: 220rpx;
+  color: #495264;
+}

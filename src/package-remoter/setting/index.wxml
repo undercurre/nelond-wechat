@@ -1,0 +1,38 @@
+<view class="fixed left-0 top-0 w-100vw h-100vh bg-hex-eef2f7" style="z-index: -1"></view>
+
+<view class="h-100vh flex flex-col items-center">
+  <!-- 标题 -->
+  <nav-bar title="设置设备" left-arrow bind:leftTap="goBack"></nav-bar>
+
+  <!-- 上半部分 -->
+  <view class="mt-24rpx w-750rpx flex-1">
+    <van-cell-group inset>
+      <van-cell is-link bind:click="handleDeviceNameEditPopup" title="设备名称" value="{{curRemoter.deviceName}}"></van-cell>
+
+      <van-cell is-link title="首页开关" value="{{curRemoter.actions[curRemoter.defaultAction].name}}" border="{{false}}" bind:click="toSetting"></van-cell>
+    </van-cell-group>
+
+    <!-- <van-cell-group inset>
+      <van-cell title="按钮震动反馈" border="{{false}}" bind:click=""></van-cell>
+    </van-cell-group> -->
+  </view>
+
+  <!-- <view class="flex flex-1 flex-col justify-end">
+    <view bind:tap="handleDeviceUnbind">
+      <text class="text-hex-a2a2a2 text-32">解绑遥控器</text>
+    </view>
+  </view> -->
+
+  <!-- 隔开一点距离 -->
+  <view class="h-40rpx"></view>
+  <!-- 底部按钮 -->
+  <van-button size="large" type="warning" custom-class="delete-btn" bind:click="handleDeviceDelete">删除设备</van-button>
+  <view class="h-96rpx"></view>
+</view>
+
+<van-toast id="van-toast" />
+<van-dialog id="van-dialog" confirm-button-color="#27282A" cancel-button-color="#27282A" />
+
+<edit-name-popup value="{{curRemoter.deviceName}}" show="{{showEditNamePopup}}" bind:close="handleDeviceNameEditCancel" bind:confirm="handleDeviceNameEditConfirm" bind:triggerDebugMode="triggerDebugMode" />
+
+<van-action-sheet show="{{ isShowSetting }}" actions="{{ curRemoter.actions }}" cancel-text="取消" bind:close="onCloseSetting" bind:select="onSelectSetting" bind:cancel="onCloseSetting" />

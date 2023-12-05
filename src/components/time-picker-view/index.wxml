@@ -1,0 +1,16 @@
+<view>
+  <view class="h-270rpx w-750rpx relative">
+    <view class="absolute w-686rpx h-90rpx top-90rpx bg-hex-f9fbfe mx-32rpx rounded-32rpx">
+      <text class="absolute top-29rpx {{colSec.length ? 'left-264rpx' : 'left-400rpx'}} text-28rpx text-hex-666666">{{colFirUnit}}</text>
+      <text wx:if="{{colSec.length}}" class="absolute top-29rpx left-494rpx text-28rpx text-hex-666666">{{colSecUnit}}</text>
+    </view>
+    <picker-view immediate-change indicator-class="picker-selected" indicator-style="height: 50px;" class="w-full h-270rpx" value="{{value}}" bindchange="bindChange">
+      <picker-view-column>
+        <view wx:for="{{colFir}}" wx:key="colFir" style="padding-left: {{colSec.length ? '124rpx' : '0rpx'}}; line-height: 50px; text-align: center; font-weight: 500; font-size: 40rpx">{{item}}</view>
+      </picker-view-column>
+      <picker-view-column wx:if="{{colSec.length}}">
+        <view wx:for="{{colSec}}" wx:key="colSec" style="padding-right: 164rpx; line-height: 50px; text-align: center; font-weight: 500; font-size: 38rpx">{{item}}</view>
+      </picker-view-column>
+    </picker-view>
+  </view>
+</view>

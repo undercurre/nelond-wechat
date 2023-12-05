@@ -1,0 +1,29 @@
+<!--addDevice//pages/notFound/notFound.wxml-->
+<view class="page" style="padding-top:{{statusBarHeight+40}}px">
+  <view class="title">没有发现{{deviceName}}</view>
+  <image class="no-device" src="{{imgBaseUrl+imges.noFound}}"></image>
+  <view class="desc-list">
+    <view class="r">
+      <view class="num">1</view>
+      <view class="text">确保{{deviceName}}已接通电源</view>
+    </view>
+    <view class="r">
+      <view class="num">2</view>
+      <view class="text">请将手机靠近{{deviceName}}</view>
+    </view>
+    <view class="r">
+      <view class="num">3</view>
+      <view class="text">若以上内容确认无误，可点击下方按钮重试，请注意在倒计时结束前按照指引完成设置</view>
+    </view>
+    <!-- <view class="r">
+      <view class="num">4</view>
+      <view class="text">
+        若按上述指引操作后仍然失败，请提交你的问题并留下你的联系方式/微信号。
+        <view class="btn" bindtap="feedback">去提交问题</view>
+      </view>
+    </view> -->
+  </view>
+  <view class="btnBox">
+    <view class="retry" bindtap="retry">重试</view>
+  </view>
+</view>

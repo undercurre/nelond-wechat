@@ -1,0 +1,14 @@
+<!--m-ui/noticebar/noticebar.wxml-->
+<view class="noticebar" wx:if="{{show}}" catchtap="noticeBarClicked" style="background-color:{{bgColor}}">
+  <image class="type-ICON" src="{{noticeTypeImg}}" style="margin-right: 16rpx"></image>
+  <text class="noticebar-content" style="color:{{color}};font-size: {{size}}rpx">{{notice}}</text>
+
+  <view class="more-click-content" v-if="mode">
+    <view wx:if="{{mode =='btn'}}" class="btnText" style="color:{{color}}" catchtap="btnClicked">{{btnText}}</view>
+    <image wx:if="{{mode=='closable'}}" src="{{closeIcon}}" class="mode-ICON" catchtap="closeIconClicked"></image>
+    <view wx:if="{{mode=='all'}}" class="mode-all">
+      <view class="btnText" style="margin-right:16rpx; color:{{color}}" catchtap="btnClicked">{{btnText}}</view>
+      <image src="{{closeIcon}}" class="mode-ICON" catchtap="closeIconClicked"></image>
+    </view>
+  </view>
+</view>

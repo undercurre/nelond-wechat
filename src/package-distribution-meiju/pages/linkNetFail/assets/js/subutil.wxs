@@ -1,0 +1,59 @@
+var formatFailTitle = function (fialMainTitle, deviceName) {
+  if (fialMainTitle.indexOf('XX') != -1) {
+    return fialMainTitle.replace('XX', deviceName)
+  } else {
+    return fialMainTitle
+  }
+}
+
+var formatGuideDesc = function (itemText, deviceName) {
+  if (itemText.indexOf('XX') != -1) {
+    itemText = itemText.replace('XX', deviceName)
+  }
+
+  if (itemText.indexOf('测试一下') != -1) {
+    itemText = itemText.replace('测试一下', '')
+  }
+
+  if (itemText.indexOf('仅iOS展示') != -1) {
+    itemText = itemText.replace('（仅iOS展示）', '')
+  }
+
+  return itemText
+}
+
+//是否有测试一下
+var isTest = function (itemText) {
+  if (itemText.indexOf('测试一下') != -1) {
+    return true
+  } else {
+    return false
+  }
+}
+
+//是否需要wifi确认框
+var isNeedWifiConfirmInput = function (itemText) {
+  if (itemText.indexOf('WiFi与密码填写正确') != -1) {
+    return true
+  } else {
+    return false
+  }
+}
+
+// 是否有查看教程
+var isGuide = function (itemText) {
+  var text = itemText || ''
+  if (text.indexOf('本地网络') != -1 || text.indexOf('Mac地址') != -1 || text.indexOf('DHCP') != -1) {
+    return true
+  } else {
+    return false
+  }
+}
+
+module.exports = {
+  formatFailTitle: formatFailTitle,
+  formatGuideDesc: formatGuideDesc,
+  isTest: isTest,
+  isNeedWifiConfirmInput: isNeedWifiConfirmInput,
+  isGuide: isGuide,
+}

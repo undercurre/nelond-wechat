@@ -1,0 +1,128 @@
+/* addDevice//pages/addGuide/addGuide.wxss */
+
+.block {
+  display: block;
+  text-align: center;
+}
+
+.thick {
+  font-weight: 600;
+}
+
+.blue {
+  color: #488fff;
+  font-weight: 600;
+}
+
+.orange-display-txt {
+  color: #ff8225;
+  font-size: 32rpx;
+  font-weight: 600;
+}
+
+.flex-r {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: center;
+}
+
+.device-img {
+  width: 196rpx;
+  height: 196rpx;
+  position: absolute;
+  top: 50%;
+  right: 100rpx;
+  transform: translateY(-50%);
+}
+
+.guide-img {
+  width: 686rpx;
+  height: 384rpx;
+  display: block;
+}
+
+.mode5-img {
+  width: 686rpx;
+  height: 384rpx;
+  display: block;
+  border-radius: 32rpx;
+  margin: 40rpx auto;
+}
+
+.addGuide-dialog-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40rpx;
+}
+
+.check-addGuide-title {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.check-addGuide-content {
+  margin-top: 40rpx;
+  margin-bottom: 18rpx;
+}
+
+.check-guide {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.desc-list {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 30rpx;
+  margin-top: 20rpx;
+  padding: 0 4%;
+  align-items: center;
+}
+
+.r {
+  display: flex;
+  margin-bottom: 42rpx;
+  align-items: top;
+}
+
+.text {
+  font-size: 32rpx;
+}
+
+.finish-sel {
+  color: #666666;
+  margin-bottom: 40rpx;
+}
+
+.switch-set .blue-text {
+  color: #488fff;
+}
+.switch-set image {
+  display: block;
+  width: 12rpx;
+  height: 20rpx;
+  margin-left: 12rpx;
+}
+.switch-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bluetoothOpenNotice {
+  padding: 0rpx 40rpx;
+  margin-bottom: 40rpx;
+}
+.btn {
+  color: #488fff;
+}
+.btnView {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

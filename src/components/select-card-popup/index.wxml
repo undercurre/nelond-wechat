@@ -1,0 +1,115 @@
+<wxs
+  src="/commons/wxs/util.wxs"
+  module="module"
+/>
+
+<van-popup
+  show="{{ show }}"
+  z-index="1002"
+  round
+  position="bottom"
+  bind:close="handleClose"
+  catchtouchmove="blank"
+  closeable
+  safe-area-inset-bottom="{{false}}"
+>
+  <view class="w-750rpx h-85vh relative flex flex-col items-center">
+    <view class="flex flex-row">
+      <text
+        wx:if="titleLeftBtnText"
+        class="absolute leading-50rpx text-32 text-hex-555659"
+        bind:tap="clickTitleLeftBtn"
+        >{{ titleLeftBtnText }}</text
+      >
+      <text class="h-50rpx text-36rpx text-black-2a mt-44rpx font-medium">{{title}}</text>
+    </view>
+
+    <scroll-view
+      enhanced
+      show-scrollbar="{{false}}"
+      scroll-x
+      class="mt-48rpx h-60rpx w-750rpx flex"
+      enable-flex
+    >
+      <view class="flex">
+        <view class="w-50rpx"></view>
+        <view class="flex min-w-650rpx justify-start">
+          <view
+            wx:for="{{roomListComputed}}"
+            wx:key="roomId"
+            class="flex-col-center {{index!==0?'ml-90rpx': ''}}"
+            data-item="{{item}}"
+            bindtap="handleRoomSelect"
+          >
+            <text class="{{roomSelect === item.roomId ? 'text-32rpx text-black-2a' : 'text-28rpx text-hex-555659'}} whitespace-nowrap">{{item.roomName}}</text>
+            <view class="w-42rpx h-8rpx mt-8rpx bg-hex-488fff rounded-999 {{roomSelect === item.roomId ? 'opacity-100' : 'opacity-0'}}"></view>
+          </view>
+        </view>
+        <view class="w-50rpx"></view>
+      </view>
+    </scroll-view>
+
+    <view class="h-44rpx"></view>
+
+    <scroll-view
+      class="grow h-600"
+      enhanced
+      show-scrollbar="{{false}}"
+      scroll-y
+    >
+      <view class="w-750rpx flex-col-center">
+        <view
+          wx:if="{{cardType==='scene'}}"
+          class="w-686rpx grid grid-cols-2 gap-x-20rpx"
+        >
+          <scene-card
+            class="mt-24rpx"
+            wx:for="{{listComputed}}"
+            wx:key="sceneId"
+            bind:cardTap="handleCardTap"
+            scene-info="{{item}}"
+            select="{{module.includes(selectList, item.sceneId)}}"
+          />
+        </view>
+        <view
+          wx:else
+          class="w-686rpx grid grid-cols-4 gap-x-20rpx gap-y-24rpx"
+        >
+          <device-card
+            wx:for="{{listComputed}}"
+            wx:key="uniId"
+            bind:cardTap="handleCardTap"
+            device-info="{{item}}"
+            showSpecialBg="{{false}}"
+            select="{{module.includes(selectList, item.uniId)}}"
+            bind:offlineTap="handleOfflineTap"
+          />
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="h-96rpx"></view>
+    <view class="flex w-686rpx gap-x-46rpx">
+      <van-button
+        wx:if="{{showCancel}}"
+        class="flex-1"
+        size="large"
+        bind:click="handleCancel"
+        >{{ cancelText }}</van-button
+      >
+
+      <van-button
+        wx:if="{{showConfirm}}"
+        type="primary"
+        class="flex-1"
+        size="large"
+        bind:click="handleConfirm"
+        >{{ confirmText }}</van-button
+      >
+    </view>
+
+    <view class="h-96rpx"></view>
+  </view>
+
+  <van-toast id="van-toast" />
+</van-popup>

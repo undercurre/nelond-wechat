@@ -1,0 +1,217 @@
+// 值变化节流时间
+var THROTTLE_TIME = 150
+
+// Toast 淡入淡出过渡动画
+var FADE_TRANSITION = 'opacity 0.3s'
+
+// Toast 停留时间
+var TOAST_DELAY = 500
+
+/**
+ * !! ES5 全局变量会跨组件作用域，以下可能存在混用的属性，须以 data-key 作区分
+ */
+var key = 'common' // 组件实例需要通过data-key唯一标识，作变量隔离
+var setValue = {} // 设置值
+var throttle_timer = null // 【值变化】事件的节流计时
+var toast_timer = {} // toast淡入淡出计时
+var sliderBar = {}
+var sliderBtn = {}
+var sliderInfo = {}
+var buttonInfo = {}
+var sliderToast = {}
+var toastActived = {}
+var isMoving = {} // 是否处理拖动中
+
+/**
+ * 滑条的最小值最大值，默认 0~100
+ * 按钮默认内嵌在滑条容器内
+ */
+var min = {}
+var max = {}
+var isBtnInset = {}
+
+// 处理属性初始化，以及变更
+function propObserver(newValue, oldValue, ownerInstance) {
+  if (newValue === oldValue) {
+    return
+  }
+  var dataset = ownerInstance.getDataset()
+  if (dataset.key !== undefined) key = dataset.key
+
+  ownerInstance.setTimeout(function () {
+    // 如果正在拖动，则不响应值变化
+    if (isMoving[key]) return
+
+    init(ownerInstance)
+    // console.log('propObserver', newValue, oldValue, key, 'min:', min[key])
+
+    // 初始化失败，不执行
+    if (!buttonInfo[key].width) {
+      return
+    }
+    var width = ((newValue - min[key]) / (max[key] - min[key])) * sliderInfo[key].width
+    changeBarStyle(ownerInstance, width)
+  }, 300)
+}
+
+function onTouchstart(event, ownerInstance) {
+  var dataset = ownerInstance.getDataset()
+  if (dataset.key !== undefined) key = dataset.key
+  var touch = event.touches[0] || event.changedTouches[0]
+  var barWidth = touch.clientX - sliderInfo[key].left
+  isMoving[key] = true
+  changeBarStyle(ownerInstance, barWidth)
+  updateValue(barWidth)
+  ownerInstance.callMethod('touchstart', { value: setValue[key] })
+}
+
+function onTouchmove(event, ownerInstance) {
+  var dataset = ownerInstance.getDataset()
+  if (dataset.key !== undefined) key = dataset.key
+
+  var touch = event.touches[0] || event.changedTouches[0]
+  var barWidth = touch.clientX - sliderInfo[key].left
+
+  updateValue(barWidth)
+  changeBarStyle(ownerInstance, barWidth)
+
+  // 气泡提示
+  if (dataset.showToast) {
+    changeToastStyle(barWidth)
+    toastActived[key] = true
+  }
+
+  // 节流触发【值变化】事件
+  if (throttle_timer) return
+  throttle_timer = ownerInstance.setTimeout(function () {
+    ownerInstance.callMethod('valueChange', { value: setValue[key] })
+    throttle_timer = null
+  }, THROTTLE_TIME)
+}
+
+function onTouchend(event, ownerInstance) {
+  var dataset = ownerInstance.getDataset()
+  if (dataset.key !== undefined) key = dataset.key
+
+  // 延迟结束点拖动状态
+  ownerInstance.setTimeout(function () {
+    isMoving[key] = false
+  }, 300)
+
+  // 气泡提示
+  if (dataset.showToast) {
+    var touch = event.touches[0] || event.changedTouches[0]
+    var barWidth = touch.clientX - sliderInfo[key].left
+
+    if (toastActived[key] && !toast_timer[key]) {
+      changeToastStyle(barWidth, false)
+      toastActived[key] = false
+    }
+    // 如果原本未显示toast，或者原本toast未完成淡出动画，则先淡入再淡出
+    else {
+      changeToastStyle(barWidth)
+      toastActived[key] = true
+
+      if (toast_timer[key]) {
+        ownerInstance.clearTimeout(toast_timer[key])
+        toast_timer[key] = null
+      }
+
+      toast_timer[key] = ownerInstance.setTimeout(function () {
+        changeToastStyle(barWidth, false)
+        toastActived[key] = false
+        toast_timer[key] = null
+      }, TOAST_DELAY)
+    }
+  }
+
+  if (throttle_timer) {
+    ownerInstance.clearTimeout(throttle_timer)
+    throttle_timer = null
+  }
+  ownerInstance.callMethod('handleEnd', { value: setValue[key] })
+}
+
+// 初始化，获取组件设置
+function init(_inst) {
+  var dataset = _inst.getDataset()
+  if (dataset.key !== undefined) key = dataset.key
+
+  dataset.min === undefined ? (min[key] = 0) : (min[key] = dataset.min)
+  dataset.max === undefined ? (max[key] = 100) : (max[key] = dataset.max)
+  dataset.isBtnInset === undefined ? (isBtnInset[key] = true) : (isBtnInset[key] = dataset.isBtnInset)
+
+  sliderBtn[key] = _inst.selectComponent('.button')
+  sliderBar[key] = _inst.selectComponent('.mz-slider-bar')
+  sliderInfo[key] = _inst.selectComponent('.mz-slider').getBoundingClientRect()
+  buttonInfo[key] = sliderBtn[key].getBoundingClientRect()
+
+  if (dataset.showToast) {
+    sliderToast[key] = _inst.selectComponent('.slider-toast')
+  }
+}
+
+// 滑条样式处理
+function changeBarStyle(_inst, _width) {
+  if (!buttonInfo[key].width) {
+    init(_inst)
+  }
+
+  var minWidth = isBtnInset[key] ? buttonInfo[key].width / 2 : 0
+  var maxWidth = isBtnInset[key] ? sliderInfo[key].width - buttonInfo[key].width / 2 : sliderInfo[key].width
+  var widthInRange = calcDragDis(_width, minWidth, maxWidth)
+  var sliderBarWidth = isBtnInset[key] ? widthInRange + buttonInfo[key].width / 2 : widthInRange
+
+  // console.log('sliderInfo[key].width', JSON.stringify(sliderInfo[key].width), key)
+  console.log('[sliderBarWidth]', sliderBarWidth)
+
+  // 已激活的滑条宽度处理
+  sliderBar[key].setStyle({
+    width: sliderBarWidth + 'px',
+  })
+
+  if (!isBtnInset[key]) {
+    // 滑动按钮位置处理
+    var btnX = widthInRange - buttonInfo[key].width / 2
+    sliderBtn[key].setStyle({
+      transform: 'translateX(' + btnX + 'px)',
+    })
+  }
+}
+
+/**
+ * Toast样式处理
+ * @param _width 滑动条激活部分宽度
+ * @param _active 是否激活（淡入）
+ */
+function changeToastStyle(_width, _active = true) {
+  var widthInRange = calcDragDis(_width, isBtnInset[key] ? buttonInfo[key].width : 0)
+  var toastInfo = sliderToast[key].getBoundingClientRect()
+  var toastLeft = widthInRange - toastInfo.width / 2
+  var compositeActive = _active || !toastActived[key]
+  sliderToast[key].setStyle({
+    opacity: compositeActive ? 1 : 0,
+    transition: FADE_TRANSITION,
+    transform: 'translateX(' + toastLeft + 'px)',
+  })
+}
+
+// 宽度转为设置值
+// ! 在此处处理 min~max 值的传化，组件中的事件处理则不必再逐一处理
+function updateValue(_width) {
+  setValue[key] = Math.round(
+    (calcDragDis(_width, 0, sliderInfo[key].width) / sliderInfo[key].width) * (max[key] - min[key]) + min[key],
+  )
+}
+
+// 计算范围约束值
+function calcDragDis(_val, _min = buttonInfo[key].width, _max = sliderInfo[key].width) {
+  return Math.min(Math.max(_val, _min), _max)
+}
+
+module.exports = {
+  onTouchstart: onTouchstart,
+  onTouchmove: onTouchmove,
+  onTouchend: onTouchend,
+  propObserver: propObserver,
+}

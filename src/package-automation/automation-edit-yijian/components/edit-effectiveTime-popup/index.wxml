@@ -1,0 +1,26 @@
+<import src="/commons/templates/popup.wxml" />
+<van-popup show="{{ show }}" z-index="1002" round position="bottom" bind:close="handleClose" closeable catchtouchmove="blank">
+  <view class="w-750rpx h-1200rpx relative flex flex-col items-center">
+    <template is="title" data="{{title: '生效时间'}}" />
+    <scroll-view enhanced show-scrollbar="{{true}}" scroll-y="{{true}}" style="height: 990rpx">
+      <view class="h-32rpx"></view>
+
+      <view class="w-full px-11rpx box-border">
+        <van-cell-group inset border="{{false}}">
+          <van-cell border="{{true}}" title="开始时间" value="{{startTime}}" custom-class="cell-border" custom-style="background-color:#f9fbfe;" data-type="start" clickable bind:click="handleTimeShow"></van-cell>
+          <van-cell border="{{false}}" title="结束时间" value="{{endTimeDesc}}" custom-class="cell-border" custom-style="background-color:#f9fbfe;" data-type="end" clickable bind:click="handleTimeShow"> </van-cell>
+        </van-cell-group>
+      </view>
+      <view class="mt-38rpx w-750rpx px-11rpx box-border py-1rpx">
+        <text class="ml-58rpx text-32rpx font-medium text-hex-27282a">重复设置</text>
+        <period-select week="{{week}}" radio="{{periodType}}" bind:periodChange="periodChange" bind:weekChange="weekChange"></period-select>
+      </view>
+    </scroll-view>
+
+    <view class="flex w-686rpx gap-x-46rpx">
+      <van-button type="primary" class="flex-1" size="large" bind:click="handleConfirm">确定</van-button>
+    </view>
+  </view>
+</van-popup>
+
+<edit-time-popup show="{{showTimePopup}}" type="{{timeType}}" value="{{timeValue}}" bind:change="handleTimeChange" bind:close="handleTimeClose" bind:confirm="handleTimeConfirm" />

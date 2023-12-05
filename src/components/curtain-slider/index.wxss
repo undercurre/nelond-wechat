@@ -1,0 +1,15 @@
+.curtain-container {
+  background-image: linear-gradient(0deg, rgba(95, 156, 251, 0.32) 0%, rgba(231, 238, 250, 0.32) 100%);
+}
+
+.left-curtain,
+.right-curtain {
+  background-image: linear-gradient(180deg, rgba(135, 197, 255, 0.13) 0%, rgba(78, 144, 255, 0.32) 50%);
+}
+
+.curtain-handle {
+  width: 14rpx;
+  height: 40rpx;
+  position: absolute;
+  top: 144rpx;
+}

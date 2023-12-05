@@ -1,0 +1,4 @@
+/* pages/login/index.wxss */
+page {
+  height: 100%;
+}

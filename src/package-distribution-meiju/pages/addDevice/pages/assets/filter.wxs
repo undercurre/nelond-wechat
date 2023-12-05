@@ -1,0 +1,14 @@
+// todo 过滤器 module 对象文件
+
+// 格式化品类
+var formatType = function (type) {
+  if (type) {
+    return type.substring(2, 2).toLocaleLowerCase()
+  } else {
+    return ''
+  }
+}
+
+module.exports = {
+  formatType: formatType,
+}

@@ -1,0 +1,8 @@
+{
+  "component": true,
+  "usingComponents": {
+    "mz-loading": "../../components/mz-loading/index",
+    "van-dialog": "@vant/weapp/dialog/index",
+    "add-scene-popup": "components/add-scene-popup/index"
+  }
+}

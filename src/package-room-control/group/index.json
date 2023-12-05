@@ -1,0 +1,5 @@
+{
+  "usingComponents": {
+    "mz-loading": "/components/mz-loading/index"
+  }
+}

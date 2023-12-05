@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "tips-box": "/components/tips-box/index",
+    "steps": "./components/steps/index",
+    "select-device": "./components/select-device/index",
+    "mz-loading": "/components/mz-loading/index",
+    "mz-progress": "/components/mz-progress/index"
+  }
+}

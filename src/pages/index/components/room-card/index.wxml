@@ -1,0 +1,61 @@
+<!--pages/index/components/room-card/index.wxml-->
+<view
+  class="card rounded-32rpx w-702rpx"
+  bindtap="handleCardTap"
+>
+  <view class="flex items-center w-full {{sceneList.length === 0 || !showScene ? 'h-128rpx' : 'h-104rpx'}}">
+    <view class="flex items-center flex-1">
+      <text class="text-36rpx font-medium ml-48rpx {{sceneList.length === 0 || !showScene ? 'my-12rpx' : ''}}">{{roomInfo.roomName}}</text>
+      <text class="flex-1 ml-20rpx text-28rpx text-hex-b6b7bb">{{ desc }}</text>
+    </view>
+    <image
+      src="/assets/img/base/arrow-right.png"
+      class="w-32rpx h-32rpx mr-32rpx"
+    ></image>
+  </view>
+  <view
+    class="mt-8rpx"
+    wx:if="{{showScene && sceneList.length > 0}}"
+  >
+    <scroll-view
+      enable-flex
+      scroll-x
+      enhanced
+      show-scrollbar="{{false}}"
+      class="w-full h-168rpx flex"
+    >
+      <view class="flex">
+        <view class="w-32rpx"></view>
+        <view
+          wx:for="{{sceneList}}"
+          wx:key="value"
+          data-value="{{item.sceneId}}"
+          catch:tap="handleSceneTap"
+          catch:longpress="doNothing"
+          class="overflow-hidden card-clip relative w-144rpx h-168rpx rounded-24rpx flex flex-col justify-center items-center bg-hex-eff0f3 shrink-0 {{index===0?'':'ml-22rpx'}}"
+        >
+          <view class="flex-col-center">
+            <view class="rounded-999 bg-white">
+              <image
+                class="block w-64 h-64"
+                src="{{sceneImgDir}}/{{item.sceneIcon}}.png"
+              ></image>
+            </view>
+            <text class="text-28rpx mt-20rpx text-hex-666666">{{item.sceneName}}</text>
+          </view>
+          <view
+            wx:if="{{sceneClickId === item.sceneId}}"
+            class="absolute left-80rpx w-250rpx h-250rpx rounded-999 ripple-bg"
+            style="animation: ripple-{{onOff ? 'on' : 'off'}} 1s ease forwards;"
+          ></view>
+        </view>
+        <view class="w-32rpx"></view>
+      </view>
+    </scroll-view>
+  </view>
+  <view
+    class="h-32rpx"
+    wx:if="{{hasBottomPadding}}"
+  ></view>
+</view>
+<view class="h-24rpx"></view>

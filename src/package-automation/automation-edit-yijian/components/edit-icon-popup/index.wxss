@@ -1,0 +1,10 @@
+.popup-control-btn {
+  width: 320rpx !important;
+  height: 88rpx !important;
+}
+
+.bg-select {
+  border-color: #507fff;
+  border-style: solid;
+  border-width: 3rpx;
+}

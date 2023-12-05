@@ -1,0 +1,16 @@
+.picker-selected {
+  position: relative;
+}
+.picker-selected::before {
+  content: '';
+  position: absolute;
+  top: 0px;
+  border: none;
+  background-color: transparent;
+}
+.picker-selected::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  border: none;
+}

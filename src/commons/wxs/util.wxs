@@ -1,0 +1,10 @@
+module.exports = {
+  includes: function (list, id) {
+    for (var index = 0; index < list.length; index++) {
+      if (list[index] === id) {
+        return true
+      }
+    }
+    return false
+  },
+}

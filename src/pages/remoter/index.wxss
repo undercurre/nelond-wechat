@@ -1,0 +1,131 @@
+/* pages/login/index.wxss */
+page {
+  height: 100%;
+}
+
+.tips-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99999;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.list-bottom-placeholder {
+  height: calc(env(safe-area-inset-bottom) + 64rpx);
+}
+
+.placeholder {
+  height: 176rpx;
+  width: 700rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 32rpx;
+  margin-top: 40rpx;
+  margin-left: 25rpx;
+  border: 3rpx solid #fff;
+  box-sizing: border-box;
+}
+
+.tips-btn {
+  border-radius: 32rpx;
+  width: 160rpx;
+  height: 64rpx;
+  background-image: linear-gradient(134deg, #4278ce 32%, #5a7fbd 91%);
+}
+
+.tips-step1-img {
+  width: 702rpx;
+  height: 332rpx;
+  margin: 88rpx auto 0;
+}
+.tips-step-arrow {
+  position: absolute;
+  top: 150rpx;
+  right: 180rpx;
+  width: 136rpx;
+  height: 170rpx;
+}
+.tips-step-arrow2 {
+  position: absolute;
+  bottom: 470rpx;
+  right: 228rpx;
+  width: 238rpx;
+  height: 300rpx;
+}
+.tips-step3-txt {
+  position: absolute;
+  width: 100%;
+  bottom: 600rpx;
+}
+.tips-step-next {
+  position: absolute;
+  bottom: calc(env(safe-area-inset-bottom) + 240rpx);
+  left: 232rpx;
+  width: 264rpx;
+  height: 96rpx;
+}
+.tips-step-popup {
+  z-index: 99999;
+  position: absolute;
+  width: 750rpx;
+  height: 760rpx;
+  bottom: 0;
+}
+.tips-step-txt {
+  width: 600rpx;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
+
+.large-btn {
+  color: #fff !important;
+  border-radius: 20rpx !important;
+  width: 686rpx;
+  height: 88rpx !important;
+  border: 0;
+  font-size: 36rpx !important;
+  font-weight: 400 !important;
+}
+.large-btn .van-button__loading-text {
+  color: #fff;
+}
+.small-btn {
+  color: #666 !important;
+  width: 176rpx;
+  height: 64rpx !important;
+  border-radius: 38rpx !important;
+  margin-top: 40rpx;
+  border: 1px solid rgba(162, 162, 162, 0.25) !important;
+}
+.small-btn .van-button__loading-text {
+  color: #666;
+}
+
+.bottom-btn {
+  position: absolute;
+  bottom: calc(env(safe-area-inset-bottom) + 150rpx);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.text-debug {
+  background-color: rgba(0, 0, 0, 0.42);
+}
+.rssiToggle {
+  position: absolute;
+  top: 100rpx;
+  right: 180rpx;
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 60rpx;
+  text-align: center;
+  line-height: 24rpx;
+  padding-top: 16rpx;
+  box-sizing: border-box;
+}

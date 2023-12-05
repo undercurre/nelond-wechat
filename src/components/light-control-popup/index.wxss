@@ -1,0 +1,24 @@
+.slider-color-temp-bar {
+  background-image: linear-gradient(90deg, #ffde78 0%, #fff4d9 35%, #fff7e8 55%, #93affe 100%) !important;
+}
+
+.onoff-slider-rail {
+  background: rgba(176, 176, 176, 0.1);
+}
+
+.onoff-slider {
+  background: #ffffff;
+  box-shadow: 0px 2px 12px 0px rgba(97, 109, 136, 0.15);
+  border-radius: 32rpx;
+  width: 334rpx;
+  height: 84rpx;
+  position: absolute;
+  top: 0;
+}
+.slider-button {
+  width: 52rpx;
+  height: 52rpx;
+  border-radius: 52rpx;
+  border: 3rpx solid #ffffff;
+  background-image: linear-gradient(30deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 60%) !important;
+}

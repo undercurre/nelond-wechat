@@ -1,0 +1,102 @@
+<view
+  id="card"
+  class="{{showShadow?'card-shadow':''}} w-160rpx h-216rpx rounded-32rpx"
+  catchtap="handleCardTap"
+  bind:longpress="handleLongPress"
+>
+  <!-- IOS 下card-clip会把box-shadow同时剪裁掉，故增加一层处理 -->
+  <view class="flex-col-center relative overflow-hidden card-clip w-160rpx h-216rpx rounded-32rpx">
+    <!-- 单选和编辑选择，选中状态均使用描边样式 -->
+    <view
+      wx:if="{{select}}"
+      class="w-160rpx h-216rpx absolute left-0 top-0 box-border select-border rounded-32rpx bg-hex-fff"
+    ></view>
+    <view
+      wx:elif="{{isGroup && showSpecialBg}}"
+      class="w-160rpx h-216rpx rounded-32rpx box-border show-group-bg white-border}}"
+    ></view>
+    <view
+      wx:else
+      class="w-160rpx h-216rpx rounded-32rpx box-border {{showGradientBg?'show-control-bg white-border':'bg-hex-f9fbfe'}}"
+    ></view>
+
+    <!-- 顶部标题 -->
+    <view class="absolute left-0 top-16rpx w-160rpx flex-center">
+      <text class="text-26rpx text-hex-353535 font-medium">{{topTitle}}</text>
+    </view>
+
+    <!-- 设备图标 -->
+    <view class="absolute left-0 pb-40rpx flex-col-center w-full h-full">
+      <image
+        src="{{picUrl}}"
+        class="w-72rpx h-72rpx"
+        binderror="loadImgError"
+      ></image>
+    </view>
+
+    <!-- 点击开关时的动画 -->
+    <view
+      wx:if="{{ripple}}"
+      class="absolute left-80rpx w-250rpx h-250rpx rounded-999 {{onOff ? 'ripple-on' : 'ripple-off'}}"
+      style="animation: ripple-{{onOff ? 'on' : 'off'}} 1s ease forwards;"
+    ></view>
+
+    <!-- 附加描述，暂时只用于显示面板名称 -->
+    <view
+      catch:tap="handleMiddleTap"
+      class="absolute text-center w-full top-90rpx pt-20rpx"
+      wx:if="{{deviceType==='switch' && (showControl || showBtnDetail)}}"
+    >
+      <text class="text-20rpx text-black-tips">{{bottomDesc}}</text>
+    </view>
+
+    <!-- 控制按钮、场景关联 -->
+    <view
+      wx:if="{{showControl && canCtrl}}"
+      class="absolute left-0 bottom-0 w-160rpx flex-col-center"
+      catch:tap="handlePowerTap"
+    >
+      <view
+        wx:if="{{deviceInfo.linkSceneName}}"
+        class="flex-center mb-22rpx"
+      >
+        <image
+          src="/assets/img/base/scene-switch-btn.png"
+          class="w-22rpx h-22rpx mt-4rpx"
+        />
+        <text class="text-blue text-24rpx leading-none ml-4rpx">{{deviceInfo.linkSceneName}}</text>
+      </view>
+      <image
+        wx:else
+        src="{{controlBtnPic}}"
+        class="w-48rpx h-48rpx mb-12rpx"
+      ></image>
+    </view>
+
+    <!-- 在线、离线、低电量、运行中文字 -->
+    <view class="absolute left-0 bottom-24rpx w-160rpx flex flex-col flex-center">
+      <text
+        wx:if="{{!canCtrl}}"
+        class="text-24rpx text-hex-fbbb32"
+        >离线</text
+      >
+      <text
+        wx:elif="{{isRunning}}"
+        class="text-24rpx text-hex-488fff"
+        >工作中</text
+      >
+      <text
+        wx:elif="{{lowBattery}}"
+        class="text-24rpx text-hex-ff3849"
+        >低电量</text
+      >
+      <text
+        wx:elif="{{!showControl || !hasControl}}"
+        class="text-24rpx text-hex-555659"
+        >在线</text
+      >
+    </view>
+  </view>
+</view>
+
+<van-toast id="van-toast" />

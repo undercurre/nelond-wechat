@@ -1,0 +1,133 @@
+<view class="page-container flex-col-center">
+  <nav-bar
+    leftArrow
+    bind:leftTap="goBack"
+    background="transparent"
+  ></nav-bar>
+
+  <view class="w-664 ml-48rpx mt-24rpx">
+    <text class="text-40rpx text-hex-27282A font-medium">设置{{currentGuide.name}}</text>
+  </view>
+  <view class="image-box w-664 mt-64rpx">
+    <image
+      class="image-guide w-664"
+      src="{{currentGuide.img}}"
+    ></image>
+  </view>
+  <view class="w-664 mt-64rpx">
+    <text class="text-32rpx text-hex-27282A">请按照以下步骤操作：</text>
+  </view>
+  <view class="w-664 flex-1 mt-32rpx">
+    <text class="text-28rpx text-hex-555659 mt-32rpx leading-56rpx">{{currentGuide.desc}}</text>
+  </view>
+
+  <view class="w-664 flex-col-center">
+    <van-checkbox
+      icon-size="14"
+      class="text-24rpx"
+      value="{{ isReady }}"
+      bind:change="onReadyClick"
+      use-icon-slot
+    >
+      <text class="text-24rpx">已完成以上操作</text>
+      <image
+        class="h-48 w-48"
+        slot="icon"
+        src="{{ isReady ? checkImg : uncheckImg }}"
+      />
+    </van-checkbox>
+  </view>
+  <view class="w-664 mt-32rpx mb-128rpx">
+    <van-button
+      bind:tap="handleNextStep"
+      block
+      disabled="{{!isReady}}"
+      type="primary"
+      size="large"
+      >下一步</van-button
+    >
+  </view>
+</view>
+
+<van-popup
+  show="{{ isShowGatewayList }}"
+  bind:close="onCloseGwList"
+  position="bottom"
+  round
+  closeable
+>
+  <view class="flex flex-col items-stretch">
+    <text class="block pt-40rpx pb-16rpx leading-46rpx text-center text-36 opacity-90 text-black-2a font-medium">选择智能网关</text>
+
+    <text class="block text-center leading-36rpx text-26 text-black-tips">选择子设备要关联的智能网关</text>
+
+    <view class="pt-48rpx px-48rpx">
+      <view
+        wx:for="{{gatewayList}}"
+        wx:key="deviceId"
+        class="flex flex-row items-center py-24rpx {{gatewayList.length -1 > index && 'border-bottom'}} {{item.onLineStatus === 0 && 'opacity-50'}}"
+        data-index="{{index}}"
+        bind:tap="selectGateway"
+      >
+        <view class="box-border rounded-full bg-hex-F6F6F8 mr-48rpx w-92 h-92 flex items-center justify-center">
+          <image
+            class="w-72 h-72"
+            src="{{item.pic}}"
+          ></image>
+        </view>
+
+        <view class="grow">
+          <text class="block leading-44rpx text-32 text-black-2a font-medium">{{ item.deviceName }} | {{ item.roomName }}</text>
+
+          <text class="block leading-36rpx text-26 text-black-tips pt-8rpx">{{ item.onLineStatus === 1 ? '在线' : '离线' }}</text>
+        </view>
+
+        <image
+          class="w-32 h-32"
+          src="{{ item.deviceId === selectGatewayId ? '/assets/img/base/check.png' : '/assets/img/base/uncheck.png' }}"
+        />
+      </view>
+    </view>
+
+    <view class="h-96"></view>
+
+    <view class="flex flex-row gap-46rpx px-24rpx">
+      <van-button
+        class="grow"
+        size="large"
+        bind:click="onCloseGwList"
+        >取消</van-button
+      >
+
+      <van-button
+        class="grow"
+        size="large"
+        type="primary"
+        bind:click="confirmGateway"
+        disabled="{{!selectGatewayId}}"
+        >确定</van-button
+      >
+    </view>
+
+    <view class="h-96"></view>
+  </view>
+</van-popup>
+
+<van-dialog
+  id="van-dialog"
+  use-slot="{{isShowNoGatewayTips}}"
+  confirm-button-color="#488FFF"
+>
+  <view class="flex flex-col items-center px-40rpx pb-48rpx leading-48rpx">
+    <image
+      class="w-160 h-160 mb-48rpx mt-28rpx"
+      src="{{deviceInfo.icon}}"
+    ></image>
+
+    <text class="w-full block text-28 text-hex-666">添加此设备前，需要先在家庭中添加网关设备。</text>
+    <text class="w-full block pb-24rpx text-28 text-hex-666">支持的智能网关型号有：</text>
+
+    <text class="block w-full text-32 text-black-2a">1、MGW-D3</text>
+    <text class="block w-full text-32 text-black-2a">2、D3ZZKP-Z</text>
+  </view>
+</van-dialog>

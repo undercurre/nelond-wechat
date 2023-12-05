@@ -1,0 +1,11 @@
+.list-wrapper {
+  height: 700rpx;
+  margin-bottom: 20rpx;
+}
+.list-empty {
+  padding-top: 50rpx;
+  min-height: 200rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

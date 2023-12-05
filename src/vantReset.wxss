@@ -1,0 +1,209 @@
+page {
+  /* button start */
+  --button-default-color: #a2a2a2;
+  --button-default-border-color: #a2a2a2;
+  --button-info-border-color: #555659;
+  --button-info-background-color: #555659;
+  --button-primary-background-color: linear-gradient(165deg, #468cfb 0%, #6ba3fc 100%);
+  --button-danger-background-color: linear-gradient(270deg, #f68aa9 13%, #ef6586 92%);
+  --button-plain-background-color: transparent;
+  --button-small-font-size: 26rpx;
+  --button-small-height: 56rpx;
+  --padding-xs: 28rpx;
+  --button-normal-font-size: 28rpx;
+  --button-normal-height: 64rpx;
+  --button-large-font-size: 36rpx;
+  --button-large-height: 88rpx;
+  --button-border-radius: 20rpx;
+  --button-round-border-radius: 32rpx;
+  /* button end */
+
+  /* 遮罩 start  */
+  --overlay-background-color: rgba(0, 0, 0, 0.5);
+  /* 遮罩 end  */
+
+  /* popup start */
+  --popup-round-border-radius: 64rpx;
+  --popup-close-icon-color: #27282a;
+  /* popup end */
+
+  --action-sheet-item-text-color: #27282a;
+  --action-sheet-cancel-text-color: #27282a;
+
+  /* cell start */
+  --cell-group-inset-border-radius: 32rpx;
+  --cell-group-inset-padding: 24rpx;
+  --cell-vertical-padding: 32rpx;
+  --cell-horizontal-padding: 32rpx;
+  --cell-font-size: 32rpx;
+  --cell-text-color: #000;
+  --cell-line-height: 48rpx;
+  --cell-icon-size: 48rpx;
+  /* cell end */
+
+  /* tab start */
+  --tabs-nav-background-color: transparent;
+  /* tab end */
+
+  /* toast start */
+  --toast-background-color: rgba(0, 0, 0, 0.8);
+  --toast-border-radius: 46rpx;
+  --toast-font-size: 32rpx;
+  --toast-line-height: 44rpx;
+  /* toast end */
+
+  /* switch start */
+  --switch-height: 50rpx;
+  --switch-width: 96rpx;
+  --switch-node-size: 35rpx;
+  --switch-background-color: #c8c7cc;
+  --switch-on-background-color: #488fff;
+  /* switch end */
+
+  /* skeleton start */
+  --skeleton-row-height: 64rpx;
+  --skeleton-row-background-color: #fff;
+  /* skeleton end */
+
+  /* dialog start */
+  --dialog-width: 622rpx;
+  --dialog-header-font-weight: 600;
+  --dialog-header-isolated-padding: 48rpx 64rpx;
+  /* dialog end */
+
+  /* toast start */
+  --toast-max-width: 80%;
+  /* toast start */
+}
+
+/* button start */
+.van-button--normal {
+  height: var(--button-normal-height) !important;
+}
+
+.van-button--block {
+  padding-left: 30rpx;
+  padding-right: 30rpx;
+}
+
+.van-button--danger,
+.van-button--primary {
+  border: 0 !important;
+}
+
+.van-button--plain.van-button--primary {
+  color: #488fff !important;
+}
+
+.van-button--plain.van-button--danger {
+  background-color: #fff !important;
+  color: #ff3849 !important;
+}
+.switch-index--btn-class-fix {
+  background-color: #488fff !important;
+  border-radius: 32rpx !important;
+  height: 88rpx;
+}
+
+/* button end */
+
+/* cell start */
+.van-cell:after {
+  border-bottom: 1rpx solid #ddd !important;
+}
+
+.van-icon {
+  font-size: 48rpx !important;
+}
+
+.van-cell__left-icon-wrap {
+  margin-right: 24rpx !important;
+}
+
+.van-icon-arrow {
+  font-size: 32rpx !important;
+}
+
+.van-cell__title {
+  font-weight: 400;
+  font-size: 32rpx;
+}
+
+/* cell end */
+
+/* 遮罩 start */
+.van-overlay {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* 遮罩 end */
+
+/* 弹窗 start */
+.van-toast--text {
+  text-align: justify;
+}
+.van-dialog__header {
+  font-size: 36rpx;
+  color: #27282a;
+}
+
+.van-dialog__message {
+  padding: 32rpx 64rpx 48rpx !important;
+}
+
+.van-dialog__message-text {
+  font-size: 28rpx;
+  color: #666;
+  line-height: 48rpx;
+}
+
+.van-dialog__cancel,
+.van-dialog__confirm {
+  font-size: 34rpx !important;
+  color: #27282a !important;
+}
+
+.van-popup__close-icon--top-right {
+  top: 40rpx !important;
+  right: 60rpx !important;
+}
+
+/* 弹窗 end */
+
+/* action-sheet start */
+.van-action-sheet__item:not(:last-child) {
+  border-bottom: 1rpx solid #e5e5e8;
+}
+
+.van-action-sheet__cancel,
+.van-action-sheet__item {
+  padding: 32rpx !important;
+}
+
+/* action-sheet end */
+
+/* switch start */
+.van-switch {
+  border: none !important;
+}
+
+.van-switch__node {
+  left: 7.7rpx !important;
+  top: 9rpx !important;
+}
+
+.van-switch__node {
+  box-shadow: none !important;
+}
+
+.van-switch--on .van-switch__node {
+  transform: translateX(47rpx) !important;
+}
+
+/* switch end */
+
+/* checkbox end */
+.van-checkbox__icon-wrap {
+  display: inline-flex;
+}
+/* checkbox end */

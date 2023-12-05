@@ -1,0 +1,8 @@
+<!-- "navigationStyle": "custom", 其他与defaultWebview一致 -->
+<view class="container">
+  <view class="page-body">
+    <view class="page-section page-section-gap">
+      <web-view src="{{ pageUrl }}"></web-view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,14 @@
+<view class="custom-dialog" wx:if="{{customDialog.show}}">
+  <view class="custom-mask"></view>
+  <view class="custom-main">
+    <view wx:if="{{customDialog.title}}" class="custom-title">{{customDialog.title}}</view>
+    <image class="close" bindtap="hideFrame" src="{{customDialog.contentImg}}"></image>
+    <view class="custom-content">
+      <text class="content-text">{{customDialog.content}}</text>
+    </view>
+    <view class="control">
+      <view wx:if="{{customDialog.showCancel}}" class="cancel" bindtap="clickCancel" style="color:{{customDialog.cancelColor}}">{{customDialog.cancelText}}</view>
+      <view wx:if="{{customDialog.confirmText}}" class="confirm" bindtap="clickComfirm" style="color:{{customDialog.comfirmColor}}">{{customDialog.confirmText}}</view>
+    </view>
+  </view>
+</view>

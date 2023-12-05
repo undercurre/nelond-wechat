@@ -1,0 +1,176 @@
+<import src="/commons/templates/popup.wxml" />
+<view class="fixed left-0 top-0 z-1000">
+  <view
+    id="top"
+    class="w-750rpx fixed top-0 left-0 bg-white flex items-end top-transform"
+    style="height: {{navigationBarAndStatusBarHeight}};"
+  >
+    <view
+      class="w-750rpx flex items-center"
+      style="height: {{navigationBarHeight}};"
+    >
+      <view
+        class="flex-center mx-32rpx my-10rpx"
+        bindtap="handleAllSelectToggle"
+      >
+        <image
+          src="/assets/img/base/{{isAllSelect?'check2':'uncheck2'}}.png"
+          class="w-48 h-48"
+        />
+        <text class="text-28rpx text-hex-555659 ml-16rpx">全选</text>
+      </view>
+    </view>
+  </view>
+
+  <view
+    id="bottom"
+    class="fixed left-0 bottom-0 popup-shadow bg-white w-750rpx edit-box-height bottom-transform"
+  >
+    <view class="w-full h-208 flex-center">
+      <view
+        class="flex-col-center flex-1 {{canEditName ?'':'opacity-25'}}"
+        bindtap="handleEditNamePopup"
+      >
+        <view class="flex-center w-100rpx h-100rpx bg-hex-f6fafd rounded-999">
+          <image
+            src="/package-room-control/assets/img/edit.png"
+            class="w-48rpx h-48rpx"
+          />
+        </view>
+        <text class="text-black-tips text-24rpx mt-26rpx">修改名称</text>
+      </view>
+      <view
+        class="flex-col-center flex-1 {{canMoveRoom ?'':'opacity-25'}}"
+        bindtap="handleMoveRoomPopup"
+      >
+        <view class="flex-center w-100rpx h-100rpx bg-hex-f6fafd rounded-999">
+          <image
+            src="/package-room-control/assets/img/move.png"
+            class="w-48rpx h-48rpx"
+          />
+        </view>
+        <text class="text-black-tips text-24rpx mt-26rpx">移动房间</text>
+      </view>
+      <view
+        class="flex-col-center flex-1 {{canGroup ?'':'opacity-25'}}"
+        bindtap="handleCreateGroup"
+      >
+        <view class="flex-center w-100rpx h-100rpx bg-hex-f6fafd rounded-999">
+          <image
+            src="/package-room-control/assets/img/group.png"
+            class="w-48rpx h-48rpx"
+          />
+        </view>
+        <text class="text-black-tips text-24rpx mt-26rpx">创建分组</text>
+      </view>
+      <view
+        class="flex-col-center flex-1 {{!canDelete ?'opacity-25':''}}"
+        bindtap="handleDeleteDialog"
+      >
+        <view class="flex-center w-100rpx h-100rpx bg-hex-f6fafd rounded-999">
+          <image
+            src="/package-room-control/assets/img/del.png"
+            class="w-48rpx h-48rpx"
+          />
+        </view>
+        <text class="text-black-tips text-24rpx mt-26rpx">删除</text>
+      </view>
+    </view>
+    <view class="w-750rpx h-2rpx bg-hex-ddd"></view>
+    <view
+      class="w-full h-88 flex-center"
+      bindtap="handleClose"
+    >
+      <text class="text-28rpx text-blue font-semibold">完成</text>
+    </view>
+  </view>
+
+  <van-popup
+    show="{{ showEditName }}"
+    z-index="2000"
+    round
+    position="bottom"
+    bind:close="handleClose"
+    closeable
+    safe-area-inset-bottom="{{false}}"
+  >
+    <view class="w-750rpx relative flex flex-col items-center">
+      <template
+        is="title"
+        data="{{title: '修改名称'}}"
+      />
+      <block wx:if="{{isEditSwitchName}}">
+        <view class="flex w-750rpx">
+          <text class="text-28rpx text-black-2a ml-48rpx mt-68rpx">按键名称</text>
+        </view>
+        <view class="flex-1 mt-32rpx w-686rpx">
+          <van-field
+            model:value="{{ editSwitchName }}"
+            maxlength="{{5}}"
+            placeholder="请输入按键名称"
+            custom-style="padding: 28rpx 32rpx;background-color: #F6FAFD;border-radius: 24rpx;"
+            clearable="{{true}}"
+            border="{{false}}"
+          >
+          </van-field>
+        </view>
+      </block>
+      <view class="flex w-750rpx mt-56rpx">
+        <text class="text-28rpx text-black-2a ml-48rpx">{{editDeviceNameTitle}}</text>
+      </view>
+      <view class="flex-1 mt-32rpx w-686rpx mb-126rpx">
+        <van-field
+          model:value="{{ editDeviceName }}"
+          maxlength="{{6}}"
+          placeholder="请输入{{editDeviceNameTitle}}"
+          custom-style="padding: 28rpx 32rpx;background-color: #F6FAFD;border-radius: 24rpx;"
+          clearable="{{true}}"
+          border="{{false}}"
+        >
+        </van-field>
+      </view>
+
+      <template
+        is="bottom-btn"
+        data="{{disabled: editNameDisable}}"
+      />
+    </view>
+  </van-popup>
+
+  <van-popup
+    show="{{ showEditRoom }}"
+    round
+    position="bottom"
+    bind:close="handleClose"
+    closeable
+    safe-area-inset-bottom="{{false}}"
+  >
+    <view class="w-750rpx flex flex-col items-center">
+      <template
+        is="title"
+        data="{{title: '选择房间'}}"
+      />
+      <view class="w-686rpx min-h-240rpx mt-16rpx">
+        <view class="flex flex-wrap">
+          <view
+            wx:for="{{roomList}}"
+            wx:key="roomId"
+            data-id="{{item.roomId}}"
+            bindtap="handleRoomSelect"
+            class="mt-16rpx mr-32rpx rounded-999 px-40rpx py-10rpx flex flex-center {{item.roomId === roomId ? 'bg-select' : 'bg-hex-dfe1e5'}}"
+          >
+            <text class="text-28rpx text-normal {{item.roomId === roomId ? 'text-white' : 'text-black-59'}}">{{item.roomName}}</text>
+          </view>
+        </view>
+      </view>
+
+      <template
+        is="bottom-btn"
+        data="{{disabled: editRoomDisable}}"
+      />
+    </view>
+  </van-popup>
+
+  <van-toast id="van-toast" />
+  <van-dialog id="van-dialog" />
+</view>

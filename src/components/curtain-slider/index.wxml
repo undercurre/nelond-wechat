@@ -1,0 +1,25 @@
+<!-- 窗帘控制 -->
+<wxs module="handler" src="./index.wxs"></wxs>
+
+<view class="w-full h-full relative flex flex-1 justify-center items-center bg-white" change:windowWidth="{{handler.windowWidthObserver}}" windowWidth="{{windowWidth}}">
+  <text class="text-36rpx text-hex-1e2c46 font-medium absolute z-100 top-46rpx">{{value}}%</text>
+  <view class="w-560rpx h-332rpx relative curtain-container overflow-hidden rounded-24rpx" bind:touchstart="{{handler.onTouchstart}}" catch:touchmove="{{handler.onTouchmove}}" bind:touchend="{{handler.onTouchend}}">
+    <view style="{{leftCurtainStyle}}" class="left-curtain w-140rpx h-332rpx absolute top-0 left-0"></view>
+    <view style="{{leftCurtainStyle}}" class="left-curtain w-140rpx h-332rpx absolute top-0 left-28rpx"></view>
+    <view style="{{leftCurtainStyle}}" class="left-curtain w-140rpx h-332rpx absolute top-0 left-56rpx"></view>
+    <view style="{{leftCurtainStyle}}" class="left-curtain w-140rpx h-332rpx absolute top-0 left-84rpx"></view>
+    <view style="{{leftCurtainStyle}}" class="left-curtain w-140rpx h-332rpx absolute top-0 left-112rpx"></view>
+    <view style="{{leftCurtainStyle}}" class="left-curtain w-140rpx h-332rpx absolute top-0 left-140rpx">
+      <image src="../../assets/img/base/arrow-left-curtain.png" class="curtain-handle right-7rpx" style="transform:{{value === 100 ? 'scaleX(-1)':unset}}"></image>
+    </view>
+
+    <view style="{{rightCurtainStyle}}" class="right-curtain w-140rpx h-332rpx absolute top-0 right-0"></view>
+    <view style="{{rightCurtainStyle}}" class="right-curtain w-140rpx h-332rpx absolute top-0 right-28rpx"></view>
+    <view style="{{rightCurtainStyle}}" class="right-curtain w-140rpx h-332rpx absolute top-0 right-56rpx"></view>
+    <view style="{{rightCurtainStyle}}" class="right-curtain w-140rpx h-332rpx absolute top-0 right-84rpx"></view>
+    <view style="{{rightCurtainStyle}}" class="right-curtain w-140rpx h-332rpx absolute top-0 right-112rpx"></view>
+    <view style="{{rightCurtainStyle}}" class="right-curtain w-140rpx h-332rpx absolute top-0 right-140rpx">
+      <image src="../../assets/img/base/arrow-right-curtain.png" class="curtain-handle left-7rpx" style="transform:{{value === 100 ? 'scaleX(-1)':unset}}"></image>
+    </view>
+  </view>
+</view>

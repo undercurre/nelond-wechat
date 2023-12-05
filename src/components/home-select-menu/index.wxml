@@ -1,0 +1,30 @@
+<!--components/home-select-menu/index.wxml-->
+<view id="menu" class="bg fixed flex flex-col items-stretch py-10rpx px-24rpx rounded-32rpx z-120" style="left: {{x}}; top: {{y}};" wx:if="{{isRender}}" catchtouchmove="black">
+  <block wx:if="{{sortedHomeList.length <= 5}}">
+    <view class="flex flex-col items-start" bindtap="handleHomeTap" wx:for="{{sortedHomeList}}" wx:key="houseId" data-value="{{item.houseId}}">
+      <view class="h-96rpx flex items-center">
+        <text class="p-10rpx text-white text-28rpx leading-none">{{item.houseName}}</text>
+        <view class="text-20rpx text-white bg-hex-a2a2a2 px-8rpx rounded-999 ml-10rpx shrink-0" wx:if="{{item.houseCreatorFlag}}">创建</view>
+        <svg-icon class="ml-18rpx" wx:if="{{item.defaultHouseFlag}}" name="icon-park:check" width="40rpx" height="40rpx" color="#d2d2d2" />
+      </view>
+      <view class="bg-hex-717171 w-full h-1rpx" wx:if="{{index != homeList.length - 1}}"></view>
+    </view>
+  </block>
+  <!-- 超过5个使用滑动 -->
+  <scroll-view wx:else enable-flex scroll-y enhanced show-scrollbar="{{false}}" class="h-480rpx items-stretch" bind:scrolltolower="scrollToLower" bind:scrolltoupper="scrollToUpper">
+    <view class="flex flex-col items-start" bindtap="handleHomeTap" wx:for="{{sortedHomeList}}" wx:key="houseId" data-value="{{item.houseId}}">
+      <view class="h-96rpx flex items-center">
+        <text class="p-10rpx text-white text-28rpx leading-none">{{item.houseName}}</text>
+        <view class="text-20rpx text-white bg-hex-a2a2a2 px-8rpx rounded-999 ml-10rpx shrink-0" wx:if="{{item.houseCreatorFlag}}">创建</view>
+        <svg-icon class="ml-18rpx" wx:if="{{item.defaultHouseFlag}}" name="icon-park:check" width="40rpx" height="40rpx" color="#d2d2d2" />
+      </view>
+      <view class="bg-hex-717171 w-full h-1rpx" wx:if="{{index != homeList.length - 1}}"></view>
+    </view>
+  </scroll-view>
+
+  <view wx:if="{{sortedHomeList.length > 5}}" class="h-32rpx flex-center">
+    <image class="w-32rpx h-32rpx {{ reverseArrow ? 'rotate-180' : ''}}" src="/assets/img/base/arrow-down2.png"></image>
+  </view>
+
+  <view class="arrow absolute left-32rpx top-0 w-0 h-0"></view>
+</view>

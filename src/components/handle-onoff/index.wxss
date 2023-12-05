@@ -1,0 +1,12 @@
+.handle-power-wrapper {
+  box-sizing: border-box;
+}
+.power-slider-wrapper {
+  position: absolute;
+  box-sizing: border-box;
+}
+
+.power-slider {
+  /* box-shadow: 0px 2px 12px 0px rgba(97, 109, 136, 0.15); */
+  border-radius: 28rpx;
+}

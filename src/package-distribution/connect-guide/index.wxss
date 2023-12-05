@@ -1,0 +1,8 @@
+.image-box {
+  height: 371rpx;
+  border-radius: 32rpx;
+  overflow: hidden;
+}
+.image-guide {
+  height: 371rpx;
+}

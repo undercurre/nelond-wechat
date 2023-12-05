@@ -1,0 +1,36 @@
+<wxs
+  module="handler"
+  src="./index.wxs"
+></wxs>
+
+<view
+  class="mz-button"
+  catch:touchstart="{{handler.touchStart}}"
+  catch:touchend="{{handler.touchEnd}}"
+  catch:tap="handleTap"
+>
+  <view class="icon-wrapper">
+    <image
+      class="icon"
+      src="{{icon}}"
+    ></image>
+    <image
+      wx:if="{{iconActive}}"
+      class="iconActive"
+      src="{{iconActive}}"
+      style="opacity: 0"
+    ></image>
+  </view>
+  <view
+    class="text-wrapper"
+    wx:if="{{text}}"
+  >
+    <text class="text">{{text}}</text>
+    <text
+      class="textActive"
+      style="opacity: 0"
+      >{{text}}</text
+    >
+  </view>
+  <slot></slot>
+</view>

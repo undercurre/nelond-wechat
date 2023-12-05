@@ -1,0 +1,56 @@
+<view class="page-container flex flex-col">
+  <nav-bar background="#eef2f7" leftArrow="{{true}}" show-go-home bind:leftTap="goBack" title="成员管理"></nav-bar>
+
+  <view class="grow flex flex-col pt-24rpx">
+    <scroll-view show-scrollbar="{{false}}">
+      <view class="rounded-32rpx bg-white px-40rpx mx-32rpx">
+        <view class="flex flex-row items-center py-16rpx leading-44rpx text-32 {{index < memberList.length - 1 && 'border-bottom'}}" wx:for="{{memberList}}" wx:key="key" data-item="{{item}}" bind:tap="onUserItemClick">
+          <image class="w-80rpx h-80rpx mr-24rpx rounded-full" src="{{item.icon}}"></image>
+
+          <text class="grow w-300rpx" style="color: #2a2b2d; text-overflow: ellipsis; overflow: hidden">{{item.name}}</text>
+
+          <view class="flex flex-row items-center">
+            <text class="pr-16rpx" style="color: #555659">{{item.role}}</text>
+            <view class="h-48rpx w-48rpx" wx:if="{{item.isCanEdit}}">
+              <svg-icon color="#c8c7cc" name="icon-park:right" width="48rpx" height="48rpx"></svg-icon>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="h-184rpx"></view>
+    </scroll-view>
+  </view>
+
+  <view class="h-184rpx w-full fixed bottom-0 bg-hex-eef2f7" wx:if="{{!isVisitor}}">
+    <view class="w-686rpx mx-32rpx mt-12rpx">
+      <van-button size="large" type="primary" bind:click="onInviteMemberClick" open-type="share" wx:if="{{isAdmin}}">邀请成员</van-button>
+      <van-button size="large" type="primary" bind:click="onInviteMemberClick" wx:if="{{!isAdmin}}">邀请成员</van-button>
+    </view>
+  </view>
+</view>
+
+<van-popup show="{{ isEditRole }}" position="bottom" round bind:close="hidePopup">
+  <view class="pt-32rpx pb-96rpx">
+    <view class="w-750rpx h-100rpx flex-center">
+      <text class="text-36rpx font-semibold">{{popupTitle}}</text>
+      <image class="absolute w-52rpx h-52rpx" style="top: 64rpx; right: 38rpx" src="/assets/img/base/close.png" bindtap="hidePopup"></image>
+    </view>
+    <view class="px-48rpx">
+      <view wx:for="{{actionList}}" class="flex flex-row items-center leading-44rpx {{item.isShow && 'border-bottom'}}" wx:key="key" bindtap="onPopupClick" data-item="{{item}}">
+        <view class="flex flex-col grow justify-center items-start {{item.isShow ? 'h-128rpx': 'h-0rpx'}}">
+          <text wx:if="{{item.isShow}}" class="text-34 leading-48rpx">{{item.text}}</text>
+          <text wx:if="{{item.isShow}}" class="text-28 leading-40rpx text-black-tips mt-16rpx">{{item.label}}</text>
+        </view>
+
+        <image wx:if="{{item.isCheck && item.isShow}}" src="/assets/img/member-manage/tick.png" class="w-48 h-48"></image>
+      </view>
+    </view>
+
+    <view class="flex flex-row gap-46rpx pt-56rpx px-32rpx">
+      <van-button class="grow" size="large" type="primary" bind:click="onComfirmClick" open-type="share" wx:if="{{isNeedShare}}">确定</van-button>
+      <van-button class="grow" size="large" type="primary" bind:click="onComfirmClick" wx:if="{{!isNeedShare}}">确定</van-button>
+    </view>
+  </view>
+</van-popup>
+
+<van-toast id="van-toast" />

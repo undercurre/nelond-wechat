@@ -1,0 +1,9 @@
+{
+  "component": true,
+  "usingComponents": {
+    "room-card": "./components/room-card/index",
+    "add-menu": "./components/add-menu/index",
+    "van-skeleton": "@vant/weapp/skeleton/index"
+  },
+  "navigationStyle": "custom"
+}

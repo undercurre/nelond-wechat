@@ -1,0 +1,3 @@
+<view class="header" style="top:{{statusBarHeight+ 6}}px">
+  <text class="app-name" bindtap="clickCancel">取消</text>
+</view>
