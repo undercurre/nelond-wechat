@@ -90,6 +90,7 @@ ComponentWithComputed({
     _scrolledWhenMoving: false, // 拖拽时，被动发生了滚动
     _lastClientY: 0, // 上次触控采样时 的Y坐标
     _isFirstShow: true, // 是否首次加载
+    _from: '', // 页面进入来源
   },
   computed: {
     currentHomeName(data) {
@@ -131,7 +132,8 @@ ComponentWithComputed({
 
   methods: {
     // 生命周期或者其他钩子
-    onLoad() {
+    onLoad(query: { from?: string }) {
+      this.data._from = query.from ?? ''
       // 更新tabbar状态
       if (typeof this.getTabBar === 'function' && this.getTabBar()) {
         this.getTabBar().setData({
@@ -150,7 +152,7 @@ ComponentWithComputed({
       emitter.off('wsReceive')
     },
     async onShow() {
-      if (!this.data._isFirstShow) {
+      if (!this.data._isFirstShow || this.data._from === 'addDevice') {
         homeStore.updateRoomCardList()
       }
       this.data._isFirstShow = false
