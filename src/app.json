@@ -145,7 +145,6 @@
       "desc": "本应用访问位置信息，用于获取天气信息提示等功能"
     }
   },
-  "requiredPrivateInfos": ["getFuzzyLocation"],
   "rendererOptions": {
     "skyline": {
       "defaultDisplayBlock": true
