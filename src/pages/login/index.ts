@@ -54,11 +54,10 @@ Component({
           console.log('login', res, e)
           if (res.code) {
             this.data._jsCode = res.code
-            const params = {
+            await this.toLogin({
               code: this.data._code,
               jsCode: this.data._jsCode,
-            }
-            await this.login(params)
+            })
 
             hideLoading()
           } else {
@@ -82,11 +81,9 @@ Component({
 
       showLoading()
 
-      const params = {
+      await this.toLogin({
         captcha: this.data.captchaInput,
-        jsCode: this.data._jsCode,
-      }
-      await this.login(params)
+      })
 
       hideLoading()
     },
@@ -98,19 +95,21 @@ Component({
     },
 
     /**
-     * @param data.code 微信登录动态令牌
-     * @param data.jsCode 获取手机的动态令牌
+     * 登录逻辑
      */
-    async login(data: { jsCode: string; code?: string }) {
-      const loginRes = await login(data)
-      if (loginRes.success && loginRes.code === 8843) {
-        getCaptcha({ mobilePhone: loginRes.result?.mobilePhone })
+    async toLogin(data: { jsCode?: string; code?: string; captcha?: string }) {
+      const res = await login(data)
+      // 如果返回未激活状态，则自动调用获取验证码的接口
+      if (res.success && res.code === 8843) {
+        getCaptcha({ mobilePhone: res.result?.mobilePhone })
         this.setData({
           needCaptcha: true,
         })
-      } else if (loginRes.success && loginRes.result) {
-        console.log('loginRes', loginRes)
-        storage.set('token', loginRes.result.token, null)
+      }
+      // 登录成功
+      else if (res.success && res.result) {
+        console.log('res', res)
+        storage.set('token', res.result.token, null)
 
         await userStore.updateUserInfo()
         userStore.setIsLogin(true)

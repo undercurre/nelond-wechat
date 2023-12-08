@@ -7,7 +7,13 @@ export * from './ota'
 export * from './scene'
 export * from './meiju'
 
-export async function login(data: object) {
+/**
+ * 用户登录
+ * @param data.code 微信登录动态令牌
+ * @param data.jsCode 获取手机的动态令牌
+ * @param data.captcha 激活验证码
+ */
+export async function login(data: { jsCode?: string; code?: string; captcha?: string }) {
   return await mzaioRequest.post<User.UserLoginRes>({
     log: true,
     loading: false,
