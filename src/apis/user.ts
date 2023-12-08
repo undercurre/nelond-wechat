@@ -52,3 +52,15 @@ export async function authQrcode(qrcode: string) {
     },
   })
 }
+
+/**
+ * 获取验证码接口
+ */
+export async function getCaptcha(data: { mobilePhone: string }) {
+  return await mzaioRequest.post({
+    log: true,
+    loading: false,
+    url: '/v1/mzgd/cl/auth/get/captcha',
+    data,
+  })
+}

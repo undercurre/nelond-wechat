@@ -11,7 +11,7 @@ export async function login(data: object) {
   return await mzaioRequest.post<User.UserLoginRes>({
     log: true,
     loading: false,
-    url: '/v1/mzgdApi/auth/mzgd/login',
+    url: '/v1/mzgd/cl/auth/wx/login',
     data,
   })
 }

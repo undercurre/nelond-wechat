@@ -25,49 +25,79 @@
   >
 </view>
 
-<view class="mx-74rpx mt-140rpx">
-  <van-checkbox
-    custom-class="items-start_el_"
-    use-icon-slot
-    class="text-24rpx"
-    value="{{ isAgree }}"
-    bind:change="onAgreeClick"
-  >
-    <text class="text-24rpx">
-      <text>我已阅读并同意</text>
-      <text
-        class="link"
-        data-value="privacyPolicy"
-        catchtap="toPage"
-        >《美的照明隐私协议》</text
-      ><text
-        class="link"
-        data-value="userService"
-        catchtap="toPage"
-        >《软件许可及用户服务协议》</text
-      ><text
-        class="link"
-        data-value="userInfoList"
-        catchtap="toPage"
-        >《已收集个人信息清单》</text
-      >和<text
-        class="link"
-        data-value="authList"
-        catchtap="toPage"
-        >《美的照明权限列表》</text
-      >
-    </text>
-    <image
-      class="h-36 w-36"
-      slot="icon"
-      src="{{ isAgree ? checkImg : uncheckImg }}"
-    />
-  </van-checkbox>
+<view
+  wx:if="{{needCaptcha}}"
+  class="px-32rpx mt-50rpx mb-128rpx"
+>
+  <view class="mx-24rpx mb-16rpx">
+    <text class="text-24rpx link">首次登录需要先激活账号，已向您的手机号发送验证码</text>
+  </view>
+
+  <van-field
+    value=""
+    custom-style="padding: 32rpx 32rpx; margin: 16rpx 0; background-color: #F6FAFD;border-radius: 24rpx;"
+    type="number"
+    maxlength="{{6}}"
+    placeholder="请输入短信验证码"
+    bind:change="captchaChange"
+  />
+  <van-button
+    bind:tap="handleLoginWithCaptcha"
+    block
+    disabled="{{!captchaInput}}"
+    type="primary"
+    size="large"
+    >激活账号并登录
+  </van-button>
 </view>
-<view class="px-32rpx mt-50rpx mb-128rpx">
+
+<view
+  wx:else
+  class="px-32rpx mt-50rpx mb-128rpx"
+>
+  <view class="mx-74rpx mt-140rpx mb-32rpx">
+    <van-checkbox
+      custom-class="items-start_el_"
+      use-icon-slot
+      class="text-24rpx"
+      value="{{ isAgree }}"
+      bind:change="onAgreeClick"
+    >
+      <text class="text-24rpx">
+        <text>我已阅读并同意</text>
+        <text
+          class="link"
+          data-value="privacyPolicy"
+          catchtap="toPage"
+          >《美的照明隐私协议》</text
+        ><text
+          class="link"
+          data-value="userService"
+          catchtap="toPage"
+          >《软件许可及用户服务协议》</text
+        ><text
+          class="link"
+          data-value="userInfoList"
+          catchtap="toPage"
+          >《已收集个人信息清单》</text
+        >和<text
+          class="link"
+          data-value="authList"
+          catchtap="toPage"
+          >《美的照明权限列表》</text
+        >
+      </text>
+      <image
+        class="h-36 w-36"
+        slot="icon"
+        src="{{ isAgree ? checkImg : uncheckImg }}"
+      />
+    </van-checkbox>
+  </view>
+
   <van-button
     open-type="getPhoneNumber|agreePrivacyAuthorization"
-    bindtap="handleLoginTap"
+    bind:tap="handleLoginTap"
     bindgetphonenumber="handleLoginClick"
     block
     disabled="{{!isAgree}}"
