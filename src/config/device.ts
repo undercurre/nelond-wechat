@@ -13,8 +13,7 @@ export const CARD_REFRESH_TIME = 1000
 // 卡片尺寸
 export const CARD_W = rpx2px(180)
 export const CARD_H = rpx2px(236)
-export const ROOM_CARD_H = rpx2px(336)
-export const ROOM_CARD_M = rpx2px(152) // 折叠后高度
+export const ROOM_CARD_H = rpx2px(184) // 房间卡片高度
 
 // 设备 modelName -> 品类码
 export const PRO_TYPE = {

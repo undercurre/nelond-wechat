@@ -9,37 +9,30 @@
   bind:touchstart="hideMenu"
 >
   <image
-    src="{{defaultImgDir}}/bg-login.png"
+    src="{{defaultImgDir}}/bg.jpg"
     class="bg-image"
   ></image>
 </view>
 
-<block wx:if="{{isLogin}}">
+<block wx:if="{{true || isLogin}}">
   <view
     style="height: calc(120rpx + {{navigationBarAndStatusBarHeight}});"
     class="fixed left-0 top-0 z-110 overflow-hidden w-750rpx"
     bind:tap="hideMenu"
   >
-    <image
-      src="{{defaultImgDir}}/bg.jpg"
-      class="bg-image absolute z-111"
-    ></image>
     <view
       class="w-750rpx flex justify-between pt-28rpx left-0 absolute z-112"
       style="top: {{navigationBarAndStatusBarHeight}};"
     >
-      <!-- 全屋开关 -->
+      <!-- 标题信息 -->
       <view class="ml-24rpx">
         <view
-          class="bg-hex-ffffff_42 w-180rpx h-80rpx rounded-40rpx flex items-center text-hex-2b4067 flex-center"
-          wx:if="{{isShowHomeControl}}"
-          bindtap="{{handler.handleAllOff}}"
+          class="bg-hex-ffffff_42 w-250rpx h-80rpx rounded-40rpx flex items-center text-hex-2b4067 flex-center"
           id="all-off"
         >
-          <text class="text-28rpx font-semibold">一键关灯</text>
+          <text class="text-28rpx font-semibold">空间管理（4）</text>
         </view>
       </view>
-
       <view
         wx:if="{{isCreator || isAdmin}}"
         class="mr-36rpx mt-8rpx"
@@ -54,7 +47,7 @@
       </view>
     </view>
   </view>
-  <!-- 导航栏 -->
+  <!-- 项目导航栏 -->
   <nav-bar z-index="{{113}}">
     <view
       catch:tap="handleShowHomeSelectMenu"
@@ -83,7 +76,7 @@
       class="flex flex-1 w-full box-border"
       id="content"
     >
-      <!-- 有设备时显示 FIXME 拖拽时不能滚动 -->
+      <!-- 有设备时显示 -->
       <scroll-view
         enhanced="{{true}}"
         scroll-y="{{!isMoving}}"
@@ -98,14 +91,14 @@
         <!-- 顶开上面的内容高度 -->
         <view class="h-24rpx"></view>
         <!-- 房间卡片列表 -->
-        <movable-area style="height: {{accumulatedY}}px; width: 702rpx;">
+        <movable-area style="height: {{movableHeight}}px; width: 702rpx;">
           <movable-view
             out-of-bounds
             wx:for="{{roomList}}"
             wx:key="roomId"
             data-index="{{index}}"
             data-rid="{{item.roomId}}"
-            class="w-702rpx {{item.sceneList.length && !isMoving ? 'h-336rpx' : 'h-152rpx'}}"
+            class="w-702rpx h-152rpx"
             y="{{roomPos[item.roomId].y}}"
             direction="vertical"
             friction="{{999}}"
@@ -120,7 +113,6 @@
               room-info="{{item}}"
               data-room="{{item.roomId}}"
               isMoving="{{isMoving}}"
-              bind:sceneSelect="handleSceneSelect"
             ></room-card>
           </movable-view>
         </movable-area>
@@ -134,7 +126,7 @@
             bind:click="goTo"
             data-url="/package-mine/room-manage/index"
           >
-            <text class="text-26rpx text-hex-555659">房间管理</text>
+            <text class="text-26rpx text-hex-555659">空间管理</text>
           </van-button>
         </view>
         <!-- 顶开下面的内容高度 -->
@@ -207,11 +199,7 @@
 </view>
 
 <!-- 未登录 -->
-<view wx:if="{{!isLogin}}">
-  <image
-    src="{{defaultImgDir}}/bg.jpg"
-    class="bg-image fixed z-200 left-0 top-0"
-  ></image>
+<view wx:if="{{false && !isLogin}}">
   <view
     class="fixed z-201 left-0 w-750rpx flex flex-col"
     style="top: {{statusBarHeight}};"

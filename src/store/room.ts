@@ -9,7 +9,24 @@ export const roomStore = observable({
   /**
    * 当前家庭的房间列表
    */
-  roomList: [] as Room.RoomInfo[],
+  roomList: [
+    {
+      roomId: 'xxx',
+      groupId: 'xxx',
+      roomIcon: 'drawing-room',
+      roomName: '公共空间',
+      deviceNum: 10,
+      offline: 2,
+      children: 2,
+    },
+    {
+      roomId: 'yyy',
+      groupId: 'yyy',
+      roomIcon: 'drawing-room',
+      roomName: '206会议室',
+      deviceNum: 12,
+    },
+  ] as Room.RoomInfo[],
   /**
    * 选择进入了哪个房间，在roomList中的index
    */
@@ -24,7 +41,7 @@ export const roomStore = observable({
   get lightOnInHouse(): number {
     const { roomList } = this
     let count = 0
-    roomList.forEach((room) => (count += room.lightOnCount))
+    roomList.forEach((room) => (count += room.lightOnCount ?? 0))
     return count
   },
 

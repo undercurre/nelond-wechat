@@ -45,7 +45,26 @@ ComponentWithComputed({
   computed: {
     sortedHomeList(data) {
       if (!data.homeList || !data.homeList.length) {
-        return []
+        return [
+          {
+            defaultHouseFlag: false,
+            deviceNum: 7,
+            houseCreatorFlag: false,
+            houseId: '0dc04866f4284d2d83efd85fe222c7fb',
+            houseName: '美创4栋',
+            roomNum: 4,
+            userNum: 6,
+          },
+          {
+            defaultHouseFlag: false,
+            deviceNum: 7,
+            houseCreatorFlag: false,
+            houseId: '0dc04866f4284d2d83efd85fe222c7fb',
+            houseName: '美创6栋',
+            roomNum: 4,
+            userNum: 6,
+          },
+        ]
       }
       const list = (data.homeList as Home.IHomeItem[])
         .sort((_: Home.IHomeItem, b: Home.IHomeItem) => (b.defaultHouseFlag ? 1 : -1))
