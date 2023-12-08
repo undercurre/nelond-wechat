@@ -1,7 +1,7 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { runInAction } from 'mobx-miniprogram'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import { roomBinding, roomStore } from '../../../../store/index'
+import { roomBinding, roomStore } from '../../store/index'
 
 ComponentWithComputed({
   options: {},
