@@ -28,6 +28,12 @@ ComponentWithComputed({
         path: '/pages/index/index',
       },
       {
+        text: '智能场景',
+        selectedIcon: '/assets/img/tabbar/automation-selected.png',
+        unSelectedIcon: '/assets/img/tabbar/automation-unselected.png',
+        path: '/pages/automation/index',
+      },
+      {
         text: '我的',
         selectedIcon: '/assets/img/tabbar/mine-selected.png',
         unSelectedIcon: '/assets/img/tabbar/mine-unselected.png',
@@ -36,14 +42,13 @@ ComponentWithComputed({
     ],
   },
   computed: {
-    // 已不需要作权限判断，暂时注释
-    // menuList(data: IAnyObject) {
-    //   const list = data.list
-    //   if (!data.isLogin || data.isVisitor) {
-    //     return list.filter((item: IAnyObject) => item.text !== '自动化')
-    //   }
-    //   return list
-    // },
+    menuList(data: IAnyObject) {
+      const list = data.list
+      if (!data.isLogin || data.isVisitor) {
+        return list.filter((item: IAnyObject) => item.text !== '智能场景')
+      }
+      return list
+    },
   },
 
   /**

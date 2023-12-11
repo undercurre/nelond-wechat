@@ -1,0 +1,39 @@
+/* components/marvels-switch.wxss */
+.marvels-switch {
+  height: 64rpx;
+  border-radius: 40rpx;
+  background-color: rgba(255, 255, 255, 0.6);
+  padding: 8rpx;
+  display: flex;
+  flex-direction: row;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 148rpx;
+  height: 64rpx;
+  z-index: 2;
+  border-radius: 32rpx;
+}
+
+.text {
+  font-size: 28rpx;
+  opacity: 0.64;
+  color: #2b4067;
+  font-weight: 500;
+}
+
+.active-text {
+  color: #fff;
+  opacity: 1;
+}
+
+.slider-wrapper {
+  position: absolute;
+  border-radius: 32rpx;
+  width: 148rpx;
+  height: 64rpx;
+  background-image: linear-gradient(165deg, #468cfb 0%, rgba(70, 140, 251, 0.8) 100%);
+}

@@ -1,0 +1,32 @@
+<!--components/marvels-switch.wxml-->
+
+<view class="marvels-switch">
+  <view
+    id="slider"
+    class="slider-wrapper z-1"
+  >
+  </view>
+  <view class="flex flex-row">
+    <view
+      data-index="0"
+      class="button"
+      bindtap="onSwitchChange"
+    >
+      <text class="text {{ checkedIndex === 0 ? 'active-text' : '' }}">一键场景</text>
+    </view>
+    <view
+      data-index="1"
+      class="button"
+      bindtap="onSwitchChange"
+    >
+      <text class="text {{ checkedIndex === 1 ? 'active-text' : '' }}">日程</text>
+    </view>
+    <view
+      data-index="2"
+      class="button"
+      bindtap="onSwitchChange"
+    >
+      <text class="text {{ checkedIndex === 2 ? 'active-text' : '' }}">自动场景</text>
+    </view>
+  </view>
+</view>
