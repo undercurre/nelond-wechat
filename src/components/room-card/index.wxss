@@ -9,9 +9,11 @@
 }
 
 .desc-normal {
-  background-color: rgb(187, 184, 184);
+  color: #909090;
+  background-color: #f0f0f0;
 }
 
 .desc-error {
-  background-color: rgb(214, 127, 127);
+  color: #d00;
+  background-color: #f0f0f0;
 }

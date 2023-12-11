@@ -41,7 +41,14 @@
     },
     {
       "root": "package-room-control",
-      "pages": ["index/index", "scene-edit/index", "scene-request-list/index", "scene-list/index", "group/index"]
+      "pages": [
+        "index/index",
+        "room-list/index",
+        "scene-edit/index",
+        "scene-request-list/index",
+        "scene-list/index",
+        "group/index"
+      ]
     },
     {
       "root": "package-protocol",

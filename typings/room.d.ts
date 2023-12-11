@@ -41,6 +41,8 @@ type roomInfo = {
 
   // 灯与面板总数量
   lightCount?: number
+
+  spaceLevel?: 1 | 2 | 3 | 4
 }
 declare namespace Room {
   /**

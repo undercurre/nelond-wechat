@@ -1,8 +1,3 @@
-<wxs
-  module="handler"
-  src="./index.wxs"
-></wxs>
-
 <!-- 背景 -->
 <view
   class="bg-z-index fixed left-0 top-0 w-100vw h-100vh"
