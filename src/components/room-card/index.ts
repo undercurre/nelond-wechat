@@ -2,6 +2,7 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import { runInAction } from 'mobx-miniprogram'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { roomBinding, roomStore } from '../../store/index'
+import { SpaceLevel, spaceIcon } from '../../config/index'
 
 ComponentWithComputed({
   options: {},
@@ -50,6 +51,10 @@ ComponentWithComputed({
       }
       return list
     },
+    icon(data) {
+      const spaceLevel = (data.roomInfo?.spaceLevel ?? 0) as SpaceLevel
+      return spaceIcon[spaceLevel]
+    },
   },
 
   /**
@@ -67,7 +72,9 @@ ComponentWithComputed({
         roomStore.currentRoomIndex = index
       })
       wx.navigateTo({
-        url: '/package-room-control/index/index',
+        url: this.data.roomInfo.children
+          ? '/package-room-control/room-list/index'
+          : '/package-room-control/index/index',
       })
     },
     doNothing() {},

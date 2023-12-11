@@ -4,8 +4,11 @@
   bindtap="handleCardTap"
 >
   <view class="flex items-center w-full h-160">
-    <view class="flex items-center justify-center bg-blue rounded-full w-96 h-96 ml-30rpx">
-      <text class="text-white text-36rpx font-medium">园</text>
+    <view
+      class="flex items-center justify-center bg-blue rounded-full w-96 h-96 ml-30rpx"
+      style="background: {{icon.color}}"
+    >
+      <text class="text-white text-36rpx font-medium">{{icon.text}}</text>
     </view>
     <view class="flex flex-1 flex-col ml-24rpx">
       <text class="text-36rpx font-medium">{{roomInfo.roomName}}</text>
@@ -13,7 +16,7 @@
         <text
           wx:for="{{desc}}"
           wx:key="index"
-          class="text-22rpx mr-10rpx px-10rpx text-hex-fff rounded-12rpx desc-{{item.type}}"
+          class="text-22rpx mr-10rpx px-10rpx rounded-12rpx desc-{{item.type}}"
           >{{ item.text }}</text
         >
       </view>

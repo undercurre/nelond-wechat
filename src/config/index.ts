@@ -1,3 +1,4 @@
+export * from './home'
 export * from './scene'
 export * from './code'
 export * from './device'
