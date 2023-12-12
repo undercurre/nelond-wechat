@@ -31,7 +31,7 @@ ComponentWithComputed({
 
   methods: {
     async onLoad() {
-      const res = await queryUserThirdPartyInfo(this.data.currentHomeId)
+      const res = await queryUserThirdPartyInfo(this.data.currentProjectId)
 
       if (res.success) {
         this.setData({

@@ -22,7 +22,7 @@ declare namespace Meiju {
     deviceName: string
     onOffStatus: string
     proType: string
-    roomName: string
+    spaceName: string
     sn8: string
     icon: string
   }

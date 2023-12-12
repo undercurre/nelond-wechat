@@ -8,7 +8,6 @@ import {
   saveOrUpdateUserHouseInfo,
   delUserHouse,
   quitUserHouse,
-  updateDefaultHouse,
   queryUserThirdPartyInfo,
   delDeviceSubscribe,
 } from '../../apis/index'
@@ -32,8 +31,8 @@ ComponentWithComputed({
     },
     // 正在编辑的家庭信息
     homeInfoEdited: {
-      houseId: '',
-      houseName: '',
+      projectId: '',
+      projectName: '',
     },
     isFocus: false,
     isEditName: false,
@@ -44,14 +43,14 @@ ComponentWithComputed({
     settingActions(data) {
       const actions = []
 
-      if (data.currentHomeDetail?.houseUserAuth === 1 || data.currentHomeDetail?.houseUserAuth === 2) {
+      if (data.currentProjectDetail?.houseUserAuth === 1 || data.currentProjectDetail?.houseUserAuth === 2) {
         actions.push({
           name: '重命名',
         })
       }
 
       // 用户家庭权限 1：创建者 2：管理员 3：游客
-      if (data.currentHomeDetail?.houseUserAuth === 1) {
+      if (data.currentProjectDetail?.houseUserAuth === 1) {
         actions.push(
           {
             name: '转让家庭',
@@ -69,12 +68,12 @@ ComponentWithComputed({
       return actions
     },
     namingPopupTitle(data) {
-      return data.homeInfoEdited.houseId ? '重命名家庭' : '新建家庭'
+      return data.homeInfoEdited.projectId ? '重命名家庭' : '新建家庭'
     },
-    houseName(data) {
-      return data.currentHomeDetail?.houseName?.length > 6
-        ? data.currentHomeDetail?.houseName.slice(0, 6) + '...'
-        : data.currentHomeDetail?.houseName
+    projectName(data) {
+      return data.currentProjectDetail?.projectName?.length > 6
+        ? data.currentProjectDetail?.projectName.slice(0, 6) + '...'
+        : data.currentProjectDetail?.projectName
     },
   },
 
@@ -158,7 +157,7 @@ ComponentWithComputed({
     },
 
     async toTransferHome() {
-      const list = homeBinding.store.homeList.filter((item) => item.houseCreatorFlag)
+      const list = homeBinding.store.projectList.filter((item) => item.houseCreatorFlag)
 
       if (list.length <= 1) {
         Toast({
@@ -169,7 +168,7 @@ ComponentWithComputed({
       }
 
       // 增加美居授权校验及提醒，并提供取消授权入口和二次确认
-      const bindRes = await queryUserThirdPartyInfo(homeStore.currentHomeId, { loading: true })
+      const bindRes = await queryUserThirdPartyInfo(homeStore.currentProjectId, { loading: true })
 
       const isAuth = bindRes.success ? bindRes.result[0].authStatus === 1 : false
 
@@ -214,7 +213,7 @@ ComponentWithComputed({
 
       if (dialogRes === 'cancel') return
 
-      const res = await delDeviceSubscribe(homeStore.currentHomeId)
+      const res = await delDeviceSubscribe(homeStore.currentProjectId)
       if (res.success) {
         Toast('已解除绑定')
 
@@ -229,16 +228,16 @@ ComponentWithComputed({
      * 创建家庭
      */
     createHome() {
-      // const ownerHomeList = homeStore.homeList.filter((home) => home.houseCreatorFlag)
-      if (homeStore.homeList.length >= 20) {
+      // const ownerHomeList = homeStore.projectList.filter((home) => home.houseCreatorFlag)
+      if (homeStore.projectList.length >= 20) {
         Toast('每个账号最多可以存在20个家庭')
         return
       }
       this.setData({
         isEditName: true,
         homeInfoEdited: {
-          houseId: '',
-          houseName: '',
+          projectId: '',
+          projectName: '',
         },
       })
     },
@@ -247,8 +246,8 @@ ComponentWithComputed({
       this.setData({
         isEditName: true,
         homeInfoEdited: {
-          houseId: homeBinding.store.currentHomeDetail.houseId,
-          houseName: homeBinding.store.currentHomeDetail.houseName,
+          projectId: homeBinding.store.currentProjectDetail.projectId,
+          projectName: homeBinding.store.currentProjectDetail.projectName,
         },
       })
 
@@ -267,21 +266,21 @@ ComponentWithComputed({
     changeHouseName(e: WechatMiniprogram.CustomEvent) {
       console.log('changeHouseName', e)
       this.setData({
-        'homeInfoEdited.houseName': e.detail,
+        'homeInfoEdited.projectName': e.detail,
       })
     },
     /**
      * 确认家庭信息
      */
     async confirmHomeInfo() {
-      const { houseName } = this.data.homeInfoEdited
+      const { projectName } = this.data.homeInfoEdited
 
-      if (checkInputNameIllegal(houseName)) {
+      if (checkInputNameIllegal(projectName)) {
         Toast('家庭名称不能用特殊符号或表情')
         return
       }
 
-      if (houseName.length > 15) {
+      if (projectName.length > 15) {
         Toast('家庭名称不能超过15个字符')
 
         return
@@ -297,16 +296,12 @@ ComponentWithComputed({
       })
 
       if (!res.success) {
-        Toast(this.data.homeInfoEdited.houseId ? '修改失败' : '新增失败')
+        Toast(this.data.homeInfoEdited.projectId ? '修改失败' : '新增失败')
         return
       }
 
       if (res.success) {
-        Toast(this.data.homeInfoEdited.houseId ? '修改成功' : '新增成功')
-      }
-
-      if (!this.data.homeInfoEdited.houseId) {
-        await updateDefaultHouse(res.result.houseId)
+        Toast(this.data.homeInfoEdited.projectId ? '修改成功' : '新增成功')
       }
 
       homeBinding.store.updateHomeInfo()
@@ -319,8 +314,8 @@ ComponentWithComputed({
         return
       }
 
-      const homeList = homeBinding.store.homeList.filter((item) => item.houseCreatorFlag)
-      if (homeList.length <= 1) {
+      const projectList = homeBinding.store.projectList.filter((item) => item.houseCreatorFlag)
+      if (projectList.length <= 1) {
         Toast('请至少保留一个创建的家庭')
         return
       }
@@ -333,7 +328,7 @@ ComponentWithComputed({
 
       if (res === 'cancel') return
 
-      const delRes = await delUserHouse(homeBinding.store.currentHomeDetail.houseId)
+      const delRes = await delUserHouse(homeBinding.store.currentProjectDetail.projectId)
 
       Toast(delRes.success ? '解散成功' : '解散失败')
 
@@ -349,7 +344,7 @@ ComponentWithComputed({
 
       if (res === 'cancel') return
 
-      const delRes = await quitUserHouse(homeBinding.store.currentHomeDetail.houseId)
+      const delRes = await quitUserHouse(homeBinding.store.currentProjectDetail.projectId)
 
       Toast(delRes.success ? '退出成功' : '退出失败')
 
@@ -368,8 +363,8 @@ ComponentWithComputed({
       } else {
         wx.navigateTo({
           url: strUtil.getUrlWithParams('/package-mine/room-detail/index', {
-            roomId: item.roomId,
-            roomName: item.roomName,
+            spaceId: item.spaceId,
+            spaceName: item.spaceName,
             roomIcon: item.roomIcon,
           }),
         })

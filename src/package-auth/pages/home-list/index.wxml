@@ -20,7 +20,7 @@
       style="height: {{listHeight}}px;"
     >
       <van-cell-group
-        wx:for="{{homeList}}"
+        wx:for="{{projectList}}"
         wx:key="mideaHouseId"
         inset
       >
@@ -57,7 +57,7 @@
     block
     bind:click="toConfirm"
     loading="{{loading}}"
-    disabled="{{!homeList.length}}"
+    disabled="{{!projectList.length}}"
     >确定</van-button
   >
 </view>

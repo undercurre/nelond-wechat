@@ -1,11 +1,31 @@
-<van-popup show="{{ show }}" position="bottom" round bind:close="close" closeable>
+<van-popup
+  show="{{ show }}"
+  position="bottom"
+  round
+  bind:close="close"
+  closeable
+>
   <view class="px-32rpx pt-48rpx text-black-2a">
     <text class="block font-medium text-center text-36 leading-48rpx">设备编辑</text>
 
-    <edit-device-form custom-style="max-height: 60vh;overflow: auto;" device-name="{{deviceName}}" room-id="{{roomId}}" room-name="{{roomName}}" bind:change="change" switch-list="{{switchList}}"></edit-device-form>
+    <edit-device-form
+      custom-style="max-height: 60vh;overflow: auto;"
+      device-name="{{deviceName}}"
+      room-id="{{spaceId}}"
+      room-name="{{spaceName}}"
+      bind:change="change"
+      switch-list="{{switchList}}"
+    ></edit-device-form>
 
     <view class="flex flex-row gap-46rpx pt-80rpx pb-40rpx">
-      <van-button class="w-full" size="large" type="primary" disabled="{{!deviceInfo.deviceName}}" bind:click="confirm">确定</van-button>
+      <van-button
+        class="w-full"
+        size="large"
+        type="primary"
+        disabled="{{!deviceInfo.deviceName}}"
+        bind:click="confirm"
+        >确定</van-button
+      >
     </view>
   </view>
 </van-popup>

@@ -1,5 +1,0 @@
-<view class="header" style="height:{{statusBarHeight + menuHeight}}px; padding-top: {{statusBarHeight}}px;">
-  <text wx:if="{{backText}}" class="back" bindtap="clickBack">{{backText}}</text>
-  <!-- <image wx:else class="back" src="./img/ic_back.png" bindtap="clickBack"></image> -->
-  <mx-icon wx:else name="arrow-left" bind:click="clickBack" color="{{buttonColor}}" size="20px" />
-</view>

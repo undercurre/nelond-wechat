@@ -133,7 +133,7 @@ emitter.on('msgPush', (res) => {
   } else if (eventType === 'del_house_user' && userStore.userInfo.userId === eventData.userId) {
     // 仅家庭创建者触发监听，监听家庭移交是否成功
     wx.showModal({
-      content: `你已被退出“${homeStore.currentHomeDetail.houseName}”家庭`,
+      content: `你已被退出“${homeStore.currentProjectDetail.projectName}”家庭`,
       showCancel: false,
       confirmText: '我知道了',
       confirmColor: '#488FFF',

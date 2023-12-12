@@ -1,9 +1,0 @@
-{
-  "navigationStyle": "custom",
-  "navigationBarBackgroundColor": "#FFF",
-  "navigationBarTitleText": "",
-  "navigationBarTextStyle": "black",
-  "usingComponents": {
-    "mx-dialog": "/miniprogram_npm/m-ui/mx-dialog/index"
-  }
-}

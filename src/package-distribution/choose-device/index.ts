@@ -1,6 +1,5 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import pageBehaviors from '../../behaviors/pageBehaviors'
-import { strUtil } from '../../utils/index'
 import cacheData from '../common/cacheData'
 import { productImgDir } from '../../config/index'
 
@@ -36,39 +35,6 @@ ComponentWithComputed({
         icon: `${productImgDir}/sensor.png`,
         name: '传感器',
         path: '/package-distribution/choose-sensor/index',
-      },
-      {
-        icon: `${productImgDir}/curtain.png`,
-        name: '窗帘',
-        path: strUtil.getUrlWithParams('/package-distribution-meiju/pages/check-auth/index', {
-          proType: '14',
-          sn8: '79700Z76',
-          productId: 'SC-1/M2-Z',
-          deviceImg: `${productImgDir}/curtain.png`,
-          mode: 0,
-        } as Meiju.IProductItem),
-      },
-      {
-        icon: `${productImgDir}/bath-heater.png`,
-        name: '浴霸',
-        path: strUtil.getUrlWithParams('/package-distribution-meiju/pages/check-auth/index', {
-          proType: '26',
-          sn8: 'M0100032',
-          productId: 'MY-S5X28-Y5W',
-          deviceImg: `${productImgDir}/bath-heater.png`,
-          mode: 0,
-        } as Meiju.IProductItem),
-      },
-      {
-        icon: `${productImgDir}/laundry.png`,
-        name: '晾衣机',
-        path: strUtil.getUrlWithParams('/package-distribution-meiju/pages/check-auth/index', {
-          proType: '17',
-          sn8: 'M0100035',
-          productId: 'MLY-D60W',
-          deviceImg: `${productImgDir}/laundry.png`,
-          mode: 0,
-        } as Meiju.IProductItem),
       },
     ],
   },

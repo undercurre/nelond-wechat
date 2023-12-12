@@ -2,25 +2,25 @@ import { IApiRequestOption, Logger, mzaioRequest } from '../utils/index'
 import homOs from 'js-homos'
 import { sceneStore } from '../store/index'
 
-export async function querySceneList(roomId: string, options?: { loading?: boolean }) {
+export async function querySceneList(spaceId: string, options?: { loading?: boolean }) {
   return await mzaioRequest.post<Scene.SceneItem[]>({
     log: true,
     loading: options?.loading ?? false,
     url: '/v1/mzgd/scene/querySceneListByRoomId',
     data: {
-      roomId,
+      spaceId,
     },
   })
 }
 
-export async function querySceneListByHouseId(houseId: string, options?: IApiRequestOption) {
+export async function querySceneListByHouseId(projectId: string, options?: IApiRequestOption) {
   return await mzaioRequest.post<Scene.SceneItem[]>({
     log: true,
     loading: options?.loading ?? false,
     isDefaultErrorTips: options?.isDefaultErrorTips ?? true,
     url: '/v1/mzgd/scene/querySceneListByHouseId',
     data: {
-      houseId,
+      projectId,
     },
   })
 }
@@ -109,19 +109,19 @@ export async function updateSceneSort(
   })
 }
 
-export async function queryAutoSceneListByHouseId(houseId: string, options?: { loading?: boolean }) {
+export async function queryAutoSceneListByHouseId(projectId: string, options?: { loading?: boolean }) {
   return await mzaioRequest.post<AutoScene.AutoSceneItem[]>({
     log: true,
     loading: options?.loading ?? false,
     url: '/v1/mzgd/scene/queryAutoSceneListByHouseId',
     data: {
-      houseId,
+      projectId,
     },
   })
 }
 
 export async function queryAutoSceneLogByHouseId(
-  data: { houseId: string; reportTs?: number },
+  data: { projectId: string; reportTs?: number },
   options?: { loading?: boolean },
 ) {
   return await mzaioRequest.post<AutoScene.AutoSceneLog[]>({

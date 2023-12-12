@@ -141,7 +141,8 @@ export function checkWifiSwitch() {
   return true
 }
 
-export function isLogon() {
+// 是否已登录（token是否存在且未过期）
+export function isLogined() {
   return Boolean(storage.get<string>('token'))
 }
 

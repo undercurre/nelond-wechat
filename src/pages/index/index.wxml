@@ -9,7 +9,8 @@
   ></image>
 </view>
 
-<block wx:if="{{true || isLogin}}">
+<block wx:if="{{isLogin}}">
+  <!-- 导航下按钮位置，现为副标题 -->
   <view
     style="height: calc(120rpx + {{navigationBarAndStatusBarHeight}});"
     class="fixed left-0 top-0 z-110 overflow-hidden w-750rpx"
@@ -42,14 +43,15 @@
       </view>
     </view>
   </view>
+
   <!-- 项目导航栏 -->
   <nav-bar z-index="{{113}}">
     <view
       catch:tap="handleShowHomeSelectMenu"
-      wx:if="{{currentHomeName}}"
+      wx:if="{{currentProjectName}}"
     >
       <view class="absolute top-8rpx left-32rpx">
-        <text class="text-hex-1e2c46 text-48rpx font-semibold">{{currentHomeName}}</text>
+        <text class="text-hex-1e2c46 text-48rpx font-semibold">{{currentProjectName}}</text>
         <svg-icon
           id="homeSelectArrow"
           class="absolute home-select-arrow"
@@ -90,23 +92,23 @@
           <movable-view
             out-of-bounds
             wx:for="{{roomList}}"
-            wx:key="roomId"
+            wx:key="spaceId"
             data-index="{{index}}"
-            data-rid="{{item.roomId}}"
+            data-rid="{{item.spaceId}}"
             class="w-702rpx h-152rpx"
-            y="{{roomPos[item.roomId].y}}"
+            y="{{roomPos[item.spaceId].y}}"
             direction="vertical"
             friction="{{999}}"
             damping="{{100}}"
             bind:longpress="movableLongpress"
             bind:touchend="movableTouchEnd"
             bind:touchmove="movableTouchMove"
-            class="{{ roomPos[item.roomId].index === placeholder.index ? 'z-100' : (isMoving ? 'opacity-50' : 'opacity-100 z-1') }}"
+            class="{{ roomPos[item.spaceId].index === placeholder.index ? 'z-100' : (isMoving ? 'opacity-50' : 'opacity-100 z-1') }}"
             disabled="{{!isMoving}}"
           >
             <room-card
-              room-info="{{item}}"
-              data-room="{{item.roomId}}"
+              space-info="{{item}}"
+              data-room="{{item.spaceId}}"
               isMoving="{{isMoving}}"
             ></room-card>
           </movable-view>
@@ -194,7 +196,7 @@
 </view>
 
 <!-- 未登录 -->
-<view wx:if="{{false && !isLogin}}">
+<view wx:if="{{!isLogin}}">
   <view
     class="fixed z-201 left-0 w-750rpx flex flex-col"
     style="top: {{statusBarHeight}};"

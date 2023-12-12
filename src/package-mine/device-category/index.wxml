@@ -1,35 +1,76 @@
 <view class="page-container flex flex-col">
-  <nav-bar background="#eef2f7" leftArrow="{{true}}" bind:leftTap="goBack" title="{{pageTitle}}"></nav-bar>
+  <nav-bar
+    background="#eef2f7"
+    leftArrow="{{true}}"
+    bind:leftTap="goBack"
+    title="{{pageTitle}}"
+  ></nav-bar>
 
   <view class="grow flex flex-col pt-24rpx">
     <scroll-view show-scrollbar="{{false}}">
       <view wx:if="{{pageTitle}}">
         <view wx:if="{{deviceListCompited.length}}">
-          <van-cell-group inset wx:for="{{deviceListCompited}}" wx:key="deviceId">
-            <van-cell clickable bind:click="handleCardClick" data-device-id="{{item.deviceId}}" data-device-type="{{item.deviceType}}">
+          <van-cell-group
+            inset
+            wx:for="{{deviceListCompited}}"
+            wx:key="deviceId"
+          >
+            <van-cell
+              clickable
+              bind:click="handleCardClick"
+              data-device-id="{{item.deviceId}}"
+              data-device-type="{{item.deviceType}}"
+            >
               <view class="flex item-center">
                 <view class="w-96rpx h-96rpx bg-hex-F6FAFD rounded-999 flex-center">
-                  <image src="{{item.pic}}" class="w-72rpx h-72rpx" />
+                  <image
+                    src="{{item.pic}}"
+                    class="w-72rpx h-72rpx"
+                  />
                 </view>
                 <view class="h-96rpx flex flex-col justify-center items-start ml-32rpx">
                   <text class="text-black-2a text-32rpx">{{item.deviceName}}</text>
                   <view>
-                    <text class="text-black-tips text-28rpx mt-8rpx">{{item.roomName}}{{item.onLineStatus ? '' : ' | '}}</text>
-                    <text wx:if="{{!item.onLineStatus}}" class="text-28rpx text-hex-fbbb32">离线</text>
+                    <text class="text-black-tips text-28rpx mt-8rpx">{{item.spaceName}}{{item.onLineStatus ? '' : ' | '}}</text>
+                    <text
+                      wx:if="{{!item.onLineStatus}}"
+                      class="text-28rpx text-hex-fbbb32"
+                      >离线</text
+                    >
                   </view>
                 </view>
               </view>
-              <view slot="right-icon" class="h-96rpx flex-center">
-                <svg-icon color="#c8c7cc" name="icon-park:right" width="48rpx" height="48rpx"></svg-icon>
+              <view
+                slot="right-icon"
+                class="h-96rpx flex-center"
+              >
+                <svg-icon
+                  color="#c8c7cc"
+                  name="icon-park:right"
+                  width="48rpx"
+                  height="48rpx"
+                ></svg-icon>
               </view>
             </van-cell>
           </van-cell-group>
         </view>
-        <view wx:else class="flex-col-center">
-          <image class="h-300rpx w-300rpx my-64rpx" src="{{defaultImg[pageParam]}}"></image>
+        <view
+          wx:else
+          class="flex-col-center"
+        >
+          <image
+            class="h-300rpx w-300rpx my-64rpx"
+            src="{{defaultImg[pageParam]}}"
+          ></image>
           <text class="text-28rpx text-hex-555659">尚未添加{{pageTitle}}</text>
           <view class="flex gap-46rpx justify-center w-686rpx mt-276rpx">
-            <van-button type="primary" class="grow" size="large" bind:click="handleAddDevice">立即添加</van-button>
+            <van-button
+              type="primary"
+              class="grow"
+              size="large"
+              bind:click="handleAddDevice"
+              >立即添加</van-button
+            >
           </view>
         </view>
       </view>

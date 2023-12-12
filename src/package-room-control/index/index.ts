@@ -154,7 +154,7 @@ ComponentWithComputed({
         return (
           (data.allRoomDeviceList as DeviceCard[]).filter(
             (device) =>
-              device.roomId === roomStore.roomList[roomStore.currentRoomIndex].roomId &&
+              device.spaceId === roomStore.roomList[roomStore.currentSpaceIndex].spaceId &&
               device.proType === PRO_TYPE.light,
           ).length > 0
         )
@@ -167,7 +167,7 @@ ComponentWithComputed({
         return (
           (data.allRoomDeviceList as DeviceCard[]).filter(
             (device) =>
-              device.roomId === roomStore.roomList[roomStore.currentRoomIndex].roomId &&
+              device.spaceId === roomStore.roomList[roomStore.currentSpaceIndex].spaceId &&
               device.proType !== PRO_TYPE.gateway,
           ).length > 0
         )
@@ -175,8 +175,8 @@ ComponentWithComputed({
       return false
     },
     title(data) {
-      if (data.roomList && data.roomList[data.currentRoomIndex]) {
-        return data.roomList[data.currentRoomIndex].roomName
+      if (data.roomList && data.roomList[data.currentSpaceIndex]) {
+        return data.roomList[data.currentSpaceIndex].spaceName
       }
       return ''
     },
@@ -381,7 +381,7 @@ ComponentWithComputed({
           this.reloadDataThrottle(e)
         } else if (
           e.result.eventType === WSEventType.room_del &&
-          e.result.eventData.roomId === roomStore.roomList[roomStore.currentRoomIndex].roomId
+          e.result.eventData.spaceId === roomStore.roomList[roomStore.currentSpaceIndex].spaceId
         ) {
           // 房间被删除，退出到首页
           await homeStore.updateRoomCardList()
@@ -438,7 +438,8 @@ ComponentWithComputed({
       }
 
       try {
-        await Promise.all([homeStore.updateRoomCardList(), sceneStore.updateAllRoomSceneList(), this.queryGroupInfo()])
+        // sceneStore.updateAllRoomSceneList(),
+        await Promise.all([homeStore.updateRoomCardList(), this.queryGroupInfo()])
 
         this.updateQueue({ isRefresh: true })
       } finally {
@@ -934,8 +935,8 @@ ComponentWithComputed({
           if (device.proType !== PRO_TYPE.switch) {
             deviceOrderData.deviceInfoByDeviceVoList.push({
               deviceId: device.deviceId,
-              houseId: homeStore.currentHomeId,
-              roomId: device.roomId,
+              projectId: homeStore.currentProjectId,
+              spaceId: device.spaceId,
               orderNum: String(device.orderNum),
               type: device.deviceType === 4 ? '2' : '0', // 灯组为2，普通设备为0
             })
@@ -944,8 +945,8 @@ ComponentWithComputed({
           else {
             switchOrderData.deviceInfoByDeviceVoList.push({
               deviceId: device.deviceId,
-              houseId: homeStore.currentHomeId,
-              roomId: device.roomId,
+              projectId: homeStore.currentProjectId,
+              spaceId: device.spaceId,
               orderNum: String(device.orderNum),
               switchId: device.switchInfoDTOList[0].switchId,
               type: '1',
@@ -975,7 +976,7 @@ ComponentWithComputed({
 
       wx.navigateTo({
         url: strUtil.getUrlWithParams('/package-automation/automation-add/index', {
-          roomid: roomStore.currentRoom.roomId,
+          roomid: roomStore.currentRoom.spaceId,
         }),
       })
     },
@@ -993,7 +994,7 @@ ComponentWithComputed({
       // 不在编辑状态，如果是WIFI设备
       else if (e.detail.deviceType === 3) {
         const { deviceId } = e.detail
-        const res = await queryAuthGetStatus({ houseId: homeStore.currentHomeId, deviceId })
+        const res = await queryAuthGetStatus({ projectId: homeStore.currentProjectId, deviceId })
         // 若设备未确权、待确权，则弹出指引弹窗
         if (!res.success) {
           Toast('设备确权异常')
@@ -1123,7 +1124,7 @@ ComponentWithComputed({
       // 如果是WIFI设备
       if (e.detail.deviceType === 3) {
         const { deviceId } = e.detail
-        const res = await queryAuthGetStatus({ houseId: homeStore.currentHomeId, deviceId })
+        const res = await queryAuthGetStatus({ projectId: homeStore.currentProjectId, deviceId })
         // 若设备未确权、待确权，则弹出指引弹窗
         if (res.result.status === 1 || res.result.status === 2) {
           this.setData({ showAuthDialog: true, deviceIdForQueryAuth: deviceId })

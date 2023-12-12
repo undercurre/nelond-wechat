@@ -44,7 +44,7 @@
 <!-- 项目导航栏 -->
 <nav-bar
   z-index="{{113}}"
-  title="{{currentHomeName}}"
+  title="{{currentProjectName}}"
   left-arrow
   bind:leftTap="goBack"
 >
@@ -78,23 +78,23 @@
         <movable-view
           out-of-bounds
           wx:for="{{roomList}}"
-          wx:key="roomId"
+          wx:key="spaceId"
           data-index="{{index}}"
-          data-rid="{{item.roomId}}"
+          data-rid="{{item.spaceId}}"
           class="w-702rpx h-152rpx"
-          y="{{roomPos[item.roomId].y}}"
+          y="{{roomPos[item.spaceId].y}}"
           direction="vertical"
           friction="{{999}}"
           damping="{{100}}"
           bind:longpress="movableLongpress"
           bind:touchend="movableTouchEnd"
           bind:touchmove="movableTouchMove"
-          class="{{ roomPos[item.roomId].index === placeholder.index ? 'z-100' : (isMoving ? 'opacity-50' : 'opacity-100 z-1') }}"
+          class="{{ roomPos[item.spaceId].index === placeholder.index ? 'z-100' : (isMoving ? 'opacity-50' : 'opacity-100 z-1') }}"
           disabled="{{!isMoving}}"
         >
           <room-card
-            room-info="{{item}}"
-            data-room="{{item.roomId}}"
+            space-info="{{item}}"
+            data-room="{{item.spaceId}}"
             isMoving="{{isMoving}}"
           ></room-card>
         </movable-view>

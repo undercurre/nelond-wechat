@@ -5,8 +5,8 @@ export interface IBleDevice {
   mac: string
   zigbeeMac: string
   name: string
-  roomId: string
-  roomName: string
+  spaceId: string
+  spaceName: string
   icon: string
   client: BleClient
   status: 'waiting' | 'fail' | 'success' // 配网状态

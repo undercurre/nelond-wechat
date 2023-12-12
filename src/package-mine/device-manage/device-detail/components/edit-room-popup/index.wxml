@@ -1,14 +1,30 @@
 <import src="/commons/templates/popup.wxml" />
-<van-popup show="{{ show }}" round position="bottom" catch:close="handleClose" closeable safe-area-inset-bottom="{{false}}">
+<van-popup
+  show="{{ show }}"
+  round
+  position="bottom"
+  catch:close="handleClose"
+  closeable
+  safe-area-inset-bottom="{{false}}"
+>
   <view class="w-750rpx flex flex-col items-center">
-    <template is="title" data="{{title: '所在房间'}}" />
+    <template
+      is="title"
+      data="{{title: '所在房间'}}"
+    />
     <view class="w-750rpx flex mt-44rpx mb-16rpx">
       <text class="text-28rpx ml-48rpx">选择房间</text>
     </view>
     <view class="w-686rpx">
       <view class="flex flex-wrap">
-        <view wx:for="{{roomList}}" wx:key="roomId" data-id="{{item.roomId}}" catch:tap="handleRoomSelect" class="mt-16rpx mr-32rpx rounded-999 px-40rpx py-10rpx flex flex-center {{item.roomId === roomSelect ? 'bg-select' : 'bg-hex-dfe1e5'}}">
-          <text class="text-28rpx text-normal {{item.roomId === roomSelect ? 'text-white' : 'text-black-59'}}">{{item.roomName}}</text>
+        <view
+          wx:for="{{roomList}}"
+          wx:key="spaceId"
+          data-id="{{item.spaceId}}"
+          catch:tap="handleRoomSelect"
+          class="mt-16rpx mr-32rpx rounded-999 px-40rpx py-10rpx flex flex-center {{item.spaceId === roomSelect ? 'bg-select' : 'bg-hex-dfe1e5'}}"
+        >
+          <text class="text-28rpx text-normal {{item.spaceId === roomSelect ? 'text-white' : 'text-black-59'}}">{{item.spaceName}}</text>
         </view>
       </view>
     </view>

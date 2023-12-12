@@ -1,6 +1,6 @@
 import { observable, runInAction } from 'mobx-miniprogram'
 import { queryAllDevice } from '../apis/device'
-import { getModelName, PRO_TYPE } from '../config/index'
+import { PRO_TYPE } from '../config/index'
 import { homeStore } from './home'
 import { roomStore } from './room'
 import { sceneStore } from './scene'
@@ -14,8 +14,8 @@ export const deviceStore = observable({
   allRoomDeviceList: [] as Device.DeviceItem[],
 
   get deviceList(): Device.DeviceItem[] {
-    const { roomId = 0 } = roomStore.currentRoom ?? {}
-    return this.allRoomDeviceList.filter((device) => device.roomId === roomId)
+    const { spaceId = 0 } = roomStore.currentRoom ?? {}
+    return this.allRoomDeviceList.filter((device) => device.spaceId === spaceId)
   },
   /**
    * deviceId -> device 映射
@@ -39,14 +39,14 @@ export const deviceStore = observable({
    * 将有多个按键的开关拍扁，保证每个设备和每个按键都是独立一个item，并且uniId唯一
    */
   get deviceFlattenList(): Device.DeviceItem[] {
-    const { roomId = 0 } = roomStore.currentRoom ?? {}
-    return this.allRoomDeviceFlattenList.filter((device) => device.roomId === roomId)
+    const { spaceId = 0 } = roomStore.currentRoom ?? {}
+    return this.allRoomDeviceFlattenList.filter((device) => device.spaceId === spaceId)
   },
 
   // 当前房间灯组数量
   get groupCount(): number {
-    const { roomId = 0 } = roomStore.currentRoom ?? {}
-    const groups = this.allRoomDeviceList.filter((device) => device.roomId === roomId && device.deviceType === 4)
+    const { spaceId = 0 } = roomStore.currentRoom ?? {}
+    const groups = this.allRoomDeviceList.filter((device) => device.spaceId === spaceId && device.deviceType === 4)
     return groups.length
   },
 
@@ -83,15 +83,15 @@ export const deviceStore = observable({
   /**
    * 在灯组中的灯ID
    */
-  get lightsInGroup() {
-    const list = [] as string[]
-    deviceStore.deviceList.forEach((device) => {
-      if (device.deviceType === 4) {
-        list.push(...device.groupDeviceList!.map((device) => device.deviceId))
-      }
-    })
-    return list
-  },
+  // get lightsInGroup() {
+  //   const list = [] as string[]
+  //   deviceStore.deviceList.forEach((device) => {
+  //     if (device.deviceType === 4) {
+  //       list.push(...device.groupDeviceList!.map((device) => device.deviceId))
+  //     }
+  //   })
+  //   return list
+  // },
 
   get allRoomDeviceFlattenMap(): Record<string, Device.DeviceItem> {
     return Object.fromEntries(
@@ -102,19 +102,19 @@ export const deviceStore = observable({
     const list = [] as Device.DeviceItem[]
     this.allRoomDeviceList.forEach((device) => {
       // 过滤属性数据不完整的数据
-      if (!device.mzgdPropertyDTOList) {
-        return
-      }
+      // if (!device.mzgdPropertyDTOList) {
+      //   return
+      // }
       // 开关面板需要前端拆分处理
       if (device.proType === PRO_TYPE.switch) {
         device.switchInfoDTOList?.forEach((switchItem) => {
           list.push({
             ...device,
             property: device.mzgdPropertyDTOList[switchItem.switchId],
-            mzgdPropertyDTOList: {
-              [switchItem.switchId]: device.mzgdPropertyDTOList[switchItem.switchId],
-            },
-            switchInfoDTOList: [switchItem],
+            // mzgdPropertyDTOList: {
+            //   [switchItem.switchId]: device.mzgdPropertyDTOList[switchItem.switchId],
+            // },
+            // switchInfoDTOList: [switchItem],
             uniId: `${device.deviceId}:${switchItem.switchId}`,
             orderNum: switchItem.orderNum,
           })
@@ -122,14 +122,14 @@ export const deviceStore = observable({
       }
       // 包括 PRO_TYPE.light PRO_TYPE.sensor在内，所有非网关、可显示的设备都用这种方案插值
       else if (device.proType !== PRO_TYPE.gateway) {
-        const modelName = getModelName(device.proType, device.productId)
+        // const modelName = getModelName(device.proType, device.productId)
         list.push({
           ...device,
           uniId: device.deviceId,
-          property: device.mzgdPropertyDTOList[modelName],
-          mzgdPropertyDTOList: {
-            [modelName]: device.mzgdPropertyDTOList[modelName],
-          },
+          // property: device.mzgdPropertyDTOList[modelName],
+          // mzgdPropertyDTOList: {
+          //   [modelName]: device.mzgdPropertyDTOList[modelName],
+          // },
           // orderNum: device.deviceType === 4 ? -1 : device.orderNum, // 灯组强制排前面
         })
       }
@@ -179,17 +179,17 @@ export const deviceStore = observable({
     return map
   },
 
-  async updateAllRoomDeviceList(houseId: string = homeStore.currentHomeId, options?: IApiRequestOption) {
-    const res = await queryAllDevice(houseId, options)
+  async updateAllRoomDeviceList(projectId: string = homeStore.currentProjectId, options?: IApiRequestOption) {
+    const res = await queryAllDevice(projectId, '0', options)
     if (res.success) {
       const list = {} as Record<string, Device.DeviceItem[]>
       res.result
         ?.sort((a, b) => a.deviceId.localeCompare(b.deviceId))
         .forEach((device) => {
-          if (list[device.roomId]) {
-            list[device.roomId].push(device)
+          if (list[device.spaceId]) {
+            list[device.spaceId].push(device)
           } else {
-            list[device.roomId] = [device]
+            list[device.spaceId] = [device]
           }
         })
       runInAction(() => {

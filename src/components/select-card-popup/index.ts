@@ -49,26 +49,26 @@ ComponentWithComputed({
       observer(value) {
         if (!value) return
         if (this.data.roomListComputed.length) {
-          let roomSelect = roomStore.currentRoom?.roomId
+          let roomSelect = roomStore.currentRoom?.spaceId
 
-          if (this.data.roomListComputed.findIndex((item) => item.roomId === roomSelect) < 0) {
-            roomSelect = this.data.roomListComputed[0].roomId
+          if (this.data.roomListComputed.findIndex((item) => item.spaceId === roomSelect) < 0) {
+            roomSelect = this.data.roomListComputed[0].spaceId
           }
 
           if (this.data.selectList.length) {
-            let selectItem = { roomId: '' }
+            let selectItem = { spaceId: '' }
             this.data.selectList.forEach((id: string) => {
-              if (selectItem === undefined || !selectItem.roomId) {
+              if (selectItem === undefined || !selectItem.spaceId) {
                 selectItem = this.data.list.find(
                   (item: Device.DeviceItem & Scene.SceneItem) => item.sceneId === id || item.uniId === id,
                 )
               }
             })
 
-            if (selectItem && selectItem.roomId) {
-              roomSelect = selectItem.roomId
+            if (selectItem && selectItem.spaceId) {
+              roomSelect = selectItem.spaceId
             } else {
-              roomSelect = this.data.roomListComputed[0].roomId
+              roomSelect = this.data.roomListComputed[0].spaceId
             }
           }
           if (this.data.defaultRoomId) {
@@ -113,11 +113,11 @@ ComponentWithComputed({
 
   computed: {
     roomListComputed(data) {
-      const roomList = [] as Room.RoomInfo[]
+      const roomList = [] as Space.SpaceInfo[]
       // 从roomList遍历，保证房间顺序， 仅显示list的数据所在的房间列表
       roomStore.roomList.forEach((room) => {
-        const isIncludes = data.list.some((item: { roomId: string }) => {
-          if (item.roomId === room.roomId) {
+        const isIncludes = data.list.some((item: { spaceId: string }) => {
+          if (item.spaceId === room.spaceId) {
             return true
           }
           return false
@@ -130,7 +130,7 @@ ComponentWithComputed({
     },
     listComputed(data) {
       if (data.list) {
-        return data.list.filter((item: Scene.SceneItem | Device.DeviceItem) => item.roomId === data.roomSelect)
+        return data.list.filter((item: Scene.SceneItem | Device.DeviceItem) => item.spaceId === data.roomSelect)
       }
       return []
     },
@@ -157,7 +157,7 @@ ComponentWithComputed({
     },
     handleRoomSelect(e: WechatMiniprogram.TouchEvent) {
       this.setData({
-        roomSelect: e.currentTarget.dataset.item.roomId,
+        roomSelect: e.currentTarget.dataset.item.spaceId,
       })
     },
     blank() {},

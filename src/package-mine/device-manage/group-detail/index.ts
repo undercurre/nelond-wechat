@@ -1,10 +1,10 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
-import { homeBinding, homeStore, roomBinding, deviceStore } from '../../../store/index'
+import { homeBinding, homeStore, roomBinding } from '../../../store/index'
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { delGroup, queryGroup, renameGroup, updateGroup } from '../../../apis/index'
-import { proName, PRO_TYPE } from '../../../config/index'
+import { proName } from '../../../config/index'
 import Dialog from '@vant/weapp/dialog/dialog'
 import { emitter } from '../../../utils/index'
 ComponentWithComputed({
@@ -13,8 +13,8 @@ ComponentWithComputed({
    * 页面的初始数据
    */
   data: {
-    roomId: '',
-    roomName: '',
+    spaceId: '',
+    spaceName: '',
     groupId: '',
     deviceName: '',
     showEditNamePopup: false,
@@ -37,11 +37,12 @@ ComponentWithComputed({
      * 不能已在灯组中
      */
     lightListToAdd() {
-      const { deviceFlattenList, lightsInGroup } = deviceStore
-      return deviceFlattenList.filter(
-        (device) =>
-          device.proType === PRO_TYPE.light && device.deviceType !== 4 && !lightsInGroup.includes(device.deviceId),
-      )
+      return true
+      // const { deviceFlattenList, lightsInGroup } = deviceStore
+      // return deviceFlattenList.filter(
+      //   (device) =>
+      //     device.proType === PRO_TYPE.light && device.deviceType !== 4 && !lightsInGroup.includes(device.deviceId),
+      // )
     },
     canAddDevice(data) {
       return data.canEditDevice && data.lightListToAdd?.length
@@ -163,8 +164,8 @@ ComponentWithComputed({
         this.setData({
           deviceInfo: res.result,
           deviceName: res.result.groupName,
-          roomId: res.result.roomId,
-          roomName: res.result.roomName,
+          spaceId: res.result.spaceId,
+          spaceName: res.result.spaceName,
         })
       }
     },

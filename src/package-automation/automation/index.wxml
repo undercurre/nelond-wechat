@@ -68,9 +68,9 @@
           >
             <van-tab
               wx:for="{{roomTab}}"
-              wx:key="roomId"
-              title="{{item.roomName}}"
-              name="{{item.roomId}}"
+              wx:key="spaceId"
+              title="{{item.spaceName}}"
+              name="{{item.spaceId}}"
             ></van-tab>
           </van-tabs>
         </view>

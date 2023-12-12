@@ -110,7 +110,7 @@ ComponentWithComputed({
   methods: {
     async init() {
       const guideInfoRes = await queryDeviceSpecifiedInfo({
-        houseId: homeStore.currentHomeId,
+        projectId: homeStore.currentProjectId,
         deviceId: this.data.deviceId,
       })
 
@@ -132,7 +132,7 @@ ComponentWithComputed({
     },
 
     async queryAuthGetStatus() {
-      const res = await queryAuthGetStatus({ houseId: homeStore.currentHomeId, deviceId: this.data.deviceId })
+      const res = await queryAuthGetStatus({ projectId: homeStore.currentProjectId, deviceId: this.data.deviceId })
 
       // 弹框取消后或者倒计时结束，取消轮询确权状态
       if (!res.success || this.data.time <= 0 || !this.data.isShow) {
@@ -181,7 +181,10 @@ ComponentWithComputed({
         status: 'waiting',
       })
 
-      const confirmRes = await confirmDeviceAuth({ houseId: homeStore.currentHomeId, deviceId: this.data.deviceId })
+      const confirmRes = await confirmDeviceAuth({
+        projectId: homeStore.currentProjectId,
+        deviceId: this.data.deviceId,
+      })
 
       if (!confirmRes.success) {
         Toast({ message: '下发进入确权指令失败', zIndex: 9999 })

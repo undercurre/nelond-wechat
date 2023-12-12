@@ -64,8 +64,8 @@ ComponentWithComputed({
       deviceUuid: '',
       deviceId: '',
       deviceName: '',
-      roomId: '',
-      roomName: '',
+      spaceId: '',
+      spaceName: '',
       switchList: [] as Device.ISwitch[],
     },
     status: 'discover' as StatusName,
@@ -205,7 +205,7 @@ ComponentWithComputed({
             isChecked: true,
             status: 'waiting' as const,
             deviceUuid: device.deviceId,
-            roomId: roomBinding.store.currentRoom.roomId, // 默认为当前房间
+            spaceId: roomBinding.store.currentRoom.spaceId, // 默认为当前房间
             mac: device.deviceId,
           }
         })
@@ -400,8 +400,8 @@ ComponentWithComputed({
         for (const device of list) {
           const res = await bindDevice({
             deviceId: device.deviceId,
-            houseId: homeBinding.store.currentHomeId,
-            roomId: device.roomId,
+            projectId: homeBinding.store.currentProjectId,
+            spaceId: device.spaceId,
             sn: '',
             deviceName: device.name,
           })
@@ -661,8 +661,8 @@ ComponentWithComputed({
     async bindBleDeviceToCloud(device: Device.ISubDevice) {
       const res = await bindDevice({
         deviceId: device.zigbeeMac,
-        houseId: homeBinding.store.currentHomeId,
-        roomId: device.roomId,
+        projectId: homeBinding.store.currentProjectId,
+        spaceId: device.spaceId,
         sn: '',
         deviceName: device.name,
       })
@@ -695,7 +695,7 @@ ComponentWithComputed({
       const deviceInfoUpdateVoList = switchList.map((item) => {
         return {
           deviceId: deviceId,
-          houseId: homeStore.currentHomeId,
+          projectId: homeStore.currentProjectId,
           switchId: item.switchId,
           switchName: item.switchName,
           type: '3',
@@ -721,8 +721,8 @@ ComponentWithComputed({
           deviceUuid: item.deviceUuid,
           deviceId: item.deviceUuid,
           deviceName: item.name,
-          roomId: item.roomId,
-          roomName: item.roomName,
+          spaceId: item.spaceId,
+          spaceName: item.spaceName,
           switchList: item.switchList,
         },
       })
@@ -735,8 +735,8 @@ ComponentWithComputed({
         (item) => item.deviceUuid === this.data.editDeviceInfo.deviceUuid,
       ) as Device.ISubDevice
 
-      item.roomId = detail.roomId
-      item.roomName = detail.roomName
+      item.spaceId = detail.spaceId
+      item.spaceName = detail.spaceName
       item.name = detail.deviceName
       item.switchList = detail.switchList
 

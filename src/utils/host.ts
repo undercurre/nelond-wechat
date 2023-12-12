@@ -7,7 +7,7 @@ export async function initHomeOs() {
 
   // 调试阶段可写死传递host参数，PC模拟调试
   homOs.login({
-    homeId: homeStore.currentHomeDetail.houseId,
+    homeId: homeStore.currentProjectDetail.projectId,
     key: homeStore.key,
     // host: { "ip": "192.168.3.9", "devId": "1694507652870764", SSID: 'test' },
   })

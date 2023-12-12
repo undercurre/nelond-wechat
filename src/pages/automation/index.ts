@@ -57,14 +57,14 @@ ComponentWithComputed({
     tabIndex: 0, // 当前为一键场景/日程/自动场景
     active: '',
     scrollTop: 0,
-    selectedRoomId: '',
+    selectedspaceId: '',
   },
   computed: {
     roomTab() {
       const tempRoomList = roomStore.roomList.map((item) => {
         return {
-          roomId: item.roomId,
-          roomName: item.roomName,
+          spaceId: item.spaceId,
+          roomName: item.spaceName,
         }
       })
       return tempRoomList
@@ -78,9 +78,9 @@ ComponentWithComputed({
       })
     },
     onYijianRoomChange(event: { detail: { name: string } }) {
-      this.data.selectedRoomId = event.detail.name
+      this.data.selectedspaceId = event.detail.name
       this.setData({
-        selectedRoomId: event.detail.name,
+        selectedspaceId: event.detail.name,
       })
       this.updateList()
     },
@@ -110,7 +110,7 @@ ComponentWithComputed({
       // emitter.on('scene_enabled', () => {
       //   autosceneBinding.store.updateAllRoomAutoSceneList()
       // })
-      console.log(roomStore.currentRoom, roomStore.currentRoomIndex)
+      console.log(roomStore.currentRoom, roomStore.currentSpaceIndex)
 
       // 加载一键场景列表
       sceneBinding.store.updateAllRoomSceneList()
@@ -119,8 +119,8 @@ ComponentWithComputed({
     },
     // onShow() {
     //   this.setData({
-    //     selectedRoomId: roomStore.currentRoom.roomId,
-    //     active: roomStore.currentRoomIndex,
+    //     selectedspaceId: roomStore.currentRoom.spaceId,
+    //     active: roomStore.currentSpaceIndex,
     //   })
     // },
     // onUnload() {
@@ -136,14 +136,14 @@ ComponentWithComputed({
     },
 
     updateList() {
-      if (this.data.selectedRoomId === '') {
-        this.data.selectedRoomId = roomStore.roomList[0].roomId
+      if (this.data.selectedspaceId === '') {
+        this.data.selectedspaceId = roomStore.roomList[0].spaceId
       }
       const listData = [] as IAnyObject[]
       const deviceMap = deviceStore.allRoomDeviceMap
 
       sceneStore.allRoomSceneList
-        .filter((item) => item.roomId === this.data.selectedRoomId)
+        .filter((item) => item.spaceId === this.data.selectedspaceId)
         .forEach((scene: Scene.SceneItem) => {
           let linkName = ''
           if (scene.deviceConditions?.length > 0) {
@@ -252,8 +252,8 @@ ComponentWithComputed({
   lifetimes: {
     ready() {
       this.setData({
-        selectedRoomId: roomStore.currentRoom.roomId,
-        active: roomStore.currentRoom.roomId,
+        selectedspaceId: roomStore.currentRoom.spaceId,
+        active: roomStore.currentRoom.spaceId,
       })
       this.updateList()
       sceneBinding.store.updateAllRoomSceneList().then(() => {

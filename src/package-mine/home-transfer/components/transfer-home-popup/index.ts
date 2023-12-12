@@ -27,7 +27,7 @@ Component({
   data: {
     defaultImgDir,
     selectIndex: -1,
-    userList: [] as Home.HouseUserItem[],
+    userList: [] as Project.HouseUserItem[],
   },
 
   lifetimes: {
@@ -47,7 +47,7 @@ Component({
    */
   methods: {
     async queryHomeUsers() {
-      const res = await queryHouseUserList({ houseId: homeBinding.store.currentHomeId })
+      const res = await queryHouseUserList({ projectId: homeBinding.store.currentProjectId })
       if (res.success) {
         this.setData({
           userList: res.result.houseUserList.filter((item) => item.userHouseAuth !== 1), // 过滤创建者，不能转让给自己
@@ -85,7 +85,7 @@ Component({
 
       const changeRes = await changeUserHouse({
         type: 1,
-        houseId: homeBinding.store.currentHomeId,
+        projectId: homeBinding.store.currentProjectId,
         changeUserId: item.userId,
       })
 

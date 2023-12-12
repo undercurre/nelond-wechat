@@ -1,8 +1,0 @@
-<view class="page-container flex flex-col">
-  <nav-bar
-    leftArrow
-    bind:leftTap="goBack"
-  ></nav-bar>
-</view>
-
-<van-toast id="van-toast" />

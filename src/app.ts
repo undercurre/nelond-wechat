@@ -1,6 +1,6 @@
 import {
   setNavigationBarAndBottomBarHeight,
-  startWebsocketService,
+  // startWebsocketService,
   closeWebSocket,
   setCurrentEnv,
   Logger,
@@ -9,11 +9,11 @@ import {
   networkStatusListen,
   removeNetworkStatusListen,
   verifyNetwork,
-  isLogon,
+  isLogined,
   getCurrentPageUrl,
 } from './utils/index'
 import svgs from './assets/svg/index'
-import { deviceStore, homeStore, othersStore, sceneStore, userStore } from './store/index'
+import { deviceStore, homeStore, othersStore, userStore } from './store/index'
 import { reaction } from 'mobx-miniprogram'
 import homOs from 'js-homos'
 import mqtt from './lib/mqtt.min.js' // 暂时只能使用4.2.1版本，高版本有bug，判断错运行环境
@@ -33,7 +33,7 @@ App<IAppOption>({
     homOs.init({ mqttLib: mqtt, isDebug: true })
 
     // 如果用户已经登录，开始请求数据[用户][家庭列表、全屋房间、全屋设备]
-    if (isLogon()) {
+    if (isLogined()) {
       try {
         userStore.setIsLogin(true)
         const start = Date.now()
@@ -49,13 +49,12 @@ App<IAppOption>({
 
     // 监听houseId变化，切换websocket连接,切换成对应家庭的sock连接
     reaction(
-      () => homeStore.currentHomeDetail.houseId,
+      () => homeStore.currentProjectDetail.projectId,
       async () => {
-        closeWebSocket()
-        startWebsocketService()
-
-        await homeStore.updateLocalKey()
-        initHomeOs()
+        // closeWebSocket()
+        // startWebsocketService()
+        // await homeStore.updateLocalKey()
+        // initHomeOs()
       },
     )
 
@@ -74,10 +73,10 @@ App<IAppOption>({
     this.globalData.firstOnShow = false
 
     // 用户热启动app，建立ws连接，并且再更新一次数据
-    Logger.log('app-onShow, isConnect:', isConnect(), 'isLogon', isLogon())
+    Logger.log('app-onShow, isConnect:', isConnect(), 'isLogined', isLogined())
 
     // 非登录状态，终止下面逻辑，且发现当前非主包页面（当前主包页面均可不需要登录访问），强制跳转登录
-    if (!isLogon()) {
+    if (!isLogined()) {
       return
     }
 
@@ -88,17 +87,17 @@ App<IAppOption>({
     }
 
     // 以下逻辑需要网络连接
-    startWebsocketService()
+    // startWebsocketService()
 
     // 首次进入有onLaunch不必加载
     // homOS本地控制要求场景数据保持尽可能实时，需要小程序回到前台刷新场景和设备列表数据
     if (!firstOnShow) {
-      deviceStore.updateAllRoomDeviceList(homeStore.currentHomeId, { isDefaultErrorTips: false })
+      deviceStore.updateAllRoomDeviceList(homeStore.currentProjectId, { isDefaultErrorTips: false })
       homeStore.updateHomeInfo({ isDefaultErrorTips: false })
     }
 
     // 全屋场景数据加载
-    sceneStore.updateAllRoomSceneList(homeStore.currentHomeId, { isDefaultErrorTips: false })
+    // sceneStore.updateAllRoomSceneList(homeStore.currentProjectId, { isDefaultErrorTips: false })
   },
 
   onHide() {

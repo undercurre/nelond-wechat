@@ -21,7 +21,7 @@ ComponentWithComputed({
    */
   data: {
     defaultImgDir,
-    deviceInfo: { deviceId: '', deviceName: '', roomId: '', proType: '', sn: '', switchList: [] as IAnyObject[] },
+    deviceInfo: { deviceId: '', deviceName: '', spaceId: '', proType: '', sn: '', switchList: [] as IAnyObject[] },
   },
 
   computed: {
@@ -59,7 +59,7 @@ ComponentWithComputed({
             deviceId: pageParams.deviceId,
             deviceName: res.result.deviceName,
             sn: res.result.sn,
-            roomId: res.result.roomId,
+            spaceId: res.result.spaceId,
             proType: res.result.proType,
             switchList:
               res.result.proType === PRO_TYPE.switch && res.result.switchInfoDTOList
@@ -77,14 +77,14 @@ ComponentWithComputed({
       console.log('changeDeviceInfo', event)
 
       this.setData({
-        'deviceInfo.roomId': event.detail.roomId,
+        'deviceInfo.spaceId': event.detail.spaceId,
         'deviceInfo.deviceName': event.detail.deviceName,
         'deviceInfo.switchList': event.detail.switchList,
       })
     },
 
     async finish() {
-      const { deviceId, deviceName, roomId } = this.data.deviceInfo
+      const { deviceId, deviceName, spaceId } = this.data.deviceInfo
 
       if (!deviceName) {
         Toast('设备名称不能为空')
@@ -105,8 +105,8 @@ ComponentWithComputed({
       const res = await editDeviceInfo({
         deviceId,
         deviceName,
-        roomId,
-        houseId: homeBinding.store.currentHomeId,
+        spaceId,
+        projectId: homeBinding.store.currentProjectId,
         type: '2',
       })
 
@@ -114,7 +114,7 @@ ComponentWithComputed({
         const deviceInfoUpdateVoList = this.data.deviceInfo.switchList.map((item) => {
           return {
             deviceId: deviceId,
-            houseId: homeStore.currentHomeId,
+            projectId: homeStore.currentProjectId,
             switchId: item.switchId,
             switchName: item.switchName,
             type: '3',

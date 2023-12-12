@@ -1,14 +1,31 @@
-<view class="fixed left-0 top-0 w-100vw h-100vh bg-hex-eef2f7" style="z-index: -1"></view>
+<view
+  class="fixed left-0 top-0 w-100vw h-100vh bg-hex-eef2f7"
+  style="z-index: -1"
+></view>
 
 <view class="h-100vh flex flex-col items-center">
   <!-- 标题 -->
-  <nav-bar title="{{deviceInfo.deviceName}}" left-arrow show-go-home bind:leftTap="goBack"></nav-bar>
+  <nav-bar
+    title="{{deviceInfo.deviceName}}"
+    left-arrow
+    show-go-home
+    bind:leftTap="goBack"
+  ></nav-bar>
 
   <!-- 上半部分 -->
   <view class="mt-24rpx w-750rpx">
     <van-cell-group inset>
-      <van-cell is-link="{{canEditDevice}}" bind:click="handleDeviceNameEditPopup" title="设备名称" value="{{deviceName}}"></van-cell>
-      <van-cell title="所在房间" value="{{roomName}}" border="{{false}}"></van-cell>
+      <van-cell
+        is-link="{{canEditDevice}}"
+        bind:click="handleDeviceNameEditPopup"
+        title="设备名称"
+        value="{{deviceName}}"
+      ></van-cell>
+      <van-cell
+        title="所在房间"
+        value="{{spaceName}}"
+        border="{{false}}"
+      ></van-cell>
     </van-cell-group>
   </view>
 
@@ -16,27 +33,58 @@
   <view class="flex flex-1 flex-col w-full">
     <view class="flex flex-row justify-between px-48rpx mt-24rpx">
       <text class="text-32rpx">灯具·{{deviceInfo.groupDeviceList.length}}</text>
-      <view wx:if="{{canAddDevice}}" catchtap="handleAddLightPopup">
-        <image src="/assets/img/home/add.png" class="w-48rpx h-48rpx"></image>
+      <view
+        wx:if="{{canAddDevice}}"
+        catchtap="handleAddLightPopup"
+      >
+        <image
+          src="/assets/img/home/add.png"
+          class="w-48rpx h-48rpx"
+        ></image>
       </view>
     </view>
     <view class="w-full">
-      <van-cell-group wx:for="{{deviceInfo.groupDeviceList}}" wx:key="deviceId" inset>
-        <van-cell data-device-id="{{item.deviceId}}" border="{{false}}">
+      <van-cell-group
+        wx:for="{{deviceInfo.groupDeviceList}}"
+        wx:key="deviceId"
+        inset
+      >
+        <van-cell
+          data-device-id="{{item.deviceId}}"
+          border="{{false}}"
+        >
           <view class="flex item-center">
             <view class="w-96rpx h-96rpx bg-hex-F6FAFD rounded-999 flex-center">
-              <image src="{{item.devicePic}}" class="w-72rpx h-72rpx" />
+              <image
+                src="{{item.devicePic}}"
+                class="w-72rpx h-72rpx"
+              />
             </view>
             <view class="h-96rpx flex flex-col justify-center items-start ml-32rpx">
               <text class="text-black-2a text-32rpx">{{item.deviceName}}</text>
               <view>
-                <text class="text-black-tips text-28rpx mt-8rpx">{{roomName}}{{item.onLineStatus ? '' : ' | '}}</text>
-                <text wx:if="{{!item.onLineStatus}}" class="text-28rpx text-hex-fbbb32">离线</text>
+                <text class="text-black-tips text-28rpx mt-8rpx">{{spaceName}}{{item.onLineStatus ? '' : ' | '}}</text>
+                <text
+                  wx:if="{{!item.onLineStatus}}"
+                  class="text-28rpx text-hex-fbbb32"
+                  >离线</text
+                >
               </view>
             </view>
           </view>
-          <view slot="right-icon" wx:if="{{canEditDevice}}" class="h-96rpx" catchtap="toDeleteLight" data-device-id="{{item.deviceId}}">
-            <svg-icon color="#c8c7cc" name="icon-park:close" width="32rpx" height="32rpx"></svg-icon>
+          <view
+            slot="right-icon"
+            wx:if="{{canEditDevice}}"
+            class="h-96rpx"
+            catchtap="toDeleteLight"
+            data-device-id="{{item.deviceId}}"
+          >
+            <svg-icon
+              color="#c8c7cc"
+              name="icon-park:close"
+              width="32rpx"
+              height="32rpx"
+            ></svg-icon>
           </view>
         </van-cell>
       </van-cell-group>
@@ -45,11 +93,35 @@
   <!-- 隔开一点距离 -->
   <view class="h-24rpx"></view>
   <!-- 底部按钮 -->
-  <van-button size="large" wx:if="{{canEditDevice}}" type="warning" custom-class="delete-btn" bind:click="handleGroupDelete">解散灯组</van-button>
-  <view wx:if="{{canEditDevice}}" style="height: 86rpx"></view>
+  <van-button
+    size="large"
+    wx:if="{{canEditDevice}}"
+    type="warning"
+    custom-class="delete-btn"
+    bind:click="handleGroupDelete"
+    >解散灯组</van-button
+  >
+  <view
+    wx:if="{{canEditDevice}}"
+    style="height: 86rpx"
+  ></view>
 </view>
 
 <van-toast id="van-toast" />
-<van-dialog id="van-dialog" confirm-button-color="#27282A" cancel-button-color="#27282A" />
-<edit-name-popup value="{{deviceName}}" show="{{showEditNamePopup}}" bind:close="handleDeviceNameEditCancel" bind:confirm="handleDeviceNameEditConfirm" />
-<select-device show="{{showAddLightPopup}}" bind:close="handleAddLightCancel" list="{{lightListToAdd}}" bind:confirm="addLightToGroup"></select-device>
+<van-dialog
+  id="van-dialog"
+  confirm-button-color="#27282A"
+  cancel-button-color="#27282A"
+/>
+<edit-name-popup
+  value="{{deviceName}}"
+  show="{{showEditNamePopup}}"
+  bind:close="handleDeviceNameEditCancel"
+  bind:confirm="handleDeviceNameEditConfirm"
+/>
+<select-device
+  show="{{showAddLightPopup}}"
+  bind:close="handleAddLightCancel"
+  list="{{lightListToAdd}}"
+  bind:confirm="addLightToGroup"
+></select-device>

@@ -44,7 +44,7 @@ ComponentWithComputed({
 
   methods: {
     updateCurLocation() {
-      const houseArea = homeBinding.store.currentHomeDetail.houseArea
+      const houseArea = homeBinding.store.currentProjectDetail.houseArea
       const position = storage.get('position_location', '') as string
       this.setData({
         curLocation: this.data.isShowPosition ? position : houseArea || position,

@@ -3,7 +3,7 @@ import { mzaioRequest } from '../utils/index'
 /**
  * 全屋设备是否有OTA版本更新
  */
-export async function queryDeviceOtaUpdateList(houseId: string) {
+export async function queryDeviceOtaUpdateList(projectId: string) {
   return await mzaioRequest.post<{
     otaProductList: Ota.OtaProduct[]
     otaUpdateList: Ota.OtaUpdate[]
@@ -13,7 +13,7 @@ export async function queryDeviceOtaUpdateList(houseId: string) {
     loading: false,
     url: '/v1/device/queryDeviceOtaUpdateList',
     data: {
-      houseId,
+      projectId,
     },
   })
 }
@@ -34,7 +34,7 @@ export async function execOtaUpdate(
  * 设置定时OTA任务
  * jobStatus： 1启动，0关闭
  */
-export async function setOtaSchedule(data: { houseId: string; jobStatus: number }, options?: { loading: boolean }) {
+export async function setOtaSchedule(data: { projectId: string; jobStatus: number }, options?: { loading: boolean }) {
   return await mzaioRequest.post<IAnyObject>({
     log: false,
     loading: options?.loading ?? false,

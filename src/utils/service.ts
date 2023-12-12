@@ -1,7 +1,7 @@
 // service模块存放项目的相关业务代码
 import { connectHouseSocket } from '../apis/websocket'
 import { homeStore, userStore } from '../store/index'
-import { isLogon, Logger, storage, isConnect, verifyNetwork } from './index'
+import { isLogined, Logger, storage, isConnect, verifyNetwork } from './index'
 import { emitter } from './eventBus'
 import homos from 'js-homos'
 
@@ -32,8 +32,8 @@ const heartbeatInfo = {
 
 export async function startWebsocketService() {
   // 检测未登录或者是否已经正在连接，以免重复连接
-  if (!isLogon() || isConnecting || !isConnect()) {
-    Logger.log('不进行ws连接,isConnecting:', isConnecting, 'isLogon', isLogon(), 'isConnect()', isConnect())
+  if (!isLogined() || isConnecting || !isConnect()) {
+    Logger.log('不进行ws连接,isConnecting:', isConnecting, 'isLogined', isLogined(), 'isConnect()', isConnect())
     return
   }
 
@@ -42,7 +42,7 @@ export async function startWebsocketService() {
     Logger.log('已存在ws连接，正在关闭已有连接')
     await socketTask?.close({ code: 1000 })
   }
-  socketTask = connectHouseSocket(homeStore.currentHomeDetail.houseId)
+  socketTask = connectHouseSocket(homeStore.currentProjectDetail.projectId)
   socketTask.onClose(onSocketClose)
   socketTask.onOpen((res) => {
     isConnecting = false
@@ -112,7 +112,7 @@ export async function startWebsocketService() {
     if (socketIsConnect) {
       socketTask?.close({ code: -1 }) // code=-1代码ws报错重连
     } else {
-      delayConnectWS(15000)
+      // delayConnectWS(15000)
     }
   })
 }
@@ -125,7 +125,7 @@ function delayConnectWS(delay = 5000) {
   clearTimeout(connectTimeId)
   connectTimeId = setTimeout(() => {
     Logger.log('socket开始重连')
-    startWebsocketService()
+    // startWebsocketService()
   }, delay)
 }
 
@@ -170,9 +170,9 @@ export function closeWebSocket() {
   }
 }
 
-emitter.on('networkStatusChange', (res) => {
-  // 已登录状态下，可以访问外网且当前没有ws连接的情况，发起ws连接
-  if (res.isConnectStatus && isLogon() && !socketIsConnect) {
-    startWebsocketService()
-  }
-})
+// emitter.on('networkStatusChange', (res) => {
+//   // 已登录状态下，可以访问外网且当前没有ws连接的情况，发起ws连接
+//   if (res.isConnectStatus && isLogined() && !socketIsConnect) {
+//     startWebsocketService()
+//   }
+// })

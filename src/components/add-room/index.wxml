@@ -13,7 +13,7 @@
     <view class="flex-center">
       <template
         is="title"
-        data="{{title: roomId ? '编辑房间' : '添加房间'}}"
+        data="{{title: spaceId ? '编辑房间' : '添加房间'}}"
       />
     </view>
 
@@ -34,7 +34,7 @@
 
         <van-field
           custom-style="padding: 32rpx 32rpx;background-color: #F6FAFD;border-radius: 24rpx;"
-          value="{{ roomInfo.name }}"
+          value="{{ spaceInfo.name }}"
           placeholder="请输入房间名称"
           clearable="{{true}}"
           bind:clear="changeRoomName"
@@ -60,7 +60,7 @@
             bind:tap="selectIcon"
           >
             <view class="flex flex-col items-center">
-              <view class="p-24rpx leading-0 bg-hex-F6FAFD rounded-32rpx border-4rpx border-solid {{ item.icon === roomInfo.icon ? ' border-hex-488FFF' : 'border-hex-F6FAFD'}}">
+              <view class="p-24rpx leading-0 bg-hex-F6FAFD rounded-32rpx border-4rpx border-solid {{ item.icon === spaceInfo.icon ? ' border-hex-488FFF' : 'border-hex-F6FAFD'}}">
                 <image
                   class="w-64rpx h-64rpx"
                   src="/assets/img/room/{{item.icon}}.png"
@@ -82,7 +82,7 @@
         class="grow"
         size="large"
         custom-style="background-image: linear-gradient(165deg, #468CFB 0%, #6BA3FC 100%);border-radius: 20rpx;height: 88rpx;font-size: 36rpx;"
-        disabled="{{!roomInfo.name}}"
+        disabled="{{!spaceInfo.name}}"
         bind:click="handleConfirm"
         >确定</van-button
       >

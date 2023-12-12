@@ -149,7 +149,7 @@ ComponentWithComputed({
       return !data.editDeviceName
     },
     editRoomDisable(data) {
-      return roomStore.currentRoom.roomId === data.roomId
+      return roomStore.currentRoom.spaceId === data.spaceId
     },
   },
 
@@ -168,7 +168,7 @@ ComponentWithComputed({
     editSwitchName: '',
     editProType: '',
     showEditRoom: false,
-    roomId: '',
+    spaceId: '',
     showConfirmDelete: false,
     moveWaitlist: [] as string[],
     moveFailCount: 0,
@@ -265,7 +265,7 @@ ComponentWithComputed({
       const device = deviceStore.deviceFlattenMap[uniId]
       this.setData({
         showEditRoom: true,
-        roomId: device.roomId,
+        spaceId: device.spaceId,
       })
     },
     handleCreateGroup() {
@@ -308,8 +308,8 @@ ComponentWithComputed({
           if (!map[deviceId]) {
             map[deviceId] = {
               deviceId,
-              houseId: homeStore.currentHomeId,
-              roomId: this.data.roomId,
+              projectId: homeStore.currentProjectId,
+              spaceId: this.data.spaceId,
               type: '1',
               deviceType,
             }
@@ -417,7 +417,7 @@ ComponentWithComputed({
             deviceInfoUpdateVoList.push({
               deviceId,
               switchId,
-              houseId: homeStore.currentHomeId,
+              projectId: homeStore.currentProjectId,
               switchName: this.data.editSwitchName,
               type,
             })
@@ -428,7 +428,7 @@ ComponentWithComputed({
             deviceInfoUpdateVoList.push({
               deviceId,
               deviceName: this.data.editDeviceName,
-              houseId: homeStore.currentHomeId,
+              projectId: homeStore.currentProjectId,
               type,
               deviceType: device.deviceType,
             })
@@ -493,7 +493,7 @@ ComponentWithComputed({
                   deviceInfoUpdateVoList: [
                     {
                       deviceId: this.data.editSelectList[0],
-                      houseId: homeStore.currentHomeId,
+                      projectId: homeStore.currentProjectId,
                       deviceName: this.data.editDeviceName,
                       type: '0',
                       deviceType: device.deviceType,
@@ -541,7 +541,7 @@ ComponentWithComputed({
     },
     handleRoomSelect(e: { currentTarget: { dataset: { id: string } } }) {
       this.setData({
-        roomId: e.currentTarget.dataset.id,
+        spaceId: e.currentTarget.dataset.id,
       })
     },
     // 初始化等待移动的列表

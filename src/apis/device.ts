@@ -4,16 +4,17 @@ import homOs from 'js-homos'
 import { deviceStore } from '../store/index'
 
 /**
- * 设备管理-根据家庭id查询全屋的设备
+ * 设备管理-根据项目id/空间id查询设备
  */
-export async function queryAllDevice(houseId: string, options?: IApiRequestOption) {
+export async function queryAllDevice(projectId: string, spaceId: string, options?: IApiRequestOption) {
   return await mzaioRequest.post<Device.DeviceItem[]>({
     log: true,
     loading: options?.loading ?? false,
     isDefaultErrorTips: options?.isDefaultErrorTips ?? true,
-    url: '/v1/device/queryDeviceInfoByHouseId',
+    url: '/v1/cl/device/wx/queryDeviceInfoByProjectId',
     data: {
-      houseId,
+      projectId,
+      spaceId,
     },
   })
 }
@@ -22,11 +23,14 @@ export async function queryAllDevice(houseId: string, options?: IApiRequestOptio
  * 全屋设备开或者关
  * 1：开 0：关
  */
-export async function allDevicePowerControl(data: { houseId: string; onOff: number }, options?: { loading?: boolean }) {
+export async function allDevicePowerControl(
+  data: { projectId: string; onOff: number },
+  options?: { loading?: boolean },
+) {
   // TODO 判断是否局域网控制
   if (homOs.isHostConnected()) {
     const localRes = await homOs.houseControl({
-      houseId: data.houseId,
+      projectId: data.projectId,
       power: data.onOff,
     })
 
@@ -50,7 +54,10 @@ export async function allDevicePowerControl(data: { houseId: string; onOff: numb
 /**
  * 设备控制-根据家庭id房间id查询房间的子设备
  */
-export async function querySubDeviceList(data: { houseId: string; roomId: string }, options?: { loading?: boolean }) {
+export async function querySubDeviceList(
+  data: { projectId: string; spaceId: string },
+  options?: { loading?: boolean },
+) {
   return await mzaioRequest.post<Device.DeviceItem[]>({
     log: true,
     loading: options?.loading ?? false,
@@ -64,7 +71,7 @@ export async function querySubDeviceList(data: { houseId: string; roomId: string
  * roomId可选，传入roomId可减少云端查询步骤
  */
 export async function queryDeviceInfoByDeviceId(
-  data: { deviceId: string; roomId?: string },
+  data: { deviceId: string; spaceId?: string },
   options?: { loading?: boolean },
 ) {
   return await mzaioRequest.post<Device.DeviceItem>({
@@ -124,8 +131,8 @@ export async function isDeviceOnline(data: { devIds: string[] }) {
  */
 export async function bindDevice(
   data: {
-    houseId?: string
-    roomId?: string
+    projectId?: string
+    spaceId?: string
     sn?: string
     deviceId?: string
     deviceName: string
@@ -387,8 +394,8 @@ export async function editDeviceInfo(
   data: {
     deviceId: string
     deviceName?: string
-    houseId?: string
-    roomId?: string
+    projectId?: string
+    spaceId?: string
     type?: string
     switchId?: string
     switchName?: string
@@ -582,7 +589,7 @@ export async function deviceReplace(
  */
 export async function getSensorLogs(
   data: {
-    houseId?: string
+    projectId?: string
     deviceId: string
   },
   options?: { loading?: boolean },
@@ -773,7 +780,7 @@ export async function delSwitchAndSwitchAssociated(data: { relIds: string }, opt
 /**
  * 根据家庭id获取面板是否已经关联过灯
  */
-export async function getLampDeviceByHouseId(data: { houseId: string }, options?: { loading?: boolean }) {
+export async function getLampDeviceByHouseId(data: { projectId: string }, options?: { loading?: boolean }) {
   return await mzaioRequest.post<Array<Device.IMzgdLampDeviceInfoDTO>>({
     log: true,
     loading: options?.loading ?? false,
@@ -789,8 +796,8 @@ export async function addGroup(
   data: {
     applianceGroupDtoList: Device.GroupDTO[]
     groupName: string
-    houseId: string
-    roomId: string
+    projectId: string
+    spaceId: string
     userId?: string
   },
   options?: { loading?: boolean },
@@ -957,7 +964,7 @@ export async function getGwNetworkInfo(
  */
 export async function queryLocalKey(
   data: {
-    houseId: string
+    projectId: string
   },
   options?: { loading?: boolean },
 ) {

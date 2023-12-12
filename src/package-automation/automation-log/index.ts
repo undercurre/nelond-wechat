@@ -49,7 +49,7 @@ ComponentWithComputed({
    */
   methods: {
     async onLoad() {
-      const logRes = await queryAutoSceneLogByHouseId({ houseId: homeStore.currentHomeId })
+      const logRes = await queryAutoSceneLogByHouseId({ projectId: homeStore.currentProjectId })
       if (logRes.success) {
         this.setData({
           _tempLog: logRes.result,
@@ -75,7 +75,7 @@ ComponentWithComputed({
         isRefreshing: true,
       })
 
-      const logRes = await queryAutoSceneLogByHouseId({ houseId: homeStore.currentHomeId })
+      const logRes = await queryAutoSceneLogByHouseId({ projectId: homeStore.currentProjectId })
       if (logRes.success) {
         this.setData({
           _tempLog: logRes.result,
@@ -89,7 +89,7 @@ ComponentWithComputed({
 
     async onLoadmore() {
       const logRes = await queryAutoSceneLogByHouseId({
-        houseId: homeStore.currentHomeId,
+        projectId: homeStore.currentProjectId,
         reportTs: this.data._tempLog[this.data._tempLog.length - 1].reportTs,
       })
       if (logRes.success) {

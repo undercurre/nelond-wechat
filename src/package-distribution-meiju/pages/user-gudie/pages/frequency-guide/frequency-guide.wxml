@@ -1,4 +1,0 @@
-<!--distribution-network/addDevice/pages/frequencyGuide/frequencyGuide.wxml-->
-<view class="content">
-  <image class="guide" src="{{imgBaseUrl + frequencyGuide}}"></image>
-</view>

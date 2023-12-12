@@ -10,10 +10,10 @@ declare namespace Scene {
     conditionType: string
     deviceActions: DeviceAction[]
     deviceConditions: DeviceCondition[]
-    houseId: string
+    projectId: string
     orderNum: number
-    roomId: string
-    roomName: string
+    spaceId: string
+    spaceName: string
   }
   /**
    * 房间列表里的场景列表项
@@ -87,8 +87,8 @@ declare namespace Scene {
 
     // 条件集合
     deviceConditions: DeviceCondition[]
-    houseId: string
-    roomId: string
+    projectId: string
+    spaceId: string
     sceneIcon: string
     sceneName: string
     /**
@@ -109,7 +109,7 @@ declare namespace Scene {
     deviceConditions?: DeviceCondition[]
     sceneIcon?: string
     sceneId?: string
-    roomId?: string
+    spaceId?: string
     sceneName?: string
     /** 更新类型
      * 0-仅更新名称和icon，1-删除结果 2-取消绑定 3-更新绑定 4-删除结果与取消绑定 5-删除结果与更新绑定

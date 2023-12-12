@@ -21,24 +21,24 @@ Component({
       type: String,
       value: '',
     },
-    roomId: {
+    spaceId: {
       type: String,
       value: '',
     },
-    roomName: {
+    spaceName: {
       type: String,
       value: '',
     },
   },
 
   observers: {
-    'deviceName, roomId, roomName, switchList': function (deviceName, roomId, roomName, switchList) {
+    'deviceName, spaceId, spaceName, switchList': function (deviceName, spaceId, spaceName, switchList) {
       this.setData({
         isAddRoom: false,
         isShowEditSwitch: false,
         deviceInfo: {
-          roomId: roomId,
-          roomName: roomName,
+          spaceId: spaceId,
+          spaceName: spaceName,
           deviceName: deviceName,
           switchList: switchList,
         },
@@ -53,8 +53,8 @@ Component({
     isAddRoom: false,
     isShowEditSwitch: false,
     deviceInfo: {
-      roomId: '',
-      roomName: '',
+      spaceId: '',
+      spaceName: '',
       deviceName: '',
       switchList: [] as Device.ISwitch[],
     },
@@ -69,11 +69,11 @@ Component({
    */
   methods: {
     selectRoom(event: WechatMiniprogram.CustomEvent) {
-      const roomInfo = roomStore.roomList[event.currentTarget.dataset.index]
+      const spaceInfo = roomStore.roomList[event.currentTarget.dataset.index]
 
       this.setData({
-        'deviceInfo.roomId': roomInfo.roomId,
-        'deviceInfo.roomName': roomInfo.roomName,
+        'deviceInfo.spaceId': spaceInfo.spaceId,
+        'deviceInfo.spaceName': spaceInfo.spaceName,
       })
 
       this.triggerEvent('change', Object.assign({}, this.data.deviceInfo))

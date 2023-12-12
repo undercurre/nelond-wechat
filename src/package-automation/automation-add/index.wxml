@@ -254,7 +254,7 @@
   bind:conditionClicked="onConditionClicked"
 />
 <edit-room-popup
-  value="{{roomId}}"
+  value="{{spaceId}}"
   show="{{showEditRoomPopup}}"
   bind:close="handleSceneRoomEditCancel"
   bind:cancel="handleRoomReturn"

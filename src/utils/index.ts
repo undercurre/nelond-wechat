@@ -17,8 +17,6 @@ export * from './capacity'
 export * from './sort'
 export * from './nameFormater'
 
-import { PRO_TYPE } from '../config/index'
-
 export function delay(ms: number) {
   return new Promise<void>((resolve) => {
     setTimeout(() => {
@@ -120,72 +118,6 @@ export function _get(obj: object, path: string, defaultVal = undefined) {
   }
 
   return formatPath.reduce((o: IAnyObject, k) => (o ?? {})[k], obj) ?? defaultVal
-}
-
-/**
- * @description 设备数量统计
- * @param ButtonMode 0 普通面板或者关联开关 2 场景 3 关联灯
- * @returns {
- *  lightOnCount: 统计多少灯打开（多开开关仍分别计数）（取代云端deviceLightOnNum）
- *  endCount: 非网关设备数（面板按拆分设备计数）
- *  lightCount: 灯与面板总数量（不排除关联，面板按拆分设备计数）
- * }
- */
-export function deviceCount(list: Device.DeviceItem[]): Record<string, number> {
-  let lightOnCount = 0
-  let endCount = 0
-  let lightCount = 0
-
-  list?.forEach((device) => {
-    switch (device.proType) {
-      case PRO_TYPE.curtain:
-        endCount++
-        break
-      case PRO_TYPE.light:
-        // release-1030 将改为灯组和单灯全部显示
-        // 终端卡片数，计算已在灯组中的单灯，也计算灯组
-        endCount++
-        // 灯数及亮灯数不计算灯组
-        if (device.deviceType === 4) {
-          return
-        }
-        lightCount++
-        if (!device.onLineStatus) break
-        if (device.mzgdPropertyDTOList['light'].power) {
-          lightOnCount++
-        }
-        break
-      case PRO_TYPE.switch:
-        device.switchInfoDTOList.forEach((switchItem) => {
-          endCount++
-          lightCount++
-          if (
-            device.onLineStatus &&
-            device.mzgdPropertyDTOList && // 避免个别设备未上报数据导致的整个页面异常
-            device.mzgdPropertyDTOList[switchItem.switchId]?.power &&
-            !device.mzgdPropertyDTOList[switchItem.switchId].ButtonMode
-          ) {
-            lightOnCount++
-          }
-        })
-        break
-      // 传感器、晾衣架、浴霸统计控制卡片数
-      case PRO_TYPE.sensor:
-      case PRO_TYPE.clothesDryingRack:
-      case PRO_TYPE.bathHeat:
-        endCount++
-        break
-      // 网关及其他类型，不作统计
-      case PRO_TYPE.gateway:
-      default:
-    }
-  })
-
-  return {
-    lightOnCount,
-    endCount,
-    lightCount,
-  }
 }
 
 export const getRect = function (context: any, selector: string, needAll = false) {

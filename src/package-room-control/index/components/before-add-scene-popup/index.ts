@@ -40,9 +40,9 @@ ComponentWithComputed({
   },
 
   computed: {
-    roomName(data) {
-      if (data.roomList && data.roomList[data.currentRoomIndex]) {
-        return data.roomList[data.currentRoomIndex].roomName
+    spaceName(data) {
+      if (data.roomList && data.roomList[data.currentSpaceIndex]) {
+        return data.roomList[data.currentSpaceIndex].spaceName
       }
       return ''
     },

@@ -16,7 +16,7 @@ Component({
    */
   data: {
     homeId: 'd61261d887d74cf9bec90c827615ea8a', // 固定虚拟家庭Id
-    roomId: '11e70cffcb4c4af1bf6960994b4d3480',
+    spaceId: '11e70cffcb4c4af1bf6960994b4d3480',
     gatewayId: '',
     _timeId: 0,
     deviceList: [] as IAnyObject[],
@@ -24,7 +24,7 @@ Component({
 
   lifetimes: {
     ready() {
-      if (homeStore.currentHomeId === this.data.homeId) {
+      if (homeStore.currentProjectId === this.data.homeId) {
         emitter.on('bind_device', async (data) => {
           Logger.log(`收到绑定推送消息：子设备${data.deviceId}`)
 
@@ -99,8 +99,8 @@ Component({
 
       const res = await bindDevice({
         deviceId: params.deviceId,
-        houseId: this.data.homeId,
-        roomId: this.data.roomId,
+        projectId: this.data.homeId,
+        spaceId: this.data.spaceId,
         sn: params.sn ?? '',
         deviceName: params.deviceName,
       })
@@ -112,17 +112,6 @@ Component({
           deviceList: this.data.deviceList.concat([{ deviceId: res.result.deviceId, name: params.deviceName }]),
         })
       }
-    },
-
-    toMeiju() {
-      wx.openEmbeddedMiniProgram({
-        appId: 'wxb12ff482a3185e46',
-        path: '/package-distribution-meiju/pages//scan-devices/pages/scan-device/scan-device',
-        // envVersion: 'trial',
-        complete(res) {
-          Logger.log('openEmbeddedMiniProgram', res)
-        },
-      })
     },
   },
 })

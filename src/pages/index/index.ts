@@ -5,7 +5,7 @@ import {
   othersBinding,
   roomBinding,
   userBinding,
-  homeStore,
+  homeBinding,
   othersStore,
   roomStore,
   deviceStore,
@@ -39,7 +39,10 @@ ComponentWithComputed({
   options: {
     pureDataPattern: /^_/, // 指定所有 _ 开头的数据字段为纯数据字段
   },
-  behaviors: [BehaviorWithStore({ storeBindings: [othersBinding, roomBinding, userBinding] }), pageBehavior],
+  behaviors: [
+    BehaviorWithStore({ storeBindings: [othersBinding, roomBinding, userBinding, homeBinding] }),
+    pageBehavior,
+  ],
   data: {
     defaultImgDir,
     navigationBarAndStatusBarHeight:
@@ -85,15 +88,6 @@ ComponentWithComputed({
     _from: '', // 页面进入来源
   },
   computed: {
-    currentHomeName() {
-      // if (homeStore.currentHomeDetail && homeStore.currentHomeDetail.houseName) {
-      //   if (homeStore.currentHomeDetail.houseName.length > 6) {
-      //     return homeStore.currentHomeDetail.houseName.slice(0, 6) + '...'
-      //   }
-      //   return homeStore.currentHomeDetail?.houseName
-      // }
-      return '美创'
-    },
     // 家庭是否有设备
     hasDevice() {
       return true
@@ -103,7 +97,7 @@ ComponentWithComputed({
       return false
     },
     movableHeight() {
-      return roomStore.roomList.length * ROOM_CARD_H
+      return roomStore.roomList?.length ? roomStore.roomList.length * ROOM_CARD_H : 0
     },
   },
   watch: {
@@ -139,9 +133,9 @@ ComponentWithComputed({
       this.hideMenu()
     },
     async onShow() {
-      if (!this.data._isFirstShow || this.data._from === 'addDevice') {
-        homeStore.updateRoomCardList()
-      }
+      // if (!this.data._isFirstShow || this.data._from === 'addDevice') {
+      //   homeStore.updateRoomCardList()
+      // }
       this.data._isFirstShow = false
 
       if (!othersStore.isInit) {
@@ -159,9 +153,9 @@ ComponentWithComputed({
       // const currentIndex = this.data.placeholder.index
       const roomPos = {} as Record<string, PosType>
       roomStore.roomList
-        .sort((a, b) => this.data.roomPos[a.roomId]?.index - this.data.roomPos[b.roomId]?.index)
+        ?.sort((a, b) => this.data.roomPos[a.spaceId]?.index - this.data.roomPos[b.spaceId]?.index)
         .forEach((room, index) => {
-          roomPos[room.roomId] = {
+          roomPos[room.spaceId] = {
             index,
             // 正在拖的卡片，不改变位置
             y: index * ROOM_CARD_H,
@@ -293,15 +287,15 @@ ComponentWithComputed({
       // 更新联动卡片的位置
       let moveCount = 0
       for (const room of roomStore.roomList) {
-        const _orderNum = this.data.roomPos[room.roomId].index
+        const _orderNum = this.data.roomPos[room.spaceId].index
         if (
           (isForward && _orderNum > oldOrder && _orderNum <= targetOrder) ||
           (!isForward && _orderNum >= targetOrder && _orderNum < oldOrder)
         ) {
           ++moveCount
           const dOrderNum = isForward ? _orderNum - 1 : _orderNum + 1
-          diffData[`roomPos.${room.roomId}.y`] = getPos(dOrderNum)
-          diffData[`roomPos.${room.roomId}.index`] = dOrderNum
+          diffData[`roomPos.${room.spaceId}.y`] = getPos(dOrderNum)
+          diffData[`roomPos.${room.spaceId}.index`] = dOrderNum
 
           // 减少遍历消耗
           if (moveCount >= Math.abs(targetOrder - oldOrder)) {
@@ -361,11 +355,11 @@ ComponentWithComputed({
     },
 
     handleSortSaving() {
-      const roomSortList = [] as Room.RoomSort[]
-      Object.keys(this.data.roomPos).forEach((roomId) => {
+      const roomSortList = [] as Space.RoomSort[]
+      Object.keys(this.data.roomPos).forEach((spaceId) => {
         roomSortList.push({
-          roomId,
-          sort: this.data.roomPos[roomId].index + 1,
+          spaceId,
+          sort: this.data.roomPos[spaceId].index + 1,
         })
       })
 
@@ -373,9 +367,9 @@ ComponentWithComputed({
       updateRoomSort(roomSortList)
 
       // 更新store排序
-      const list = [] as Room.RoomInfo[]
+      const list = [] as Space.SpaceInfo[]
       roomStore.roomList.forEach((room) => {
-        const { index } = this.data.roomPos[room.roomId]
+        const { index } = this.data.roomPos[room.spaceId]
         list[index] = room
       })
       runInAction(() => {

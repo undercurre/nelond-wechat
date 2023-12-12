@@ -65,8 +65,8 @@ ComponentWithComputed({
     roomTab() {
       const tempRoomList = roomStore.roomList.map((item) => {
         return {
-          roomId: item.roomId,
-          roomName: item.roomName,
+          spaceId: item.spaceId,
+          spaceName: item.spaceName,
         }
       })
       return tempRoomList
@@ -95,7 +95,7 @@ ComponentWithComputed({
       // }
       // 监听houseId变化，重新请求对应家庭的自动化列表
       // reaction(
-      //   () => homeStore.currentHomeDetail.houseId,
+      //   () => homeStore.currentProjectDetail.projectId,
       //   () => {
       //     autosceneBinding.store.updateAllRoomAutoSceneList()
       //   },
@@ -112,7 +112,7 @@ ComponentWithComputed({
       // emitter.on('scene_enabled', () => {
       //   autosceneBinding.store.updateAllRoomAutoSceneList()
       // })
-      console.log(roomStore.currentRoom, roomStore.currentRoomIndex)
+      console.log(roomStore.currentRoom, roomStore.currentSpaceIndex)
 
       // 加载一键场景列表
       sceneBinding.store.updateAllRoomSceneList()
@@ -121,8 +121,8 @@ ComponentWithComputed({
     },
     // onShow() {
     //   this.setData({
-    //     selectedRoomId: roomStore.currentRoom.roomId,
-    //     active: roomStore.currentRoomIndex,
+    //     selectedRoomId: roomStore.currentRoom.spaceId,
+    //     active: roomStore.currentSpaceIndex,
     //   })
     // },
     // onUnload() {
@@ -139,13 +139,13 @@ ComponentWithComputed({
 
     updateList() {
       if (this.data.selectedRoomId === '') {
-        this.data.selectedRoomId = roomStore.roomList[0].roomId
+        this.data.selectedRoomId = roomStore.roomList[0].spaceId
       }
       const listData = [] as IAnyObject[]
       const deviceMap = deviceStore.allRoomDeviceMap
 
       sceneStore.allRoomSceneList
-        .filter((item) => item.roomId === this.data.selectedRoomId)
+        .filter((item) => item.spaceId === this.data.selectedRoomId)
         .forEach((scene: Scene.SceneItem) => {
           let linkName = ''
           if (scene.deviceConditions?.length > 0) {
@@ -254,8 +254,8 @@ ComponentWithComputed({
   lifetimes: {
     ready() {
       this.setData({
-        selectedRoomId: roomStore.currentRoom.roomId,
-        active: roomStore.currentRoom.roomId,
+        selectedRoomId: roomStore.currentRoom.spaceId,
+        active: roomStore.currentRoom.spaceId,
       })
       this.updateList()
       sceneBinding.store.updateAllRoomSceneList().then(() => {

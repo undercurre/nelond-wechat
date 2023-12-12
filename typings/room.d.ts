@@ -1,70 +1,59 @@
 /**
- * 	房间信息
+ * 	空间信息
  */
-type roomInfo = {
-  /**
-   * 灯打开数量
-   */
-  deviceLightOnNum?: number
+type spaceInfo = {
   /**
    * 设备数量
    */
-  deviceNum: number
+  deviceCount: number
   /**
-   * 	房间icon
+   * 子级节点数量
    */
-  roomIcon: string | null
+  nodeCount: number
   /**
-   * 房间id
+   * 离线设备数量
    */
-  roomId: string
+  offlineDeviceCount: 0
   /**
-   * 分组id，房间也属于一个分组
+   * 空间id
+   */
+  spaceId: string
+  /**
+   * 分组id，空间也属于一个分组
    */
   groupId: string
   /**
-   * 房间名称
+   * 空间名称
    */
-  roomName: string
+  spaceName: string
   /**
-   * 房间场景列表
+   * 空间场景列表
    */
   sceneList?: Scene.SceneItem[]
-  /**
-   * 下面是小程序端统计的字段
-   */
-  // 统计多少灯打开（多开开关单独计算）（取代云端deviceLightOnNum）
-  lightOnCount?: number
-
-  // 非网关设备数
-  endCount?: number
-
-  // 灯与面板总数量
-  lightCount?: number
 
   spaceLevel?: 1 | 2 | 3 | 4
 }
-declare namespace Room {
+declare namespace Space {
   /**
-   * 家庭查询房间列表项
+   * 家庭查询空间列表项
    */
-  interface RoomItem {
-    roomInfo: roomInfo
+  interface SpaceItem {
+    spaceInfo: spaceInfo
     /**
-     * 房间场景列表
+     * 空间场景列表
      */
-    roomSceneList: Scene.SceneItem[]
+    roomSceneList?: Scene.SceneItem[]
   }
   /**
-   * 房间信息
+   * 空间信息
    */
-  type RoomInfo = roomInfo
+  type SpaceInfo = spaceInfo
 
   /**
-   * 房间排序
+   * 空间排序
    */
   interface RoomSort {
-    roomId: string
+    spaceId: string
     sort: number
   }
 }

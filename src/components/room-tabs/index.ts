@@ -2,7 +2,7 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { roomBinding, deviceBinding, deviceStore } from '../../store/index'
 
-type SimRoomInfo = Pick<Room.RoomInfo, 'roomId' | 'roomName'>
+type SimRoomInfo = Pick<Space.SpaceInfo, 'spaceId' | 'spaceName'>
 
 ComponentWithComputed({
   behaviors: [BehaviorWithStore({ storeBindings: [roomBinding, deviceBinding] })],
@@ -44,18 +44,18 @@ ComponentWithComputed({
         : list.filter((device: Device.DeviceItem) => device.deviceType === 2)
       const roomList: SimRoomInfo[] = []
 
-      deviceList.forEach(({ roomId, roomName }) => {
-        if (roomList.findIndex((room) => room.roomId === roomId) === -1) {
+      deviceList.forEach(({ spaceId, spaceName }) => {
+        if (roomList.findIndex((room) => room.spaceId === spaceId) === -1) {
           roomList.push({
-            roomId,
-            roomName,
+            spaceId,
+            spaceName,
           })
         }
       })
       if (data.showOfflineTab) {
-        return [{ roomId: '0', roomName: '全屋' }, ...roomList, { roomId: '-1', roomName: '离线' }]
+        return [{ spaceId: '0', spaceName: '全屋' }, ...roomList, { spaceId: '-1', spaceName: '离线' }]
       } else {
-        return [{ roomId: '0', roomName: '全屋' }, ...roomList]
+        return [{ spaceId: '0', spaceName: '全屋' }, ...roomList]
       }
     },
   },
@@ -67,7 +67,7 @@ ComponentWithComputed({
    */
   methods: {
     handleRoomSelect(e: WechatMiniprogram.TouchEvent) {
-      const roomSelect = e.currentTarget.dataset.item.roomId
+      const roomSelect = e.currentTarget.dataset.item.spaceId
       this.setData({ roomSelect })
       this.triggerEvent('roomSelect', roomSelect)
     },

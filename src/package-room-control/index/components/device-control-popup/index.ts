@@ -267,7 +267,7 @@ ComponentWithComputed({
       if (proType !== PRO_TYPE.sensor) {
         return
       }
-      const res = await getSensorLogs({ deviceId, houseId: homeStore.currentHomeId })
+      const res = await getSensorLogs({ deviceId, projectId: homeStore.currentProjectId })
       console.log(res)
       this.setData({
         logList: res.result,
@@ -422,7 +422,7 @@ ComponentWithComputed({
       })
 
       if (type === 'switch') {
-        const res = await getLampDeviceByHouseId({ houseId: homeStore.currentHomeId })
+        const res = await getLampDeviceByHouseId({ projectId: homeStore.currentProjectId })
 
         if (res.success) {
           this.data._allSwitchLampRelList = res.result
@@ -727,7 +727,8 @@ ComponentWithComputed({
         await this.editAssocite()
       }
 
-      await Promise.all([sceneStore.updateAllRoomSceneList(), deviceStore.updateAllRoomDeviceList()])
+      // sceneStore.updateAllRoomSceneList(),
+      await Promise.all([deviceStore.updateAllRoomDeviceList()])
 
       this.data._switchRelInfo.switchUniId = '' // 置空标志位，否则不会更新数据
       this.updateLinkInfo()

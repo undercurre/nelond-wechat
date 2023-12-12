@@ -95,7 +95,7 @@
                 />
               </view>
 
-              <text class="text-26 text-black-59 opacity-95">{{ item.roomName }}</text>
+              <text class="text-26 text-black-59 opacity-95">{{ item.spaceName }}</text>
             </view>
 
             <view
@@ -233,7 +233,7 @@
                 />
               </view>
 
-              <text class="text-26 text-black-59 opacity-95">{{ item.roomName }}</text>
+              <text class="text-26 text-black-59 opacity-95">{{ item.spaceName }}</text>
             </view>
 
             <view
@@ -309,8 +309,8 @@
   show="{{isEditDevice}}"
   switch-list="{{editDeviceInfo.switchList}}"
   device-name="{{editDeviceInfo.deviceName}}"
-  room-id="{{editDeviceInfo.roomId}}"
-  room-name="{{editDeviceInfo.roomName}}"
+  room-id="{{editDeviceInfo.spaceId}}"
+  room-name="{{editDeviceInfo.spaceName}}"
   bind:close="cancelEditDevice"
   bind:confirm="confirmEditDevice"
 ></edit-device-info>

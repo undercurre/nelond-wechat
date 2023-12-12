@@ -1,7 +1,6 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { homeBinding, homeStore } from '../../store/index'
-import { updateDefaultHouse } from '../../apis/index'
 
 ComponentWithComputed({
   options: {},
@@ -44,34 +43,14 @@ ComponentWithComputed({
 
   computed: {
     sortedHomeList(data) {
-      if (!data.homeList || !data.homeList.length) {
-        return [
-          {
-            defaultHouseFlag: false,
-            deviceNum: 7,
-            houseCreatorFlag: false,
-            houseId: '0dc04866f4284d2d83efd85fe222c7fb',
-            houseName: '美创4栋',
-            roomNum: 4,
-            userNum: 6,
-          },
-          {
-            defaultHouseFlag: false,
-            deviceNum: 7,
-            houseCreatorFlag: false,
-            houseId: '0dc04866f4284d2d83efd85fe222c7fb',
-            houseName: '美创6栋',
-            roomNum: 4,
-            userNum: 6,
-          },
-        ]
+      if (!data.projectList?.length) {
+        return []
       }
-      const list = (data.homeList as Home.IHomeItem[])
-        .sort((_: Home.IHomeItem, b: Home.IHomeItem) => (b.defaultHouseFlag ? 1 : -1))
-        .map((home) => ({
-          ...home,
-          houseName: home.houseName?.length > 6 ? home.houseName.slice(0, 6) + '...' : home.houseName,
-        }))
+      const list = (data.projectList as Project.IProjectItem[]).map((item) => ({
+        ...item,
+        projectName: item.projectName?.length > 6 ? item.projectName.slice(0, 6) + '...' : item.projectName,
+        selected: item.projectId === homeStore.currentProjectId,
+      }))
 
       return list
     },
@@ -82,16 +61,14 @@ ComponentWithComputed({
    */
   methods: {
     async handleHomeTap(e: { currentTarget: { dataset: { value: string } } }) {
-      const houseId = e.currentTarget.dataset.value
+      const projectId = e.currentTarget.dataset.value
+
+      homeStore.setProjectId(projectId)
 
       console.log('handleHomeTap', e)
-      this.triggerEvent('select', { houseId })
-      const res = await updateDefaultHouse(houseId)
-
-      if (res.success) {
-        await homeStore.homeInit()
-      }
-      this.triggerEvent('afterSelected', { houseId })
+      this.triggerEvent('select', { projectId })
+      await homeStore.homeInit()
+      this.triggerEvent('afterSelected', { projectId })
     },
     hideAnimate() {
       this.animate(

@@ -17,7 +17,7 @@ Component({
         if (value) {
           console.log(
             '显示选择房间',
-            roomStore.roomList.find((item) => item.roomId === this.data.value),
+            roomStore.roomList.find((item) => item.spaceId === this.data.value),
           )
           this.setData({
             roomSelect: this.data.value,

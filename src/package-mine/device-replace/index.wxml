@@ -1,9 +1,17 @@
 <view class="page-container flex flex-col">
-  <nav-bar background="transparent" leftArrow="{{true}}" bind:leftTap="goBack" title="设备替换"></nav-bar>
+  <nav-bar
+    background="transparent"
+    leftArrow="{{true}}"
+    bind:leftTap="goBack"
+    title="设备替换"
+  ></nav-bar>
 
   <view class="grow flex flex-col pt-40rpx">
     <block wx:if="{{status === 'introduce'}}">
-      <tips-box text="当某个设备损坏或需要更换时，您可以使用设备替换功能，用新设备完全替换该设备，新设备将继承以下数据：" icon="{{defaultImgDir}}/new-device-replace.png"></tips-box>
+      <tips-box
+        text="当某个设备损坏或需要更换时，您可以使用设备替换功能，用新设备完全替换该设备，新设备将继承以下数据："
+        icon="{{defaultImgDir}}/new-device-replace.png"
+      ></tips-box>
 
       <view class="pt-32rpx px-64rpx">
         <view class="text-24 leading-46rpx text-black-tips">
@@ -21,26 +29,48 @@
       <text class="block text-center pt-60rpx pb-16rpx leading-40rpx text-28 text-black-59">选择被替换设备</text>
       <text class="block text-center pb-80rpx leading-34rpx text-24 text-hex-a2a2a2">替换完成后，该设备将自动从家庭中解绑。</text>
 
-      <van-cell-group inset wx:if="{{ oldDeviceItem && oldDeviceItem.deviceId }}">
-        <van-cell clickable bind:click="addOldDevice">
+      <van-cell-group
+        inset
+        wx:if="{{ oldDeviceItem && oldDeviceItem.deviceId }}"
+      >
+        <van-cell
+          clickable
+          bind:click="addOldDevice"
+        >
           <view class="flex item-center">
             <view class="w-96rpx h-96rpx bg-hex-F6FAFD rounded-999 flex-center">
-              <image src="{{oldDeviceItem.pic}}" class="w-72rpx h-72rpx" />
+              <image
+                src="{{oldDeviceItem.pic}}"
+                class="w-72rpx h-72rpx"
+              />
             </view>
             <view class="h-96rpx flex flex-col justify-center items-start ml-32rpx">
               <text class="text-black-2a text-32rpx">{{oldDeviceItem.deviceName}}</text>
               <view>
-                <text class="text-black-tips text-28rpx mt-8rpx">{{oldDeviceItem.roomName}}{{oldDeviceItem.onLineStatus ? '' : ' | '}}</text>
-                <text wx:if="{{!oldDeviceItem.onLineStatus}}" class="text-28rpx text-hex-fbbb32">离线</text>
+                <text class="text-black-tips text-28rpx mt-8rpx">{{oldDeviceItem.spaceName}}{{oldDeviceItem.onLineStatus ? '' : ' | '}}</text>
+                <text
+                  wx:if="{{!oldDeviceItem.onLineStatus}}"
+                  class="text-28rpx text-hex-fbbb32"
+                  >离线</text
+                >
               </view>
             </view>
           </view>
         </van-cell>
       </van-cell-group>
 
-      <view wx:else class="bg-white mx-24rpx py-32rpx rounded-32rpx flex justify-center">
-        <view class="flex flex-col items-center" bind:tap="addOldDevice">
-          <image class="w-108 h-108" src="/assets/img/device-replace/add.png"></image>
+      <view
+        wx:else
+        class="bg-white mx-24rpx py-32rpx rounded-32rpx flex justify-center"
+      >
+        <view
+          class="flex flex-col items-center"
+          bind:tap="addOldDevice"
+        >
+          <image
+            class="w-108 h-108"
+            src="/assets/img/device-replace/add.png"
+          ></image>
           <text class="pt-48rpx text-28 leading-40rpx text-black-59">选择设备</text>
         </view>
       </view>
@@ -51,25 +81,43 @@
       <text class="block text-center pt-60rpx pb-16rpx leading-40rpx text-28 text-black-59">选择新设备</text>
       <text class="block text-center pb-80rpx leading-34rpx text-24 text-hex-a2a2a2">仅可选择在线，且与旧设备同类别的新设备</text>
 
-      <van-cell-group inset wx:if="{{ newDeviceItem && newDeviceItem.deviceId }}">
-        <van-cell clickable bind:click="addNewDevice">
+      <van-cell-group
+        inset
+        wx:if="{{ newDeviceItem && newDeviceItem.deviceId }}"
+      >
+        <van-cell
+          clickable
+          bind:click="addNewDevice"
+        >
           <view class="flex item-center">
             <view class="w-96rpx h-96rpx bg-hex-F6FAFD rounded-999 flex-center">
-              <image src="{{newDeviceItem.pic}}" class="w-72rpx h-72rpx" />
+              <image
+                src="{{newDeviceItem.pic}}"
+                class="w-72rpx h-72rpx"
+              />
             </view>
             <view class="h-96rpx flex flex-col justify-center items-start ml-32rpx">
               <text class="text-black-2a text-32rpx">{{newDeviceItem.deviceName}}</text>
               <view>
-                <text class="text-black-tips text-28rpx mt-8rpx">{{newDeviceItem.roomName}}</text>
+                <text class="text-black-tips text-28rpx mt-8rpx">{{newDeviceItem.spaceName}}</text>
               </view>
             </view>
           </view>
         </van-cell>
       </van-cell-group>
 
-      <view wx:else class="bg-white mx-24rpx py-32rpx rounded-32rpx flex justify-center">
-        <view class="flex flex-col items-center" bind:tap="addNewDevice">
-          <image class="w-108 h-108" src="/assets/img/device-replace/add.png"></image>
+      <view
+        wx:else
+        class="bg-white mx-24rpx py-32rpx rounded-32rpx flex justify-center"
+      >
+        <view
+          class="flex flex-col items-center"
+          bind:tap="addNewDevice"
+        >
+          <image
+            class="w-108 h-108"
+            src="/assets/img/device-replace/add.png"
+          ></image>
           <text class="pt-48rpx text-28 leading-40rpx text-black-59">选择设备</text>
         </view>
       </view>
@@ -77,33 +125,72 @@
 
     <block wx:if="{{status === 'processing'}}">
       <steps active="{{2}}"></steps>
-      <mz-loading class="mt-130rpx text-black-59" text="设备替换中"></mz-loading>
+      <mz-loading
+        class="mt-130rpx text-black-59"
+        text="设备替换中"
+      ></mz-loading>
       <text class="block text-center pb-80rpx leading-48rpx text-24 text-black-tips">为确保成功完成替换，请保持网络连接与设备供电</text>
 
-      <mz-progress show-progress="{{true}}" stepList="{{[]}}"></mz-progress>
+      <mz-progress
+        show-progress="{{true}}"
+        stepList="{{[]}}"
+      ></mz-progress>
 
       <text class="block text-center pt-20rpx text-24 text-black-tips">预计所需时间30秒</text>
     </block>
 
     <block wx:if="{{status === 'replaceFinish'}}">
       <steps active="{{2}}"></steps>
-      <tips-box text="设备替换完成" icon="{{defaultImgDir}}/success.png"></tips-box>
+      <tips-box
+        text="设备替换完成"
+        icon="{{defaultImgDir}}/success.png"
+      ></tips-box>
     </block>
 
     <block wx:if="{{status === 'replaceFail'}}">
       <steps active="{{2}}"></steps>
-      <tips-box text="设备替换失败" icon="{{defaultImgDir}}/error.png"></tips-box>
+      <tips-box
+        text="设备替换失败"
+        icon="{{defaultImgDir}}/error.png"
+      ></tips-box>
     </block>
   </view>
 
   <view class="flex flex-row">
-    <van-button color="transparent" wx:if="{{status === 'newDevice'}}" class="flex-1 mx-24rpx border border-solid border-hex-ddd rounded-16rpx" size="large" block bind:click="prevBtn">上一步</van-button>
-    <van-button wx:if="{{status !== 'processing'}}" class="flex-1 mx-24rpx" size="large" type="primary" block bind:click="nextBtn" disabled="{{nextBtnDisabled}}">{{ nextBtnText }}</van-button>
+    <van-button
+      color="transparent"
+      wx:if="{{status === 'newDevice'}}"
+      class="flex-1 mx-24rpx border border-solid border-hex-ddd rounded-16rpx"
+      size="large"
+      block
+      bind:click="prevBtn"
+      >上一步</van-button
+    >
+    <van-button
+      wx:if="{{status !== 'processing'}}"
+      class="flex-1 mx-24rpx"
+      size="large"
+      type="primary"
+      block
+      bind:click="nextBtn"
+      disabled="{{nextBtnDisabled}}"
+      >{{ nextBtnText }}</van-button
+    >
   </view>
 </view>
 
-<select-device show="{{isSelectOldDevice}}" bind:close="closeOldDevicePopup" bind:confirm="confirmOldDevicePopup"></select-device>
+<select-device
+  show="{{isSelectOldDevice}}"
+  bind:close="closeOldDevicePopup"
+  bind:confirm="confirmOldDevicePopup"
+></select-device>
 
-<select-device show="{{isSelectNewDevice}}" bind:close="closeNewDevicePopup" bind:confirm="confirmNewDevicePopup" list="{{ computedDeviceList }}" choosingNew="{{true}}"></select-device>
+<select-device
+  show="{{isSelectNewDevice}}"
+  bind:close="closeNewDevicePopup"
+  bind:confirm="confirmNewDevicePopup"
+  list="{{ computedDeviceList }}"
+  choosingNew="{{true}}"
+></select-device>
 
 <van-toast id="van-toast" />

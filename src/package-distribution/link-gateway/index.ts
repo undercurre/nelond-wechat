@@ -400,8 +400,8 @@ ComponentWithComputed({
 
       const res = await bindDevice({
         deviceId: deviceId,
-        houseId: homeBinding.store.currentHomeId,
-        roomId: roomBinding.store.currentRoom.roomId,
+        projectId: homeBinding.store.currentProjectId,
+        spaceId: roomBinding.store.currentRoom.spaceId,
         sn,
         deviceName: deviceName,
       })

@@ -17,9 +17,9 @@ ComponentWithComputed({
   data: {
     isEdit: false,
     editType: '',
-    roomInfo: {
-      roomId: '',
-      roomName: '',
+    spaceInfo: {
+      spaceId: '',
+      spaceName: '',
       roomIcon: '',
     },
   },
@@ -34,9 +34,9 @@ ComponentWithComputed({
       console.log('pageParams', pageParams)
 
       this.setData({
-        roomInfo: {
-          roomId: pageParams.roomId,
-          roomName: pageParams.roomName,
+        spaceInfo: {
+          spaceId: pageParams.spaceId,
+          spaceName: pageParams.spaceName,
           roomIcon: pageParams.roomIcon,
         },
       })
@@ -67,9 +67,9 @@ ComponentWithComputed({
     finishAddRoom(event: WechatMiniprogram.CustomEvent) {
       this.setData({
         isEdit: false,
-        roomInfo: {
-          roomId: event.detail.roomId,
-          roomName: event.detail.roomName,
+        spaceInfo: {
+          spaceId: event.detail.spaceId,
+          spaceName: event.detail.spaceName,
           roomIcon: event.detail.roomIcon,
         },
       })
@@ -77,14 +77,14 @@ ComponentWithComputed({
 
     async saveRoomInfo() {
       const res = await saveHouseRoomInfo({
-        houseId: homeBinding.store.currentHomeId,
-        roomId: this.data.roomInfo.roomId,
-        roomIcon: this.data.roomInfo.roomIcon,
-        roomName: this.data.roomInfo.roomName,
+        projectId: homeBinding.store.currentProjectId,
+        spaceId: this.data.spaceInfo.spaceId,
+        roomIcon: this.data.spaceInfo.roomIcon,
+        spaceName: this.data.spaceInfo.spaceName,
       })
 
       if (res.success) {
-        roomBinding.store.updateRoomList()
+        roomBinding.store.updateSpaceList()
         emitter.emit('homeInfoEdit')
         this.goBack()
       } else {
@@ -110,10 +110,10 @@ ComponentWithComputed({
         return
       }
 
-      const res = await delHouseRoom(this.data.roomInfo.roomId)
+      const res = await delHouseRoom(this.data.spaceInfo.spaceId)
 
       if (res.success) {
-        roomBinding.store.updateRoomList()
+        roomBinding.store.updateSpaceList()
         emitter.emit('homeInfoEdit')
 
         wx.navigateBack()

@@ -27,10 +27,10 @@ ComponentWithComputed({
      * @param query.homeId 上一页选择的美居家庭id
      */
     async onLoad(query: { homeId: string }) {
-      console.log('device list onload', query, this.data.currentHomeId)
+      console.log('device list onload', query, this.data.currentProjectId)
       // 带 homeId，未绑定
       if (query?.homeId) {
-        const res = await bindMeiju({ mideaHouseId: query.homeId, houseId: this.data.currentHomeId })
+        const res = await bindMeiju({ mideaHouseId: query.homeId, projectId: this.data.currentProjectId })
 
         if (res.success) {
           const deviceList = res.result
@@ -44,7 +44,7 @@ ComponentWithComputed({
       }
       // 不带 homeId，从第三方列表页直接进入
       else {
-        const res = await getMeijuDeviceList(this.data.currentHomeId)
+        const res = await getMeijuDeviceList(this.data.currentProjectId)
         if (res.success) {
           const deviceList = res.result
           this.setData({
@@ -70,7 +70,7 @@ ComponentWithComputed({
     },
 
     async syncMeijuDevice() {
-      const res = await syncMeijuDeviceList(this.data.currentHomeId)
+      const res = await syncMeijuDeviceList(this.data.currentProjectId)
       if (res.success) {
         const deviceList = res.result
         this.setData({
@@ -90,7 +90,7 @@ ComponentWithComputed({
 
       if (dialogRes === 'cancel') return
 
-      const res = await delDeviceSubscribe(this.data.currentHomeId)
+      const res = await delDeviceSubscribe(this.data.currentProjectId)
       if (res.success) {
         Toast('已解除绑定')
 

@@ -154,12 +154,12 @@
         <view class="flex flex-wrap">
           <view
             wx:for="{{roomList}}"
-            wx:key="roomId"
-            data-id="{{item.roomId}}"
+            wx:key="spaceId"
+            data-id="{{item.spaceId}}"
             bindtap="handleRoomSelect"
-            class="mt-16rpx mr-32rpx rounded-999 px-40rpx py-10rpx flex flex-center {{item.roomId === roomId ? 'bg-select' : 'bg-hex-dfe1e5'}}"
+            class="mt-16rpx mr-32rpx rounded-999 px-40rpx py-10rpx flex flex-center {{item.spaceId === spaceId ? 'bg-select' : 'bg-hex-dfe1e5'}}"
           >
-            <text class="text-28rpx text-normal {{item.roomId === roomId ? 'text-white' : 'text-black-59'}}">{{item.roomName}}</text>
+            <text class="text-28rpx text-normal {{item.spaceId === spaceId ? 'text-white' : 'text-black-59'}}">{{item.spaceName}}</text>
           </view>
         </view>
       </view>

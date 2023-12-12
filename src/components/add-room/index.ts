@@ -31,11 +31,11 @@ Component({
       type: Boolean,
       value: true,
     },
-    roomId: {
+    spaceId: {
       type: String,
       default: '',
     },
-    roomName: {
+    spaceName: {
       type: String,
       default: '',
     },
@@ -51,12 +51,12 @@ Component({
         return
       }
 
-      console.log('observers-roomName, roomIcon', this.data)
+      console.log('observers-spaceName, roomIcon', this.data)
 
       this.setData({
-        roomInfo: {
-          hasEditName: Boolean(this.data.roomName),
-          name: this.data.roomName,
+        spaceInfo: {
+          hasEditName: Boolean(this.data.spaceName),
+          name: this.data.spaceName,
           icon: this.data.roomIcon || 'parents-room',
         },
       })
@@ -67,7 +67,7 @@ Component({
    * 组件的初始数据
    */
   data: {
-    roomInfo: {
+    spaceInfo: {
       hasEditName: false,
       name: '',
       icon: 'parents-room',
@@ -132,8 +132,8 @@ Component({
       console.log('changeRoomName', event)
 
       this.setData({
-        'roomInfo.hasEditName': true,
-        'roomInfo.name': event.detail || '',
+        'spaceInfo.hasEditName': true,
+        'spaceInfo.name': event.detail || '',
       })
     },
 
@@ -141,32 +141,32 @@ Component({
       this.triggerEvent('close')
     },
     async handleConfirm() {
-      if (!this.data.roomInfo.name) {
+      if (!this.data.spaceInfo.name) {
         Toast('名称不能为空')
         return
       }
 
       // 校验名字合法性
-      if (checkInputNameIllegal(this.data.roomInfo.name)) {
+      if (checkInputNameIllegal(this.data.spaceInfo.name)) {
         Toast('名称不能用特殊符号或表情')
         return
       }
 
-      if (this.data.roomInfo.name.length > 5) {
+      if (this.data.spaceInfo.name.length > 5) {
         Toast('名称不能超过5个字符')
         return
       }
 
       if (this.data.isSave) {
         const res = await saveHouseRoomInfo({
-          houseId: homeBinding.store.currentHomeId,
-          roomId: this.data.roomId,
-          roomIcon: this.data.roomInfo.icon,
-          roomName: this.data.roomInfo.name,
+          projectId: homeBinding.store.currentProjectId,
+          spaceId: this.data.spaceId,
+          roomIcon: this.data.spaceInfo.icon,
+          spaceName: this.data.spaceInfo.name,
         })
 
         if (res.success) {
-          roomBinding.store.updateRoomList()
+          roomBinding.store.updateSpaceList()
           emitter.emit('homeInfoEdit')
         } else {
           return
@@ -174,9 +174,9 @@ Component({
       }
 
       this.triggerEvent('confirm', {
-        roomId: this.data.roomId,
-        roomIcon: this.data.roomInfo.icon,
-        roomName: this.data.roomInfo.name,
+        spaceId: this.data.spaceId,
+        roomIcon: this.data.spaceInfo.icon,
+        spaceName: this.data.spaceInfo.name,
       })
 
       this.triggerEvent('close')
@@ -188,15 +188,15 @@ Component({
       console.log('selectIcon', currentTarget)
       const { icon, text } = currentTarget.dataset
 
-      if (this.data.roomInfo.name && this.data.roomInfo.hasEditName) {
+      if (this.data.spaceInfo.name && this.data.spaceInfo.hasEditName) {
         this.setData({
-          'roomInfo.icon': icon,
+          'spaceInfo.icon': icon,
         })
       } else {
         this.setData({
-          'roomInfo.name': text,
-          'roomInfo.icon': icon,
-          'roomInfo.hasEditName': false,
+          'spaceInfo.name': text,
+          'spaceInfo.icon': icon,
+          'spaceInfo.hasEditName': false,
         })
       }
     },

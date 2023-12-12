@@ -62,20 +62,20 @@ export default BehaviorWithComputed({
   },
   computed: {
     isCreator(data) {
-      if (data.currentHomeDetail) {
-        return data.currentHomeDetail.houseUserAuth === userRole.creator
+      if (data.currentProjectDetail) {
+        return data.currentProjectDetail.houseUserAuth === userRole.creator
       }
       return false
     },
     isAdmin(data) {
-      if (data.currentHomeDetail) {
-        return data.currentHomeDetail.houseUserAuth === userRole.admin
+      if (data.currentProjectDetail) {
+        return data.currentProjectDetail.houseUserAuth === userRole.admin
       }
       return false
     },
     isVisitor(data) {
-      if (data.currentHomeDetail) {
-        return data.currentHomeDetail.houseUserAuth === userRole.visitor
+      if (data.currentProjectDetail) {
+        return data.currentProjectDetail.houseUserAuth === userRole.visitor
       }
       return true
     },

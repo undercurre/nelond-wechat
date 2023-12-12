@@ -65,8 +65,8 @@ export const autosceneStore = observable({
     }
   },
 
-  async updateAllRoomAutoSceneList(houseId: string = homeStore.currentHomeId) {
-    const res = await queryAutoSceneListByHouseId(houseId)
+  async updateAllRoomAutoSceneList(projectId: string = homeStore.currentProjectId) {
+    const res = await queryAutoSceneListByHouseId(projectId)
     console.log('自动化场景列表', res)
 
     if (res.success) {

@@ -59,7 +59,7 @@ ComponentWithComputed({
       return list.filter((device) => {
         const isScreen = SCREEN_PID.includes(device.productId)
         const isSubdevice = device.deviceType === 2
-        const isCurrentRoom = data.roomSelect === '0' ? true : device.roomId === data.roomSelect
+        const isCurrentRoom = data.roomSelect === '0' ? true : device.spaceId === data.roomSelect
         return isSubdevice && isCurrentRoom && !isScreen
       })
     },
@@ -67,7 +67,7 @@ ComponentWithComputed({
 
   lifetimes: {
     async ready() {
-      await roomBinding.store.updateRoomList()
+      await roomBinding.store.updateSpaceList()
 
       deviceBinding.store.updateAllRoomDeviceList()
     },

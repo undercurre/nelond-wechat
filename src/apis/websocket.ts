@@ -4,12 +4,12 @@ import { Logger, storage } from '../utils/index'
 
 /**
  * 建立某个房间的webSocket连接
- * @param houseId 家庭id
+ * @param projectId 家庭id
  */
-export function connectHouseSocket(houseId: string) {
-  Logger.log('连接家庭socket: ', houseId, homeStore.currentHomeDetail.houseName)
+export function connectHouseSocket(projectId: string) {
+  Logger.log('连接家庭socket: ', projectId, homeStore.currentProjectDetail.projectName)
   return wx.connectSocket({
-    url: mzaioWSURL[getEnv()] + houseId,
+    url: mzaioWSURL[getEnv()] + projectId,
     protocols: [storage.get<string>('token') as string],
     success(res) {
       Logger.log('connectSocket-success', res)

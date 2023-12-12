@@ -25,10 +25,10 @@ ComponentWithComputed({
     roomSelectMenuList(data: IAnyObject) {
       if (data.roomList) {
         return [
-          { roomId: '0', roomName: '全屋' },
-          ...(data.roomList as Room.RoomInfo[]).map((room) => ({
-            roomId: room.roomId,
-            roomName: room.roomName,
+          { spaceId: '0', spaceName: '全屋' },
+          ...(data.roomList as Space.SpaceInfo[]).map((room) => ({
+            spaceId: room.spaceId,
+            spaceName: room.spaceName,
           })),
         ]
       }
@@ -36,9 +36,9 @@ ComponentWithComputed({
     },
     currentRoomName(data: IAnyObject) {
       if (data.roomSelectMenuList) {
-        return (data.roomSelectMenuList as { roomId: string; roomName: string }[]).find(
-          (room) => room.roomId === data.roomSelect,
-        )?.roomName
+        return (data.roomSelectMenuList as { spaceId: string; spaceName: string }[]).find(
+          (room) => room.spaceId === data.roomSelect,
+        )?.spaceName
       }
       return ''
     },
@@ -53,10 +53,10 @@ ComponentWithComputed({
 
   lifetimes: {
     async ready() {
-      await roomBinding.store.updateRoomList()
-      if (this.data.roomSelect === '0') {
-        deviceBinding.store.updateAllRoomDeviceList()
-      }
+      // await roomBinding.store.updateSpaceList()
+      // if (this.data.roomSelect === '0') {
+      //   deviceBinding.store.updateAllRoomDeviceList()
+      // }
     },
   },
 

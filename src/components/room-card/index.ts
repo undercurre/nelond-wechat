@@ -11,7 +11,7 @@ ComponentWithComputed({
    * 组件的属性列表
    */
   properties: {
-    roomInfo: {
+    spaceInfo: {
       type: Object,
       observer() {},
     },
@@ -23,36 +23,36 @@ ComponentWithComputed({
 
   computed: {
     deviceListComputed(data) {
-      if (data.roomDeviceList && data.roomInfo && data.roomInfo.roomId) {
-        return data.roomDeviceList[data.roomInfo.roomId] ?? []
+      if (data.roomDeviceList && data.spaceInfo && data.spaceInfo.spaceId) {
+        return data.roomDeviceList[data.spaceInfo.spaceId] ?? []
       }
       return []
     },
     desc(data) {
       const list = [] as { text: string; type: string }[]
-      const { deviceNum, offline, children } = data.roomInfo || {}
-      if (children) {
+      const { deviceCount, offlineDeviceCount, nodeCount } = (data.spaceInfo || {}) as Space.SpaceInfo
+      if (nodeCount) {
         list.push({
-          text: `${children} 个下级空间`,
+          text: `${nodeCount} 个下级空间`,
           type: 'normal',
         })
       }
-      if (deviceNum) {
+      if (deviceCount) {
         list.push({
-          text: `全部设备 ${deviceNum}`,
+          text: `全部设备 ${deviceCount}`,
           type: 'normal',
         })
       }
-      if (offline) {
+      if (offlineDeviceCount) {
         list.push({
-          text: `离线 ${offline}`,
+          text: `离线 ${offlineDeviceCount}`,
           type: 'error',
         })
       }
       return list
     },
     icon(data) {
-      const spaceLevel = (data.roomInfo?.spaceLevel ?? 0) as SpaceLevel
+      const spaceLevel = (data.spaceInfo?.spaceLevel ?? 1) as SpaceLevel
       return spaceIcon[spaceLevel]
     },
   },
@@ -67,12 +67,12 @@ ComponentWithComputed({
    */
   methods: {
     handleCardTap() {
-      const index = roomStore.roomList.findIndex((room) => room.roomId === this.data.roomInfo.roomId)
+      const index = roomStore.roomList.findIndex((room) => room.spaceId === this.data.spaceInfo.spaceId)
       runInAction(() => {
-        roomStore.currentRoomIndex = index
+        roomStore.currentSpaceIndex = index
       })
       wx.navigateTo({
-        url: this.data.roomInfo.children
+        url: this.data.spaceInfo.children
           ? '/package-room-control/room-list/index'
           : '/package-room-control/index/index',
       })

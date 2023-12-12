@@ -28,7 +28,7 @@ ComponentWithComputed({
    */
   data: {
     sceneImgDir,
-    roomId: '',
+    spaceId: '',
     showEditRoomPopup: false,
     adviceSceneNameList: adviceSceneNameList,
     navigationBarAndStatusBarHeight:
@@ -230,7 +230,7 @@ ComponentWithComputed({
         this.setData({
           sceneIcon: sceneInfo.sceneIcon,
           sceneName: sceneInfo.sceneName,
-          roomId: sceneInfo.roomId,
+          spaceId: sceneInfo.spaceId,
           isDefault: sceneInfo.isDefault === '1',
         })
 
@@ -747,7 +747,7 @@ ComponentWithComputed({
             //   uniId: scene.sceneId,
             //   name: scene.sceneName,
             //   deviceType: 5,
-            //   desc: [scene.roomName],
+            //   desc: [scene.spaceName],
             //   pic: `/assets/img/scene/${scene.sceneIcon}.png`,
             //   value: {},
             //   orderNum: 0,
@@ -779,13 +779,13 @@ ComponentWithComputed({
     updateSceneDeviceConditionsFlatten() {
       const sceneDeviceConditionsFlatten = [] as AutoScene.AutoSceneFlattenCondition[]
 
-      if (this.data.roomId !== '') {
+      if (this.data.spaceId !== '') {
         sceneDeviceConditionsFlatten.push({
           uniId: 'room',
           name: '手动点击场景',
           desc: [
-            roomStore.roomList.find((item) => item.roomId === this.data.roomId)?.roomName ??
-              roomStore.roomList[0].roomName,
+            roomStore.roomList.find((item) => item.spaceId === this.data.spaceId)?.spaceName ??
+              roomStore.roomList[0].spaceName,
           ],
           pic: '/package-automation/assets/imgs/automation/touch-materialized.png',
           productId: 'touch',
@@ -1032,8 +1032,8 @@ ComponentWithComputed({
         conditionType: '0',
         deviceActions: [],
         deviceConditions: [],
-        houseId: homeStore.currentHomeDetail.houseId,
-        roomId: this.data.roomId === '' ? roomStore.roomList[roomStore.currentRoomIndex].roomId : this.data.roomId,
+        projectId: homeStore.currentProjectDetail.projectId,
+        spaceId: this.data.spaceId === '' ? roomStore.roomList[roomStore.currentSpaceIndex].spaceId : this.data.spaceId,
         sceneIcon: this.data.sceneIcon,
         sceneName: this.data.sceneName,
         sceneType: '0',
@@ -1078,7 +1078,7 @@ ComponentWithComputed({
         sceneId: this.data._sceneInfo.sceneId,
         updateType: '0',
         conditionType: '0',
-        roomId: this.data.roomId,
+        spaceId: this.data.spaceId,
       } as Scene.UpdateSceneDto
       // 检查场景名字是否变更
       if (this.data.sceneName !== this.data._sceneInfo.sceneName) {
@@ -1162,7 +1162,7 @@ ComponentWithComputed({
     },
     async handleSceneRoomEditConfirm(e: { detail: string }) {
       this.setData({
-        roomId: e.detail,
+        spaceId: e.detail,
         showEditRoomPopup: false,
         _isEditCondition: true,
       })

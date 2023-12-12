@@ -12,7 +12,7 @@ export const otaStore = observable({
   },
 
   async updateList() {
-    const res = await queryDeviceOtaUpdateList(homeStore.currentHomeDetail.houseId)
+    const res = await queryDeviceOtaUpdateList(homeStore.currentProjectDetail.projectId)
     if (res.success) {
       runInAction(() => {
         otaStore.otaUpdateList = res.result.otaUpdateList

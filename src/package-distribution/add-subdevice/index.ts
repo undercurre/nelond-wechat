@@ -174,8 +174,8 @@ ComponentWithComputed({
           proType: this.data.pageParams.proType,
           protocolVersion: msgObj.protocolVersion,
         }),
-        roomId: '',
-        roomName: '',
+        spaceId: '',
+        spaceName: '',
         status: 'waiting',
         requestTimes: 20,
         zigbeeRepeatTimes: 3,
@@ -304,8 +304,8 @@ ComponentWithComputed({
 
       const res = await bindDevice({
         deviceId: mac,
-        houseId: homeBinding.store.currentHomeId,
-        roomId: roomBinding.store.currentRoom.roomId,
+        projectId: homeBinding.store.currentProjectId,
+        spaceId: roomBinding.store.currentRoom.spaceId,
         sn: '',
         deviceName: deviceName,
       })

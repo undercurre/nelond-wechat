@@ -1,12 +1,19 @@
 import { mzaioRequest } from '../utils/index'
 
-export async function queryRoomList(houseId: string, options?: { loading?: boolean }) {
-  return await mzaioRequest.post<{ roomInfoList: Room.RoomItem[] }>({
+/**
+ * 查询项目空间
+ * @param projectId
+ * @param options
+ * @returns
+ */
+export async function querySpaceList(projectId: string, pid = '0', options?: { loading?: boolean }) {
+  return await mzaioRequest.post<Space.SpaceInfo[]>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/user/house/queryRoomList',
+    url: '/v1/mzgd/cl/user/space/queryList',
     data: {
-      houseId,
+      projectId,
+      pid,
     },
   })
 }
@@ -16,10 +23,10 @@ export async function queryRoomList(houseId: string, options?: { loading?: boole
  */
 export async function saveHouseRoomInfo(
   data: {
-    houseId: string
+    projectId: string
     roomIcon: string
-    roomId?: string
-    roomName: string
+    spaceId?: string
+    spaceName: string
   },
   options?: { loading?: boolean },
 ) {
@@ -34,19 +41,19 @@ export async function saveHouseRoomInfo(
 /**
  * 删除房间
  */
-export async function delHouseRoom(roomId: string, options?: { loading?: boolean }) {
+export async function delHouseRoom(spaceId: string, options?: { loading?: boolean }) {
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
     url: '/v1/mzgd/user/house/delHouseRoom',
-    data: { roomId },
+    data: { spaceId },
   })
 }
 
 /**
  * 房间排序
  */
-export async function updateRoomSort(roomSortList: Room.RoomSort[], options?: { loading?: boolean }) {
+export async function updateRoomSort(roomSortList: Space.RoomSort[], options?: { loading?: boolean }) {
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,

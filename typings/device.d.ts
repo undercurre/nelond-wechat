@@ -73,8 +73,8 @@ declare namespace Device {
     proType: string
     /** 产品Id */
     productId: string
-    roomId: string
-    roomName: string
+    spaceId: string
+    spaceName: string
     switchInfoDTOList: MzgdPanelSwitchInfoDTO[]
     version: string
     sn: string
@@ -115,14 +115,14 @@ declare namespace Device {
   }
 
   interface MzgdPanelSwitchInfoDTO {
-    houseId: string
+    projectId: string
     orderNum: number
     /** 面板Id */
     panelId: string
     /** 设备图片 */
     pic: string
-    roomId: string
-    roomName: string
+    spaceId: string
+    spaceName: string
     /** 开关Id */
     switchId: string
     /** 开关名称 */
@@ -132,9 +132,9 @@ declare namespace Device {
   interface OrderSaveData {
     deviceInfoByDeviceVoList: {
       deviceId: string
-      houseId: string
+      projectId: string
       orderNum: string
-      roomId: string
+      spaceId: string
       switchId?: string
       type?: string
     }[]
@@ -152,7 +152,7 @@ declare namespace Device {
     productName: string
     sn: string
     switchNum: number
-    roomId: string
+    spaceId: string
   }
 
   interface ActionItem {
@@ -172,8 +172,8 @@ declare namespace Device {
   interface DeviceInfoUpdateVo {
     deviceId: string
     deviceName?: string
-    houseId: string
-    roomId?: string
+    projectId: string
+    spaceId?: string
     type?: string // 0 更改开关以外的设备 1 仅更改房间 2 所有都更改 3 仅开关更改
     deviceType?: number // 1 网关 2 子设备 3wifi设备
     switchId?: string
@@ -225,8 +225,8 @@ declare namespace Device {
     zigbeeMac: string
     isConfig: string
     name: string
-    roomId: string
-    roomName: string
+    spaceId: string
+    spaceName: string
     icon: string
     productId: string
     switchList: Device.ISwitch[]

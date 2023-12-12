@@ -30,7 +30,7 @@ ComponentWithComputed({
         withShareTicket: true, // 用于禁用分享选择界面的多选操作
       })
 
-      const res = await getShareId({ houseId: homeBinding.store.currentHomeId })
+      const res = await getShareId({ projectId: homeBinding.store.currentProjectId })
 
       if (res.success) {
         this.data._shareId = res.result.shareId
@@ -53,7 +53,7 @@ ComponentWithComputed({
       const expireTime = new Date().valueOf() + params.expire * 1000 // 过期时间
 
       // todo: 暂时去掉&shareId=${this.data._shareId}
-      return `type=transferHome&houseId=${homeBinding.store.currentHomeId}&expireTime=${expireTime}&shareId=${this.data._shareId}&userId=${userBinding.store.userInfo.userId}`
+      return `type=transferHome&projectId=${homeBinding.store.currentProjectId}&expireTime=${expireTime}&shareId=${this.data._shareId}&userId=${userBinding.store.userInfo.userId}`
     },
     showQrCode() {
       const query = wx.createSelectorQuery()
@@ -106,7 +106,7 @@ ComponentWithComputed({
       }
     },
     toTransferHomeMember() {
-      if (homeBinding.store.currentHomeDetail.userCount <= 1) {
+      if (homeBinding.store.currentProjectDetail.userCount <= 1) {
         Toast('没有其他成员可供转让')
 
         return

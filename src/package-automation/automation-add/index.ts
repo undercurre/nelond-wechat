@@ -21,7 +21,7 @@ ComponentWithComputed({
     dialogConfirmBtnColor: '#27282A',
     sceneImgDir,
     opearationType: 'yijian', // yijian是一键场景，auto是自动化场景
-    roomId: '',
+    spaceId: '',
     showEditRoomPopup: false,
     adviceSceneNameList: adviceSceneNameList,
     navigationBarAndStatusBarHeight:
@@ -277,7 +277,7 @@ ComponentWithComputed({
                 uniId: scene.sceneId,
                 name: scene.sceneName,
                 type: 5,
-                desc: [scene.roomName],
+                desc: [scene.spaceName],
                 pic: `https://mzgd-oss-bucket.oss-cn-shenzhen.aliyuncs.com/homlux/auto-scene/${scene.sceneIcon}.png`,
                 value: {},
                 orderNum: index,
@@ -357,12 +357,12 @@ ComponentWithComputed({
 
       if (roomid) {
         const deviceListInRoom: Device.DeviceItem[] = deviceStore.allRoomDeviceFlattenList.filter(
-          (item) => item.roomId === roomid,
+          (item) => item.spaceId === roomid,
         )
         console.log('默认选中', deviceListInRoom)
         this.setData(
           {
-            roomId: roomid,
+            spaceId: roomid,
             _isEditCondition: true,
             sceneDevicelinkSelectList: deviceListInRoom.map((item) => item.uniId),
             opearationType: 'yijian',
@@ -490,12 +490,12 @@ ComponentWithComputed({
     },
     async handleSceneRoomEditConfirm(e: { detail: string }) {
       const deviceListInRoom: Device.DeviceItem[] = deviceStore.allRoomDeviceFlattenList.filter(
-        (item) => item.roomId === e.detail,
+        (item) => item.spaceId === e.detail,
       )
       console.log('默认选中', deviceListInRoom)
       this.setData(
         {
-          roomId: e.detail,
+          spaceId: e.detail,
           showEditRoomPopup: false,
           _isEditCondition: true,
           sceneDevicelinkSelectList: deviceListInRoom.map((item) => item.uniId),
@@ -816,7 +816,7 @@ ComponentWithComputed({
               uniId: scene.sceneId,
               name: scene.sceneName,
               type: 5,
-              desc: [scene.roomName],
+              desc: [scene.spaceName],
               pic: `https://mzgd-oss-bucket.oss-cn-shenzhen.aliyuncs.com/homlux/auto-scene/${scene.sceneIcon}.png`,
               value: {},
               orderNum: 0,
@@ -848,13 +848,13 @@ ComponentWithComputed({
     updateSceneDeviceConditionsFlatten() {
       const sceneDeviceConditionsFlatten = [] as AutoScene.AutoSceneFlattenCondition[]
 
-      if (this.data.roomId !== '' && this.data.opearationType === 'yijian') {
+      if (this.data.spaceId !== '' && this.data.opearationType === 'yijian') {
         sceneDeviceConditionsFlatten.push({
           uniId: 'room',
           name: '手动点击场景',
           desc: [
-            roomStore.roomList.find((item) => item.roomId === this.data.roomId)?.roomName ??
-              roomStore.roomList[0].roomName,
+            roomStore.roomList.find((item) => item.spaceId === this.data.spaceId)?.spaceName ??
+              roomStore.roomList[0].spaceName,
           ],
           pic: '/package-automation/assets/imgs/automation/touch-materialized.png',
           productId: 'touch',
@@ -1206,7 +1206,7 @@ ComponentWithComputed({
           timeType: this.data.effectiveTime.timeType === '4' ? '1' : this.data.effectiveTime.timeType, //前端用4表示自定义 1表示每天，云端全用1
           timePeriod: this.data.effectiveTime.timePeriod,
         },
-        houseId: homeStore.currentHomeDetail.houseId,
+        projectId: homeStore.currentProjectDetail.projectId,
         sceneIcon: this.data.sceneIcon,
         sceneName: this.data.sceneName,
         sceneCategory: '1',
@@ -1395,8 +1395,8 @@ ComponentWithComputed({
         conditionType: '0',
         deviceActions: [],
         deviceConditions: [],
-        houseId: homeStore.currentHomeDetail.houseId,
-        roomId: this.data.roomId === '' ? roomStore.roomList[roomStore.currentRoomIndex].roomId : this.data.roomId,
+        projectId: homeStore.currentProjectDetail.projectId,
+        spaceId: this.data.spaceId === '' ? roomStore.roomList[roomStore.currentSpaceIndex].spaceId : this.data.spaceId,
         sceneIcon: this.data.sceneIcon,
         sceneName: this.data.sceneName,
         sceneType: '0',

@@ -79,7 +79,7 @@
     </scroll-view>
     <van-cell-group
       inset
-      wx:if="{{sceneDeviceConditionsFlatten.length && !timeCondition.time && !roomId}}"
+      wx:if="{{sceneDeviceConditionsFlatten.length && !timeCondition.time && !spaceId}}"
     >
       <van-cell
         border="{{false}}"
@@ -253,7 +253,7 @@
 />
 <!-- <add-condition-popup show="{{showEditConditionPopup}}" bind:close="handleConditionClose" bind:cancel="handleTimeConditionReturn" bind:confirm="handleEffectiveTimeConfirm" bind:conditionClicked="onConditionClicked" /> -->
 <edit-room-popup
-  value="{{roomId}}"
+  value="{{spaceId}}"
   show="{{showEditRoomPopup}}"
   bind:close="handleSceneRoomEditCancel"
   bind:cancel="handleRoomReturn"

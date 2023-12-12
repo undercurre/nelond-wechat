@@ -32,7 +32,7 @@ declare namespace Ota {
     /** 设备图片 */
     pic: string
     /** 房间名称 */
-    roomName: string
+    spaceName: string
     /** 更新版本号 */
     updateVersion: string
     /** ota更新版本连接 */

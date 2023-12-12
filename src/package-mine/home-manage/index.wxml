@@ -16,7 +16,7 @@
         bind:tap="handleShowHomeSelectMenu"
         id="homeName"
       >
-        <text class="text-40 text-hex-1E2C46 font-semibold leading-56rpx">{{ houseName }}</text>
+        <text class="text-40 text-hex-1E2C46 font-semibold leading-56rpx">{{ projectName }}</text>
 
         <svg-icon
           id="homeSelectArrow"
@@ -36,14 +36,14 @@
     </view>
 
     <view class="pt-16rpx leading-40rpx text-black-59 text-28 opacity-75">
-      <text>房间{{ currentHomeDetail.roomCount }}｜设备{{ currentHomeDetail.deviceCount }}｜成员{{ currentHomeDetail.userCount }}</text>
+      <text>房间{{ currentProjectDetail.roomCount }}｜设备{{ currentProjectDetail.deviceCount }}｜成员{{ currentProjectDetail.userCount }}</text>
     </view>
   </view>
 
   <view class="grow flex flex-col justify-between">
     <view>
       <!-- <van-cell-group inset>
-        <van-cell title="家庭位置" value="{{currentHomeDetail.houseArea || positionLocation}}" value-class="single-text" is-link center link-type="navigateTo" url="/package-mine/home-location/index" border="{{false}}" />
+        <van-cell title="家庭位置" value="{{currentProjectDetail.houseArea || positionLocation}}" value-class="single-text" is-link center link-type="navigateTo" url="/package-mine/home-location/index" border="{{false}}" />
       </van-cell-group> -->
 
       <van-cell-group inset>
@@ -116,7 +116,7 @@
 
     <view class="mx-32rpx">
       <van-field
-        value="{{ homeInfoEdited.houseName }}"
+        value="{{ homeInfoEdited.projectName }}"
         placeholder="请输入家庭名称"
         custom-style="padding: 32rpx 32rpx;background-color: #F6FAFD;border-radius: 24rpx;"
         clearable="{{true}}"
@@ -136,7 +136,7 @@
       >
 
       <van-button
-        disabled="{{!homeInfoEdited.houseName}}"
+        disabled="{{!homeInfoEdited.projectName}}"
         class="grow"
         size="large"
         type="primary"
@@ -150,7 +150,7 @@
 <van-dialog id="van-dialog" />
 
 <transfer-home-popup
-  wx:if="{{currentHomeDetail.houseUserAuth === 1}}"
+  wx:if="{{currentProjectDetail.houseUserAuth === 1}}"
   show="{{isTransferHome}}"
   bind:close="closeTransferHome"
 ></transfer-home-popup>

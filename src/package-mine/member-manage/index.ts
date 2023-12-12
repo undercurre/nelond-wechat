@@ -54,7 +54,7 @@ ComponentWithComputed({
     ],
     curClickUserItem: null as any,
     curOptionItem: null as any,
-    curUser: { userHouseAuth: 3 } as Home.HouseUserItem,
+    curUser: { userHouseAuth: 3 } as Project.HouseUserItem,
     isNeedShare: false,
     isAdmin: false,
     isVisitor: false,
@@ -94,7 +94,7 @@ ComponentWithComputed({
         return a.userHouseAuth - b.userHouseAuth
       })
       if (list) {
-        const curUser = list.find((item: Home.HouseUserItem) => {
+        const curUser = list.find((item: Project.HouseUserItem) => {
           return item.userId === curUserId
         })
         if (curUser) {
@@ -112,7 +112,7 @@ ComponentWithComputed({
             isVisitor: curUser.userHouseAuth === 3,
           })
         }
-        list.forEach((item: Home.HouseUserItem) => {
+        list.forEach((item: Project.HouseUserItem) => {
           if (curUser?.userId !== item.userId) {
             const isCanEdit = this.canIEditOther(curUser?.userHouseAuth, item.userHouseAuth)
             result.push({
@@ -285,7 +285,7 @@ ComponentWithComputed({
         emitter.emit('homeInfoEdit')
       }, 300)
     },
-    changeUserRole(userId: string, auth: Home.UserRole) {
+    changeUserRole(userId: string, auth: Project.UserRole) {
       homeBinding.store.updateMemberAuth(userId, auth).then(() => {
         this.updateView()
         emitter.emit('homeInfoEdit')
@@ -320,8 +320,8 @@ ComponentWithComputed({
             path:
               '/pages/index/index?type=' +
               type +
-              '&houseId=' +
-              homeBinding.store.currentHomeId +
+              '&projectId=' +
+              homeBinding.store.currentProjectId +
               '&time=' +
               time.valueOf() +
               '&shareId=' +

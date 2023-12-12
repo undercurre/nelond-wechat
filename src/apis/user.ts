@@ -7,7 +7,7 @@ export async function queryUserInfo() {
   return await mzaioRequest.post<User.UserInfo>({
     log: true,
     loading: false,
-    url: '/v1/mzgd/user/queryWxUserInfo',
+    url: '/v1/mzgd/cl/user/account/info',
   })
 }
 

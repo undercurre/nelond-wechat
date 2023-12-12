@@ -1,27 +1,81 @@
 <view class="page-container flex flex-col pt-40rpx">
-  <nav-bar background="transparent" leftArrow="{{true}}" bind:leftTap="goBack" title="{{roomInfo.roomName}}" show-go-home></nav-bar>
+  <nav-bar
+    background="transparent"
+    leftArrow="{{true}}"
+    bind:leftTap="goBack"
+    title="{{spaceInfo.spaceName}}"
+    show-go-home
+  ></nav-bar>
 
   <view class="grow">
     <van-cell-group inset>
-      <van-cell title="房间名称" is-link="{{isManager}}" clickable="{{isManager}}" value="{{roomInfo.roomName}}" center bind:click="editRoom" data-type="name"> </van-cell>
+      <van-cell
+        title="房间名称"
+        is-link="{{isManager}}"
+        clickable="{{isManager}}"
+        value="{{spaceInfo.spaceName}}"
+        center
+        bind:click="editRoom"
+        data-type="name"
+      >
+      </van-cell>
     </van-cell-group>
 
     <van-cell-group inset>
-      <van-cell title="房间图标" is-link="{{isManager}}" clickable="{{isManager}}" center bind:click="editRoom" data-type="icon">
-        <image class="w-64rpx h-64rpx" src="/assets/img/room/{{roomInfo.roomIcon}}.png"></image>
+      <van-cell
+        title="房间图标"
+        is-link="{{isManager}}"
+        clickable="{{isManager}}"
+        center
+        bind:click="editRoom"
+        data-type="icon"
+      >
+        <image
+          class="w-64rpx h-64rpx"
+          src="/assets/img/room/{{spaceInfo.roomIcon}}.png"
+        ></image>
       </van-cell>
     </van-cell-group>
   </view>
 
-  <view class="flex px-32rpx gap-x-46rpx" wx:if="{{isManager}}">
-    <van-button class="flex-1" size="large" bind:click="delRoom" custom-style="background-color: transparent;">删除</van-button>
+  <view
+    class="flex px-32rpx gap-x-46rpx"
+    wx:if="{{isManager}}"
+  >
+    <van-button
+      class="flex-1"
+      size="large"
+      bind:click="delRoom"
+      custom-style="background-color: transparent;"
+      >删除</van-button
+    >
 
-    <van-button type="primary" class="flex-1" size="large" bind:click="saveRoomInfo">确认</van-button>
+    <van-button
+      type="primary"
+      class="flex-1"
+      size="large"
+      bind:click="saveRoomInfo"
+      >确认</van-button
+    >
   </view>
 </view>
 
-<add-room show="{{isEdit}}" isSave="{{false}}" is-edit-name="{{editType === 'name'}}" is-edit-icon="{{editType === 'icon'}}" room-id="{{roomInfo.roomId}}" room-name="{{roomInfo.roomName}}" room-icon="{{roomInfo.roomIcon}}" bind:confirm="finishAddRoom" bind:close="onClose"></add-room>
+<add-room
+  show="{{isEdit}}"
+  isSave="{{false}}"
+  is-edit-name="{{editType === 'name'}}"
+  is-edit-icon="{{editType === 'icon'}}"
+  room-id="{{spaceInfo.spaceId}}"
+  room-name="{{spaceInfo.spaceName}}"
+  room-icon="{{spaceInfo.roomIcon}}"
+  bind:confirm="finishAddRoom"
+  bind:close="onClose"
+></add-room>
 
-<van-dialog id="van-dialog" confirm-button-color="#27282A" cancel-button-color="#27282A" />
+<van-dialog
+  id="van-dialog"
+  confirm-button-color="#27282A"
+  cancel-button-color="#27282A"
+/>
 
 <van-toast id="van-toast" />

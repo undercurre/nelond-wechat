@@ -1,20 +1,48 @@
 <!--pages/index/components/dropdown-menu/index.wxml-->
-<view id="menu" class="bg absolute flex flex-col items-center p-10rpx rounded-32rpx w-256rpx z-100" style="left: {{x}}; top: {{y}};" wx:if="{{isRender}}">
+<view
+  id="menu"
+  class="bg absolute flex flex-col items-center p-10rpx rounded-32rpx w-256rpx z-100"
+  style="left: {{x}}; top: {{y}};"
+  wx:if="{{isRender}}"
+>
   <block wx:if="{{list.length <= 5}}">
-    <view wx:for="{{list}}" wx:key="roomId" data-id="{{item.roomId}}" bindtap="handleRoomSelect">
+    <view
+      wx:for="{{list}}"
+      wx:key="spaceId"
+      data-id="{{item.spaceId}}"
+      bindtap="handleRoomSelect"
+    >
       <view class="h-96rpx flex-center">
-        <text class="text-white text-28rpx">{{item.roomName}}</text>
+        <text class="text-white text-28rpx">{{item.spaceName}}</text>
       </view>
-      <view wx:if="{{index != list.length - 1}}" class="bg-hex-717171 w-208rpx h-1rpx"></view>
+      <view
+        wx:if="{{index != list.length - 1}}"
+        class="bg-hex-717171 w-208rpx h-1rpx"
+      ></view>
     </view>
   </block>
   <!-- 超过5个使用滑动 -->
-  <scroll-view wx:else enable-flex scroll-y enhanced show-scrollbar="{{false}}" class="h-480rpx flex flex-col items-center">
-    <view wx:for="{{list}}" wx:key="roomId" data-id="{{item.roomId}}" bindtap="handleRoomSelect">
+  <scroll-view
+    wx:else
+    enable-flex
+    scroll-y
+    enhanced
+    show-scrollbar="{{false}}"
+    class="h-480rpx flex flex-col items-center"
+  >
+    <view
+      wx:for="{{list}}"
+      wx:key="spaceId"
+      data-id="{{item.spaceId}}"
+      bindtap="handleRoomSelect"
+    >
       <view class="h-96rpx flex-center">
-        <text class="text-white text-28rpx">{{item.roomName}}</text>
+        <text class="text-white text-28rpx">{{item.spaceName}}</text>
       </view>
-      <view wx:if="{{index != list.length - 1}}" class="bg-hex-717171 w-208rpx h-1rpx"></view>
+      <view
+        wx:if="{{index != list.length - 1}}"
+        class="bg-hex-717171 w-208rpx h-1rpx"
+      ></view>
     </view>
   </scroll-view>
 

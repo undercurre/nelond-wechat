@@ -24,12 +24,12 @@ export const sceneStore = observable({
    * 当前房间场景
    */
   get sceneList(): Scene.SceneItem[] {
-    const { roomId } = roomStore.currentRoom
-    const roomDeviceList = roomStore.roomDeviceList[roomId]
+    const { spaceId } = roomStore.currentRoom
+    const roomDeviceList = roomStore.roomDeviceList[spaceId]
     const hasSwitch = roomDeviceList?.some((device) => device.proType === PRO_TYPE.switch) ?? false
     const hasLight = roomDeviceList?.some((device) => device.proType === PRO_TYPE.light) ?? false
 
-    let list = this.allRoomSceneList.filter((scene) => scene.roomId === roomId && scene.deviceActions?.length > 0)
+    let list = this.allRoomSceneList.filter((scene) => scene.spaceId === spaceId && scene.deviceActions?.length > 0)
 
     if (!hasSwitch && !hasLight) {
       // 四个默认场景都去掉
@@ -45,11 +45,11 @@ export const sceneStore = observable({
   get roomSceneList(): Record<string, Scene.SceneItem[]> {
     const data = {} as Record<string, Scene.SceneItem[]>
     this.allRoomSceneList.forEach((scene) => {
-      if (data[scene.roomId]) {
-        data[scene.roomId].push(scene)
+      if (data[scene.spaceId]) {
+        data[scene.spaceId].push(scene)
         return
       }
-      data[scene.roomId] = [scene]
+      data[scene.spaceId] = [scene]
     })
     return data
   },
@@ -68,8 +68,8 @@ export const sceneStore = observable({
     return map
   },
 
-  async updateAllRoomSceneList(houseId: string = homeStore.currentHomeId, options?: IApiRequestOption) {
-    const res = await querySceneListByHouseId(houseId, options)
+  async updateAllRoomSceneList(projectId: string = homeStore.currentProjectId, options?: IApiRequestOption) {
+    const res = await querySceneListByHouseId(projectId, options)
     if (res.success) {
       const list = res.result
         .filter((scene) => scene.deviceActions && scene.deviceActions.length)

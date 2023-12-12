@@ -68,7 +68,7 @@ ComponentWithComputed({
           type: '3',
           deviceType: this.data.deviceInfo.deviceType,
           deviceId: this.data.deviceInfo.deviceId,
-          houseId: homeStore.currentHomeDetail.houseId,
+          projectId: homeStore.currentProjectDetail.projectId,
           switchId: this.data.deviceInfo.switchInfoDTOList[this.data.switchClickIndex].switchId,
           switchName: this.data.switchName,
         })

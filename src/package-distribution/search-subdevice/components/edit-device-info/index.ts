@@ -14,11 +14,11 @@ Component({
       type: String,
       value: '',
     },
-    roomId: {
+    spaceId: {
       type: String,
       value: '',
     },
-    roomName: {
+    spaceName: {
       type: String,
       value: '',
     },
@@ -36,11 +36,11 @@ Component({
   },
 
   observers: {
-    'deviceName, roomId, roomName, switchList': function (deviceName, roomId, roomName, switchList) {
+    'deviceName, spaceId, spaceName, switchList': function (deviceName, spaceId, spaceName, switchList) {
       this.setData({
         deviceInfo: {
-          roomId: roomId,
-          roomName: roomName,
+          spaceId: spaceId,
+          spaceName: spaceName,
           deviceName: deviceName,
           switchList: switchList,
         },

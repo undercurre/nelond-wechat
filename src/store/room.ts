@@ -1,64 +1,23 @@
 import { observable, runInAction } from 'mobx-miniprogram'
-import { queryRoomList } from '../apis/index'
-import { PRO_TYPE } from '../config/index'
+import { querySpaceList } from '../apis/index'
 import { deviceStore } from './device'
 import { homeStore } from './home'
-import { deviceCount, IApiRequestOption } from '../utils/index'
+import { IApiRequestOption } from '../utils/index'
 
 export const roomStore = observable({
   /**
    * 当前家庭的房间列表
    */
-  roomList: [
-    {
-      roomId: 'xxx',
-      groupId: 'xxx',
-      roomName: '公共空间',
-      deviceNum: 10,
-      offline: 2,
-      children: 2,
-      spaceLevel: 1,
-    },
-    {
-      roomId: 'xxx2',
-      groupId: 'xxx',
-      roomName: '4栋',
-      deviceNum: 10,
-      children: 2,
-      spaceLevel: 2,
-    },
-    {
-      roomId: 'xxx3',
-      groupId: 'xxx',
-      roomName: '二楼',
-      deviceNum: 10,
-      children: 2,
-      spaceLevel: 3,
-    },
-    {
-      roomId: 'yyy2',
-      groupId: 'yyy',
-      roomName: '206会议室',
-      deviceNum: 12,
-      spaceLevel: 4,
-    },
-  ] as Room.RoomInfo[],
+  roomList: [] as Space.SpaceInfo[],
   /**
    * 选择进入了哪个房间，在roomList中的index
    */
-  currentRoomIndex: 0,
+  currentSpaceIndex: 0,
   /** 全屋设备，对应房间id作为key，房间的设备列表作为key */
   roomDeviceList: {} as Record<string, Device.DeviceItem[]>,
 
-  get currentRoom(): Room.RoomInfo {
-    return this.roomList[this.currentRoomIndex]
-  },
-
-  get lightOnInHouse(): number {
-    const { roomList } = this
-    let count = 0
-    roomList.forEach((room) => (count += room.lightOnCount ?? 0))
-    return count
+  get currentRoom(): Space.SpaceInfo {
+    return this.roomList?.length ? this.roomList[this.currentSpaceIndex] : ({} as Space.SpaceInfo)
   },
 
   /**
@@ -70,20 +29,12 @@ export const roomStore = observable({
     deviceStore.allRoomDeviceList
       .sort((a, b) => a.deviceId.localeCompare(b.deviceId))
       .forEach((device) => {
-        if (list[device.roomId]) {
-          list[device.roomId].push(device)
+        if (list[device.spaceId]) {
+          list[device.spaceId].push(device)
         } else {
-          list[device.roomId] = [device]
+          list[device.spaceId] = [device]
         }
       })
-    roomStore.roomList.forEach((roomInfo) => {
-      const roomDeviceList = list[roomInfo.roomId]
-      const { lightOnCount, endCount, lightCount } = deviceCount(roomDeviceList)
-
-      roomInfo.lightOnCount = lightOnCount
-      roomInfo.endCount = endCount
-      roomInfo.lightCount = lightCount
-    })
 
     runInAction(() => {
       roomStore.roomDeviceList = list
@@ -91,41 +42,12 @@ export const roomStore = observable({
     })
   },
 
-  async updateRoomList(options?: IApiRequestOption) {
-    const res = await queryRoomList(homeStore.currentHomeId, options)
+  async updateSpaceList(options?: IApiRequestOption) {
+    const res = await querySpaceList(homeStore.currentProjectId, '0', options)
     if (res.success) {
-      res.result.roomInfoList.forEach((room) => {
-        const roomDeviceList = roomStore.roomDeviceList[room.roomInfo.roomId]
-        // 过滤一下默认场景，没灯过滤明亮柔和，没灯没开关全部过滤
-        const hasSwitch = roomDeviceList?.some((device) => device.proType === PRO_TYPE.switch) ?? false
-        const hasLight = roomDeviceList?.some((device) => device.proType === PRO_TYPE.light) ?? false
-        if (!hasSwitch && !hasLight) {
-          // 四个默认场景都去掉
-          room.roomSceneList = room.roomSceneList.filter((scene) => scene.isDefault === '0')
-        } else if (hasSwitch && !hasLight) {
-          // 只有开关，去掉默认的明亮、柔和
-          room.roomSceneList = room.roomSceneList.filter((scene) => !['2', '3'].includes(scene.defaultType))
-        }
-
-        const { lightOnCount, endCount, lightCount } = deviceCount(roomDeviceList)
-
-        room.roomInfo.lightOnCount = lightOnCount
-        room.roomInfo.endCount = endCount
-        room.roomInfo.lightCount = lightCount
-      })
-
       runInAction(() => {
-        roomStore.roomList = res.result.roomInfoList.map((room) => ({
-          roomId: room.roomInfo.roomId,
-          groupId: room.roomInfo.groupId,
-          roomIcon: room.roomInfo.roomIcon || 'drawing-room',
-          roomName: room.roomInfo.roomName,
-          sceneList: room.roomSceneList,
-          deviceNum: room.roomInfo.deviceNum,
-          lightOnCount: room.roomInfo.lightOnCount,
-          endCount: room.roomInfo.endCount,
-          lightCount: room.roomInfo.lightCount,
-        }))
+        roomStore.roomList = res.result
+        console.log('updateSpaceList', roomStore.roomList)
       })
     }
   },
@@ -133,6 +55,6 @@ export const roomStore = observable({
 
 export const roomBinding = {
   store: roomStore,
-  fields: ['roomList', 'currentRoomIndex', 'roomDeviceList', 'currentRoom'],
+  fields: ['roomList', 'currentSpaceIndex', 'roomDeviceList', 'currentRoom'],
   actions: [],
 }

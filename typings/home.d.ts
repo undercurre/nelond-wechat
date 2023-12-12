@@ -1,22 +1,17 @@
-// 家庭
-declare namespace Home {
+// 项目
+declare namespace Project {
   /**
-   * 家庭列表，列表项
+   * 项目列表，列表项
    */
-  export interface IHomeItem {
+  export interface IProjectItem {
     /**
-     * 家庭唯一id
+     * 项目唯一id
      */
-    houseId: string
+    projectId: string
     /**
-     * 家庭名称
+     * 项目名称
      */
-    houseName: string
-
-    /**
-     * 是否默认家庭
-     */
-    defaultHouseFlag: boolean
+    projectName: string
 
     /**
      * 是否创建者
@@ -41,15 +36,15 @@ declare namespace Home {
   /**
    * 家庭详细值
    */
-  export interface IHomeDetail {
+  export interface IProjectDetail {
     /**
-     * 家庭唯一id
+     * 项目唯一id
      */
-    houseId: string
+    projectId: string
     /**
-     * 家庭名称
+     * 项目名称
      */
-    houseName: string
+    projectName: string
 
     // 用户家庭权限
     houseUserAuth: UserRole
@@ -75,11 +70,11 @@ declare namespace Home {
     roomCount: number
   }
 
-  export interface IRoomInfo {
+  export interface ISpaceInfo {
     lightOnCount: number
     roomIcon: string
-    roomId: string
-    roomName: string
+    spaceId: string
+    spaceName: string
   }
 
   export interface HouseUserItem {

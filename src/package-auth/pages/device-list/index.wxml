@@ -57,7 +57,7 @@
       >
         <van-cell
           title="{{item.deviceName}}"
-          label="{{item.roomName}}"
+          label="{{item.spaceName}}"
           title-class="py-16rpx pl-16rpx"
           center
           border="{{false}}"

@@ -37,7 +37,7 @@ ComponentWithComputed({
       } else if (data.roomSelect === '-1') {
         return rst.filter((d) => !d.onLineStatus)
       } else {
-        return rst.filter((d: Device.DeviceItem) => d.roomId === data.roomSelect)
+        return rst.filter((d: Device.DeviceItem) => d.spaceId === data.roomSelect)
       }
     },
   },
@@ -87,7 +87,7 @@ ComponentWithComputed({
         setTimeout(() => {
           if (!this.data.deviceListCompited.length) {
             this.setData({
-              roomSelect: roomBinding.store.roomList[0].roomId,
+              roomSelect: roomBinding.store.roomList[0].spaceId,
             })
           }
         }, 100)
@@ -101,8 +101,8 @@ ComponentWithComputed({
         if (
           typeof e.result.eventData === 'object' &&
           WSEventType.device_online_status === e.result.eventType &&
-          e.result.eventData.roomId &&
-          (e.result.eventData.roomId === this.data.roomSelect || this.data.roomSelect === '0')
+          e.result.eventData.spaceId &&
+          (e.result.eventData.spaceId === this.data.roomSelect || this.data.roomSelect === '0')
         ) {
           // 如果是当前房间的设备状态发生变化，更新设备状态
           const index = deviceStore.allRoomDeviceList.findIndex(
@@ -111,7 +111,7 @@ ComponentWithComputed({
           if (index !== -1) {
             const res = await queryDeviceInfoByDeviceId({
               deviceId: deviceStore.deviceList[index].deviceId,
-              roomId: deviceStore.deviceList[index].roomId,
+              spaceId: deviceStore.deviceList[index].spaceId,
             })
             if (res.success) {
               runInAction(() => {
@@ -126,8 +126,8 @@ ComponentWithComputed({
         } else if (
           typeof e.result.eventData === 'object' &&
           WSEventType.device_del === e.result.eventType &&
-          e.result.eventData.roomId &&
-          (e.result.eventData.roomId === this.data.roomSelect || this.data.roomSelect === '0')
+          e.result.eventData.spaceId &&
+          (e.result.eventData.spaceId === this.data.roomSelect || this.data.roomSelect === '0')
         ) {
           // 设备被删除，查房间
           // if (this.data.roomSelect === '0') {
@@ -136,19 +136,19 @@ ComponentWithComputed({
           // deviceBinding.store.updateDeviceList(undefined, this.data.roomSelect)
           // }
         } else if (typeof e.result.eventData === 'object' && e.result.eventType === WSEventType.room_del) {
-          // await roomStore.updateRoomList()
+          // await roomStore.updateSpaceList()
           // if (this.data.roomSelect === '0') {
           deviceBinding.store.updateAllRoomDeviceList()
           if (roomStore.roomList.length > 0) {
             this.setData({
-              roomSelect: roomBinding.store.roomList[0].roomId,
+              roomSelect: roomBinding.store.roomList[0].spaceId,
             })
           }
-          // } else if (e.result.eventData.roomId === this.data.roomSelect) {
+          // } else if (e.result.eventData.spaceId === this.data.roomSelect) {
           //   // 房间被删了，切到其他房间
           //   if (roomStore.roomList.length > 0) {
           //     this.setData({
-          //       roomSelect: roomBinding.store.roomList[0].roomId,
+          //       roomSelect: roomBinding.store.roomList[0].spaceId,
           //     })
           //     deviceBinding.store.updateDeviceList(undefined, this.data.roomSelect)
           //   } else {
@@ -171,7 +171,7 @@ ComponentWithComputed({
 
     async onPullDownRefresh() {
       try {
-        // await roomStore.updateRoomList()
+        // await roomStore.updateSpaceList()
         // if (this.data.roomSelect) {
         //   // 查房间
         //   deviceBinding.store.updateDeviceList(undefined, this.data.roomSelect)
@@ -189,7 +189,7 @@ ComponentWithComputed({
     async loadData() {
       // 先加载ota列表信息，用于设备详情页展示
       otaStore.updateList()
-      // await roomStore.updateRoomList()
+      // await roomStore.updateSpaceList()
       // if (this.data.roomSelect === '0') {
       deviceBinding.store.updateAllRoomDeviceList()
       //   return

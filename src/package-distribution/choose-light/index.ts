@@ -1,6 +1,5 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import pageBehaviors from '../../behaviors/pageBehaviors'
-import { strUtil } from '../../utils/index'
 import { productImgDir } from '../../config/index'
 
 ComponentWithComputed({
@@ -16,18 +15,6 @@ ComponentWithComputed({
    */
   data: {
     deviceList: [
-      {
-        icon: `${productImgDir}/light-wifi.png`,
-        name: '吸顶灯',
-        tag: 'wifi',
-        path: strUtil.getUrlWithParams('/package-distribution-meiju/pages/check-auth/index', {
-          proType: '13',
-          sn8: '7909AC81',
-          productId: '美的智能吸顶灯',
-          deviceImg: `${productImgDir}/light-wifi.png`,
-          mode: 0,
-        } as Meiju.IProductItem),
-      },
       {
         icon: `${productImgDir}/downlight.png`,
         name: '筒射灯',

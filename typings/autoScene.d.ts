@@ -14,7 +14,7 @@ declare namespace AutoScene {
     deviceConditions: DeviceCondition[]
     timeConditions: TimeCondition[]
     effectiveTime: effectiveTime
-    houseId: string
+    projectId: string
     desc: string
   }
   /**
@@ -106,7 +106,7 @@ declare namespace AutoScene {
     timeConditions: TimeCondition[]
     // 场景生效时间
     effectiveTime: effectiveTime
-    houseId: string
+    projectId: string
     sceneIcon: string
     sceneName: string
     /**

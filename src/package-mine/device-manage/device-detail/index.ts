@@ -14,7 +14,7 @@ ComponentWithComputed({
    * 页面的初始数据
    */
   data: {
-    roomId: '',
+    spaceId: '',
     deviceId: '',
     deviceName: '',
     showEditNamePopup: false,
@@ -25,9 +25,9 @@ ComponentWithComputed({
   },
 
   computed: {
-    roomName(data) {
-      if (data.roomList && data.roomId) {
-        return data.roomList.find((room: { roomId: string }) => room.roomId === data.roomId)?.roomName
+    spaceName(data) {
+      if (data.roomList && data.spaceId) {
+        return data.roomList.find((room: { spaceId: string }) => room.spaceId === data.spaceId)?.spaceName
       }
       return ''
     },
@@ -62,7 +62,7 @@ ComponentWithComputed({
       if (data.deviceInfo.gatewayId) {
         const gateway = deviceStore.allRoomDeviceList.find((device) => device.deviceId === data.deviceInfo.gatewayId)
         if (gateway) {
-          return `${gateway.deviceName} | ${gateway.roomName}`
+          return `${gateway.deviceName} | ${gateway.spaceName}`
         }
         return ''
       }
@@ -97,10 +97,10 @@ ComponentWithComputed({
     /**
      * 生命周期函数--监听页面加载
      */
-    onLoad({ deviceId, roomId }: { deviceId: string; roomId: string }) {
+    onLoad({ deviceId, spaceId }: { deviceId: string; spaceId: string }) {
       this.setData({
         deviceId,
-        roomId,
+        spaceId,
       })
       this.updateDeviceInfo()
 
@@ -153,7 +153,7 @@ ComponentWithComputed({
         deviceType: this.data.deviceInfo.deviceType,
         deviceId: this.data.deviceId,
         deviceName: this.data.deviceName,
-        houseId: homeStore.currentHomeDetail.houseId,
+        projectId: homeStore.currentProjectDetail.projectId,
       })
       if (res.success) {
         this.updateDeviceInfo()
@@ -174,19 +174,19 @@ ComponentWithComputed({
     async handleDeviceRoomEditConfirm(e: { detail: string }) {
       this.setData({
         showEditRoomPopup: false,
-        roomId: e.detail,
+        spaceId: e.detail,
       })
       const res = await editDeviceInfo({
         type: '1',
         deviceType: this.data.deviceInfo.deviceType,
         deviceId: this.data.deviceId,
-        roomId: this.data.roomId,
-        houseId: homeStore.currentHomeDetail.houseId,
+        spaceId: this.data.spaceId,
+        projectId: homeStore.currentProjectDetail.projectId,
       })
       if (res.success) {
         this.updateDeviceInfo()
         await homeStore.updateRoomCardList()
-        await roomStore.updateRoomList()
+        await roomStore.updateSpaceList()
         roomStore.updateRoomCardLightOnNum()
         emitter.emit('deviceEdit')
       }
@@ -219,12 +219,12 @@ ComponentWithComputed({
       })
     },
     async updateDeviceInfo() {
-      const res = await queryDeviceInfoByDeviceId({ deviceId: this.data.deviceId, roomId: this.data.roomId })
+      const res = await queryDeviceInfoByDeviceId({ deviceId: this.data.deviceId, spaceId: this.data.spaceId })
       if (res.success) {
         this.setData({
           deviceInfo: res.result,
           deviceName: res.result.deviceName,
-          roomId: res.result.roomId,
+          spaceId: res.result.spaceId,
         })
       }
     },

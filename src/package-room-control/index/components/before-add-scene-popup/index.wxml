@@ -1,40 +1,105 @@
 <import src="/commons/templates/popup.wxml" />
-<van-popup show="{{ show }}" z-index="2000" round position="bottom" bind:close="handleClose" closeable safe-area-inset-bottom="{{false}}">
+<van-popup
+  show="{{ show }}"
+  z-index="2000"
+  round
+  position="bottom"
+  bind:close="handleClose"
+  closeable
+  safe-area-inset-bottom="{{false}}"
+>
   <view class="w-750rpx h-1200rpx relative flex flex-col items-center">
-    <template is="title" data="{{title: '创建场景'}}" />
-    <text class="text-26rpx text-hex-555659 mb-52rpx mt-24rpx">将{{roomName}}内所有设备的状态保存为新场景</text>
-    <view class="flex-1" id="content">
-      <scroll-view class="box-border px-24rpx" enhanced show-scrollbar="{{false}}" scroll-y style="height: {{contentHeight}}px; width: 750rpx;">
-        <view class="flex flex-row items-center bg-hex-F6FAFD rounded-32rpx px-40rpx py-32rpx mb-24rpx relative" wx:for="{{addSceneActions}}" bindtap="handleSceneActionEdit" data-index="{{index}}" wx:key="uniId">
+    <template
+      is="title"
+      data="{{title: '创建场景'}}"
+    />
+    <text class="text-26rpx text-hex-555659 mb-52rpx mt-24rpx">将{{spaceName}}内所有设备的状态保存为新场景</text>
+    <view
+      class="flex-1"
+      id="content"
+    >
+      <scroll-view
+        class="box-border px-24rpx"
+        enhanced
+        show-scrollbar="{{false}}"
+        scroll-y
+        style="height: {{contentHeight}}px; width: 750rpx;"
+      >
+        <view
+          class="flex flex-row items-center bg-hex-F6FAFD rounded-32rpx px-40rpx py-32rpx mb-24rpx relative"
+          wx:for="{{addSceneActions}}"
+          bindtap="handleSceneActionEdit"
+          data-index="{{index}}"
+          wx:key="uniId"
+        >
           <view class="w-96rpx h-96rpx box-border rounded-full bg-hex-F9FBFE p-12rpx">
-            <image src="{{item.pic}}" class="w-72rpx h-72rpx" />
+            <image
+              src="{{item.pic}}"
+              class="w-72rpx h-72rpx"
+            />
           </view>
 
           <view class="flex flex-col items-start ml-32rpx">
             <text class="text-36 text-black-2a font-medium leading-50rpx">{{item.name}}</text>
             <view class="flex flex-row gap-x-20rpx text-26 text-hex-555659 mt-22rpx leading-56rpx">
-              <text class="px-24rpx desc rounded-32rpx" wx:for="{{item.desc}}" wx:key="index">{{item}}</text>
+              <text
+                class="px-24rpx desc rounded-32rpx"
+                wx:for="{{item.desc}}"
+                wx:key="index"
+                >{{item}}</text
+              >
             </view>
           </view>
 
-          <view class="px-20rpx py-16rpx absolute right-0 top-0" catchtap="handleActionDelete" data-index="{{index}}">
-            <image src="/assets/img/base/close-gray.png" class="w-40 h-40" />
+          <view
+            class="px-20rpx py-16rpx absolute right-0 top-0"
+            catchtap="handleActionDelete"
+            data-index="{{index}}"
+          >
+            <image
+              src="/assets/img/base/close-gray.png"
+              class="w-40 h-40"
+            />
           </view>
         </view>
       </scroll-view>
     </view>
     <view class="h-96rpx"></view>
     <view class="w-686rpx">
-      <van-button type="primary" size="large" disabled="{{addSceneActions.length === 0}}" bind:click="handleNext">下一步</van-button>
+      <van-button
+        type="primary"
+        size="large"
+        disabled="{{addSceneActions.length === 0}}"
+        bind:click="handleNext"
+        >下一步</van-button
+      >
     </view>
     <view class="h-96rpx"></view>
   </view>
 
-  <light-control-popup show="{{popupType === '0x13'}}" title="{{actionEditTitle}}" lightInfo="{{sceneEditInfo}}" bind:confirm="handleSceneEditConfirm" bind:close="handleEditPopupClose"></light-control-popup>
+  <light-control-popup
+    show="{{popupType === '0x13'}}"
+    title="{{actionEditTitle}}"
+    lightInfo="{{sceneEditInfo}}"
+    bind:confirm="handleSceneEditConfirm"
+    bind:close="handleEditPopupClose"
+  ></light-control-popup>
 
-  <switch-control-popup show="{{popupType === '0x21'}}" title="{{actionEditTitle}}" switchInfo="{{sceneEditInfo}}" bind:confirm="handleSceneEditConfirm" bind:close="handleEditPopupClose"></switch-control-popup>
+  <switch-control-popup
+    show="{{popupType === '0x21'}}"
+    title="{{actionEditTitle}}"
+    switchInfo="{{sceneEditInfo}}"
+    bind:confirm="handleSceneEditConfirm"
+    bind:close="handleEditPopupClose"
+  ></switch-control-popup>
 
-  <curtain-control-popup show="{{popupType === '0x14'}}" title="{{actionEditTitle}}" deviceInfo="{{sceneEditInfo}}" bind:confirm="handleSceneEditConfirm" bind:close="handleEditPopupClose"></curtain-control-popup>
+  <curtain-control-popup
+    show="{{popupType === '0x14'}}"
+    title="{{actionEditTitle}}"
+    deviceInfo="{{sceneEditInfo}}"
+    bind:confirm="handleSceneEditConfirm"
+    bind:close="handleEditPopupClose"
+  ></curtain-control-popup>
 </van-popup>
 
 <van-toast id="van-toast" />

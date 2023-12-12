@@ -2,7 +2,7 @@ import Toast from '@vant/weapp/toast/toast'
 import { login, getCaptcha } from '../../apis/index'
 import { homeStore, othersStore, userStore } from '../../store/index'
 import { storage, showLoading, hideLoading, Logger } from '../../utils/index'
-import { defaultImgDir } from '../../config/index'
+import { defaultImgDir, UNACTIVATED } from '../../config/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 
 // pages/login/index.ts
@@ -100,7 +100,7 @@ Component({
     async toLogin(data: { jsCode?: string; code?: string; captcha?: string }) {
       const res = await login(data)
       // 如果返回未激活状态，则自动调用获取验证码的接口
-      if (res.success && res.code === 8843) {
+      if (res.success && res.code === UNACTIVATED) {
         getCaptcha({ mobilePhone: res.result?.mobilePhone })
         this.setData({
           needCaptcha: true,
@@ -108,7 +108,7 @@ Component({
       }
       // 登录成功
       else if (res.success && res.result) {
-        console.log('res', res)
+        console.log('login res', res)
         storage.set('token', res.result.token, null)
 
         await userStore.updateUserInfo()

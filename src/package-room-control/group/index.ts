@@ -133,8 +133,8 @@ ComponentWithComputed({
           proType: device.proType,
         })),
         groupName: '灯组',
-        houseId: this.data.currentHomeId,
-        roomId: this.data.currentRoom.roomId,
+        projectId: this.data.currentProjectId,
+        spaceId: this.data.currentRoom.spaceId,
       })
       if (res.success) {
         this.data.groupId = res.result.groupId

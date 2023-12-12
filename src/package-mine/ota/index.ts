@@ -78,7 +78,10 @@ ComponentWithComputed({
       this.setData({
         isLoading: true,
       })
-      const res = await setOtaSchedule({ houseId: homeStore.currentHomeId, jobStatus: this.data.autoUpdate ? 0 : 1 })
+      const res = await setOtaSchedule({
+        projectId: homeStore.currentProjectId,
+        jobStatus: this.data.autoUpdate ? 0 : 1,
+      })
       if (res.success) {
         this.setData({
           autoUpdate: !this.data.autoUpdate,
