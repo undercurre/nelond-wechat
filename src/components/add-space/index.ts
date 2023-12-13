@@ -1,7 +1,7 @@
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
 import { saveHouseRoomInfo } from '../../apis/index'
-import { projectBinding, roomBinding } from '../../store/index'
+import { projectBinding, spaceBinding } from '../../store/index'
 import { checkInputNameIllegal, emitter } from '../../utils/index'
 
 Component({
@@ -166,7 +166,7 @@ Component({
         })
 
         if (res.success) {
-          roomBinding.store.updateSpaceList()
+          spaceBinding.store.updateSpaceList()
           emitter.emit('homeInfoEdit')
         } else {
           return

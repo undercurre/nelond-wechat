@@ -1,10 +1,10 @@
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
-import { projectBinding, roomBinding, spaceStore } from '../../store/index'
+import { projectBinding, spaceBinding, spaceStore } from '../../store/index'
 import { checkInputNameIllegal } from '../../utils/index'
 
 Component({
-  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, roomBinding] })],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, spaceBinding] })],
   /**
    * 组件的属性列表
    */
@@ -80,7 +80,7 @@ Component({
     },
 
     addRoom() {
-      if (roomBinding.store.spaceList.length >= 50) {
+      if (spaceBinding.store.spaceList.length >= 50) {
         Toast('一个项目中最多创建50个空间')
         return
       }

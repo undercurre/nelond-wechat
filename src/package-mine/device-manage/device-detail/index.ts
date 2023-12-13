@@ -1,7 +1,7 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
-import { deviceStore, projectBinding, projectStore, otaStore, roomBinding, spaceStore } from '../../../store/index'
+import { deviceStore, projectBinding, projectStore, otaStore, spaceBinding, spaceStore } from '../../../store/index'
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { waitingDeleteDevice, editDeviceInfo, queryDeviceInfoByDeviceId, sendDevice } from '../../../apis/index'
 import { proName, PRO_TYPE, SCREEN_PID } from '../../../config/index'
@@ -9,7 +9,7 @@ import Dialog from '@vant/weapp/dialog/dialog'
 import { emitter } from '../../../utils/index'
 
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [roomBinding, projectBinding] }), pageBehavior],
+  behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding, projectBinding] }), pageBehavior],
   /**
    * 页面的初始数据
    */

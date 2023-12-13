@@ -2,12 +2,12 @@ import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import Toast from '@vant/weapp/toast/toast'
 import pageBehaviors from '../../behaviors/pageBehaviors'
-import { projectBinding, roomBinding } from '../../store/index'
+import { projectBinding, spaceBinding } from '../../store/index'
 import { strUtil } from '../../utils/index'
 
 ComponentWithComputed({
   options: {},
-  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, roomBinding] }), pageBehaviors],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, spaceBinding] }), pageBehaviors],
 
   /**
    * 页面的初始数据
@@ -29,7 +29,7 @@ ComponentWithComputed({
     editRoom(event: WechatMiniprogram.CustomEvent) {
       const { index } = event.currentTarget.dataset
 
-      const item = roomBinding.store.spaceList[index]
+      const item = spaceBinding.store.spaceList[index]
 
       wx.navigateTo({
         url: strUtil.getUrlWithParams('/package-mine/space-detail/index', {
@@ -41,7 +41,7 @@ ComponentWithComputed({
     },
 
     addRoom() {
-      if (roomBinding.store.spaceList.length >= 50) {
+      if (spaceBinding.store.spaceList.length >= 50) {
         Toast('一个项目中最多创建50个空间')
         return
       }

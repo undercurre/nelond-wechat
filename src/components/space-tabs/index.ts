@@ -1,11 +1,11 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import { roomBinding, deviceBinding, deviceStore } from '../../store/index'
+import { spaceBinding, deviceBinding, deviceStore } from '../../store/index'
 
 type SimRoomInfo = Pick<Space.SpaceInfo, 'spaceId' | 'spaceName'>
 
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [roomBinding, deviceBinding] })],
+  behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding, deviceBinding] })],
   /**
    * 组件的属性列表
    */

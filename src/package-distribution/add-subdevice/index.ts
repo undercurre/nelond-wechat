@@ -1,6 +1,6 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import { projectBinding, roomBinding, deviceBinding } from '../../store/index'
+import { projectBinding, spaceBinding, deviceBinding } from '../../store/index'
 import { bleUtil, strUtil, BleClient, getCurrentPageParams, emitter, Logger } from '../../utils/index'
 import pageBehaviors from '../../behaviors/pageBehaviors'
 import { sendCmdAddSubdevice, bindDevice, isDeviceOnline, batchGetProductInfoByBPid } from '../../apis/index'
@@ -15,7 +15,7 @@ ComponentWithComputed({
     pureDataPattern: /^_/, // 指定所有 _ 开头的数据字段为纯数据字段
   },
 
-  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, roomBinding] }), pageBehaviors],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, spaceBinding] }), pageBehaviors],
 
   /**
    * 页面的初始数据
@@ -305,7 +305,7 @@ ComponentWithComputed({
       const res = await bindDevice({
         deviceId: mac,
         projectId: projectBinding.store.currentProjectId,
-        spaceId: roomBinding.store.currentSpace.spaceId,
+        spaceId: spaceBinding.store.currentSpace.spaceId,
         sn: '',
         deviceName: deviceName,
       })

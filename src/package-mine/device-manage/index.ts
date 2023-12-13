@@ -1,5 +1,5 @@
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import { roomBinding, deviceBinding, deviceStore, spaceStore, otaStore } from '../../store/index'
+import { spaceBinding, deviceBinding, deviceStore, spaceStore, otaStore } from '../../store/index'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { emitter, WSEventType } from '../../utils/eventBus'
@@ -8,7 +8,7 @@ import { runInAction } from 'mobx-miniprogram'
 import { PRO_TYPE, SCREEN_PID, defaultImgDir } from '../../config/index'
 
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [roomBinding, deviceBinding] }), pageBehavior],
+  behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding, deviceBinding] }), pageBehavior],
   /**
    * 页面的初始数据
    */
@@ -87,7 +87,7 @@ ComponentWithComputed({
         setTimeout(() => {
           if (!this.data.deviceListCompited.length) {
             this.setData({
-              roomSelect: roomBinding.store.spaceList[0].spaceId,
+              roomSelect: spaceBinding.store.spaceList[0].spaceId,
             })
           }
         }, 100)
@@ -139,14 +139,14 @@ ComponentWithComputed({
           deviceBinding.store.updateallDeviceList()
           if (spaceStore.spaceList.length > 0) {
             this.setData({
-              roomSelect: roomBinding.store.spaceList[0].spaceId,
+              roomSelect: spaceBinding.store.spaceList[0].spaceId,
             })
           }
           // } else if (e.result.eventData.spaceId === this.data.roomSelect) {
           //   // 空间被删了，切到其他空间
           //   if (spaceStore.spaceList.length > 0) {
           //     this.setData({
-          //       roomSelect: roomBinding.store.spaceList[0].spaceId,
+          //       roomSelect: spaceBinding.store.spaceList[0].spaceId,
           //     })
           //     deviceBinding.store.updateDeviceList(undefined, this.data.roomSelect)
           //   } else {

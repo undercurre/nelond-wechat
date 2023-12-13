@@ -1,10 +1,10 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import { roomBinding, deviceBinding } from '../../../../store/index'
+import { spaceBinding, deviceBinding } from '../../../../store/index'
 import { SCREEN_PID } from '../../../../config/index'
 
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [roomBinding, deviceBinding] })],
+  behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding, deviceBinding] })],
 
   /**
    * 组件的属性列表
@@ -67,7 +67,7 @@ ComponentWithComputed({
 
   lifetimes: {
     async ready() {
-      await roomBinding.store.updateSpaceList()
+      await spaceBinding.store.updateSpaceList()
 
       deviceBinding.store.updateallDeviceList()
     },

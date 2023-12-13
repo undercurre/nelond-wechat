@@ -14,14 +14,14 @@ import {
   emitter,
 } from '../../utils/index'
 import { adviceSceneNameList } from '../../config/scene'
-import { roomBinding } from '../../store/index'
+import { spaceBinding } from '../../store/index'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 
 ComponentWithComputed({
   options: {
     pureDataPattern: /^_/, // 指定所有 _ 开头的数据字段为纯数据字段
   },
-  behaviors: [pageBehavior, BehaviorWithStore({ storeBindings: [roomBinding] })],
+  behaviors: [pageBehavior, BehaviorWithStore({ storeBindings: [spaceBinding] })],
 
   /**
    * 组件的初始数据

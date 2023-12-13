@@ -3,13 +3,13 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import Dialog from '@vant/weapp/dialog/dialog'
 import Toast from '@vant/weapp/toast/toast'
 import pageBehaviors from '../../behaviors/pageBehaviors'
-import { projectBinding, roomBinding } from '../../store/index'
+import { projectBinding, spaceBinding } from '../../store/index'
 import { emitter, getCurrentPageParams } from '../../utils/index'
 import { delHouseRoom, saveHouseRoomInfo } from '../../apis/index'
 
 ComponentWithComputed({
   options: {},
-  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, roomBinding] }), pageBehaviors],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, spaceBinding] }), pageBehaviors],
 
   /**
    * 页面的初始数据
@@ -84,7 +84,7 @@ ComponentWithComputed({
       })
 
       if (res.success) {
-        roomBinding.store.updateSpaceList()
+        spaceBinding.store.updateSpaceList()
         emitter.emit('homeInfoEdit')
         this.goBack()
       } else {
@@ -93,7 +93,7 @@ ComponentWithComputed({
     },
 
     async delRoom() {
-      if (roomBinding.store.spaceList.length === 1) {
+      if (spaceBinding.store.spaceList.length === 1) {
         Toast('请至少保留一个空间')
         return
       }
@@ -113,7 +113,7 @@ ComponentWithComputed({
       const res = await delHouseRoom(this.data.spaceInfo.spaceId)
 
       if (res.success) {
-        roomBinding.store.updateSpaceList()
+        spaceBinding.store.updateSpaceList()
         emitter.emit('homeInfoEdit')
 
         wx.navigateBack()

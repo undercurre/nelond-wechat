@@ -1,14 +1,14 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
-import { projectBinding, projectStore, roomBinding } from '../../../store/index'
+import { projectBinding, projectStore, spaceBinding } from '../../../store/index'
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { delGroup, queryGroup, renameGroup, updateGroup } from '../../../apis/index'
 import { proName } from '../../../config/index'
 import Dialog from '@vant/weapp/dialog/dialog'
 import { emitter } from '../../../utils/index'
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [roomBinding, projectBinding] }), pageBehavior],
+  behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding, projectBinding] }), pageBehavior],
   /**
    * 页面的初始数据
    */

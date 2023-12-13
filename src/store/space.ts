@@ -53,7 +53,7 @@ export const spaceStore = observable({
   },
 })
 
-export const roomBinding = {
+export const spaceBinding = {
   store: spaceStore,
   fields: ['spaceList', 'currentSpaceIndex', 'spaceDeviceList', 'currentSpace'],
   actions: [],

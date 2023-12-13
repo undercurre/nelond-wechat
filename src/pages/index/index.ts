@@ -3,7 +3,7 @@ import { runInAction } from 'mobx-miniprogram'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import {
   othersBinding,
-  roomBinding,
+  spaceBinding,
   userBinding,
   projectBinding,
   othersStore,
@@ -40,7 +40,7 @@ ComponentWithComputed({
     pureDataPattern: /^_/, // 指定所有 _ 开头的数据字段为纯数据字段
   },
   behaviors: [
-    BehaviorWithStore({ storeBindings: [othersBinding, roomBinding, userBinding, projectBinding] }),
+    BehaviorWithStore({ storeBindings: [othersBinding, spaceBinding, userBinding, projectBinding] }),
     pageBehavior,
   ],
   data: {

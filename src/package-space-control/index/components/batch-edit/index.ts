@@ -2,7 +2,7 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { getModelName, PRO_TYPE, SCREEN_PID } from '../../../../config/index'
 import { waitingBatchDeleteDevice, batchUpdate, renameGroup } from '../../../../apis/index'
-import { deviceBinding, deviceStore, projectStore, roomBinding, spaceStore } from '../../../../store/index'
+import { deviceBinding, deviceStore, projectStore, spaceBinding, spaceStore } from '../../../../store/index'
 import Toast from '@vant/weapp/toast/toast'
 import Dialog from '@vant/weapp/dialog/dialog'
 import { storage, checkInputNameIllegal, emitter, showLoading, hideLoading } from '../../../../utils/index'
@@ -12,7 +12,7 @@ let timeId: number
 ComponentWithComputed({
   options: {},
 
-  behaviors: [BehaviorWithStore({ storeBindings: [deviceBinding, roomBinding] })],
+  behaviors: [BehaviorWithStore({ storeBindings: [deviceBinding, spaceBinding] })],
 
   properties: {
     editSelectList: {

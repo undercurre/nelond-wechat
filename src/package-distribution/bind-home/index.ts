@@ -4,13 +4,13 @@ import Toast from '@vant/weapp/toast/toast'
 import pageBehaviors from '../../behaviors/pageBehaviors'
 import { getCurrentPageParams, checkInputNameIllegal, Logger } from '../../utils/index'
 import { queryDeviceInfoByDeviceId, editDeviceInfo, batchUpdate } from '../../apis/index'
-import { projectBinding, projectStore, roomBinding, deviceStore } from '../../store/index'
+import { projectBinding, projectStore, spaceBinding, deviceStore } from '../../store/index'
 import { PRO_TYPE, defaultImgDir } from '../../config/index'
 import cacheData from '../common/cacheData'
 
 ComponentWithComputed({
   options: {},
-  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, roomBinding] }), pageBehaviors],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, spaceBinding] }), pageBehaviors],
   /**
    * 组件的属性列表
    */

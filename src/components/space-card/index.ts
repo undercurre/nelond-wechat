@@ -1,12 +1,12 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { runInAction } from 'mobx-miniprogram'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import { roomBinding, spaceStore } from '../../store/index'
+import { spaceBinding, spaceStore } from '../../store/index'
 import { SpaceLevel, spaceIcon } from '../../config/index'
 
 ComponentWithComputed({
   options: {},
-  behaviors: [BehaviorWithStore({ storeBindings: [roomBinding] })],
+  behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding] })],
   /**
    * 组件的属性列表
    */

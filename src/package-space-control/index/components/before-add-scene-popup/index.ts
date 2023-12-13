@@ -3,14 +3,14 @@ import { runInAction } from 'mobx-miniprogram'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { findDevice, sendDevice } from '../../../../apis/index'
 import { PRO_TYPE } from '../../../../config/index'
-import { deviceStore, roomBinding, sceneBinding, sceneStore } from '../../../../store/index'
+import { deviceStore, spaceBinding, sceneBinding, sceneStore } from '../../../../store/index'
 import { toPropertyDesc } from '../../../../utils/index'
 
 ComponentWithComputed({
   options: {
     pureDataPattern: /^_/, // 指定所有 _ 开头的数据字段为纯数据字段
   },
-  behaviors: [BehaviorWithStore({ storeBindings: [sceneBinding, roomBinding] })],
+  behaviors: [BehaviorWithStore({ storeBindings: [sceneBinding, spaceBinding] })],
   /**
    * 组件的属性列表
    */

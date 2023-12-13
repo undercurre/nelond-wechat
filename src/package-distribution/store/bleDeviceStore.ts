@@ -1,6 +1,6 @@
 import { observable, runInAction } from 'mobx-miniprogram'
 import { BleClient, bleUtil, Logger, throttle, unique } from '../../utils/index'
-import { roomBinding, deviceBinding } from '../../store/index'
+import { spaceBinding, deviceBinding } from '../../store/index'
 import { batchCheckDevice, batchGetProductInfoByBPid } from '../../apis/index'
 
 let _foundList = [] as IBleBaseInfo[]
@@ -312,8 +312,8 @@ function handleBleDeviceInfo(
       proType,
       protocolVersion: deviceInfo.protocolVersion,
     }),
-    spaceId: roomBinding.store.currentSpace.spaceId,
-    spaceName: roomBinding.store.currentSpace.spaceName,
+    spaceId: spaceBinding.store.currentSpace.spaceId,
+    spaceName: spaceBinding.store.currentSpace.spaceName,
     switchList: [],
     status: 'waiting',
     requesting: false,

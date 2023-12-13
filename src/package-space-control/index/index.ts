@@ -2,7 +2,7 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import {
   userBinding,
-  roomBinding,
+  spaceBinding,
   deviceBinding,
   sceneBinding,
   projectBinding,
@@ -76,7 +76,7 @@ function getIndex(x: number, y: number) {
 
 ComponentWithComputed({
   behaviors: [
-    BehaviorWithStore({ storeBindings: [userBinding, roomBinding, deviceBinding, sceneBinding, projectBinding] }),
+    BehaviorWithStore({ storeBindings: [userBinding, spaceBinding, deviceBinding, sceneBinding, projectBinding] }),
     pageBehavior,
   ],
   /**

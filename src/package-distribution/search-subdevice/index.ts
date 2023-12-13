@@ -2,7 +2,7 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { runInAction } from 'mobx-miniprogram'
 import Toast from '@vant/weapp/toast/toast'
-import { deviceStore, projectBinding, projectStore, roomBinding } from '../../store/index'
+import { deviceStore, projectBinding, projectStore, spaceBinding } from '../../store/index'
 import { bleDevicesBinding, bleDevicesStore } from '../store/bleDeviceStore'
 import { delay, emitter, getCurrentPageParams, Logger, strUtil } from '../../utils/index'
 import pageBehaviors from '../../behaviors/pageBehaviors'
@@ -21,7 +21,7 @@ ComponentWithComputed({
     pureDataPattern: /^_/, // 指定所有 _ 开头的数据字段为纯数据字段
   },
 
-  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, roomBinding, bleDevicesBinding] }), pageBehaviors],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, spaceBinding, bleDevicesBinding] }), pageBehaviors],
 
   /**
    * 页面的初始数据
@@ -205,7 +205,7 @@ ComponentWithComputed({
             isChecked: true,
             status: 'waiting' as const,
             deviceUuid: device.deviceId,
-            spaceId: roomBinding.store.currentSpace.spaceId, // 默认为当前空间
+            spaceId: spaceBinding.store.currentSpace.spaceId, // 默认为当前空间
             mac: device.deviceId,
           }
         })

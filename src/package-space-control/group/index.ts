@@ -1,7 +1,7 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import pageBehaviors from '../../behaviors/pageBehaviors'
-import { deviceStore, projectBinding, roomBinding } from '../../store/index'
+import { deviceStore, projectBinding, spaceBinding } from '../../store/index'
 import { emitter } from '../../utils/index'
 import { StatusType } from './typings'
 import { addGroup, renameGroup, delGroup, updateGroup } from '../../apis/device'
@@ -9,7 +9,7 @@ import { addGroup, renameGroup, delGroup, updateGroup } from '../../apis/device'
 let timeoutId: number | null
 
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, roomBinding] }), pageBehaviors],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, spaceBinding] }), pageBehaviors],
   data: {
     deviceList: [] as Device.DeviceItem[],
     status: 'processing' as StatusType,

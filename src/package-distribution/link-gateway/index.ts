@@ -3,7 +3,7 @@ import Dialog from '@vant/weapp/dialog/dialog'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import pageBehaviors from '../../behaviors/pageBehaviors'
 import { queryDeviceOnlineStatus, bindDevice } from '../../apis/index'
-import { projectBinding, roomBinding, deviceBinding } from '../../store/index'
+import { projectBinding, spaceBinding, deviceBinding } from '../../store/index'
 import { WifiSocket, getCurrentPageParams, strUtil, isAndroid, isAndroid10Plus, Logger } from '../../utils/index'
 import { stepListForBind, stepListForChangeWiFi } from './conifg'
 import { defaultImgDir } from '../../config/index'
@@ -401,7 +401,7 @@ ComponentWithComputed({
       const res = await bindDevice({
         deviceId: deviceId,
         projectId: projectBinding.store.currentProjectId,
-        spaceId: roomBinding.store.currentSpace.spaceId,
+        spaceId: spaceBinding.store.currentSpace.spaceId,
         sn,
         deviceName: deviceName,
       })

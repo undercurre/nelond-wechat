@@ -1,9 +1,9 @@
-import { projectBinding, roomBinding, spaceStore } from '../../../../store/index'
+import { projectBinding, spaceBinding, spaceStore } from '../../../../store/index'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 
 Component({
   options: {},
-  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, roomBinding] })],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, spaceBinding] })],
   /**
    * 组件的属性列表
    */
