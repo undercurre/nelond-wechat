@@ -222,30 +222,6 @@ ComponentWithComputed({
         this.clearOptionList()
       }, 300)
     },
-    onInviteMemberClick() {
-      this.configPopupInviteOption()
-
-      const item = this.data.actionList.find((item) => {
-        return item.key === 'BE_VIS'
-      })
-      this.setData({ curOptionItem: item })
-      this.setPopupOptionPick('BE_VIS')
-
-      if (this.data.isAdmin) {
-        this.setData({
-          isEditRole: false,
-          curClickUserItem: null,
-          isNeedShare: true,
-        })
-        this.onComfirmClick()
-      } else {
-        this.setData({
-          isEditRole: true,
-          curClickUserItem: null,
-          isNeedShare: true,
-        })
-      }
-    },
     onPopupClick(data: any) {
       const item = data.currentTarget.dataset.item
       this.setData({ curOptionItem: item })

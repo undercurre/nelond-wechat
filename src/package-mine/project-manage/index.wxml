@@ -16,7 +16,7 @@
         bind:tap="handleShowHomeSelectMenu"
         id="homeName"
       >
-        <text class="text-40 text-hex-1E2C46 font-semibold leading-56rpx">{{ projectName }}</text>
+        <text class="text-40 text-hex-1E2C46 font-semibold leading-56rpx">{{ currentProjectName }}</text>
 
         <svg-icon
           id="homeSelectArrow"
@@ -27,16 +27,10 @@
           height="48rpx"
         />
       </view>
-
-      <image
-        class="w-48 h-48"
-        src="/assets/img/home-manage/setting.png"
-        bind:tap="toSetting"
-      ></image>
     </view>
 
     <view class="pt-16rpx leading-40rpx text-black-59 text-28 opacity-75">
-      <text>空间{{ currentProjectDetail.roomCount }}｜设备{{ currentProjectDetail.deviceCount }}｜成员{{ currentProjectDetail.userCount }}</text>
+      <text>设备{{ currentProjectDetail.deviceCount }}｜成员{{ currentProjectDetail.userCount }}</text>
     </view>
   </view>
 
@@ -69,16 +63,6 @@
         />
       </van-cell-group>
     </view>
-
-    <view class="flex flex-row gap-46rpx pt-30rpx px-32rpx">
-      <van-button
-        class="w-full"
-        size="large"
-        type="primary"
-        bind:click="createHome"
-        >新建项目</van-button
-      >
-    </view>
   </view>
 </view>
 
@@ -88,67 +72,3 @@
   isShow="{{selectHomeMenu.isShow}}"
   bind:select="hideMenu"
 ></project-select-menu>
-
-<van-action-sheet
-  show="{{ isShowSetting }}"
-  actions="{{ settingActions }}"
-  cancel-text="取消"
-  bind:close="onCloseSetting"
-  bind:select="onSelectSetting"
-  bind:cancel="onCloseSetting"
-/>
-
-<van-popup
-  round
-  show="{{ isEditName }}"
-  bind:close="onCloseEditName"
-  position="bottom"
-  closeable
->
-  <view class="pb-100rpx">
-    <text class="block pt-48rpx pb-64rpx text-center leading-50rpx text-36 text-black-2a font-medium">{{namingPopupTitle}}</text>
-
-    <text class="block pl-48rpx pb-32rpx text-28">项目名称</text>
-
-    <view class="mx-32rpx">
-      <van-field
-        value="{{ homeInfoEdited.projectName }}"
-        placeholder="请输入项目名称"
-        custom-style="padding: 32rpx 32rpx;background-color: #F6FAFD;border-radius: 24rpx;"
-        clearable="{{true}}"
-        focus="{{isFocus}}"
-        bind:change="changeHouseName"
-        border="{{false}}"
-      >
-      </van-field>
-    </view>
-
-    <view class="flex flex-row gap-46rpx pt-80rpx px-32rpx">
-      <van-button
-        class="grow"
-        size="large"
-        bind:click="onCloseEditName"
-        >取消</van-button
-      >
-
-      <van-button
-        disabled="{{!homeInfoEdited.projectName}}"
-        class="grow"
-        size="large"
-        type="primary"
-        bind:click="confirmHomeInfo"
-        >确定</van-button
-      >
-    </view>
-  </view>
-</van-popup>
-
-<van-dialog id="van-dialog" />
-
-<transfer-project-popup
-  wx:if="{{currentProjectDetail.houseUserAuth === 1}}"
-  show="{{isTransferHome}}"
-  bind:close="closeTransferHome"
-></transfer-project-popup>
-
-<van-toast id="van-toast" />
