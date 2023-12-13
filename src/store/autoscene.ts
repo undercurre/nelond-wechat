@@ -1,6 +1,6 @@
 import { observable, runInAction } from 'mobx-miniprogram'
 import { queryAutoSceneListByHouseId, setAutoSceneEnabled } from '../apis/scene'
-import { homeStore } from './home'
+import { projectStore } from './project'
 import { strUtil } from '../utils/index'
 import { PRO_TYPE } from '../config/index'
 import { deviceStore } from './device'
@@ -65,7 +65,7 @@ export const autosceneStore = observable({
     }
   },
 
-  async updateAllRoomAutoSceneList(projectId: string = homeStore.currentProjectId) {
+  async updateAllRoomAutoSceneList(projectId: string = projectStore.currentProjectId) {
     const res = await queryAutoSceneListByHouseId(projectId)
     console.log('自动化场景列表', res)
 

@@ -1,4 +1,4 @@
-export * from './home'
+export * from './project'
 export * from './scene'
 export * from './code'
 export * from './device'

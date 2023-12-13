@@ -36,7 +36,7 @@
     <van-cell-group inset>
       <van-cell
         icon="/assets/img/mine/home.png"
-        title="家庭管理"
+        title="项目管理"
         is-link
         center
         data-url="{{urls.homeControl}}"

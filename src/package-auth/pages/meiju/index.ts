@@ -38,7 +38,7 @@ ComponentWithComputed({
           state: 1,
           response_type: 'code',
           redirect_uri: strUtil.getUrlWithParams(`${getH5BaseUrl()}/index.html`, {
-            miniProgramUrl: '/package-auth/pages/home-list/index',
+            miniProgramUrl: '/package-auth/pages/project-list/index',
           }),
         }),
       })

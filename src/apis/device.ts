@@ -52,7 +52,7 @@ export async function allDevicePowerControl(
 }
 
 /**
- * 设备控制-根据家庭id房间id查询房间的子设备
+ * 设备控制-根据项目id空间id查询空间的子设备
  */
 export async function querySubDeviceList(
   data: { projectId: string; spaceId: string },
@@ -357,7 +357,7 @@ export async function findDevice(
 }
 
 /**
- * 云端获取网关下的传感器列表（未绑定到家庭的）
+ * 云端获取网关下的传感器列表（未绑定到项目的）
  * @param gatewayId
  */
 export async function getUnbindSensor(data: { gatewayId: string }, option?: { loading?: boolean }) {
@@ -384,10 +384,10 @@ export async function checkOtaVersion(deviceId: string, options?: { loading?: bo
 }
 
 /**
- * 设备管理-修改设备的名称、按键名称、所在房间
+ * 设备管理-修改设备的名称、按键名称、所在空间
  * type:0 修改设备名字，传入设备名称
- * 1：修改房间
- * 2：同时修改设备名字、房间
+ * 1：修改空间
+ * 2：同时修改设备名字、空间
  * 3：修改开关名字
  */
 export async function editDeviceInfo(
@@ -778,7 +778,7 @@ export async function delSwitchAndSwitchAssociated(data: { relIds: string }, opt
 }
 
 /**
- * 根据家庭id获取面板是否已经关联过灯
+ * 根据项目id获取面板是否已经关联过灯
  */
 export async function getLampDeviceByHouseId(data: { projectId: string }, options?: { loading?: boolean }) {
   return await mzaioRequest.post<Array<Device.IMzgdLampDeviceInfoDTO>>({
@@ -896,7 +896,7 @@ export async function groupControl(
 ) {
   const { groupId, controlAction } = data
 
-  const groupInfo = deviceStore.allRoomDeviceList.find((item) => item.deviceId === groupId)
+  const groupInfo = deviceStore.allDeviceList.find((item) => item.deviceId === groupId)
 
   // 仅子设备需要判断是否局域网控制
   if (homOs.isSupportLan({ groupId, updateStamp: groupInfo?.updateStamp })) {

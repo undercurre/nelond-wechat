@@ -18,6 +18,6 @@
     "cell": "./components/cell/index",
     "cell-default": "./components/cell-default/index",
     "drag": "/components/drag/index",
-    "edit-room-popup": "./components/edit-room-popup/index"
+    "edit-space-popup": "./components/edit-space-popup/index"
   }
 }

@@ -1,5 +1,5 @@
 import { observable, runInAction } from 'mobx-miniprogram'
-import { homeStore } from './index'
+import { projectStore } from './index'
 import { queryDeviceOtaUpdateList } from '../apis/index'
 
 export const otaStore = observable({
@@ -12,7 +12,7 @@ export const otaStore = observable({
   },
 
   async updateList() {
-    const res = await queryDeviceOtaUpdateList(homeStore.currentProjectDetail.projectId)
+    const res = await queryDeviceOtaUpdateList(projectStore.currentProjectDetail.projectId)
     if (res.success) {
       runInAction(() => {
         otaStore.otaUpdateList = res.result.otaUpdateList

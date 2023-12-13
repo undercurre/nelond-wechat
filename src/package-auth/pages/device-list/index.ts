@@ -4,12 +4,12 @@ import pageBehaviors from '../../../behaviors/pageBehaviors'
 import { bindMeiju, getMeijuDeviceList, syncMeijuDeviceList, delDeviceSubscribe } from '../../../apis/index'
 import { delay } from '../../../utils/index'
 import { defaultImgDir } from '../../../config/index'
-import { homeStore, homeBinding } from '../../../store/index'
+import { projectStore, projectBinding } from '../../../store/index'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
 
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [homeBinding] }), pageBehaviors],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding] }), pageBehaviors],
 
   /**
    * 页面的初始数据
@@ -24,7 +24,7 @@ ComponentWithComputed({
 
   methods: {
     /**
-     * @param query.homeId 上一页选择的美居家庭id
+     * @param query.homeId 上一页选择的美居项目id
      */
     async onLoad(query: { homeId: string }) {
       console.log('device list onload', query, this.data.currentProjectId)
@@ -37,7 +37,7 @@ ComponentWithComputed({
           this.setData({
             deviceList,
           })
-          homeStore.updateRoomCardList()
+          projectStore.updateSpaceCardList()
         } else {
           Toast(res.msg)
         }
@@ -50,7 +50,7 @@ ComponentWithComputed({
           this.setData({
             deviceList,
           })
-          homeStore.updateRoomCardList()
+          projectStore.updateSpaceCardList()
         } else {
           Toast(res.msg)
         }
@@ -76,7 +76,7 @@ ComponentWithComputed({
         this.setData({
           deviceList,
         })
-        homeStore.updateRoomCardList()
+        projectStore.updateSpaceCardList()
         Toast('同步成功')
       } else {
         Toast(res.msg)
@@ -85,7 +85,7 @@ ComponentWithComputed({
 
     async debindMeiju() {
       const dialogRes = await Dialog.confirm({
-        title: '取消授权后，美居家庭的设备将从HOMLUX家庭移除，请谨慎操作。',
+        title: '取消授权后，美居项目的设备将从HOMLUX项目移除，请谨慎操作。',
       }).catch(() => 'cancel')
 
       if (dialogRes === 'cancel') return
@@ -94,7 +94,7 @@ ComponentWithComputed({
       if (res.success) {
         Toast('已解除绑定')
 
-        homeStore.updateRoomCardList()
+        projectStore.updateSpaceCardList()
         await delay(1500)
 
         wx.switchTab({

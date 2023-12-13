@@ -27,7 +27,7 @@ ComponentWithComputed({
    * 组件的初始数据
    */
   data: {
-    allRoomDeviceList: Array<Device.DeviceItem>(),
+    allDeviceList: Array<Device.DeviceItem>(),
     checkedDevice: {},
     roomSelect: '0',
   },
@@ -41,20 +41,20 @@ ComponentWithComputed({
     /**
      * @description 所有待选设备列表
      * 如正在选择新设备，则传入 deviceList，即使用指定列表；否则显示所有设备
-     * ! 不按房间筛选
+     * ! 不按空间筛选
      */
     allDeviceList(data) {
-      const list = data.choosingNew ? data.list : data.allRoomDeviceList
+      const list = data.choosingNew ? data.list : data.allDeviceList
       return list.filter((d) => d.deviceType === 2)
     },
 
     /**
      * @description 显示待选设备列表
      * 如正在选择新设备，则传入 deviceList，即使用指定列表；否则显示所有设备
-     * isCurrentRoom 按房间筛选
+     * isCurrentRoom 按空间筛选
      */
     showDeviceList(data) {
-      const list = data.choosingNew ? data.list : data.allRoomDeviceList
+      const list = data.choosingNew ? data.list : data.allDeviceList
 
       return list.filter((device) => {
         const isScreen = SCREEN_PID.includes(device.productId)
@@ -69,7 +69,7 @@ ComponentWithComputed({
     async ready() {
       await roomBinding.store.updateSpaceList()
 
-      deviceBinding.store.updateAllRoomDeviceList()
+      deviceBinding.store.updateallDeviceList()
     },
   },
 

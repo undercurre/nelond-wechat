@@ -19,14 +19,14 @@ Component({
         id: 0,
         icon: '/package-automation/assets/imgs/automation/device.png',
         title: '设备',
-        desc: '执行房间内的设备动作',
+        desc: '执行空间内的设备动作',
         key: 'device',
       },
       // {
       //   id: 1,
       //   icon: '/package-automation/assets/imgs/automation/scene.png',
       //   title: '场景',
-      //   desc: '执行房间内的场景',
+      //   desc: '执行空间内的场景',
       //   key: 'scene',
       // },
       // {

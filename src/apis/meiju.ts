@@ -1,8 +1,8 @@
 import { mzaioRequest } from '../utils/index'
 
 /**
- * 查询美居家庭列表
- * @param code，美居登录后返回的授权码，正常授权流程必传，因为暂没有二次获取家庭列表的路径
+ * 查询美居项目列表
+ * @param code，美居登录后返回的授权码，正常授权流程必传，因为暂没有二次获取项目列表的路径
  */
 export async function getMeijuHomeList(code?: string) {
   return await mzaioRequest.post<{ mideaHouseList: Meiju.MeijuHome[] }>({
@@ -17,7 +17,7 @@ export async function getMeijuHomeList(code?: string) {
 
 /**
  * 查询用户美居授权绑定关系
- * @param projectId 美居家庭id
+ * @param projectId 美居项目id
  */
 export async function queryUserMideaAuthInfo(projectId: string) {
   return await mzaioRequest.post<{ mideaAuthFlag: boolean; projectName: string }>({
@@ -32,8 +32,8 @@ export async function queryUserMideaAuthInfo(projectId: string) {
 
 /**
  * 美居用户设备授权（同时返回美居设备列表）
- * @param mideaHouseId 美居家庭id
- * @param projectId Homlux 家庭id
+ * @param mideaHouseId 美居项目id
+ * @param projectId Homlux 项目id
  */
 export async function bindMeiju({ projectId, mideaHouseId }: { projectId: string; mideaHouseId: string }) {
   return await mzaioRequest.post<Meiju.MeijuDevice[]>({
@@ -58,7 +58,7 @@ export async function getMeijuDeviceList(projectId: string) {
 
 /**
  * 同步美居设备列表
- * @param projectId Homlux 家庭id
+ * @param projectId Homlux 项目id
  */
 export async function syncMeijuDeviceList(projectId: string) {
   return await mzaioRequest.post<Meiju.MeijuDevice[]>({
@@ -71,7 +71,7 @@ export async function syncMeijuDeviceList(projectId: string) {
 
 /**
  * 查询第三方授权
- * @param projectId Homlux 家庭id
+ * @param projectId Homlux 项目id
  */
 export async function queryUserThirdPartyInfo(
   projectId: string,
@@ -88,7 +88,7 @@ export async function queryUserThirdPartyInfo(
 
 /**
  * 取消第三方授权
- * @param projectId Homlux 家庭id
+ * @param projectId Homlux 项目id
  */
 export async function delDeviceSubscribe(projectId: string) {
   return await mzaioRequest.post({
@@ -164,8 +164,8 @@ export async function bindMideaDevice(params: {
   applianceType?: string // 【品类码】 对应Android/iOS AP配网返回的参数deviceTpye【设备品类】
   bindType?: string // 绑定类型，默认AP配网可不传，例如大屏扫码的类型为qrcode
   deviceId: string // 美居设备id
-  projectId: string // homLux家庭id
-  spaceId: string // homLux房间id
+  projectId: string // homLux项目id
+  spaceId: string // homLux空间id
   verificationCode?: string // 验证码，bindType不传或者为ap时必传
 }) {
   return await mzaioRequest.post({

@@ -3,7 +3,7 @@ import Dialog from '@vant/weapp/dialog/dialog'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import pageBehaviors from '../../behaviors/pageBehaviors'
 import { queryDeviceOnlineStatus, bindDevice } from '../../apis/index'
-import { homeBinding, roomBinding, deviceBinding } from '../../store/index'
+import { projectBinding, roomBinding, deviceBinding } from '../../store/index'
 import { WifiSocket, getCurrentPageParams, strUtil, isAndroid, isAndroid10Plus, Logger } from '../../utils/index'
 import { stepListForBind, stepListForChangeWiFi } from './conifg'
 import { defaultImgDir } from '../../config/index'
@@ -391,17 +391,17 @@ ComponentWithComputed({
     async requestBindDevice(sn: string, deviceId: string) {
       const params = getCurrentPageParams()
 
-      const existDevice = deviceBinding.store.allRoomDeviceList.find((item) => item.sn === sn)
+      const existDevice = deviceBinding.store.allDeviceList.find((item) => item.sn === sn)
 
-      let gatewayNum = deviceBinding.store.allRoomDeviceList.filter((item) => item.proType === '0x16').length // 网关数量
+      let gatewayNum = deviceBinding.store.allDeviceList.filter((item) => item.proType === '0x16').length // 网关数量
 
       // 强绑情况下，取旧命名
       const deviceName = existDevice ? existDevice.deviceName : params.deviceName + (gatewayNum > 0 ? ++gatewayNum : '')
 
       const res = await bindDevice({
         deviceId: deviceId,
-        projectId: homeBinding.store.currentProjectId,
-        spaceId: roomBinding.store.currentRoom.spaceId,
+        projectId: projectBinding.store.currentProjectId,
+        spaceId: roomBinding.store.currentSpace.spaceId,
         sn,
         deviceName: deviceName,
       })

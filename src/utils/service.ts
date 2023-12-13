@@ -1,6 +1,6 @@
 // service模块存放项目的相关业务代码
 import { connectHouseSocket } from '../apis/websocket'
-import { homeStore, userStore } from '../store/index'
+import { projectStore, userStore } from '../store/index'
 import { isLogined, Logger, storage, isConnect, verifyNetwork } from './index'
 import { emitter } from './eventBus'
 import homos from 'js-homos'
@@ -8,7 +8,7 @@ import homos from 'js-homos'
 export function logout() {
   storage.remove('mobilePhone')
   storage.remove('token')
-  storage.remove('localKey') // 清除局域网的家庭key
+  storage.remove('localKey') // 清除局域网的项目key
   userStore.logout()
   homos.logout()
   closeWebSocket()
@@ -42,7 +42,7 @@ export async function startWebsocketService() {
     Logger.log('已存在ws连接，正在关闭已有连接')
     await socketTask?.close({ code: 1000 })
   }
-  socketTask = connectHouseSocket(homeStore.currentProjectDetail.projectId)
+  socketTask = connectHouseSocket(projectStore.currentProjectDetail.projectId)
   socketTask.onClose(onSocketClose)
   socketTask.onOpen((res) => {
     isConnecting = false

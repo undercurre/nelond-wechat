@@ -191,8 +191,8 @@ async function checkBleDeviceList(list: IBleBaseInfo[]) {
 
     // 过滤已经配网的设备
     // 设备网络状态 0x00：未入网   0x01：正在入网   0x02:  已经入网
-    // 但由于丢包情况，设备本地状态不可靠，需要查询云端是否存在该设备的绑定状态（是否存在家庭绑定关系）结合判断是否真正配网
-    // 2、过滤云端存在房间绑定关系且设备本地状态为02(已绑定状态)的设备
+    // 但由于丢包情况，设备本地状态不可靠，需要查询云端是否存在该设备的绑定状态（是否存在项目绑定关系）结合判断是否真正配网
+    // 2、过滤云端存在空间绑定关系且设备本地状态为02(已绑定状态)的设备
     const isBind = cloudDeviceInfo.spaceId && isConfig === '02'
 
     if (isBind) {
@@ -277,7 +277,7 @@ function handleBleDeviceInfo(
 
   Logger.log(`成功发现${deviceName}：${zigbeeMac}`)
 
-  const bindNum = deviceBinding.store.allRoomDeviceList.filter(
+  const bindNum = deviceBinding.store.allDeviceList.filter(
     (item) => item.proType === proType && item.productId === modelId,
   ).length // 已绑定的相同设备数量
 
@@ -312,8 +312,8 @@ function handleBleDeviceInfo(
       proType,
       protocolVersion: deviceInfo.protocolVersion,
     }),
-    spaceId: roomBinding.store.currentRoom.spaceId,
-    spaceName: roomBinding.store.currentRoom.spaceName,
+    spaceId: roomBinding.store.currentSpace.spaceId,
+    spaceName: roomBinding.store.currentSpace.spaceName,
     switchList: [],
     status: 'waiting',
     requesting: false,

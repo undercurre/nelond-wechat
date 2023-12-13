@@ -35,13 +35,13 @@
     </view>
   </block>
 
-  <text class="label">选择房间</text>
+  <text class="label">选择空间</text>
 
   <view class="flex flex-row flex-wrap gap-32rpx">
     <text
-      wx:for="{{roomList}}"
+      wx:for="{{spaceList}}"
       wx:key="spaceId"
-      class="px-32rpx rounded-28rpx text-28 leading-56rpx {{ item.spaceId === deviceInfo.spaceId ? 'room-checked text-white' : 'bg-hex-DFE1E5 text-black-59'}}"
+      class="px-32rpx rounded-28rpx text-28 leading-56rpx {{ item.spaceId === deviceInfo.spaceId ? 'space-checked text-white' : 'bg-hex-DFE1E5 text-black-59'}}"
       bind:tap="selectRoom"
       data-index="{{index}}"
       >{{ item.spaceName }}</text
@@ -60,10 +60,10 @@
   </view>
 </view>
 
-<add-room
+<add-space
   show="{{ isAddRoom }}"
   bind:close="closeAddRoom"
-></add-room>
+></add-space>
 
 <import src="/commons/templates/popup.wxml" />
 <van-popup

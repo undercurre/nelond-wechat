@@ -1,14 +1,14 @@
-import { deviceStore, homeStore } from '../store/index'
+import { deviceStore, projectStore } from '../store/index'
 import homOs from 'js-homos'
 import { Logger, emitter, debounce } from './index'
 
 export async function initHomeOs() {
-  await homeStore.initLocalKey()
+  await projectStore.initLocalKey()
 
   // 调试阶段可写死传递host参数，PC模拟调试
   homOs.login({
-    homeId: homeStore.currentProjectDetail.projectId,
-    key: homeStore.key,
+    homeId: projectStore.currentProjectDetail.projectId,
+    key: projectStore.key,
     // host: { "ip": "192.168.3.9", "devId": "1694507652870764", SSID: 'test' },
   })
 
@@ -34,7 +34,7 @@ export async function initHomeOs() {
         },
       })
     } else if (topic === 'updateDeviceListLan' || topic === 'updateGroupListLan') {
-      Logger.console('mqtt局域网家庭设备、灯组数据更新')
+      Logger.console('mqtt局域网项目设备、灯组数据更新')
       updateHomeDataLanInfo() // 防抖处理
     } else {
       Logger.console('➤ 未处理的mqtt推送：', res)
@@ -43,11 +43,11 @@ export async function initHomeOs() {
 }
 
 /**
- * 局域网家庭设备、灯组数据更新
+ * 局域网项目设备、灯组数据更新
  */
 const updateHomeDataLanInfo = debounce(() => {
-  Logger.console('触发局域网家庭数据更新')
-  deviceStore.updateAllRoomDeviceListLanStatus()
+  Logger.console('触发局域网项目数据更新')
+  deviceStore.updateallDeviceListLanStatus()
   emitter.emit('msgPush', {
     source: 'mqtt',
     result: {

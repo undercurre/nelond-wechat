@@ -253,7 +253,7 @@
   bind:close="handleConditionClose"
   bind:conditionClicked="onConditionClicked"
 />
-<edit-room-popup
+<edit-space-popup
   value="{{spaceId}}"
   show="{{showEditRoomPopup}}"
   bind:close="handleSceneRoomEditCancel"

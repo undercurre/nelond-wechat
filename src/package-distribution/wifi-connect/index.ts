@@ -64,7 +64,7 @@ ComponentWithComputed({
       if (data.type === 'changeWifi') {
         title = '重新联网'
       } else {
-        title = '连接家庭Wi-Fi'
+        title = '连接项目Wi-Fi'
       }
 
       return title

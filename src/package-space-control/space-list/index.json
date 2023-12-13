@@ -1,0 +1,7 @@
+{
+  "component": true,
+  "usingComponents": {
+    "space-card": "/components/space-card/index"
+  },
+  "navigationStyle": "custom"
+}

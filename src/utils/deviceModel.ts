@@ -24,7 +24,7 @@ export function transferDeviceProperty(proType: string, properties: IAnyObject) 
 
   // 灯光属性
   if (proType === PRO_TYPE.light) {
-    const { maxColorTemp, minColorTemp } = properties.colorTempRange || properties // 色温范围，房间首页的数据的色温属性可能已经被转换过，可能不存在colorTempRange属性
+    const { maxColorTemp, minColorTemp } = properties.colorTempRange || properties // 色温范围，空间首页的数据的色温属性可能已经被转换过，可能不存在colorTempRange属性
 
     result.maxColorTemp = maxColorTemp
     result.minColorTemp = minColorTemp

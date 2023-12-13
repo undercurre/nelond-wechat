@@ -252,7 +252,7 @@
   bind:confirm="handleEffectiveTimeConfirm"
 />
 <!-- <add-condition-popup show="{{showEditConditionPopup}}" bind:close="handleConditionClose" bind:cancel="handleTimeConditionReturn" bind:confirm="handleEffectiveTimeConfirm" bind:conditionClicked="onConditionClicked" /> -->
-<edit-room-popup
+<edit-space-popup
   value="{{spaceId}}"
   show="{{showEditRoomPopup}}"
   bind:close="handleSceneRoomEditCancel"

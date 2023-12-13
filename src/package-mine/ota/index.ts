@@ -1,11 +1,11 @@
 import { execOtaUpdate, setOtaSchedule } from '../../apis/ota'
 import pageBehavior from '../../behaviors/pageBehaviors'
-import { homeBinding, homeStore, otaBinding, otaStore } from '../../store/index'
+import { projectBinding, projectStore, otaBinding, otaStore } from '../../store/index'
 import Toast from '@vant/weapp/toast/toast'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [otaBinding, homeBinding] }), pageBehavior],
+  behaviors: [BehaviorWithStore({ storeBindings: [otaBinding, projectBinding] }), pageBehavior],
 
   /**
    * 组件的初始数据
@@ -79,7 +79,7 @@ ComponentWithComputed({
         isLoading: true,
       })
       const res = await setOtaSchedule({
-        projectId: homeStore.currentProjectId,
+        projectId: projectStore.currentProjectId,
         jobStatus: this.data.autoUpdate ? 0 : 1,
       })
       if (res.success) {

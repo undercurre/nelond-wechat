@@ -3,7 +3,7 @@ import Toast from '@vant/weapp/toast/toast'
 import { deleteScene, findDevice, updateScene } from '../../apis/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { deviceStore, sceneStore, homeStore, roomStore } from '../../store/index'
+import { deviceStore, sceneStore, projectStore, spaceStore } from '../../store/index'
 import { PRO_TYPE, SENSOR_TYPE, getModelName, sceneImgDir } from '../../config/index'
 import {
   toPropertyDesc,
@@ -200,7 +200,7 @@ ComponentWithComputed({
       //处理三个传感器、场景和设备列表
       await Promise.all([
         sceneStore.updateAllRoomSceneList(),
-        deviceStore.updateAllRoomDeviceList(), //deviceStore.updateSubDeviceList(), //
+        deviceStore.updateallDeviceList(), //deviceStore.updateSubDeviceList(), //
       ])
       const sensorList = deviceStore.allRoomDeviceFlattenList.filter((item) => item.proType === PRO_TYPE.sensor)
       sensorList.forEach((item) => {
@@ -784,8 +784,8 @@ ComponentWithComputed({
           uniId: 'room',
           name: '手动点击场景',
           desc: [
-            roomStore.roomList.find((item) => item.spaceId === this.data.spaceId)?.spaceName ??
-              roomStore.roomList[0].spaceName,
+            spaceStore.spaceList.find((item) => item.spaceId === this.data.spaceId)?.spaceName ??
+              spaceStore.spaceList[0].spaceName,
           ],
           pic: '/package-automation/assets/imgs/automation/touch-materialized.png',
           productId: 'touch',
@@ -888,7 +888,7 @@ ComponentWithComputed({
 
     handleSceneConditionEdit() {
       if (this.data.isDefault) {
-        // 默认情景不能换房间
+        // 默认情景不能换空间
         return
       }
       // const { index } = e.currentTarget.dataset
@@ -1032,8 +1032,9 @@ ComponentWithComputed({
         conditionType: '0',
         deviceActions: [],
         deviceConditions: [],
-        projectId: homeStore.currentProjectDetail.projectId,
-        spaceId: this.data.spaceId === '' ? roomStore.roomList[roomStore.currentSpaceIndex].spaceId : this.data.spaceId,
+        projectId: projectStore.currentProjectDetail.projectId,
+        spaceId:
+          this.data.spaceId === '' ? spaceStore.spaceList[spaceStore.currentSpaceIndex].spaceId : this.data.spaceId,
         sceneIcon: this.data.sceneIcon,
         sceneName: this.data.sceneName,
         sceneType: '0',
@@ -1064,7 +1065,7 @@ ComponentWithComputed({
           const res = await deleteScene(this.data._sceneInfo.sceneId)
           if (res.success) {
             emitter.emit('sceneEdit')
-            homeStore.updateRoomCardList()
+            projectStore.updateSpaceCardList()
             wx.navigateBack()
           } else {
             Toast({ message: '删除失败', zIndex: 9999 })
@@ -1110,7 +1111,7 @@ ComponentWithComputed({
       const res = await updateScene(data)
       if (res.success) {
         emitter.emit('sceneEdit')
-        homeStore.updateRoomCardList()
+        projectStore.updateSpaceCardList()
         Toast({ message: '修改成功', zIndex: 9999 })
         wx.navigateBack()
       } else {
@@ -1130,7 +1131,7 @@ ComponentWithComputed({
       const delRes = await deleteScene(this.data._sceneInfo.sceneId)
       if (delRes.success) {
         emitter.emit('sceneEdit')
-        homeStore.updateRoomCardList()
+        projectStore.updateSpaceCardList()
         wx.navigateBack()
       } else {
         Toast({ message: '删除失败', zIndex: 9999 })

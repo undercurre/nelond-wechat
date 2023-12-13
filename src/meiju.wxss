@@ -312,7 +312,8 @@
   line-height: 72rpx;
   /* color: #000000; */
   padding-left: 56rpx;
-  font-weight: bold; /* kkk add */
+  font-weight: bold;
+  /* kkk add */
 }
 
 #meiju .content-item {
@@ -1374,10 +1375,10 @@
   margin: auto;
 }
 
-#meiju .room-list {
+#meiju .space-list {
 }
 
-#meiju .add-room-btn {
+#meiju .add-space-btn {
   width: 120rpx;
   display: inline-block;
   height: 72rpx;
@@ -1403,7 +1404,7 @@
   height: 56rpx;
 }
 
-#meiju .room-name {
+#meiju .space-name {
   display: inline-block;
   height: 72rpx;
   padding: 0rpx 32rpx;
@@ -1491,7 +1492,7 @@
   color: #488fff;
 }
 
-#meiju .before-one-room {
+#meiju .before-one-space {
   width: 32rpx;
   height: 32rpx;
   position: absolute;
@@ -1509,11 +1510,11 @@
   color: #fff;
 }
 
-#meiju .get-room-fail {
+#meiju .get-space-fail {
   text-align: center;
 }
 
-#meiju .try-get-room {
+#meiju .try-get-space {
   color: #488fff;
 }
 
@@ -2032,13 +2033,13 @@
   color: #333333;
 }
 
-#meiju .combined-result-room {
+#meiju .combined-result-space {
   position: relative;
   margin-left: 40rpx;
   color: #333333;
 }
 
-#meiju .combined-result-room::before {
+#meiju .combined-result-space::before {
   content: '';
   position: absolute;
   top: 11rpx;

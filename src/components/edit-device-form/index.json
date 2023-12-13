@@ -2,6 +2,6 @@
   "component": true,
   "styleIsolation": "apply-shared",
   "usingComponents": {
-    "add-room": "/components/add-room/index"
+    "add-space": "/components/add-space/index"
   }
 }

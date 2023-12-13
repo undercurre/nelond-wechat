@@ -18,7 +18,7 @@
     <view class="grow px-24rpx mt-28rpx">
       <edit-device-form
         device-name="{{deviceInfo.deviceName}}"
-        room-id="{{deviceInfo.spaceId}}"
+        space-id="{{deviceInfo.spaceId}}"
         switch-list="{{deviceInfo.switchList}}"
         bind:change="changeDeviceInfo"
       ></edit-device-form>

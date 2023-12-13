@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "project-select-menu": "../../components/project-select-menu/index",
+    "van-action-sheet": "@vant/weapp/action-sheet/index",
+    "transfer-project-popup": "./components/transfer-project-popup/index"
+  }
+}

@@ -1,7 +1,7 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
-import { deviceStore, homeBinding, homeStore, otaStore, roomBinding, roomStore } from '../../../store/index'
+import { deviceStore, projectBinding, projectStore, otaStore, roomBinding, spaceStore } from '../../../store/index'
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { waitingDeleteDevice, editDeviceInfo, queryDeviceInfoByDeviceId, sendDevice } from '../../../apis/index'
 import { proName, PRO_TYPE, SCREEN_PID } from '../../../config/index'
@@ -9,7 +9,7 @@ import Dialog from '@vant/weapp/dialog/dialog'
 import { emitter } from '../../../utils/index'
 
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [roomBinding, homeBinding] }), pageBehavior],
+  behaviors: [BehaviorWithStore({ storeBindings: [roomBinding, projectBinding] }), pageBehavior],
   /**
    * 页面的初始数据
    */
@@ -26,8 +26,8 @@ ComponentWithComputed({
 
   computed: {
     spaceName(data) {
-      if (data.roomList && data.spaceId) {
-        return data.roomList.find((room: { spaceId: string }) => room.spaceId === data.spaceId)?.spaceName
+      if (data.spaceList && data.spaceId) {
+        return data.spaceList.find((space: { spaceId: string }) => space.spaceId === data.spaceId)?.spaceName
       }
       return ''
     },
@@ -60,7 +60,7 @@ ComponentWithComputed({
     },
     belongsToGateway(data) {
       if (data.deviceInfo.gatewayId) {
-        const gateway = deviceStore.allRoomDeviceList.find((device) => device.deviceId === data.deviceInfo.gatewayId)
+        const gateway = deviceStore.allDeviceList.find((device) => device.deviceId === data.deviceInfo.gatewayId)
         if (gateway) {
           return `${gateway.deviceName} | ${gateway.spaceName}`
         }
@@ -153,7 +153,7 @@ ComponentWithComputed({
         deviceType: this.data.deviceInfo.deviceType,
         deviceId: this.data.deviceId,
         deviceName: this.data.deviceName,
-        projectId: homeStore.currentProjectDetail.projectId,
+        projectId: projectStore.currentProjectDetail.projectId,
       })
       if (res.success) {
         this.updateDeviceInfo()
@@ -181,13 +181,13 @@ ComponentWithComputed({
         deviceType: this.data.deviceInfo.deviceType,
         deviceId: this.data.deviceId,
         spaceId: this.data.spaceId,
-        projectId: homeStore.currentProjectDetail.projectId,
+        projectId: projectStore.currentProjectDetail.projectId,
       })
       if (res.success) {
         this.updateDeviceInfo()
-        await homeStore.updateRoomCardList()
-        await roomStore.updateSpaceList()
-        roomStore.updateRoomCardLightOnNum()
+        await projectStore.updateSpaceCardList()
+        await spaceStore.updateSpaceList()
+        spaceStore.updateRoomCardLightOnNum()
         emitter.emit('deviceEdit')
       }
     },
@@ -209,7 +209,7 @@ ComponentWithComputed({
         })
         if (res.success) {
           Toast('删除成功')
-          homeStore.updateRoomCardList()
+          projectStore.updateSpaceCardList()
           emitter.emit('deviceEdit')
           emitter.emit('homeInfoEdit')
           wx.navigateBack()

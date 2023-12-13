@@ -2,7 +2,7 @@
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { Logger, emitter } from '../../utils/index'
 import { queryDeviceOnlineStatus, sendCmdAddSubdevice, bindDevice } from '../../apis/index'
-import { deviceStore, homeStore } from '../../store/index'
+import { deviceStore, projectStore } from '../../store/index'
 
 Component({
   behaviors: [pageBehavior],
@@ -15,7 +15,7 @@ Component({
    * 组件的初始数据
    */
   data: {
-    homeId: 'd61261d887d74cf9bec90c827615ea8a', // 固定虚拟家庭Id
+    homeId: 'd61261d887d74cf9bec90c827615ea8a', // 固定虚拟项目Id
     spaceId: '11e70cffcb4c4af1bf6960994b4d3480',
     gatewayId: '',
     _timeId: 0,
@@ -24,7 +24,7 @@ Component({
 
   lifetimes: {
     ready() {
-      if (homeStore.currentProjectId === this.data.homeId) {
+      if (projectStore.currentProjectId === this.data.homeId) {
         emitter.on('bind_device', async (data) => {
           Logger.log(`收到绑定推送消息：子设备${data.deviceId}`)
 
@@ -35,7 +35,7 @@ Component({
     detached() {
       emitter.off('bind_device')
       clearInterval(this.data._timeId)
-      homeStore.updateHomeInfo()
+      projectStore.updateProjectInfo()
     },
   },
   /**
@@ -58,7 +58,7 @@ Component({
     },
 
     async addSubDevice() {
-      const list = deviceStore.allRoomDeviceList.filter((item) => item.deviceType === 1)
+      const list = deviceStore.allDeviceList.filter((item) => item.deviceType === 1)
 
       const action = await wx
         .showActionSheet({

@@ -1,6 +1,6 @@
 import Toast from '@vant/weapp/toast/toast'
 import { login, getCaptcha } from '../../apis/index'
-import { homeStore, othersStore, userStore } from '../../store/index'
+import { projectStore, othersStore, userStore } from '../../store/index'
 import { storage, showLoading, hideLoading, Logger } from '../../utils/index'
 import { defaultImgDir, UNACTIVATED } from '../../config/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
@@ -114,7 +114,7 @@ Component({
         await userStore.updateUserInfo()
         userStore.setIsLogin(true)
         othersStore.setIsInit(false)
-        homeStore.homeInit()
+        projectStore.spaceInit()
         wx.switchTab({
           url: '/pages/index/index',
         })

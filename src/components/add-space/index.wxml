@@ -1,0 +1,95 @@
+<import src="/commons/templates/popup.wxml" />
+<van-popup
+  show="{{ show }}"
+  position="bottom"
+  round
+  bind:close="handleClose"
+  safe-area-inset-bottom="{{false}}"
+  lock-scroll="{{true}}"
+  closeable
+  catchtouchmove="true"
+>
+  <view class="px-32rpx text-black-2a">
+    <view class="flex-center">
+      <template
+        is="title"
+        data="{{title: spaceId ? '编辑空间' : '添加空间'}}"
+      />
+    </view>
+
+    <view class="h-48rpx"></view>
+
+    <scroll-view
+      scroll-y
+      enhanced
+      show-scrollbar="{{false}}"
+      style="max-height: 50vh"
+    >
+      <view wx:if="{{isEditName}}">
+        <text
+          class="block pl-16rpx pb-24rpx text-28 text-hex-555659"
+          wx:if="{{isEditIcon}}"
+          >空间名称</text
+        >
+
+        <van-field
+          custom-style="padding: 32rpx 32rpx;background-color: #F6FAFD;border-radius: 24rpx;"
+          value="{{ spaceInfo.name }}"
+          placeholder="请输入空间名称"
+          clearable="{{true}}"
+          bind:clear="changeRoomName"
+          bind:change="changeRoomName"
+          border="{{false}}"
+        ></van-field>
+      </view>
+
+      <view wx:if="{{isEditIcon}}">
+        <text
+          class="block pl-16rpx pb-28rpx pt-48rpx text-28 text-hex-555659"
+          wx:if="{{isEditName}}"
+          >选择空间图标</text
+        >
+
+        <view class="flex flex-row flex-wrap gap-x-60rpx gap-y-40rpx pl-16rpx">
+          <view
+            wx:for="{{iconList}}"
+            wx:key="icon"
+            class="flex justify-center items-center"
+            data-icon="{{item.icon}}"
+            data-text="{{item.text}}"
+            bind:tap="selectIcon"
+          >
+            <view class="flex flex-col items-center">
+              <view class="p-24rpx leading-0 bg-hex-F6FAFD rounded-32rpx border-4rpx border-solid {{ item.icon === spaceInfo.icon ? ' border-hex-488FFF' : 'border-hex-F6FAFD'}}">
+                <image
+                  class="w-64rpx h-64rpx"
+                  src="/assets/img/room/{{item.icon}}.png"
+                ></image>
+              </view>
+
+              <text class="text-24 pt-8rpx text-black-tips">{{item.text}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="h-96rpx"></view>
+
+    <view class="flex gap-46rpx justify-center w-686rpx">
+      <van-button
+        type="primary"
+        class="grow"
+        size="large"
+        custom-style="background-image: linear-gradient(165deg, #468CFB 0%, #6BA3FC 100%);border-radius: 20rpx;height: 88rpx;font-size: 36rpx;"
+        disabled="{{!spaceInfo.name}}"
+        bind:click="handleConfirm"
+        >确定</van-button
+      >
+    </view>
+
+    <view class="h-96rpx"></view>
+  </view>
+</van-popup>
+
+<van-toast id="van-toast" />

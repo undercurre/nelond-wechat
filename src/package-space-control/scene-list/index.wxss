@@ -1,0 +1,11 @@
+/* package-space-control/scene-list/index.wxss */
+.exec-btn {
+  padding: 0 !important;
+  border-radius: 24rpx !important;
+  width: 100rpx !important;
+  height: 60rpx !important;
+  font-size: 28rpx !important;
+  font-weight: 400 !important;
+  border: 2rpx solid #555659 !important;
+  color: #555659 !important;
+}

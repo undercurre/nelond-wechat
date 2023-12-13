@@ -87,7 +87,7 @@
           style="height: calc(120rpx + {{tabClientTop}} - {{navigationBarAndStatusBarHeight}} - 32rpx);"
         ></view>
         <view class="h-32rpx"></view>
-        <!-- 房间卡片列表 -->
+        <!-- 空间卡片列表 -->
         <drag
           wx:if="{{listData.length > 0}}"
           id="yijian"
@@ -122,7 +122,7 @@
         class="flex-1 z-112"
         wx:if="{{allRoomAutoSceneListComputed.length && tabIndex !== 0}}"
       >
-        <!-- 房间卡片列表 -->
+        <!-- 空间卡片列表 -->
         <van-cell-group
           wx:for="{{allRoomAutoSceneListComputed}}"
           wx:key="sceneId"

@@ -1,0 +1,5 @@
+/* package-mine/hoom-manage/index.wxss */
+.project-select-arrow {
+  right: -64rpx;
+  top: 10rpx;
+}

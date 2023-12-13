@@ -282,10 +282,10 @@
 
         <view class="py-30rpx text-26 text-hex-666 leading-46rpx">
           <view>
-            <text>1、家庭网络是否正常</text>
+            <text>1、项目网络是否正常</text>
           </view>
           <view>
-            <text>2、网关是否正常供电，且已连接家庭网络</text>
+            <text>2、网关是否正常供电，且已连接项目网络</text>
           </view>
           <view>
             <text>3、子设备是否离网关过远，或被障碍物遮挡</text>
@@ -309,8 +309,8 @@
   show="{{isEditDevice}}"
   switch-list="{{editDeviceInfo.switchList}}"
   device-name="{{editDeviceInfo.deviceName}}"
-  room-id="{{editDeviceInfo.spaceId}}"
-  room-name="{{editDeviceInfo.spaceName}}"
+  space-id="{{editDeviceInfo.spaceId}}"
+  space-name="{{editDeviceInfo.spaceName}}"
   bind:close="cancelEditDevice"
   bind:confirm="confirmEditDevice"
 ></edit-device-info>

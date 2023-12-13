@@ -2,14 +2,14 @@
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import pageBehaviors from '../../behaviors/pageBehaviors'
-import { homeBinding, userBinding } from '../../store/index'
+import { projectBinding, userBinding } from '../../store/index'
 import { storage } from '../../utils/storage'
 import { emitter } from '../../utils/eventBus'
 import { ShareImgUrl } from '../../config/index'
 
 ComponentWithComputed({
   options: {},
-  behaviors: [BehaviorWithStore({ storeBindings: [homeBinding, userBinding] }), pageBehaviors],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, userBinding] }), pageBehaviors],
 
   /**
    * 页面的初始数据
@@ -81,16 +81,16 @@ ComponentWithComputed({
 
   methods: {
     initData() {
-      homeBinding.store.updateHomeMemberList().then(() => {
+      projectBinding.store.updateHomeMemberList().then(() => {
         this.updateView()
       })
-      homeBinding.store.getInviteShareId()
+      projectBinding.store.getInviteShareId()
     },
     updateView() {
-      if (homeBinding.store.homeMemberInfo.houseUserList.length === 0) return
+      if (projectBinding.store.homeMemberInfo.houseUserList.length === 0) return
       const curUserId = userBinding.store.userInfo.userId
       const result: object[] = []
-      const list = homeBinding.store.homeMemberInfo.houseUserList.sort((a, b) => {
+      const list = projectBinding.store.homeMemberInfo.houseUserList.sort((a, b) => {
         return a.userHouseAuth - b.userHouseAuth
       })
       if (list) {
@@ -286,13 +286,13 @@ ComponentWithComputed({
       }, 300)
     },
     changeUserRole(userId: string, auth: Project.UserRole) {
-      homeBinding.store.updateMemberAuth(userId, auth).then(() => {
+      projectBinding.store.updateMemberAuth(userId, auth).then(() => {
         this.updateView()
         emitter.emit('homeInfoEdit')
       })
     },
     deleteUser(userId: string) {
-      homeBinding.store.deleteMember(userId).then(() => {
+      projectBinding.store.deleteMember(userId).then(() => {
         this.updateView()
         emitter.emit('homeInfoEdit')
       })
@@ -316,22 +316,22 @@ ComponentWithComputed({
           const type = storage.get('invite_type', '3')
           const time = new Date()
           resolve({
-            title: '邀请你加入我的家庭',
+            title: '邀请你加入我的项目',
             path:
               '/pages/index/index?type=' +
               type +
               '&projectId=' +
-              homeBinding.store.currentProjectId +
+              projectBinding.store.currentProjectId +
               '&time=' +
               time.valueOf() +
               '&shareId=' +
-              homeBinding.store.shareId,
+              projectBinding.store.shareId,
             imageUrl: ShareImgUrl,
           })
         }, 500)
       })
       return {
-        title: '邀请你加入我的家庭',
+        title: '邀请你加入我的项目',
         path: '/pages/index/index?type=visitor',
         imageUrl: ShareImgUrl,
         promise,

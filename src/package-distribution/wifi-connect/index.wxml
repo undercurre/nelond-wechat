@@ -181,7 +181,7 @@
       />
     </view>
 
-    <text class="px-26rpx pb-30rpx text-28 leading-48rpx text-hex-666 text-center">为获取您的家庭WIFI列表，请进入手机系统的无线局域网页面，再返回本页面</text>
+    <text class="px-26rpx pb-30rpx text-28 leading-48rpx text-hex-666 text-center">为获取您的项目WIFI列表，请进入手机系统的无线局域网页面，再返回本页面</text>
   </view>
 </van-dialog>
 

@@ -1,6 +1,6 @@
 {
   "component": true,
   "usingComponents": {
-    "room-tabs": "../../components/room-tabs/index"
+    "space-tabs": "../../components/space-tabs/index"
   }
 }

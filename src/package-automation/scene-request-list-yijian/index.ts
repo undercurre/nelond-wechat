@@ -4,7 +4,7 @@ import Dialog from '@vant/weapp/dialog/dialog'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { storage, emitter, getCurrentPageParams } from '../../utils/index'
 import { addScene, retryScene, updateScene } from '../../apis/index'
-import { sceneStore, deviceStore, homeStore } from '../../store/index'
+import { sceneStore, deviceStore, projectStore } from '../../store/index'
 import { PRO_TYPE } from '../../config/index'
 
 ComponentWithComputed({
@@ -228,8 +228,8 @@ ComponentWithComputed({
     detached() {
       emitter.off('scene_device_result_status')
       sceneStore.updateAllRoomSceneList()
-      deviceStore.updateAllRoomDeviceList()
-      homeStore.updateRoomCardList()
+      deviceStore.updateallDeviceList()
+      projectStore.updateSpaceCardList()
     },
   },
 

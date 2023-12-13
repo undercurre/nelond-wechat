@@ -1,6 +1,6 @@
 import Toast from '@vant/weapp/toast/toast'
 import { BehaviorWithComputed } from 'miniprogram-computed'
-import { userRole } from '../config/home'
+import { userRole } from '../config/project'
 import { ossDomain } from '../config/index'
 
 export default BehaviorWithComputed({

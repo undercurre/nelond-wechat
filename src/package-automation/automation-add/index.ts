@@ -3,7 +3,7 @@ import Toast from '@vant/weapp/toast/toast'
 import { deleteScene, findDevice, addScene, updateScene } from '../../apis/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { deviceStore, sceneStore, homeStore, autosceneStore, roomStore } from '../../store/index'
+import { deviceStore, sceneStore, projectStore, autosceneStore, spaceStore } from '../../store/index'
 import { PRO_TYPE, SENSOR_TYPE, getModelName, sceneImgDir } from '../../config/index'
 import { toPropertyDesc, storage, getCurrentPageParams, strUtil, checkInputNameIllegal } from '../../utils/index'
 import { adviceSceneNameList } from '../../config/scene'
@@ -187,7 +187,7 @@ ComponentWithComputed({
       //处理三个传感器、场景和设备列表
       await Promise.all([
         sceneStore.updateAllRoomSceneList(),
-        deviceStore.updateAllRoomDeviceList(), //deviceStore.updateSubDeviceList(), //
+        deviceStore.updateallDeviceList(), //deviceStore.updateSubDeviceList(), //
       ])
       const sensorList = deviceStore.allRoomDeviceFlattenList.filter((item) => item.proType === PRO_TYPE.sensor)
       sensorList.forEach((item) => {
@@ -390,7 +390,7 @@ ComponentWithComputed({
         showEditIconPopup: true,
       })
     },
-    /* 选择建议的房间名称 start */
+    /* 选择建议的空间名称 start */
     selectAdviceName(e: { currentTarget: { dataset: { text: string } } }) {
       const name = e.currentTarget.dataset.text
       this.setData({
@@ -476,7 +476,7 @@ ComponentWithComputed({
       })
     },
     /* 设置场景条件弹窗 end */
-    /* 设置手动场景——房间 */
+    /* 设置手动场景——空间 */
     handleSceneRoomEditCancel() {
       this.setData({
         showEditRoomPopup: false,
@@ -506,7 +506,7 @@ ComponentWithComputed({
       )
       this.updateSceneDeviceConditionsFlatten()
     },
-    /* 设置手动场景——房间 */
+    /* 设置手动场景——空间 */
     /**
      * 增加传感器做场景条件
      */
@@ -853,8 +853,8 @@ ComponentWithComputed({
           uniId: 'room',
           name: '手动点击场景',
           desc: [
-            roomStore.roomList.find((item) => item.spaceId === this.data.spaceId)?.spaceName ??
-              roomStore.roomList[0].spaceName,
+            spaceStore.spaceList.find((item) => item.spaceId === this.data.spaceId)?.spaceName ??
+              spaceStore.spaceList[0].spaceName,
           ],
           pic: '/package-automation/assets/imgs/automation/touch-materialized.png',
           productId: 'touch',
@@ -1206,7 +1206,7 @@ ComponentWithComputed({
           timeType: this.data.effectiveTime.timeType === '4' ? '1' : this.data.effectiveTime.timeType, //前端用4表示自定义 1表示每天，云端全用1
           timePeriod: this.data.effectiveTime.timePeriod,
         },
-        projectId: homeStore.currentProjectDetail.projectId,
+        projectId: projectStore.currentProjectDetail.projectId,
         sceneIcon: this.data.sceneIcon,
         sceneName: this.data.sceneName,
         sceneCategory: '1',
@@ -1395,8 +1395,9 @@ ComponentWithComputed({
         conditionType: '0',
         deviceActions: [],
         deviceConditions: [],
-        projectId: homeStore.currentProjectDetail.projectId,
-        spaceId: this.data.spaceId === '' ? roomStore.roomList[roomStore.currentSpaceIndex].spaceId : this.data.spaceId,
+        projectId: projectStore.currentProjectDetail.projectId,
+        spaceId:
+          this.data.spaceId === '' ? spaceStore.spaceList[spaceStore.currentSpaceIndex].spaceId : this.data.spaceId,
         sceneIcon: this.data.sceneIcon,
         sceneName: this.data.sceneName,
         sceneType: '0',

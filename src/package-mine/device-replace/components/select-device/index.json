@@ -3,6 +3,6 @@
   "styleIsolation": "apply-shared",
   "usingComponents": {
     "device-card": "../../../../components/device-card/index",
-    "room-tabs": "../../../../components/room-tabs/index"
+    "space-tabs": "../../../../components/space-tabs/index"
   }
 }

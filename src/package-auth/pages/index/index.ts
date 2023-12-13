@@ -1,13 +1,13 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import pageBehaviors from '../../../behaviors/pageBehaviors'
 import { queryUserThirdPartyInfo } from '../../../apis/index'
-import { homeBinding } from '../../../store/index'
+import { projectBinding } from '../../../store/index'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
 import { storage } from '../../../utils/index'
 
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [homeBinding] }), pageBehaviors],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding] }), pageBehaviors],
 
   /**
    * 页面的初始数据

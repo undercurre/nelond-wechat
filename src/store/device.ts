@@ -1,8 +1,8 @@
 import { observable, runInAction } from 'mobx-miniprogram'
 import { queryAllDevice } from '../apis/device'
 import { PRO_TYPE } from '../config/index'
-import { homeStore } from './home'
-import { roomStore } from './room'
+import { projectStore } from './project'
+import { spaceStore } from './space'
 import { sceneStore } from './scene'
 import homOs from 'js-homos'
 import { IApiRequestOption } from '../utils'
@@ -11,11 +11,11 @@ export const deviceStore = observable({
   /**
    * 全屋设备
    */
-  allRoomDeviceList: [] as Device.DeviceItem[],
+  allDeviceList: [] as Device.DeviceItem[],
 
   get deviceList(): Device.DeviceItem[] {
-    const { spaceId = 0 } = roomStore.currentRoom ?? {}
-    return this.allRoomDeviceList.filter((device) => device.spaceId === spaceId)
+    const { spaceId = 0 } = spaceStore.currentSpace ?? {}
+    return this.allDeviceList.filter((device) => device.spaceId === spaceId)
   },
   /**
    * deviceId -> device 映射
@@ -25,9 +25,7 @@ export const deviceStore = observable({
   },
 
   get allRoomDeviceMap(): Record<string, Device.DeviceItem> {
-    return Object.fromEntries(
-      deviceStore.allRoomDeviceList.map((device: Device.DeviceItem) => [device.deviceId, device]),
-    )
+    return Object.fromEntries(deviceStore.allDeviceList.map((device: Device.DeviceItem) => [device.deviceId, device]))
   },
 
   get deviceFlattenMap(): Record<string, Device.DeviceItem> {
@@ -35,22 +33,22 @@ export const deviceStore = observable({
   },
 
   /**
-   * @description 房间设备列表
+   * @description 空间设备列表
    * 将有多个按键的开关拍扁，保证每个设备和每个按键都是独立一个item，并且uniId唯一
    */
   get deviceFlattenList(): Device.DeviceItem[] {
-    const { spaceId = 0 } = roomStore.currentRoom ?? {}
+    const { spaceId = 0 } = spaceStore.currentSpace ?? {}
     return this.allRoomDeviceFlattenList.filter((device) => device.spaceId === spaceId)
   },
 
-  // 当前房间灯组数量
+  // 当前空间灯组数量
   get groupCount(): number {
-    const { spaceId = 0 } = roomStore.currentRoom ?? {}
-    const groups = this.allRoomDeviceList.filter((device) => device.spaceId === spaceId && device.deviceType === 4)
+    const { spaceId = 0 } = spaceStore.currentSpace ?? {}
+    const groups = this.allDeviceList.filter((device) => device.spaceId === spaceId && device.deviceType === 4)
     return groups.length
   },
 
-  // 房间所有灯的亮度计算
+  // 空间所有灯的亮度计算
   get lightStatusInRoom(): { brightness: number; colorTemperature: number } {
     let sumOfBrightness = 0,
       sumOfColorTemp = 0,
@@ -100,7 +98,7 @@ export const deviceStore = observable({
   },
   get allRoomDeviceFlattenList(): Device.DeviceItem[] {
     const list = [] as Device.DeviceItem[]
-    this.allRoomDeviceList.forEach((device) => {
+    this.allDeviceList.forEach((device) => {
       // 过滤属性数据不完整的数据
       // if (!device.mzgdPropertyDTOList) {
       //   return
@@ -179,7 +177,7 @@ export const deviceStore = observable({
     return map
   },
 
-  async updateAllRoomDeviceList(projectId: string = homeStore.currentProjectId, options?: IApiRequestOption) {
+  async updateallDeviceList(projectId: string = projectStore.currentProjectId, options?: IApiRequestOption) {
     const res = await queryAllDevice(projectId, '0', options)
     if (res.success) {
       const list = {} as Record<string, Device.DeviceItem[]>
@@ -193,10 +191,10 @@ export const deviceStore = observable({
           }
         })
       runInAction(() => {
-        roomStore.roomDeviceList = list
-        deviceStore.allRoomDeviceList = res.result
+        spaceStore.spaceDeviceList = list
+        deviceStore.allDeviceList = res.result
 
-        this.updateAllRoomDeviceListLanStatus(false)
+        this.updateallDeviceListLanStatus(false)
       })
     } else {
       console.log('加载全屋设备失败！', res)
@@ -206,8 +204,8 @@ export const deviceStore = observable({
   /**
    * 更新全屋设备列表的局域网状态
    */
-  updateAllRoomDeviceListLanStatus(isUpdateUI = true) {
-    const allRoomDeviceList = deviceStore.allRoomDeviceList.map((item) => {
+  updateallDeviceListLanStatus(isUpdateUI = true) {
+    const allDeviceList = deviceStore.allDeviceList.map((item) => {
       const { deviceId, updateStamp } = item
 
       const canLanCtrl =
@@ -222,18 +220,18 @@ export const deviceStore = observable({
     })
 
     if (!isUpdateUI) {
-      deviceStore.allRoomDeviceList = allRoomDeviceList
+      deviceStore.allDeviceList = allDeviceList
       return
     }
 
     runInAction(() => {
-      deviceStore.allRoomDeviceList = allRoomDeviceList
+      deviceStore.allDeviceList = allDeviceList
     })
   },
 })
 
 export const deviceBinding = {
   store: deviceStore,
-  fields: ['deviceList', 'allRoomDeviceList', 'deviceFlattenList'],
+  fields: ['deviceList', 'allDeviceList', 'deviceFlattenList'],
   actions: [],
 }

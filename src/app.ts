@@ -13,7 +13,7 @@ import {
   getCurrentPageUrl,
 } from './utils/index'
 import svgs from './assets/svg/index'
-import { deviceStore, homeStore, othersStore, userStore } from './store/index'
+import { deviceStore, projectStore, othersStore, userStore } from './store/index'
 import { reaction } from 'mobx-miniprogram'
 import homOs from 'js-homos'
 import mqtt from './lib/mqtt.min.js' // 暂时只能使用4.2.1版本，高版本有bug，判断错运行环境
@@ -32,13 +32,13 @@ App<IAppOption>({
 
     homOs.init({ mqttLib: mqtt, isDebug: true })
 
-    // 如果用户已经登录，开始请求数据[用户][家庭列表、全屋房间、全屋设备]
+    // 如果用户已经登录，开始请求数据[用户][项目列表、全屋空间、全屋设备]
     if (isLogined()) {
       try {
         userStore.setIsLogin(true)
         const start = Date.now()
         console.log('开始时间', start / 1000)
-        await Promise.all([userStore.updateUserInfo(), homeStore.homeInit()])
+        await Promise.all([userStore.updateUserInfo(), projectStore.spaceInit()])
         console.log('加载完成时间', Date.now() / 1000, '用时', (Date.now() - start) / 1000 + 's')
       } catch (e) {
         Logger.error('appOnLaunch-err:', e)
@@ -47,13 +47,13 @@ App<IAppOption>({
       othersStore.setIsInit(false)
     }
 
-    // 监听houseId变化，切换websocket连接,切换成对应家庭的sock连接
+    // 监听houseId变化，切换websocket连接,切换成对应项目的sock连接
     reaction(
-      () => homeStore.currentProjectDetail.projectId,
+      () => projectStore.currentProjectDetail.projectId,
       async () => {
         // closeWebSocket()
         // startWebsocketService()
-        // await homeStore.updateLocalKey()
+        // await projectStore.updateLocalKey()
         // initHomeOs()
       },
     )
@@ -92,12 +92,12 @@ App<IAppOption>({
     // 首次进入有onLaunch不必加载
     // homOS本地控制要求场景数据保持尽可能实时，需要小程序回到前台刷新场景和设备列表数据
     if (!firstOnShow) {
-      deviceStore.updateAllRoomDeviceList(homeStore.currentProjectId, { isDefaultErrorTips: false })
-      homeStore.updateHomeInfo({ isDefaultErrorTips: false })
+      deviceStore.updateallDeviceList(projectStore.currentProjectId, { isDefaultErrorTips: false })
+      projectStore.updateProjectInfo({ isDefaultErrorTips: false })
     }
 
     // 全屋场景数据加载
-    // sceneStore.updateAllRoomSceneList(homeStore.currentProjectId, { isDefaultErrorTips: false })
+    // sceneStore.updateAllRoomSceneList(projectStore.currentProjectId, { isDefaultErrorTips: false })
   },
 
   onHide() {

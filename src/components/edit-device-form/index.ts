@@ -1,10 +1,10 @@
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
-import { homeBinding, roomBinding, roomStore } from '../../store/index'
+import { projectBinding, roomBinding, spaceStore } from '../../store/index'
 import { checkInputNameIllegal } from '../../utils/index'
 
 Component({
-  behaviors: [BehaviorWithStore({ storeBindings: [homeBinding, roomBinding] })],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, roomBinding] })],
   /**
    * 组件的属性列表
    */
@@ -69,7 +69,7 @@ Component({
    */
   methods: {
     selectRoom(event: WechatMiniprogram.CustomEvent) {
-      const spaceInfo = roomStore.roomList[event.currentTarget.dataset.index]
+      const spaceInfo = spaceStore.spaceList[event.currentTarget.dataset.index]
 
       this.setData({
         'deviceInfo.spaceId': spaceInfo.spaceId,
@@ -80,8 +80,8 @@ Component({
     },
 
     addRoom() {
-      if (roomBinding.store.roomList.length >= 50) {
-        Toast('一个家庭中最多创建50个房间')
+      if (roomBinding.store.spaceList.length >= 50) {
+        Toast('一个项目中最多创建50个空间')
         return
       }
 

@@ -1,6 +1,6 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import { homeBinding, roomBinding, deviceBinding } from '../../store/index'
+import { projectBinding, roomBinding, deviceBinding } from '../../store/index'
 import { bleUtil, strUtil, BleClient, getCurrentPageParams, emitter, Logger } from '../../utils/index'
 import pageBehaviors from '../../behaviors/pageBehaviors'
 import { sendCmdAddSubdevice, bindDevice, isDeviceOnline, batchGetProductInfoByBPid } from '../../apis/index'
@@ -15,7 +15,7 @@ ComponentWithComputed({
     pureDataPattern: /^_/, // 指定所有 _ 开头的数据字段为纯数据字段
   },
 
-  behaviors: [BehaviorWithStore({ storeBindings: [homeBinding, roomBinding] }), pageBehaviors],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, roomBinding] }), pageBehaviors],
 
   /**
    * 页面的初始数据
@@ -289,13 +289,13 @@ ComponentWithComputed({
       const { mac, proType, modelId } = this.data.pageParams
       let { deviceName } = this.data.pageParams
 
-      const existDevice = deviceBinding.store.allRoomDeviceList.find((item) => item.deviceId === mac)
+      const existDevice = deviceBinding.store.allDeviceList.find((item) => item.deviceId === mac)
 
-      // 重新绑定同一家庭情况下，取旧命名
+      // 重新绑定同一项目情况下，取旧命名
       if (existDevice) {
         deviceName = existDevice.deviceName
       } else {
-        let bindNum = deviceBinding.store.allRoomDeviceList.filter(
+        let bindNum = deviceBinding.store.allDeviceList.filter(
           (item) => item.proType === proType && item.productId === modelId,
         ).length // 已绑定的相同设备数量
 
@@ -304,8 +304,8 @@ ComponentWithComputed({
 
       const res = await bindDevice({
         deviceId: mac,
-        projectId: homeBinding.store.currentProjectId,
-        spaceId: roomBinding.store.currentRoom.spaceId,
+        projectId: projectBinding.store.currentProjectId,
+        spaceId: roomBinding.store.currentSpace.spaceId,
         sn: '',
         deviceName: deviceName,
       })

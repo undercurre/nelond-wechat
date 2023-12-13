@@ -1,7 +1,0 @@
-{
-  "usingComponents": {
-    "home-select-menu": "../../components/home-select-menu/index",
-    "van-action-sheet": "@vant/weapp/action-sheet/index",
-    "transfer-home-popup": "./components/transfer-home-popup/index"
-  }
-}

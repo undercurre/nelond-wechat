@@ -11,8 +11,8 @@
     <edit-device-form
       custom-style="max-height: 60vh;overflow: auto;"
       device-name="{{deviceName}}"
-      room-id="{{spaceId}}"
-      room-name="{{spaceName}}"
+      space-id="{{spaceId}}"
+      space-name="{{spaceName}}"
       bind:change="change"
       switch-list="{{switchList}}"
     ></edit-device-form>

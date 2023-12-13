@@ -1,5 +1,5 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { roomStore } from '../../store/index'
+import { spaceStore } from '../../store/index'
 
 ComponentWithComputed({
   options: {},
@@ -37,7 +37,7 @@ ComponentWithComputed({
       type: Array,
     },
 
-    // 默认显示的房间数据
+    // 默认显示的空间数据
     defaultRoomId: {
       type: String,
       value: '',
@@ -49,7 +49,7 @@ ComponentWithComputed({
       observer(value) {
         if (!value) return
         if (this.data.roomListComputed.length) {
-          let roomSelect = roomStore.currentRoom?.spaceId
+          let roomSelect = spaceStore.currentSpace?.spaceId
 
           if (this.data.roomListComputed.findIndex((item) => item.spaceId === roomSelect) < 0) {
             roomSelect = this.data.roomListComputed[0].spaceId
@@ -113,20 +113,20 @@ ComponentWithComputed({
 
   computed: {
     roomListComputed(data) {
-      const roomList = [] as Space.SpaceInfo[]
-      // 从roomList遍历，保证房间顺序， 仅显示list的数据所在的房间列表
-      roomStore.roomList.forEach((room) => {
+      const spaceList = [] as Space.SpaceInfo[]
+      // 从roomList遍历，保证空间顺序， 仅显示list的数据所在的空间列表
+      spaceStore.spaceList.forEach((space) => {
         const isIncludes = data.list.some((item: { spaceId: string }) => {
-          if (item.spaceId === room.spaceId) {
+          if (item.spaceId === space.spaceId) {
             return true
           }
           return false
         })
         if (isIncludes) {
-          roomList.push(room)
+          spaceList.push(space)
         }
       })
-      return roomList
+      return spaceList
     },
     listComputed(data) {
       if (data.list) {

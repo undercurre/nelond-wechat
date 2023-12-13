@@ -2,11 +2,11 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import pageBehavior from '../behaviors/pageBehaviors'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import { homeBinding, userBinding } from '../store/index'
+import { projectBinding, userBinding } from '../store/index'
 
 ComponentWithComputed({
   options: {},
-  behaviors: [BehaviorWithStore({ storeBindings: [homeBinding, userBinding] }), pageBehavior],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, userBinding] }), pageBehavior],
 
   /**
    * 组件的属性列表

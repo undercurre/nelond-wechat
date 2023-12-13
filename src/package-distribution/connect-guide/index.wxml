@@ -124,7 +124,7 @@
       src="{{deviceInfo.icon}}"
     ></image>
 
-    <text class="w-full block text-28 text-hex-666">添加此设备前，需要先在家庭中添加网关设备。</text>
+    <text class="w-full block text-28 text-hex-666">添加此设备前，需要先在项目中添加网关设备。</text>
     <text class="w-full block pb-24rpx text-28 text-hex-666">支持的智能网关型号有：</text>
 
     <text class="block w-full text-32 text-black-2a">1、MGW-D3</text>

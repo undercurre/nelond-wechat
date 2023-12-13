@@ -37,7 +37,7 @@ ComponentWithComputed({
     computedDeviceList(data) {
       const choosingNew = data.oldDeviceItem && data.oldDeviceItem.productId
 
-      return deviceStore.allRoomDeviceList.filter((device) => {
+      return deviceStore.allDeviceList.filter((device) => {
         const isSubdevice = device.deviceType === 2
         const isScreen = SCREEN_PID.includes(device.productId)
         const isFilterDevice = choosingNew
@@ -166,9 +166,9 @@ ComponentWithComputed({
     },
 
     addOldDevice() {
-      const allRoomDeviceList = deviceBinding.store.allRoomDeviceList
-      if (!allRoomDeviceList || !allRoomDeviceList.length) {
-        Toast('家庭中没有设备')
+      const allDeviceList = deviceBinding.store.allDeviceList
+      if (!allDeviceList || !allDeviceList.length) {
+        Toast('项目中没有设备')
         return
       }
 

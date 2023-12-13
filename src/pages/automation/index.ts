@@ -4,9 +4,9 @@ import pageBehaviors from '../../behaviors/pageBehaviors'
 import {
   autosceneBinding,
   deviceStore,
-  homeBinding,
-  homeStore,
-  roomStore,
+  projectBinding,
+  projectStore,
+  spaceStore,
   sceneBinding,
   sceneStore,
   userBinding,
@@ -23,7 +23,7 @@ import { sceneImgDir, defaultImgDir } from '../../config/index'
 // pages/login/index.ts
 ComponentWithComputed({
   behaviors: [
-    BehaviorWithStore({ storeBindings: [autosceneBinding, userBinding, sceneBinding, homeBinding] }),
+    BehaviorWithStore({ storeBindings: [autosceneBinding, userBinding, sceneBinding, projectBinding] }),
     pageBehaviors,
   ],
   /**
@@ -61,7 +61,7 @@ ComponentWithComputed({
   },
   computed: {
     roomTab() {
-      const tempRoomList = roomStore.roomList.map((item) => {
+      const tempRoomList = spaceStore.spaceList.map((item) => {
         return {
           spaceId: item.spaceId,
           roomName: item.spaceName,
@@ -91,9 +91,9 @@ ComponentWithComputed({
           selected: 1,
         })
       }
-      // 监听houseId变化，重新请求对应家庭的自动化列表
+      // 监听houseId变化，重新请求对应项目的自动化列表
       // reaction(
-      //   () => homeStore.currentHomeDetail.houseId,
+      //   () => projectStore.currentHomeDetail.houseId,
       //   () => {
       //     autosceneBinding.store.updateAllRoomAutoSceneList()
       //   },
@@ -110,7 +110,7 @@ ComponentWithComputed({
       // emitter.on('scene_enabled', () => {
       //   autosceneBinding.store.updateAllRoomAutoSceneList()
       // })
-      console.log(roomStore.currentRoom, roomStore.currentSpaceIndex)
+      console.log(spaceStore.currentSpace, spaceStore.currentSpaceIndex)
 
       // 加载一键场景列表
       sceneBinding.store.updateAllRoomSceneList()
@@ -119,8 +119,8 @@ ComponentWithComputed({
     },
     // onShow() {
     //   this.setData({
-    //     selectedspaceId: roomStore.currentRoom.spaceId,
-    //     active: roomStore.currentSpaceIndex,
+    //     selectedspaceId: spaceStore.currentSpace.spaceId,
+    //     active: spaceStore.currentSpaceIndex,
     //   })
     // },
     // onUnload() {
@@ -137,7 +137,7 @@ ComponentWithComputed({
 
     updateList() {
       if (this.data.selectedspaceId === '') {
-        this.data.selectedspaceId = roomStore.roomList[0].spaceId
+        this.data.selectedspaceId = spaceStore.spaceList[0].spaceId
       }
       const listData = [] as IAnyObject[]
       const deviceMap = deviceStore.allRoomDeviceMap
@@ -208,7 +208,7 @@ ComponentWithComputed({
       }
       await updateSceneSort({ sceneSortList })
       await sceneStore.updateAllRoomSceneList()
-      homeStore.updateRoomCardList()
+      projectStore.updateSpaceCardList()
       this.updateList()
     },
 
@@ -252,8 +252,8 @@ ComponentWithComputed({
   lifetimes: {
     ready() {
       this.setData({
-        selectedspaceId: roomStore.currentRoom.spaceId,
-        active: roomStore.currentRoom.spaceId,
+        selectedspaceId: spaceStore.currentSpace.spaceId,
+        active: spaceStore.currentSpace.spaceId,
       })
       this.updateList()
       sceneBinding.store.updateAllRoomSceneList().then(() => {

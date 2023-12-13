@@ -35,9 +35,9 @@ export const store = observable({
 定义完 store 之后就需要绑定到组件或者页面
 
 ```ts
-import { othersBinding, roomBinding, userBinding, homeBinding } from '../../store/index'
+import { othersBinding, roomBinding, userBinding, projectBinding } from '../../store/index'
 ComponentWithComputed({
-    behaviors: [BehaviorWithStore({storeBindings: [othersBinding, roomBinding, userBinding, homeBinding]})],
+  behaviors: [BehaviorWithStore({ storeBindings: [othersBinding, roomBinding, userBinding, projectBinding] })],
 })
 ```
 

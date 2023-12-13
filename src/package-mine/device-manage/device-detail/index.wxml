@@ -36,7 +36,7 @@
           <van-cell
             is-link="{{canEditDevice}}"
             bind:click="handleDeviceRoomEditPopup"
-            title="所在房间"
+            title="所在空间"
             value="{{spaceName}}"
           ></van-cell>
           <van-cell
@@ -131,7 +131,7 @@
   bind:close="handleDeviceNameEditCancel"
   bind:confirm="handleDeviceNameEditConfirm"
 />
-<edit-room-popup
+<edit-space-popup
   value="{{spaceId}}"
   show="{{showEditRoomPopup}}"
   bind:close="handleDeviceRoomEditCancel"

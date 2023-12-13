@@ -111,7 +111,7 @@
       src="/package-distribution/assets/link-gateway/force-bind.png"
     ></image>
   </view>
-  <text class="block pb-60rpx text-center leading-48rpx text-28 text-hex-666">如需绑定至新的家庭，请单击网关最右侧按键</text>
+  <text class="block pb-60rpx text-center leading-48rpx text-28 text-hex-666">如需绑定至新的项目，请单击网关最右侧按键</text>
 </van-dialog>
 
 <van-dialog

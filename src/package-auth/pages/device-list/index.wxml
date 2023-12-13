@@ -7,7 +7,7 @@
 
   <view class="px-32rpx">
     <van-cell
-      title="我的家庭"
+      title="我的项目"
       label="已同步{{deviceList.length}}个设备"
       center
       data-url="{{urls.meiju}}"

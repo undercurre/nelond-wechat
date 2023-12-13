@@ -60,9 +60,9 @@ ComponentWithComputed({
 
   computed: {
     gatewayList(data) {
-      const allRoomDeviceList: Device.DeviceItem[] = (data as IAnyObject).allRoomDeviceList || []
+      const allDeviceList: Device.DeviceItem[] = (data as IAnyObject).allDeviceList || []
 
-      return allRoomDeviceList.filter((item) => item.deviceType === 1)
+      return allDeviceList.filter((item) => item.deviceType === 1)
     },
     isShowTips(data) {
       return (data.scanType === 'subdevice' && data._isBlePermit) || data.scanType === 'gateway'

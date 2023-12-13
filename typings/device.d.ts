@@ -174,7 +174,7 @@ declare namespace Device {
     deviceName?: string
     projectId: string
     spaceId?: string
-    type?: string // 0 更改开关以外的设备 1 仅更改房间 2 所有都更改 3 仅开关更改
+    type?: string // 0 更改开关以外的设备 1 仅更改空间 2 所有都更改 3 仅开关更改
     deviceType?: number // 1 网关 2 子设备 3wifi设备
     switchId?: string
     switchName?: string

@@ -1,6 +1,6 @@
 declare namespace Scene {
   /**
-   * 查询房间的场景列表项
+   * 查询空间的场景列表项
    */
   interface SceneItem extends SceneBase {
     /**
@@ -16,7 +16,7 @@ declare namespace Scene {
     spaceName: string
   }
   /**
-   * 房间列表里的场景列表项
+   * 空间列表里的场景列表项
    */
   interface SceneBase {
     /**

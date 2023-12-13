@@ -2,7 +2,7 @@ import Toast from '@vant/weapp/toast/toast'
 import Dialog from '@vant/weapp/dialog/dialog'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { confirmDeviceAuth, queryAuthGetStatus, queryDeviceSpecifiedInfo } from '../../apis/index'
-import { homeStore } from '../../store/index'
+import { projectStore } from '../../store/index'
 import { imgList } from '../../config/index'
 
 let secondTimeId = 0 // 倒计时器
@@ -110,7 +110,7 @@ ComponentWithComputed({
   methods: {
     async init() {
       const guideInfoRes = await queryDeviceSpecifiedInfo({
-        projectId: homeStore.currentProjectId,
+        projectId: projectStore.currentProjectId,
         deviceId: this.data.deviceId,
       })
 
@@ -132,7 +132,7 @@ ComponentWithComputed({
     },
 
     async queryAuthGetStatus() {
-      const res = await queryAuthGetStatus({ projectId: homeStore.currentProjectId, deviceId: this.data.deviceId })
+      const res = await queryAuthGetStatus({ projectId: projectStore.currentProjectId, deviceId: this.data.deviceId })
 
       // 弹框取消后或者倒计时结束，取消轮询确权状态
       if (!res.success || this.data.time <= 0 || !this.data.isShow) {
@@ -182,7 +182,7 @@ ComponentWithComputed({
       })
 
       const confirmRes = await confirmDeviceAuth({
-        projectId: homeStore.currentProjectId,
+        projectId: projectStore.currentProjectId,
         deviceId: this.data.deviceId,
       })
 

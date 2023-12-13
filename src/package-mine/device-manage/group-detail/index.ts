@@ -1,14 +1,14 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
-import { homeBinding, homeStore, roomBinding } from '../../../store/index'
+import { projectBinding, projectStore, roomBinding } from '../../../store/index'
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { delGroup, queryGroup, renameGroup, updateGroup } from '../../../apis/index'
 import { proName } from '../../../config/index'
 import Dialog from '@vant/weapp/dialog/dialog'
 import { emitter } from '../../../utils/index'
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [roomBinding, homeBinding] }), pageBehavior],
+  behaviors: [BehaviorWithStore({ storeBindings: [roomBinding, projectBinding] }), pageBehavior],
   /**
    * 页面的初始数据
    */
@@ -115,7 +115,7 @@ ComponentWithComputed({
           })
           if (res.success) {
             Toast('删除成功')
-            homeStore.updateRoomCardList()
+            projectStore.updateSpaceCardList()
             emitter.emit('deviceEdit')
             emitter.emit('homeInfoEdit')
             wx.navigateBack()
@@ -147,7 +147,7 @@ ComponentWithComputed({
 
           if (res.success) {
             Toast('删除成功')
-            homeStore.updateRoomCardList()
+            projectStore.updateSpaceCardList()
             this.queryGroupInfo()
             emitter.emit('deviceEdit')
             emitter.emit('homeInfoEdit')
@@ -174,7 +174,7 @@ ComponentWithComputed({
       const { groupDeviceList = [] } = this.data.deviceInfo
 
       wx.navigateTo({
-        url: '/package-room-control/group/index',
+        url: '/package-space-control/group/index',
         success: (res) => {
           res.eventChannel.emit('createGroup', {
             lightList: [...groupDeviceList, ...e.detail].map((device) => device.deviceId),

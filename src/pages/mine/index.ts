@@ -1,11 +1,11 @@
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { logout, storage, strUtil } from '../../utils/index'
-import { userBinding, homeBinding, userStore } from '../../store/index'
+import { userBinding, projectBinding, userStore } from '../../store/index'
 import { defaultImgDir } from '../../config/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 
 Component({
-  behaviors: [BehaviorWithStore({ storeBindings: [userBinding, homeBinding] }), pageBehavior],
+  behaviors: [BehaviorWithStore({ storeBindings: [userBinding, projectBinding] }), pageBehavior],
   /**
    * 页面的初始数据
    */
@@ -14,8 +14,8 @@ Component({
     managerList: [
       {
         icon: '/assets/img/mine/home.png',
-        text: '家庭管理',
-        url: '/package-mine/home-manage/index',
+        text: '项目管理',
+        url: '/package-mine/project-manage/index',
       },
       {
         icon: '/assets/img/mine/device.png',
@@ -29,7 +29,7 @@ Component({
       },
     ],
     urls: {
-      homeControl: '/package-mine/home-manage/index',
+      homeControl: '/package-mine/project-manage/index',
       automation: '/package-automation/automation/index',
       voiceControl: '/package-mine/voice-control/index',
       auth: '/package-auth/pages/index/index',

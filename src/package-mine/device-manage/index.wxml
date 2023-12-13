@@ -15,12 +15,12 @@
     bind:leftTap="goBack"
   ></nav-bar>
 
-  <room-tabs
+  <space-tabs
     class="px-32rpx mt-32rpx"
-    sDeviceList="{{allRoomDeviceList}}"
+    sDeviceList="{{allDeviceList}}"
     bind:roomSelect="handleRoomSelect"
     showGateway="{{true}}"
-  ></room-tabs>
+  ></space-tabs>
 
   <!-- 无设备 -->
   <view
