@@ -56,14 +56,7 @@
     },
     {
       "root": "package-auth",
-      "pages": [
-        "pages/auth-screen/index",
-        "pages/index/index",
-        "pages/meiju/index",
-        "pages/project-list/index",
-        "pages/confirm-auth/index",
-        "pages/device-list/index"
-      ]
+      "pages": ["pages/auth-screen/index"]
     },
     {
       "root": "package-automation",

@@ -1,1 +1,0 @@
-<web-view src="{{webviewSrc}}" bindload="onWebviewLoad" bindmessage="onMessage"></web-view>

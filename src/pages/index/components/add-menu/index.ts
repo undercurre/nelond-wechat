@@ -61,14 +61,6 @@ ComponentWithComputed({
           },
         )
       }
-      if (data.isCreator) {
-        list.push({
-          title: '连接其它平台',
-          key: 'platform',
-          icon: 'auth',
-          url: '/package-auth/pages/index/index',
-        })
-      }
 
       return list
     },

@@ -32,7 +32,6 @@ Component({
       homeControl: '/package-mine/project-manage/index',
       automation: '/package-automation/automation/index',
       voiceControl: '/package-mine/voice-control/index',
-      auth: '/package-auth/pages/index/index',
       deviceReplace: '/package-mine/device-replace/index',
       feedback: '/package-mine/feedback/index',
       help: '/package-mine/help/list/index',

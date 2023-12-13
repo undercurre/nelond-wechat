@@ -64,14 +64,6 @@
         bind:click="toPage"
       />
       <van-cell
-        icon="/assets/img/mine/link.png"
-        title="连接其他平台"
-        is-link
-        center
-        data-url="{{urls.auth}}"
-        bind:click="toPage"
-      />
-      <van-cell
         wx:if="{{!isVisitor}}"
         icon="/assets/img/mine/deviceReplace.png"
         title="设备替换"
