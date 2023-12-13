@@ -33,7 +33,7 @@ export async function saveHouseRoomInfo(
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/user/saveHouseRoomInfo',
+    url: '/v1/mzgd/cl/user/saveHouseRoomInfo',
     data: data,
   })
 }
@@ -45,7 +45,7 @@ export async function delHouseRoom(spaceId: string, options?: { loading?: boolea
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/user/house/delHouseRoom',
+    url: '/v1/mzgd/cl/user/house/delHouseRoom',
     data: { spaceId },
   })
 }
@@ -57,7 +57,7 @@ export async function updateRoomSort(roomSortList: Space.RoomSort[], options?: {
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/user/updateRoomSort',
+    url: '/v1/mzgd/cl/user/updateRoomSort',
     data: { roomSortList },
   })
 }

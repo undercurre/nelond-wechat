@@ -52,7 +52,7 @@ export async function saveOrUpdateUserHouseInfo(
   return await mzaioRequest.post<Project.IProjectDetail>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/user/saveOrUpdateUserHouseInfo',
+    url: '/v1/mzgd/cl/user/saveOrUpdateUserHouseInfo',
     data: params,
   })
 }
@@ -64,7 +64,7 @@ export async function delUserHouse(projectId: string, options?: { loading?: bool
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/user/house/delUserHouse',
+    url: '/v1/mzgd/cl/user/house/delUserHouse',
     data: {
       projectId,
     },
@@ -78,7 +78,7 @@ export async function quitUserHouse(projectId: string, options?: { loading?: boo
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/user/house/quitUserHouse',
+    url: '/v1/mzgd/cl/user/house/quitUserHouse',
     data: {
       projectId,
       userId: userBinding.store.userInfo.userId,
@@ -97,7 +97,7 @@ export async function changeUserHouse(
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/user/house/changeUserHouse',
+    url: '/v1/mzgd/cl/user/house/changeUserHouse',
     data: {
       ...params,
     },
@@ -111,7 +111,7 @@ export async function queryHouseUserList({ projectId = '' }, options?: { loading
   return await mzaioRequest.post<Project.HomeMemberInfo>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/user/house/queryHouseUserList',
+    url: '/v1/mzgd/cl/user/house/queryHouseUserList',
     data: {
       projectId,
       pageSize: 50,
@@ -127,7 +127,7 @@ export async function updateHouseUserAuth({ userId = '', auth = 3, projectId = '
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/user/house/updateHouseUserAuth',
+    url: '/v1/mzgd/cl/user/house/updateHouseUserAuth',
     data: {
       userId,
       houseUserAuth: auth,
@@ -143,7 +143,7 @@ export async function deleteHouseUser({ projectId = '', userId = '' }, options?:
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/user/house/delHouseUser',
+    url: '/v1/mzgd/cl/user/house/delHouseUser',
     data: {
       projectId,
       userId,
@@ -158,7 +158,7 @@ export async function inviteHouseUser({ projectId = '', auth = 3, shareId = '' }
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/user/inviteHouseUser',
+    url: '/v1/mzgd/cl/user/inviteHouseUser',
     data: {
       projectId,
       houseUserAuth: auth,
@@ -174,7 +174,7 @@ export async function getShareId({ projectId = '' }, options?: { loading?: boole
   return await mzaioRequest.post<{ shareId: string }>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/user/getShareId',
+    url: '/v1/mzgd/cl/user/getShareId',
     data: {
       projectId,
     },

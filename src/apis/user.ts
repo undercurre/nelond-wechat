@@ -18,7 +18,7 @@ export async function queryWxImgQrCode(imgUrl: string) {
   return await mzaioRequest.post<{ qrCodeUrl: string }>({
     log: true,
     loading: true,
-    url: '/v1/mzgd/user/queryWxImgQrCode',
+    url: '/v1/mzgd/cl/user/queryWxImgQrCode',
     data: {
       qrCodeDownloadUrl: imgUrl,
     },
@@ -32,7 +32,7 @@ export async function getUploadFileForOssInfo(fileName: string) {
   return await mzaioRequest.post<{ certification: string; downloadUrl: string; uploadUrl: string }>({
     log: false,
     loading: false,
-    url: '/v1/mzgd/user/uploadFileForOss',
+    url: '/v1/mzgd/cl/user/uploadFileForOss',
     data: {
       fileName,
     },
@@ -46,7 +46,7 @@ export async function authQrcode(qrcode: string) {
   return await mzaioRequest.post({
     log: true,
     loading: false,
-    url: '/v1/mzgd/user/mzgdUserQrcodeAuthorize',
+    url: '/v1/mzgd/cl/user/mzgdUserQrcodeAuthorize',
     data: {
       qrcode,
     },

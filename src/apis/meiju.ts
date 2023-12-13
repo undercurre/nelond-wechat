@@ -8,7 +8,7 @@ export async function getMeijuHomeList(code?: string) {
   return await mzaioRequest.post<{ mideaHouseList: Meiju.MeijuHome[] }>({
     log: true,
     loading: false,
-    url: '/v1/mzgd/user/queryMideaUserHouseInfo',
+    url: '/v1/mzgd/cl/user/queryMideaUserHouseInfo',
     data: {
       code,
     },
@@ -23,7 +23,7 @@ export async function queryUserMideaAuthInfo(projectId: string) {
   return await mzaioRequest.post<{ mideaAuthFlag: boolean; projectName: string }>({
     log: true,
     loading: false,
-    url: '/v1/mzgd/user/queryUserMideaAuthInfo',
+    url: '/v1/mzgd/cl/user/queryUserMideaAuthInfo',
     data: {
       projectId,
     },

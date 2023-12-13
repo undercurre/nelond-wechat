@@ -46,7 +46,7 @@ export async function allDevicePowerControl(
   return await mzaioRequest.post<IAnyObject>({
     log: false,
     loading: options?.loading ?? false,
-    url: '/v1/device/deviceControlByHouseId',
+    url: '/v1/cl/device/deviceControlByHouseId',
     data: data,
   })
 }
@@ -61,7 +61,7 @@ export async function querySubDeviceList(
   return await mzaioRequest.post<Device.DeviceItem[]>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/querySubDeviceInfoByRoomId',
+    url: '/v1/cl/device/querySubDeviceInfoByRoomId',
     data,
   })
 }
@@ -77,7 +77,7 @@ export async function queryDeviceInfoByDeviceId(
   return await mzaioRequest.post<Device.DeviceItem>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/queryDeviceInfoByDeviceId',
+    url: '/v1/cl/device/queryDeviceInfoByDeviceId',
     data,
   })
 }
@@ -96,7 +96,7 @@ export async function queryDeviceOnlineStatus(
     log: false,
     loading: options?.loading ?? false,
     isDefaultErrorTips: false,
-    url: '/v1/device/queryDeviceOnlineStatus',
+    url: '/v1/cl/device/queryDeviceOnlineStatus',
     data,
   })
 }
@@ -110,7 +110,7 @@ export async function queryBindDevIdIsSuccess(data: { devIds: string[] }, option
   return await mzaioRequest.post<string[]>({
     log: false,
     loading: options?.loading ?? false,
-    url: '/v1/device/queryBindDevIdIsSuccess',
+    url: '/v1/cl/device/queryBindDevIdIsSuccess',
     data,
   })
 }
@@ -142,7 +142,7 @@ export async function bindDevice(
   const res = await mzaioRequest.post<{ deviceId: string; isBind: boolean; msg: string }>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/bindDevice',
+    url: '/v1/cl/device/bindDevice',
     data,
   })
 
@@ -196,7 +196,7 @@ export async function controlDevice(
     log: true,
     isDefaultErrorTips: false,
     loading: option?.loading || false,
-    url: '/v1/device/down',
+    url: '/v1/cl/device/down',
     data: data,
   })
 }
@@ -364,7 +364,7 @@ export async function getUnbindSensor(data: { gatewayId: string }, option?: { lo
   return await mzaioRequest.post<Device.ISubDevice[]>({
     log: true,
     loading: option?.loading || false,
-    url: '/v1/device/getUnbindSensor',
+    url: '/v1/cl/device/getUnbindSensor',
     data,
   })
 }
@@ -376,7 +376,7 @@ export async function checkOtaVersion(deviceId: string, options?: { loading?: bo
   return await mzaioRequest.post<IAnyObject>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/checkOtaVersion',
+    url: '/v1/cl/device/checkOtaVersion',
     data: {
       deviceId,
     },
@@ -406,7 +406,7 @@ export async function editDeviceInfo(
   return await mzaioRequest.post<IAnyObject>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/update',
+    url: '/v1/cl/device/update',
     data,
   })
 }
@@ -425,7 +425,7 @@ export async function batchUpdate(
   return await mzaioRequest.post<{ isSuccess: boolean }>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/batchUpdate',
+    url: '/v1/cl/device/batchUpdate',
     data,
   })
 }
@@ -441,7 +441,7 @@ export async function deleteDevice(
   return await mzaioRequest.post<IAnyObject>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/delDevice',
+    url: '/v1/cl/device/delDevice',
     data,
   })
 }
@@ -453,7 +453,7 @@ export async function queryDelDevIdIsSuccess(data: { devIds: string[] }, options
   return await mzaioRequest.post<string[]>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/queryDelDevIdIsSuccess',
+    url: '/v1/cl/device/queryDelDevIdIsSuccess',
     data,
   })
 }
@@ -508,7 +508,7 @@ export async function batchDeleteDevice(
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/batchDelDevice',
+    url: '/v1/cl/device/batchDelDevice',
     data,
   })
 }
@@ -560,7 +560,7 @@ export async function saveDeviceOrder(data: Device.OrderSaveData, options?: { lo
   return await mzaioRequest.post<IAnyObject>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/saveDeviceNum',
+    url: '/v1/cl/device/saveDeviceNum',
     data,
   })
 }
@@ -579,7 +579,7 @@ export async function deviceReplace(
   return await mzaioRequest.post<IAnyObject>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/deviceReplace',
+    url: '/v1/cl/device/deviceReplace',
     data,
   })
 }
@@ -597,7 +597,7 @@ export async function getSensorLogs(
   return await mzaioRequest.post<Device.Log[]>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/querySensorLog',
+    url: '/v1/cl/device/querySensorLog',
     data,
   })
 }
@@ -614,7 +614,7 @@ export async function uploadDeviceLog(
   return await mzaioRequest.post<Device.Log[]>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/uploadDeviceLog',
+    url: '/v1/cl/device/uploadDeviceLog',
     data,
   })
 }
@@ -634,7 +634,7 @@ export async function checkDevice(
     log: true,
     loading: options?.loading ?? false,
     isDefaultErrorTips: false,
-    url: '/v1/device/checkDevice',
+    url: '/v1/cl/device/checkDevice',
     data,
   })
 }
@@ -651,7 +651,7 @@ export async function batchCheckDevice(
   return await mzaioRequest.post<Device.MzgdProTypeDTO[]>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/batchCheckDevice',
+    url: '/v1/cl/device/batchCheckDevice',
     data,
   })
 }
@@ -677,7 +677,7 @@ export async function batchGetProductInfoByBPid(
   >({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/batchGetProductInfoByBPid',
+    url: '/v1/cl/device/batchGetProductInfoByBPid',
     data,
   })
 }
@@ -692,7 +692,7 @@ export async function getRelLampInfo(
   return await mzaioRequest.post<{ lampRelList: Device.IMzgdLampRelGetDTO[] }>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/getRelLampInfo',
+    url: '/v1/cl/device/getRelLampInfo',
     data,
   })
 }
@@ -710,7 +710,7 @@ export async function getRelDeviceInfo(
   }>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/getRelDeviceInfo',
+    url: '/v1/cl/device/getRelDeviceInfo',
     data,
   })
 }
@@ -728,7 +728,7 @@ export async function editLampAndSwitchAssociated(
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/editLampAndSwitchAssociated',
+    url: '/v1/cl/device/editLampAndSwitchAssociated',
     data,
   })
 }
@@ -743,7 +743,7 @@ export async function delLampAndSwitchAssociated(
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/delLampAndSwitchAssociated',
+    url: '/v1/cl/device/delLampAndSwitchAssociated',
     data,
   })
 }
@@ -759,7 +759,7 @@ export async function editSwitchAndSwitchAssociated(
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/editSwitchAndSwitchAssociated',
+    url: '/v1/cl/device/editSwitchAndSwitchAssociated',
     data,
   })
 }
@@ -772,7 +772,7 @@ export async function delSwitchAndSwitchAssociated(data: { relIds: string }, opt
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/delSwitchAndSwitchAssociated',
+    url: '/v1/cl/device/delSwitchAndSwitchAssociated',
     data,
   })
 }
@@ -784,7 +784,7 @@ export async function getLampDeviceByHouseId(data: { projectId: string }, option
   return await mzaioRequest.post<Array<Device.IMzgdLampDeviceInfoDTO>>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/getLampDeviceByHouseId',
+    url: '/v1/cl/device/getLampDeviceByHouseId',
     data,
   })
 }
@@ -805,7 +805,7 @@ export async function addGroup(
   return await mzaioRequest.post<{ groupId: string }>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/addGroup',
+    url: '/v1/mzgd/cl/scene/addGroup',
     data,
   })
 }
@@ -823,7 +823,7 @@ export async function updateGroup(
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/uptGroup',
+    url: '/v1/mzgd/cl/scene/uptGroup',
     data,
   })
 }
@@ -840,7 +840,7 @@ export async function queryGroup(
   return await mzaioRequest.post<Device.DeviceItem>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/queryGroupByGroupId',
+    url: '/v1/mzgd/cl/scene/queryGroupByGroupId',
     data,
   })
 }
@@ -857,7 +857,7 @@ export async function delGroup(
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/delGroup',
+    url: '/v1/mzgd/cl/scene/delGroup',
     data,
   })
 }
@@ -875,7 +875,7 @@ export async function renameGroup(
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/groupRename',
+    url: '/v1/mzgd/cl/scene/groupRename',
     data,
   })
 }
@@ -918,7 +918,7 @@ export async function groupControl(
     isDefaultErrorTips: false,
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/groupControl',
+    url: '/v1/mzgd/cl/scene/groupControl',
     data,
   })
 }
@@ -971,7 +971,7 @@ export async function queryLocalKey(
   return await mzaioRequest.post<string>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/queryLocalKey',
+    url: '/v1/cl/device/queryLocalKey',
     data,
   })
 }
