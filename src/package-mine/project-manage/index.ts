@@ -4,13 +4,7 @@ import Dialog from '@vant/weapp/dialog/dialog'
 import Toast from '@vant/weapp/toast/toast'
 import pageBehaviors from '../../behaviors/pageBehaviors'
 import { roomBinding, projectBinding, userBinding, deviceBinding, projectStore } from '../../store/index'
-import {
-  saveOrUpdateUserHouseInfo,
-  delUserHouse,
-  quitUserHouse,
-  queryUserThirdPartyInfo,
-  delDeviceSubscribe,
-} from '../../apis/index'
+import { saveOrUpdateUserHouseInfo, delUserHouse, quitUserHouse } from '../../apis/index'
 import { strUtil, checkInputNameIllegal, emitter } from '../../utils/index'
 
 ComponentWithComputed({
@@ -167,63 +161,11 @@ ComponentWithComputed({
         return
       }
 
-      // 增加美居授权校验及提醒，并提供取消授权入口和二次确认
-      const bindRes = await queryUserThirdPartyInfo(projectStore.currentProjectId, { loading: true })
-
-      const isAuth = bindRes.success ? bindRes.result[0].authStatus === 1 : false
-
-      if (!bindRes.success) {
-        Toast('查询美居授权状态失败')
-        return
-      }
-
-      if (isAuth) {
-        const res = await Dialog.confirm({
-          title: '当前项目已绑定美居账号，转让项目必须先解绑，确认是否解绑',
-        }).catch(() => 'cancel')
-
-        console.log('delHome', res)
-
-        if (res === 'cancel') {
-          return
-        }
-
-        const dialogRes = await Dialog.confirm({
-          title: '取消授权后，美居项目的设备将从HOMLUX项目移除，请谨慎操作。',
-        }).catch(() => 'cancel')
-
-        if (dialogRes === 'cancel') return
-
-        const deBindRes = await this.deBindMeiju()
-
-        if (!deBindRes?.success) {
-          return
-        }
-      }
-
       wx.navigateTo({
         url: '/package-mine/project-transfer/index',
       })
     },
 
-    async deBindMeiju() {
-      const dialogRes = await Dialog.confirm({
-        title: '取消授权后，美居项目的设备将从HOMLUX项目移除，请谨慎操作。',
-      }).catch(() => 'cancel')
-
-      if (dialogRes === 'cancel') return
-
-      const res = await delDeviceSubscribe(projectStore.currentProjectId)
-      if (res.success) {
-        Toast('已解除绑定')
-
-        projectStore.updateSpaceCardList()
-      } else {
-        Toast(res.msg)
-      }
-
-      return res
-    },
     /**
      * 创建项目
      */
