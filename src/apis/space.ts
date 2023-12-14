@@ -19,22 +19,43 @@ export async function querySpaceList(projectId: string, pid = '0', options?: { l
 }
 
 /**
- * 新增或更新空间信息
+ * 新增空间信息
  */
-export async function saveHouseRoomInfo(
+export async function addSpace(
   data: {
     projectId: string
-    roomIcon: string
-    spaceId?: string
+    pid: string
     spaceName: string
+    spaceLevel: Space.SpaceLevel
   },
   options?: { loading?: boolean },
 ) {
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/cl/user/saveHouseRoomInfo',
-    data: data,
+    url: '/v1/mzgd/cl/user/space/add',
+    data,
+  })
+}
+
+/**
+ * 编辑空间信息
+ */
+export async function updateSpace(
+  data: {
+    projectId: string
+    pid: string
+    spaceId: string
+    spaceName: string
+    spaceLevel: Space.SpaceLevel
+  },
+  options?: { loading?: boolean },
+) {
+  return await mzaioRequest.post({
+    log: true,
+    loading: options?.loading ?? false,
+    url: '/v1/mzgd/cl/user/space/update',
+    data,
   })
 }
 

@@ -19,7 +19,7 @@ export const SpaceConfig = {
   [SpaceLevel.floor]: {
     text: '层',
     name: '楼层',
-    color: '#9195bd',
+    color: '#e2ad4d',
   },
   [SpaceLevel.area]: {
     text: '区',

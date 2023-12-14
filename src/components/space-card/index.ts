@@ -3,6 +3,7 @@ import { runInAction } from 'mobx-miniprogram'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { spaceBinding, spaceStore } from '../../store/index'
 import { SpaceLevel, SpaceConfig } from '../../config/index'
+import { strUtil } from '../../utils/index'
 
 ComponentWithComputed({
   options: {},
@@ -95,7 +96,11 @@ ComponentWithComputed({
       })
       const link = nodeCount ? '/package-space-control/space-list/index' : '/package-space-control/index/index'
       wx.navigateTo({
-        url: `${link}?pid=${spaceId}&pname=${spaceName}&plevel=${spaceLevel}`,
+        url: strUtil.getUrlWithParams(link, {
+          pid: spaceId,
+          pname: spaceName,
+          plevel: spaceLevel,
+        }),
       })
     },
     doNothing() {},

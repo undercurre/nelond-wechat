@@ -1,8 +1,9 @@
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
-import { saveHouseRoomInfo } from '../../apis/index'
+import { addSpace } from '../../apis/index'
 import { projectBinding, spaceBinding } from '../../store/index'
 import { checkInputNameIllegal, emitter } from '../../utils/index'
+import { SpaceLevel } from '../../config'
 
 Component({
   options: {
@@ -158,11 +159,11 @@ Component({
       }
 
       if (this.data.isSave) {
-        const res = await saveHouseRoomInfo({
+        const res = await addSpace({
           projectId: projectBinding.store.currentProjectId,
-          spaceId: this.data.spaceId,
-          roomIcon: this.data.spaceInfo.icon,
           spaceName: this.data.spaceInfo.name,
+          spaceLevel: SpaceLevel.area,
+          pid: '0',
         })
 
         if (res.success) {

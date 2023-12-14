@@ -1,3 +1,5 @@
 {
-  "usingComponents": {}
+  "usingComponents": {
+    "space-card": "/components/space-card/index"
+  }
 }

@@ -3,9 +3,10 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import Dialog from '@vant/weapp/dialog/dialog'
 import Toast from '@vant/weapp/toast/toast'
 import pageBehaviors from '../../behaviors/pageBehaviors'
-import { projectBinding, spaceBinding } from '../../store/index'
+import { projectBinding, spaceBinding, userStore } from '../../store/index'
 import { emitter, getCurrentPageParams } from '../../utils/index'
-import { delHouseRoom, saveHouseRoomInfo } from '../../apis/index'
+import { delHouseRoom, updateSpace } from '../../apis/index'
+import { SpaceLevel } from '../../config/index'
 
 ComponentWithComputed({
   options: {},
@@ -47,7 +48,7 @@ ComponentWithComputed({
 
   methods: {
     editRoom(event: WechatMiniprogram.CustomEvent) {
-      if (!projectBinding.store.isManager) {
+      if (!userStore.isManager) {
         return
       }
 
@@ -76,11 +77,12 @@ ComponentWithComputed({
     },
 
     async saveRoomInfo() {
-      const res = await saveHouseRoomInfo({
+      const res = await updateSpace({
         projectId: projectBinding.store.currentProjectId,
         spaceId: this.data.spaceInfo.spaceId,
-        roomIcon: this.data.spaceInfo.roomIcon,
         spaceName: this.data.spaceInfo.spaceName,
+        spaceLevel: SpaceLevel.area,
+        pid: '0',
       })
 
       if (res.success) {

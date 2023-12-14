@@ -24,6 +24,7 @@
         "project-transfer/index",
         "space-manage/index",
         "space-detail/index",
+        "space-new/index",
         "member-manage/index",
         "device-replace/index",
         "ota/index",
