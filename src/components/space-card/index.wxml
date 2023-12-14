@@ -22,6 +22,7 @@
       </view>
     </view>
     <image
+      wx:if="{{hasArrow}}"
       src="/assets/img/base/arrow-right.png"
       class="w-32rpx h-32rpx mr-32rpx"
     ></image>

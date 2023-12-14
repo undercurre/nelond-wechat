@@ -174,14 +174,6 @@ ComponentWithComputed({
         'addMenu.isShow': false,
       })
     },
-    /**
-     * 跳转到登录页
-     */
-    toLogin() {
-      wx.navigateTo({
-        url: '/pages/login/index',
-      })
-    },
 
     /**
      * 用户切换项目

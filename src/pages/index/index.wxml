@@ -26,11 +26,11 @@
           class="bg-hex-ffffff_42 w-250rpx h-80rpx rounded-40rpx flex items-center text-hex-2b4067 flex-center"
           id="all-off"
         >
-          <text class="text-28rpx font-semibold">空间管理（4）</text>
+          <text class="text-28rpx font-semibold">空间管理（{{spaceList.length || 0}}）</text>
         </view>
       </view>
       <view
-        wx:if="{{isCreator || isAdmin}}"
+        wx:if="{{isManager}}"
         class="mr-36rpx mt-8rpx"
         data-mark="addIcon"
         id="addIcon"

@@ -1,5 +1,13 @@
 // 业务类型示例
+
 declare namespace User {
+  // 用户角色
+  enum UserRole {
+    UnDef = '',
+    Creator = '1',
+    Admin = '2',
+    Visitor = '3',
+  }
   interface UserLoginRes {
     /**
      * 头像
@@ -36,9 +44,9 @@ declare namespace User {
      */
     userId: string
     /**
-     * 名称
+     * 用户名称
      */
-    name: string
+    userName: string
     /**
      * 微信id
      */
@@ -47,5 +55,13 @@ declare namespace User {
      * 性别
      */
     sex: number
+    /**
+     * 用户角色 uuid
+     */
+    roleType: UserRole
+    /**
+     * 用户角色名称
+     */
+    roleName: string
   }
 }
