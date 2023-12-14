@@ -1,9 +1,3 @@
-export const userRole: Project.UserRoleMap = {
-  creator: 1,
-  admin: 2,
-  visitor: 3,
-}
-
 export enum SpaceLevel {
   park = 1,
   building = 2,
@@ -11,21 +5,25 @@ export enum SpaceLevel {
   area = 4,
 }
 
-export const spaceIcon = {
+export const SpaceConfig = {
   [SpaceLevel.park]: {
     text: '园',
+    name: '园区',
     color: '#7cd06a',
   },
   [SpaceLevel.building]: {
     text: '楼',
+    name: '楼栋',
     color: '#78bdd8',
   },
   [SpaceLevel.floor]: {
     text: '层',
-    color: '#9195bd',
+    name: '楼层',
+    color: '#e2ad4d',
   },
   [SpaceLevel.area]: {
     text: '区',
+    name: '区域',
     color: '#f37c99',
   },
-} as Record<SpaceLevel, { text: string; color: string }>
+} as Record<SpaceLevel, { text: string; name: string; color: string }>

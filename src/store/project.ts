@@ -17,7 +17,6 @@ import { deviceStore } from './device'
 import { othersStore } from './others'
 import { spaceStore } from './space'
 import { userStore } from './user'
-import { userRole } from '../config/project'
 
 export const projectStore = observable({
   key: '', // 局域网本地场景key
@@ -38,19 +37,6 @@ export const projectStore = observable({
       return this.currentProjectDetail.projectName.slice(0, 6) + '...'
     }
     return this.currentProjectDetail?.projectName ?? ''
-  },
-
-  // 是否创建者
-  get isCreator() {
-    if (this.currentProjectDetail) {
-      return this.currentProjectDetail.houseUserAuth === userRole.creator
-    }
-    return false
-  },
-
-  // 是否管理员权限+
-  get isManager() {
-    return this.currentProjectDetail.houseUserAuth === 1 || this.currentProjectDetail.houseUserAuth === 2
   },
 
   setProjectId(id: string) {

@@ -8,34 +8,18 @@
   ></nav-bar>
 
   <scroll-view
-    class="mt-40rpx grow shrink h-500 box-border"
-    scroll-y="{{true}}"
+    class="mt-40rpx grow shrink h-500 box-border mx-24rpx"
+    scroll-y
+    enhanced
+    enable-flex
+    show-scrollbar="{{false}}"
   >
-    <van-cell-group
+    <space-card
       wx:for="{{spaceList}}"
       wx:key="spaceId"
-      inset
-    >
-      <van-cell
-        title="{{item.spaceName}}"
-        is-link
-        bind:click="editRoom"
-        data-index="{{index}}"
-        label="{{item.deviceNum}}个设备"
-        center
-        title-style="font-weight: 500;"
-      >
-        <view
-          slot="icon"
-          class="bg-hex-F6FAFD rounded-32rpx p-16rpx mr-32rpx leading-0"
-        >
-          <image
-            class="w-64 h-64"
-            src="/assets/img/room/{{item.roomIcon}}.png"
-          ></image>
-        </view>
-      </van-cell>
-    </van-cell-group>
+      space-info="{{item}}"
+      data-space="{{item.spaceId}}"
+    ></space-card>
   </scroll-view>
 
   <block wx:if="{{isManager}}">
@@ -45,14 +29,9 @@
       type="primary"
       block
       bind:click="addRoom"
-      >添加空间</van-button
+      >新增空间</van-button
     >
   </block>
 </view>
-
-<add-room
-  show="{{isAddRoom}}"
-  bind:close="hideAddRoom"
-></add-room>
 
 <van-toast id="van-toast" />

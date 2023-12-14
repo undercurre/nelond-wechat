@@ -1,6 +1,5 @@
 import Toast from '@vant/weapp/toast/toast'
 import { BehaviorWithComputed } from 'miniprogram-computed'
-import { userRole } from '../config/project'
 import { ossDomain } from '../config/index'
 
 export default BehaviorWithComputed({
@@ -60,24 +59,5 @@ export default BehaviorWithComputed({
     //   }
     // },
   },
-  computed: {
-    isCreator(data) {
-      if (data.currentProjectDetail) {
-        return data.currentProjectDetail.houseUserAuth === userRole.creator
-      }
-      return false
-    },
-    isAdmin(data) {
-      if (data.currentProjectDetail) {
-        return data.currentProjectDetail.houseUserAuth === userRole.admin
-      }
-      return false
-    },
-    isVisitor(data) {
-      if (data.currentProjectDetail) {
-        return data.currentProjectDetail.houseUserAuth === userRole.visitor
-      }
-      return true
-    },
-  },
+  computed: {},
 })

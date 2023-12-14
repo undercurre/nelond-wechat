@@ -1,40 +1,12 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { runInAction } from 'mobx-miniprogram'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import {
-  othersBinding,
-  spaceBinding,
-  userBinding,
-  projectStore,
-  projectBinding,
-  othersStore,
-  spaceStore,
-  deviceStore,
-} from '../../store/index'
+import { othersBinding, spaceBinding, userBinding, projectStore, projectBinding } from '../../store/index'
 import { storage, throttle } from '../../utils/index'
-import { ROOM_CARD_H, defaultImgDir } from '../../config/index'
-import { updateRoomSort } from '../../apis/index'
+import { ROOM_CARD_H, SpaceConfig, defaultImgDir } from '../../config/index'
+import { updateRoomSort, querySpaceList } from '../../apis/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 
 type PosType = Record<'index' | 'y', number>
-
-/**
- * 根据index计算坐标位置
- * @returns {x, y}
- */
-function getPos(index: number): number {
-  return index * ROOM_CARD_H
-}
-
-/**
- * 根据坐标位置计算index
- * TODO 防止超界
- * @returns index
- */
-function getIndex(y: number) {
-  const maxIndex = spaceStore.spaceList.length - 1 // 防止越界
-  return Math.max(0, Math.min(maxIndex, Math.floor((y + ROOM_CARD_H / 2) / ROOM_CARD_H)))
-}
 
 ComponentWithComputed({
   options: {
@@ -45,6 +17,9 @@ ComponentWithComputed({
     pageBehavior,
   ],
   data: {
+    title: '',
+    subTitle: '',
+    subSpaceList: [] as Space.SpaceInfo[],
     defaultImgDir,
     navigationBarAndStatusBarHeight:
       (storage.get<number>('statusBarHeight') as number) +
@@ -60,23 +35,9 @@ ComponentWithComputed({
       90 - // 开关、添加按钮
       (storage.get<number>('navigationBarHeight') as number),
     _system: storage.get('system') as string,
-    selectHomeMenu: {
-      x: '0px',
-      y: '0px',
-      isShow: false,
-    },
-    addMenu: {
-      right: '0px',
-      y: '0px',
-      isShow: false,
-    },
-    allOnBtnTap: false,
-    allOffBtnTap: false,
-    showAddNewRoom: false,
-    showHomeSelect: false,
     loading: true,
     isMoving: false,
-    roomPos: {} as Record<string, PosType>,
+    cardPos: {} as Record<string, PosType>,
     accumulatedY: 0, // 可移动区域高度
     placeholder: {
       y: 0,
@@ -89,73 +50,62 @@ ComponentWithComputed({
     _from: '', // 页面进入来源
   },
   computed: {
-    // 项目是否有设备
-    hasDevice() {
-      if (deviceStore.allDeviceList) {
-        return deviceStore.allDeviceList.length
-      }
-      return false
-    },
-    movableHeight() {
-      return spaceStore.spaceList.length * ROOM_CARD_H
+    movableHeight(data) {
+      return data.subSpaceList.length * ROOM_CARD_H
     },
   },
   watch: {
-    isInit(data) {
-      // 如果已初始化，但仍在loading
-      if (this.data.loading && data) {
-        this.setData({ loading: !data })
-      }
-    },
-    spaceList() {
-      this.renewRoomPos()
+    subSpaceList() {
+      this.renewPos()
     },
   },
-
   methods: {
     // 生命周期或者其他钩子
-    onLoad(query: { from?: string }) {
-      this.data._from = query.from ?? ''
-      // 更新tabbar状态
-      if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-        this.getTabBar().setData({
-          selected: 0,
-        })
-      }
-      if (othersStore.isInit) {
+    async onLoad(query: { pid?: string; pname?: string; plevel?: Space.SpaceLevel }) {
+      if (query.pname && query.plevel) {
         this.setData({
-          loading: false,
+          title: query.pname,
+          subTitle: SpaceConfig[query.plevel].name,
+        })
+      }
+      // 加载本空间列表
+      const res = await querySpaceList(projectStore.currentProjectId, query.pid)
+      if (res.success) {
+        this.setData({
+          subSpaceList: res.result,
         })
       }
     },
-    onHide() {
-      // 隐藏之前展示的下拉菜单
-      this.hideMenu()
-    },
-    async onShow() {
-      if (!this.data._isFirstShow || this.data._from === 'addDevice') {
-        projectStore.updateSpaceCardList()
-      }
-      this.data._isFirstShow = false
 
-      if (!othersStore.isInit) {
-        this.setData({
-          loading: true,
-        })
-      }
+    /**
+     * 根据index计算坐标位置
+     * @returns {x, y}
+     */
+    getPos(index: number): number {
+      return index * ROOM_CARD_H
+    },
+
+    /**
+     * 根据坐标位置计算index
+     * TODO 防止超界
+     * @returns index
+     */
+    getIndex(y: number) {
+      const maxIndex = this.data.subSpaceList.length - 1 // 防止越界
+      return Math.max(0, Math.min(maxIndex, Math.floor((y + ROOM_CARD_H / 2) / ROOM_CARD_H)))
     },
 
     /**
      * @description 生成空间位置
      * @param isMoving 是否正在拖动
      */
-    renewRoomPos() {
+    renewPos() {
       // const currentIndex = this.data.placeholder.index
-      const roomPos = {} as Record<string, PosType>
-      spaceStore.spaceList
-        .sort((a, b) => this.data.roomPos[a.spaceId]?.index - this.data.roomPos[b.spaceId]?.index)
+      const cardPos = {} as Record<string, PosType>
+      this.data.subSpaceList
+        .sort((a, b) => this.data.cardPos[a.spaceId]?.index - this.data.cardPos[b.spaceId]?.index)
         .forEach((space, index) => {
-          roomPos[space.spaceId] = {
+          cardPos[space.spaceId] = {
             index,
             // 正在拖的卡片，不改变位置
             y: index * ROOM_CARD_H,
@@ -163,78 +113,7 @@ ComponentWithComputed({
         })
 
       this.setData({
-        roomPos,
-      })
-    },
-
-    // 收起所有菜单
-    hideMenu() {
-      this.setData({
-        'selectHomeMenu.isShow': false,
-        'addMenu.isShow': false,
-      })
-    },
-    /**
-     * 跳转到登录页
-     */
-    toLogin() {
-      wx.navigateTo({
-        url: '/pages/login/index',
-      })
-    },
-
-    /**
-     * 用户切换项目
-     */
-    handleHomeSelect() {
-      this.setData({
-        'selectHomeMenu.isShow': false,
-        'addMenu.isShow': false,
-      })
-    },
-    /**
-     * 用户点击展示/隐藏项目选择
-     */
-    handleShowHomeSelectMenu() {
-      const diffData = {} as IAnyObject
-      diffData.selectHomeMenu = {
-        x: '28rpx',
-        y:
-          (storage.get<number>('statusBarHeight') as number) +
-          (storage.get<number>('navigationBarHeight') as number) +
-          8 +
-          'px',
-        isShow: !this.data.selectHomeMenu.isShow,
-      }
-
-      // 关闭已打开的其他菜单
-      if (!this.data.selectHomeMenu.isShow && this.data.addMenu.isShow) {
-        diffData['addMenu.isShow'] = false
-      }
-
-      this.setData(diffData)
-    },
-    /**
-     * 隐藏添加空间popup
-     */
-    handleHideAddNewRoom() {
-      this.setData({
-        showAddNewRoom: false,
-      })
-    },
-
-    showAddMenu() {
-      this.setData({
-        addMenu: {
-          right: '25rpx',
-          y:
-            (storage.get<number>('statusBarHeight') as number) +
-            (storage.get<number>('navigationBarHeight') as number) +
-            50 +
-            'px',
-          isShow: !this.data.addMenu.isShow,
-        },
-        'selectHomeMenu.isShow': false,
+        cardPos,
       })
     },
 
@@ -243,13 +122,13 @@ ComponentWithComputed({
       wx.vibrateShort({ type: 'heavy' })
 
       const rid = e.currentTarget.dataset.rid
-      const index = this.data.roomPos[rid].index
+      const index = this.data.cardPos[rid].index
 
       const diffData = {} as IAnyObject
       diffData.isMoving = true
       diffData.placeholder = {
         index,
-        y: getPos(index),
+        y: this.getPos(index),
       }
 
       console.log('[movableTouchStart] diffData: ', diffData)
@@ -266,7 +145,7 @@ ComponentWithComputed({
     movableChangeThrottle: throttle(function (this: IAnyObject, e: WechatMiniprogram.TouchEvent) {
       const TOP_HEIGHT = 170
       const posY = (e.detail.y || e.touches[0]?.clientY) - TOP_HEIGHT + this.data.scrollTop
-      const targetOrder = getIndex(posY)
+      const targetOrder = this.getIndex(posY)
       if (this.data.placeholder.index === targetOrder) {
         return
       }
@@ -282,20 +161,20 @@ ComponentWithComputed({
       const isForward = oldOrder < targetOrder
       const diffData = {} as IAnyObject
       diffData[`placeholder.index`] = targetOrder
-      diffData[`placeholder.y`] = getPos(targetOrder)
+      diffData[`placeholder.y`] = this.getPos(targetOrder)
 
       // 更新联动卡片的位置
       let moveCount = 0
-      for (const space of spaceStore.spaceList) {
-        const _orderNum = this.data.roomPos[space.spaceId].index
+      for (const space of this.data.subSpaceList) {
+        const _orderNum = this.data.cardPos[space.spaceId].index
         if (
           (isForward && _orderNum > oldOrder && _orderNum <= targetOrder) ||
           (!isForward && _orderNum >= targetOrder && _orderNum < oldOrder)
         ) {
           ++moveCount
           const dOrderNum = isForward ? _orderNum - 1 : _orderNum + 1
-          diffData[`roomPos.${space.spaceId}.y`] = getPos(dOrderNum)
-          diffData[`roomPos.${space.spaceId}.index`] = dOrderNum
+          diffData[`cardPos.${space.spaceId}.y`] = this.getPos(dOrderNum)
+          diffData[`cardPos.${space.spaceId}.index`] = dOrderNum
 
           // 减少遍历消耗
           if (moveCount >= Math.abs(targetOrder - oldOrder)) {
@@ -307,11 +186,11 @@ ComponentWithComputed({
       // 直接更新被拖拽卡片位置
       if (this.data._scrolledWhenMoving || this.data._system.indexOf('iOS') > -1) {
         const rid = e.currentTarget.dataset.rid
-        diffData[`roomPos.${rid}.y`] = getPos(targetOrder)
+        diffData[`cardPos.${rid}.y`] = this.getPos(targetOrder)
       }
 
       // 更新被拖拽卡片的排序num
-      diffData[`roomPos.${e.currentTarget.dataset.rid}.index`] = targetOrder
+      diffData[`cardPos.${e.currentTarget.dataset.rid}.index`] = targetOrder
 
       console.log('[movableChange] diffData:', diffData)
       this.setData(diffData)
@@ -331,7 +210,7 @@ ComponentWithComputed({
       diffData.isMoving = false
 
       // 修正卡片位置
-      diffData[`roomPos.${e.currentTarget.dataset.rid}.y`] = dpos
+      diffData[`cardPos.${e.currentTarget.dataset.rid}.y`] = dpos
       diffData[`placeholder.index`] = -1
       this.setData(diffData)
       console.log('movableTouchEnd:', diffData)
@@ -356,10 +235,10 @@ ComponentWithComputed({
 
     handleSortSaving() {
       const roomSortList = [] as Space.RoomSort[]
-      Object.keys(this.data.roomPos).forEach((spaceId) => {
+      Object.keys(this.data.cardPos).forEach((spaceId) => {
         roomSortList.push({
           spaceId,
-          sort: this.data.roomPos[spaceId].index + 1,
+          sort: this.data.cardPos[spaceId].index + 1,
         })
       })
 
@@ -368,12 +247,12 @@ ComponentWithComputed({
 
       // 更新store排序
       const list = [] as Space.SpaceInfo[]
-      spaceStore.spaceList.forEach((space) => {
-        const { index } = this.data.roomPos[space.spaceId]
+      this.data.subSpaceList.forEach((space) => {
+        const { index } = this.data.cardPos[space.spaceId]
         list[index] = space
       })
-      runInAction(() => {
-        spaceStore.spaceList = list
+      this.setData({
+        subSpaceList: list,
       })
     },
   },

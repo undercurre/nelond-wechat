@@ -52,7 +52,7 @@ declare namespace Project {
     /**
      * 设备数量
      */
-    deviceCount: number
+    deviceTotal: number
 
     /**
      * 成员数量

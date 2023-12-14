@@ -111,10 +111,9 @@ export async function queryHouseUserList({ projectId = '' }, options?: { loading
   return await mzaioRequest.post<Project.HomeMemberInfo>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/cl/user/house/queryHouseUserList',
+    url: '/v1/mzgd/cl/user/project/queryProjectUserList',
     data: {
       projectId,
-      pageSize: 50,
     },
   })
 }

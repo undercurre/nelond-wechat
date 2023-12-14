@@ -2,19 +2,17 @@ import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import Toast from '@vant/weapp/toast/toast'
 import pageBehaviors from '../../behaviors/pageBehaviors'
-import { projectBinding, spaceBinding } from '../../store/index'
+import { projectBinding, spaceBinding, userBinding } from '../../store/index'
 import { strUtil } from '../../utils/index'
 
 ComponentWithComputed({
   options: {},
-  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, spaceBinding] }), pageBehaviors],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, spaceBinding, userBinding] }), pageBehaviors],
 
   /**
    * 页面的初始数据
    */
-  data: {
-    isAddRoom: false,
-  },
+  data: {},
 
   computed: {},
 
@@ -46,14 +44,8 @@ ComponentWithComputed({
         return
       }
 
-      this.setData({
-        isAddRoom: true,
-      })
-    },
-
-    hideAddRoom() {
-      this.setData({
-        isAddRoom: false,
+      wx.navigateTo({
+        url: '/package-mine/space-new/index',
       })
     },
   },

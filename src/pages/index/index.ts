@@ -81,6 +81,7 @@ ComponentWithComputed({
       y: 0,
       index: -1,
     } as PosType,
+    movableHeight: 0, // 移动区域高度
     scrollTop: 0,
     _scrolledWhenMoving: false, // 拖拽时，被动发生了滚动
     _lastClientY: 0, // 上次触控采样时 的Y坐标
@@ -96,9 +97,6 @@ ComponentWithComputed({
       }
       return false
     },
-    movableHeight() {
-      return spaceStore.spaceList?.length ? spaceStore.spaceList.length * ROOM_CARD_H : 0
-    },
   },
   watch: {
     isInit(data) {
@@ -107,7 +105,10 @@ ComponentWithComputed({
         this.setData({ loading: !data })
       }
     },
-    spaceList() {
+    spaceList(list) {
+      this.setData({
+        movableHeight: list?.length ? list.length * ROOM_CARD_H : 0,
+      })
       this.renewRoomPos()
     },
   },
@@ -172,14 +173,6 @@ ComponentWithComputed({
       this.setData({
         'selectHomeMenu.isShow': false,
         'addMenu.isShow': false,
-      })
-    },
-    /**
-     * 跳转到登录页
-     */
-    toLogin() {
-      wx.navigateTo({
-        url: '/pages/login/index',
       })
     },
 

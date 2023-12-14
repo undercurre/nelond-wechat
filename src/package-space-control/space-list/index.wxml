@@ -1,8 +1,5 @@
 <!-- 背景 -->
-<view
-  class="bg-z-index fixed left-0 top-0 w-100vw h-100vh"
-  bind:touchstart="hideMenu"
->
+<view class="bg-z-index fixed left-0 top-0 w-100vw h-100vh">
   <image
     src="{{defaultImgDir}}/bg.jpg"
     class="bg-image"
@@ -12,7 +9,6 @@
 <view
   style="height: calc(120rpx + {{navigationBarAndStatusBarHeight}});"
   class="fixed left-0 top-0 z-110 overflow-hidden w-750rpx"
-  bind:tap="hideMenu"
 >
   <view
     class="w-750rpx flex justify-between pt-28rpx left-0 absolute z-112"
@@ -24,36 +20,21 @@
         class="bg-hex-ffffff_42 w-250rpx h-80rpx rounded-40rpx flex items-center text-hex-2b4067 flex-center"
         id="all-off"
       >
-        <text class="text-28rpx font-semibold">空间管理（4）</text>
+        <text class="text-28rpx font-semibold">{{subTitle}}管理（{{subSpaceList.length}}）</text>
       </view>
-    </view>
-    <view
-      wx:if="{{isCreator || isAdmin}}"
-      class="mr-36rpx mt-8rpx"
-      data-mark="addIcon"
-      id="addIcon"
-      catch:tap="showAddMenu"
-    >
-      <image
-        src="/assets/img/home/add.png"
-        class="w-64rpx h-64rpx"
-      ></image>
     </view>
   </view>
 </view>
 <!-- 项目导航栏 -->
 <nav-bar
   z-index="{{113}}"
-  title="{{currentProjectName}}"
+  title="{{title}}"
   left-arrow
   bind:leftTap="goBack"
 >
 </nav-bar>
 <view class="h-114rpx"></view>
-<view
-  class="flex flex-col"
-  bind:tap="hideMenu"
->
+<view class="flex flex-col">
   <!-- 主体内容 -->
   <view
     class="flex flex-1 w-full box-border"
@@ -65,7 +46,6 @@
       scroll-y="{{!isMoving}}"
       show-scrollbar="{{false}}"
       class="flex flex-col items-between mx-24rpx"
-      wx:if="{{hasDevice}}"
       style="height: {{scrollViewHeight}}px;"
       scroll-top="{{scrollTop}}"
       scroll-with-animation="{{true}}"
@@ -77,19 +57,19 @@
       <movable-area style="height: {{movableHeight}}px; width: 702rpx;">
         <movable-view
           out-of-bounds
-          wx:for="{{spaceList}}"
+          wx:for="{{subSpaceList}}"
           wx:key="spaceId"
           data-index="{{index}}"
           data-rid="{{item.spaceId}}"
           class="w-702rpx h-152rpx"
-          y="{{roomPos[item.spaceId].y}}"
+          y="{{cardPos[item.spaceId].y}}"
           direction="vertical"
           friction="{{999}}"
           damping="{{100}}"
           bind:longpress="movableLongpress"
           bind:touchend="movableTouchEnd"
           bind:touchmove="movableTouchMove"
-          class="{{ roomPos[item.spaceId].index === placeholder.index ? 'z-100' : (isMoving ? 'opacity-50' : 'opacity-100 z-1') }}"
+          class="{{ cardPos[item.spaceId].index === placeholder.index ? 'z-100' : (isMoving ? 'opacity-50' : 'opacity-100 z-1') }}"
           disabled="{{!isMoving}}"
         >
           <space-card
@@ -115,27 +95,6 @@
       <!-- 顶开下面的内容高度 -->
       <view class="h-64rpx"></view>
     </scroll-view>
-    <!-- 无设备时显示 -->
-    <view
-      wx:else
-      class="w-full mt-68rpx flex flex-col items-center"
-    >
-      <image
-        src="{{defaultImgDir}}/no-device.png"
-        class="w-300rpx h-300rpx"
-      ></image>
-      <text class="text-32rpx text-black-59 mt-44rpx mb-32rpx">尚未添加设备</text>
-      <text class="text-24rpx text-black-59 mb-224rpx opacity-40">立即添加设备，开启智慧照明</text>
-      <van-button
-        bind:click="goToWhenConnected"
-        data-url="/package-distribution/choose-device/index"
-        color="linear-gradient(165deg, #468CFB 0%, #6BA3FC 100%)"
-        custom-class="add-immediately-btn"
-        wx:if="{{isInit && !hasDevice && (isCreator || isAdmin)}}"
-      >
-        <text class="text-white text-36rpx font-normal">添加智能设备</text>
-      </van-button>
-    </view>
   </view>
 </view>
 
