@@ -56,6 +56,7 @@ ComponentWithComputed({
       const res = await addSpace({
         projectId: projectStore.currentProjectId,
         pid: '0',
+        cid: '0',
         spaceLevel,
         spaceName,
       })

@@ -1,9 +1,7 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { runInAction } from 'mobx-miniprogram'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import { spaceBinding, spaceStore } from '../../store/index'
+import { spaceBinding } from '../../store/index'
 import { SpaceLevel, SpaceConfig } from '../../config/index'
-import { strUtil } from '../../utils/index'
 
 ComponentWithComputed({
   options: {},
@@ -62,8 +60,9 @@ ComponentWithComputed({
       return SpaceConfig[spaceLevel]
     },
     hasArrow(data) {
-      const { spaceLevel, isManage } = data.spaceInfo
-      return !isManage || spaceLevel !== SpaceLevel.park
+      const { isManage } = data
+      const { spaceLevel } = data.spaceInfo
+      return !isManage || spaceLevel !== SpaceLevel.area
     },
   },
 
@@ -77,31 +76,7 @@ ComponentWithComputed({
    */
   methods: {
     handleCardTap() {
-      const { spaceLevel, spaceId, spaceName, nodeCount } = this.data.spaceInfo as Space.SpaceInfo
-
-      // 在空间管理页中
-      if (this.data.isManage) {
-        if (spaceLevel !== SpaceLevel.park) {
-          wx.navigateTo({
-            url: '/package-space-control/space-list/index',
-          })
-        }
-        return
-      }
-
-      // 在空间展示列表中
-      const index = spaceStore.spaceList.findIndex((space) => space.spaceId === spaceId)
-      runInAction(() => {
-        spaceStore.currentSpaceIndex = index
-      })
-      const link = nodeCount ? '/package-space-control/space-list/index' : '/package-space-control/index/index'
-      wx.navigateTo({
-        url: strUtil.getUrlWithParams(link, {
-          pid: spaceId,
-          pname: spaceName,
-          plevel: spaceLevel,
-        }),
-      })
+      this.triggerEvent('cardtap', this.data.spaceInfo)
     },
     doNothing() {},
   },

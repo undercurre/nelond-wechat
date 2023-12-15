@@ -2,8 +2,10 @@ import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import Toast from '@vant/weapp/toast/toast'
 import pageBehaviors from '../../behaviors/pageBehaviors'
-import { projectBinding, spaceBinding, userBinding } from '../../store/index'
+import { projectBinding, projectStore, spaceBinding, userBinding } from '../../store/index'
 import { strUtil } from '../../utils/index'
+import { SpaceConfig, SpaceLevel } from '../../config/index'
+import { addSpace, querySpaceList } from '../../apis/index'
 
 ComponentWithComputed({
   options: {},
@@ -12,18 +14,82 @@ ComponentWithComputed({
   /**
    * 页面的初始数据
    */
-  data: {},
+  data: {
+    subSpaceList: [] as Space.SpaceInfo[],
+    pid: '0',
+    plevel: SpaceLevel.undef, // 父层级
+    clevel: SpaceLevel.park, // 子层级
+    rootAsGrandpa: false, // 爷爷节点即根节点
+    showAddDialog: false,
+    spaceInfo: {
+      spaceLevel: SpaceLevel.park,
+      spaceName: '',
+    } as Space.SpaceInfo,
+  },
 
-  computed: {},
-
-  lifetimes: {
-    // 生命周期函数，可以为函数，或一个在 methods 段中定义的方法名
-    attached: function () {},
-    moved: function () {},
-    detached: function () {},
+  computed: {
+    subTitle(data) {
+      const { sList, plevel } = data
+      return `${SpaceConfig[plevel]?.name ?? '空间'}管理（${sList?.length ?? 0}）`
+    },
+    sList(data) {
+      const { plevel, subSpaceList, spaceList } = data
+      return plevel === SpaceLevel.undef ? spaceList : subSpaceList
+    },
+    showParkAdding(data) {
+      const { plevel } = data
+      console.log('plevel', plevel)
+      return plevel === SpaceLevel.undef
+    },
+    showChildAdding(data) {
+      const { plevel } = data
+      return plevel !== SpaceLevel.undef
+    },
+    showParentAdding(data) {
+      const { clevel, rootAsGrandpa } = data
+      return rootAsGrandpa === true && (clevel === SpaceLevel.floor || clevel === SpaceLevel.area)
+    },
+    // 父级按钮名称
+    spaceParentName(data) {
+      const { plevel } = data
+      return SpaceConfig[plevel]?.name ?? ''
+    },
+    // 子级按钮名称
+    spaceChildName(data) {
+      const { clevel } = data
+      return SpaceConfig[clevel]?.name ?? ''
+    },
+    // 当前添加层级名称
+    spaceLevelName(data) {
+      const { spaceLevel } = data.spaceInfo
+      return SpaceConfig[spaceLevel].name
+    },
   },
 
   methods: {
+    onLoad(query: { pid?: string; pname?: string; plevel?: Space.SpaceLevel; rootAsGrandpa: boolean }) {
+      if (query.pname && query.plevel && query.pid) {
+        this.setData({
+          plevel: Number(query.plevel),
+          clevel: Number(query.plevel) + 1,
+        })
+        this.data.pid = query.pid
+        this.data.rootAsGrandpa = query.rootAsGrandpa
+      }
+    },
+    onShow() {
+      this.init()
+    },
+
+    // 加载本空间列表
+    async init() {
+      const res = await querySpaceList(projectStore.currentProjectId, this.data.pid)
+      if (res.success) {
+        this.setData({
+          subSpaceList: res.result,
+        })
+      }
+    },
     editRoom(event: WechatMiniprogram.CustomEvent) {
       const { index } = event.currentTarget.dataset
 
@@ -38,7 +104,7 @@ ComponentWithComputed({
       })
     },
 
-    addRoom() {
+    addSpacePage() {
       if (spaceBinding.store.spaceList.length >= 50) {
         Toast('一个项目中最多创建50个空间')
         return
@@ -46,6 +112,66 @@ ComponentWithComputed({
 
       wx.navigateTo({
         url: '/package-mine/space-new/index',
+      })
+    },
+
+    onClose() {
+      this.setData({
+        showAddDialog: false,
+      })
+    },
+    changeName(e: { detail: string }) {
+      this.setData({
+        'spaceInfo.spaceName': e.detail,
+      })
+    },
+    async addParentDialog() {
+      this.setData({
+        showAddDialog: true,
+        'spaceInfo.spaceLevel': this.data.plevel,
+      })
+    },
+    async addChildDialog() {
+      this.setData({
+        showAddDialog: true,
+        'spaceInfo.spaceLevel': this.data.clevel,
+      })
+    },
+    async toAddSpace() {
+      const { spaceName, spaceLevel } = this.data.spaceInfo
+      const isCreateParent = spaceLevel === this.data.plevel
+      const res = await addSpace({
+        projectId: projectStore.currentProjectId,
+        pid: this.data.pid,
+        cid: isCreateParent ? '1' : '0',
+        spaceName,
+        spaceLevel,
+      })
+      if (!res.success) {
+        Toast({ message: '新增失败', zIndex: 9999 })
+        return
+      }
+
+      if (!isCreateParent) {
+        this.init()
+      }
+    },
+
+    // 点击卡片
+    handleCardTap(e: WechatMiniprogram.CustomEvent) {
+      console.log('handleCardTap', e)
+      const { spaceId, spaceName, spaceLevel } = e.detail
+      if (spaceLevel === SpaceLevel.area) {
+        return
+      }
+
+      wx.navigateTo({
+        url: strUtil.getUrlWithParams('/package-mine/space-manage/index', {
+          pid: spaceId,
+          pname: spaceName,
+          plevel: spaceLevel,
+          rootAsGrandpa: this.data.pid === '0',
+        }),
       })
     },
   },

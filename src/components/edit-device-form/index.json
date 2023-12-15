@@ -1,7 +1,5 @@
 {
   "component": true,
   "styleIsolation": "apply-shared",
-  "usingComponents": {
-    "add-space": "/components/add-space/index"
-  }
+  "usingComponents": {}
 }

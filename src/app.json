@@ -110,7 +110,6 @@
     "van-toast": "@vant/weapp/toast/index",
     "nav-bar": "./components/custom-nav-bar/index",
     "project-select-menu": "./components/project-select-menu/index",
-    "add-space": "./components/add-space/index",
     "svg-icon": "./components/svg-icon/index",
     "van-field": "@vant/weapp/field/index",
     "device-card": "./components/device-card/index"

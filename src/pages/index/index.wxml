@@ -20,10 +20,10 @@
       class="w-750rpx flex justify-between pt-28rpx left-0 absolute z-112"
       style="top: {{navigationBarAndStatusBarHeight}};"
     >
-      <!-- 标题信息 -->
+      <!-- 副标题信息 -->
       <view class="ml-24rpx">
         <view
-          class="bg-hex-ffffff_42 w-250rpx h-80rpx rounded-40rpx flex items-center text-hex-2b4067 flex-center"
+          class="bg-hex-ffffff_42 w-250rpx h-80rpx rounded-40rpx flex items-center flex-center"
           id="all-off"
         >
           <text class="text-28rpx font-semibold">空间管理（{{spaceList.length || 0}}）</text>
@@ -31,7 +31,7 @@
       </view>
       <view
         wx:if="{{isManager}}"
-        class="mr-36rpx mt-8rpx"
+        class="mr-36rpx mt-16rpx"
         data-mark="addIcon"
         id="addIcon"
         catch:tap="showAddMenu"
@@ -110,6 +110,7 @@
               space-info="{{item}}"
               data-space="{{item.spaceId}}"
               isMoving="{{isMoving}}"
+              bind:cardtap="handleCardTap"
             ></space-card>
           </movable-view>
         </movable-area>
@@ -233,10 +234,7 @@
   y="{{addMenu.y}}"
   isShow="{{addMenu.isShow}}"
 ></add-menu>
-<add-space
-  show="{{showAddNewRoom}}"
-  bind:close="handleHideAddNewRoom"
-></add-space>
+
 <van-toast id="van-toast" />
 <van-dialog
   id="van-dialog"

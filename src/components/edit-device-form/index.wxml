@@ -60,11 +60,6 @@
   </view>
 </view>
 
-<add-space
-  show="{{ isAddRoom }}"
-  bind:close="closeAddRoom"
-></add-space>
-
 <import src="/commons/templates/popup.wxml" />
 <van-popup
   show="{{ isShowEditSwitch }}"

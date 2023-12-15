@@ -20,11 +20,14 @@ export async function querySpaceList(projectId: string, pid = '0', options?: { l
 
 /**
  * 新增空间信息
+ * @param pid 当前空间pid
+ * @param cid 新空间是否有子节点的标志：创建父级1 创建子级0
  */
 export async function addSpace(
   data: {
     projectId: string
     pid: string
+    cid: string
     spaceName: string
     spaceLevel: Space.SpaceLevel
   },
