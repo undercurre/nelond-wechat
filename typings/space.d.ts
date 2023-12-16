@@ -1,5 +1,6 @@
 declare namespace Space {
   enum SpaceLevel {
+    undef = 0,
     park = 1,
     building = 2,
     floor = 3,

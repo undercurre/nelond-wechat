@@ -11,21 +11,21 @@ export const userStore = observable({
     userName: '',
     wxId: '',
     sex: 0,
-    roleType: '',
+    roleId: '',
     roleName: '',
   } as User.UserInfo,
   isLogin: false,
 
   // 是否创建者
   get isCreator() {
-    const { roleType } = this.userInfo
-    return roleType === UserRole.Creator
+    const { roleId } = this.userInfo
+    return roleId === UserRole.Creator
   },
 
   // 是否管理员权限+
   get isManager() {
-    const { roleType } = this.userInfo
-    return roleType === UserRole.Creator || roleType === UserRole.Admin
+    const { roleId } = this.userInfo
+    return roleId === UserRole.Creator || roleId === UserRole.Admin
   },
 
   logout() {
@@ -38,7 +38,7 @@ export const userStore = observable({
         userName: '',
         wxId: '',
         sex: 0,
-        roleType: UserRole.UnDef,
+        roleId: UserRole.UnDef,
         roleName: '',
       }
       this.isLogin = false

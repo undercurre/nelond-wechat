@@ -1,7 +1,6 @@
 /**app.wxss**/
 @import './unocss.wxss';
 @import './vantReset.wxss';
-@import 'meiju.wxss';
 
 .container {
   height: 100%;

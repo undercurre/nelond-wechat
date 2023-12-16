@@ -58,7 +58,7 @@ declare namespace User {
     /**
      * 用户角色 uuid
      */
-    roleType: UserRole
+    roleId: UserRole
     /**
      * 用户角色名称
      */

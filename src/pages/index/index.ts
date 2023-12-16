@@ -10,7 +10,7 @@ import {
   spaceStore,
   deviceStore,
 } from '../../store/index'
-import { storage, throttle } from '../../utils/index'
+import { storage, strUtil, throttle } from '../../utils/index'
 import { ROOM_CARD_H, defaultImgDir } from '../../config/index'
 import { updateRoomSort } from '../../apis/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
@@ -367,6 +367,26 @@ ComponentWithComputed({
       })
       runInAction(() => {
         spaceStore.spaceList = list
+      })
+    },
+
+    // 点击卡片
+    handleCardTap(e: WechatMiniprogram.CustomEvent) {
+      const { spaceId, nodeCount, spaceName, spaceLevel } = e.detail
+      const link = nodeCount ? '/package-space-control/space-list/index' : '/package-space-control/index/index'
+
+      // 更新当前园区 // TODO 确定是否仍需要本状态
+      const index = spaceStore.spaceList.findIndex((space) => space.spaceId === spaceId)
+      runInAction(() => {
+        spaceStore.currentSpaceIndex = index
+      })
+
+      wx.navigateTo({
+        url: strUtil.getUrlWithParams(link, {
+          pid: spaceId,
+          pname: spaceName,
+          plevel: spaceLevel,
+        }),
       })
     },
   },

@@ -15,25 +15,8 @@
         clickable="{{isManager}}"
         value="{{spaceInfo.spaceName}}"
         center
-        bind:click="editRoom"
-        data-type="name"
+        bind:click="editSpace"
       >
-      </van-cell>
-    </van-cell-group>
-
-    <van-cell-group inset>
-      <van-cell
-        title="空间图标"
-        is-link="{{isManager}}"
-        clickable="{{isManager}}"
-        center
-        bind:click="editRoom"
-        data-type="icon"
-      >
-        <image
-          class="w-64rpx h-64rpx"
-          src="/assets/img/room/{{spaceInfo.roomIcon}}.png"
-        ></image>
       </van-cell>
     </van-cell-group>
   </view>
@@ -45,7 +28,7 @@
     <van-button
       class="flex-1"
       size="large"
-      bind:click="delRoom"
+      bind:click="delSpace"
       custom-style="background-color: transparent;"
       >删除</van-button
     >
@@ -54,23 +37,11 @@
       type="primary"
       class="flex-1"
       size="large"
-      bind:click="saveRoomInfo"
+      bind:click="saveSpaceInfo"
       >确认</van-button
     >
   </view>
 </view>
-
-<add-space
-  show="{{isEdit}}"
-  isSave="{{false}}"
-  is-edit-name="{{editType === 'name'}}"
-  is-edit-icon="{{editType === 'icon'}}"
-  space-id="{{spaceInfo.spaceId}}"
-  space-name="{{spaceInfo.spaceName}}"
-  space-icon="{{spaceInfo.roomIcon}}"
-  bind:confirm="finishAddRoom"
-  bind:close="onClose"
-></add-space>
 
 <van-dialog
   id="van-dialog"
@@ -79,3 +50,11 @@
 />
 
 <van-toast id="van-toast" />
+
+<edit-name-dialog
+  value="{{ spaceInfo.spaceName }}"
+  placeholder="请输入{{spaceLevelName}}名称"
+  title="修改{{spaceLevelName}}名称"
+  show="{{isEdit}}"
+  bind:confirm="toUpdateSpace"
+></edit-name-dialog>

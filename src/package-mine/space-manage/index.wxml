@@ -4,8 +4,32 @@
     leftArrow="{{true}}"
     show-go-home
     bind:leftTap="goBack"
-    title="空间列表"
+    title="空间管理"
   ></nav-bar>
+
+  <view class="w-750rpx flex justify-between pt-28rpx z-112">
+    <!-- 副标题信息 -->
+    <view class="ml-24rpx">
+      <view
+        class="bg-hex-ffffff_42 w-250rpx h-80rpx rounded-40rpx flex items-center flex-center"
+        id="all-off"
+      >
+        <text class="text-28rpx font-semibold">{{subTitle}}</text>
+      </view>
+    </view>
+    <view
+      wx:if="{{isManager}}"
+      class="mr-36rpx mt-16rpx"
+      data-mark="addIcon"
+      id="addIcon"
+      catch:tap="toEditMode"
+    >
+      <image
+        src="/assets/img/home-manage/setting.png"
+        class="w-48rpx h-48rpx"
+      ></image>
+    </view>
+  </view>
 
   <scroll-view
     class="mt-40rpx grow shrink h-500 box-border mx-24rpx"
@@ -15,23 +39,53 @@
     show-scrollbar="{{false}}"
   >
     <space-card
-      wx:for="{{spaceList}}"
+      wx:for="{{sList}}"
       wx:key="spaceId"
       space-info="{{item}}"
       data-space="{{item.spaceId}}"
+      bind:cardtap="handleCardTap"
+      isEditMode="{{isEditMode}}"
+      isManagePage
     ></space-card>
   </scroll-view>
 
   <block wx:if="{{isManager}}">
     <van-button
+      wx:if="{{showParkAdding}}"
       class="mx-32rpx"
       size="large"
       type="primary"
       block
-      bind:click="addRoom"
+      bind:click="addSpacePage"
       >新增空间</van-button
+    >
+    <van-button
+      wx:if="{{showParentAdding}}"
+      class="mx-32rpx mb-32rpx"
+      size="large"
+      type="primary"
+      block
+      bind:click="addParentDialog"
+      >新增{{spaceParentName}}</van-button
+    >
+    <van-button
+      wx:if="{{showChildAdding}}"
+      class="mx-32rpx"
+      size="large"
+      type="primary"
+      block
+      bind:click="addChildDialog"
+      >新增{{spaceChildName}}</van-button
     >
   </block>
 </view>
 
 <van-toast id="van-toast" />
+
+<edit-name-dialog
+  value="{{ spaceInfo.spaceName }}"
+  placeholder="请输入{{spaceLevelName}}名称"
+  title="新增{{spaceLevelName}}"
+  show="{{showAddDialog}}"
+  bind:confirm="toAddSpace"
+></edit-name-dialog>
