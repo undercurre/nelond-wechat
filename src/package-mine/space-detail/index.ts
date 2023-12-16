@@ -3,14 +3,13 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import Dialog from '@vant/weapp/dialog/dialog'
 import Toast from '@vant/weapp/toast/toast'
 import pageBehaviors from '../../behaviors/pageBehaviors'
-import { projectBinding, spaceBinding, userStore } from '../../store/index'
+import { projectBinding, spaceBinding, userBinding, userStore } from '../../store/index'
 import { emitter, getCurrentPageParams } from '../../utils/index'
-import { delHouseRoom, updateSpace } from '../../apis/index'
-import { SpaceLevel } from '../../config/index'
+import { delSpace, updateSpace } from '../../apis/index'
 
 ComponentWithComputed({
   options: {},
-  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, spaceBinding] }), pageBehaviors],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, spaceBinding, userBinding] }), pageBehaviors],
 
   /**
    * 页面的初始数据
@@ -21,7 +20,6 @@ ComponentWithComputed({
     spaceInfo: {
       spaceId: '',
       spaceName: '',
-      roomIcon: '',
     },
   },
 
@@ -38,54 +36,39 @@ ComponentWithComputed({
         spaceInfo: {
           spaceId: pageParams.spaceId,
           spaceName: pageParams.spaceName,
-          roomIcon: pageParams.roomIcon,
         },
       })
     },
-    moved: function () {},
-    detached: function () {},
   },
 
   methods: {
-    editRoom(event: WechatMiniprogram.CustomEvent) {
+    editSpace() {
       if (!userStore.isManager) {
         return
       }
 
-      const { type } = event.currentTarget.dataset
-
       this.setData({
         isEdit: true,
-        editType: type,
       })
     },
-    onClose() {
+    async toUpdateSpace(e: { detail: string }) {
       this.setData({
-        isEdit: false,
+        spaceName: e.detail,
       })
     },
 
-    finishAddRoom(event: WechatMiniprogram.CustomEvent) {
-      this.setData({
-        isEdit: false,
-        spaceInfo: {
-          spaceId: event.detail.spaceId,
-          spaceName: event.detail.spaceName,
-          roomIcon: event.detail.roomIcon,
-        },
-      })
-    },
-
-    async saveRoomInfo() {
+    async saveSpaceInfo() {
+      const { spaceId, spaceName } = this.data.spaceInfo
+      if (!spaceName) {
+        return
+      }
       const res = await updateSpace({
-        projectId: projectBinding.store.currentProjectId,
-        spaceId: this.data.spaceInfo.spaceId,
-        spaceName: this.data.spaceInfo.spaceName,
-        spaceLevel: SpaceLevel.area,
-        pid: '0',
+        spaceId,
+        spaceName,
       })
 
       if (res.success) {
+        // TODO 优化返回后更新
         spaceBinding.store.updateSpaceList()
         emitter.emit('homeInfoEdit')
         this.goBack()
@@ -94,7 +77,7 @@ ComponentWithComputed({
       }
     },
 
-    async delRoom() {
+    async delSpace() {
       if (spaceBinding.store.spaceList.length === 1) {
         Toast('请至少保留一个空间')
         return
@@ -106,13 +89,11 @@ ComponentWithComputed({
         return 'cancel'
       })
 
-      console.log('dialogRes', dialogRes)
-
       if (dialogRes === 'cancel') {
         return
       }
 
-      const res = await delHouseRoom(this.data.spaceInfo.spaceId)
+      const res = await delSpace(this.data.spaceInfo.spaceId)
 
       if (res.success) {
         spaceBinding.store.updateSpaceList()

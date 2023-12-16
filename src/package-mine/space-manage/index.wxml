@@ -14,7 +14,7 @@
         class="bg-hex-ffffff_42 w-250rpx h-80rpx rounded-40rpx flex items-center flex-center"
         id="all-off"
       >
-        <text class="text-28rpx font-semibold">{{subTitle}}）</text>
+        <text class="text-28rpx font-semibold">{{subTitle}}</text>
       </view>
     </view>
     <view
@@ -22,7 +22,7 @@
       class="mr-36rpx mt-16rpx"
       data-mark="addIcon"
       id="addIcon"
-      catch:tap="showAddMenu"
+      catch:tap="toEditMode"
     >
       <image
         src="/assets/img/home-manage/setting.png"
@@ -44,7 +44,8 @@
       space-info="{{item}}"
       data-space="{{item.spaceId}}"
       bind:cardtap="handleCardTap"
-      isManage
+      isEditMode="{{isEditMode}}"
+      isManagePage
     ></space-card>
   </scroll-view>
 
@@ -81,23 +82,10 @@
 
 <van-toast id="van-toast" />
 
-<van-dialog
-  use-slot
+<edit-name-dialog
+  value="{{ spaceInfo.spaceName }}"
+  placeholder="请输入{{spaceLevelName}}名称"
   title="新增{{spaceLevelName}}"
-  show="{{ showAddDialog }}"
-  show-cancel-button
-  bind:close="onClose"
-  bind:cancel="onClose"
+  show="{{showAddDialog}}"
   bind:confirm="toAddSpace"
->
-  <view class="px-32rpx py-32rpx">
-    <van-field
-      custom-style="padding: 32rpx; background-color: #F6FAFD;border-radius: 24rpx;"
-      value="{{ spaceInfo.spaceName }}"
-      placeholder="请输入{{spaceLevelName}}名称"
-      bind:clear="changeName"
-      bind:change="changeName"
-      border="{{false}}"
-    ></van-field>
-  </view>
-</van-dialog>
+></edit-name-dialog>

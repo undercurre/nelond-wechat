@@ -19,7 +19,12 @@ ComponentWithComputed({
       value: false,
     },
     // 是否空间管理页
-    isManage: {
+    isManagePage: {
+      type: Boolean,
+      value: false,
+    },
+    // 是否编辑模式
+    isEditMode: {
       type: Boolean,
       value: false,
     },
@@ -60,9 +65,9 @@ ComponentWithComputed({
       return SpaceConfig[spaceLevel]
     },
     hasArrow(data) {
-      const { isManage } = data
+      const { isManagePage } = data
       const { spaceLevel } = data.spaceInfo
-      return !isManage || spaceLevel !== SpaceLevel.area
+      return !isManagePage || spaceLevel !== SpaceLevel.area
     },
   },
 

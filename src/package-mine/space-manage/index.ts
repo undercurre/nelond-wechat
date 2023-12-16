@@ -21,6 +21,7 @@ ComponentWithComputed({
     clevel: SpaceLevel.park, // 子层级
     rootAsGrandpa: false, // 爷爷节点即根节点
     showAddDialog: false,
+    isEditMode: false,
     spaceInfo: {
       spaceLevel: SpaceLevel.park,
       spaceName: '',
@@ -120,11 +121,6 @@ ComponentWithComputed({
         showAddDialog: false,
       })
     },
-    changeName(e: { detail: string }) {
-      this.setData({
-        'spaceInfo.spaceName': e.detail,
-      })
-    },
     async addParentDialog() {
       this.setData({
         showAddDialog: true,
@@ -137,8 +133,12 @@ ComponentWithComputed({
         'spaceInfo.spaceLevel': this.data.clevel,
       })
     },
-    async toAddSpace() {
-      const { spaceName, spaceLevel } = this.data.spaceInfo
+    async toAddSpace(e: { detail: string }) {
+      const spaceName = e.detail
+      if (!spaceName) {
+        return
+      }
+      const { spaceLevel } = this.data.spaceInfo
       const isCreateParent = spaceLevel === this.data.plevel
       const res = await addSpace({
         projectId: projectStore.currentProjectId,
@@ -161,6 +161,19 @@ ComponentWithComputed({
     handleCardTap(e: WechatMiniprogram.CustomEvent) {
       console.log('handleCardTap', e)
       const { spaceId, spaceName, spaceLevel } = e.detail
+
+      // 如果是编辑模式
+      if (this.data.isEditMode) {
+        wx.navigateTo({
+          url: strUtil.getUrlWithParams('/package-mine/space-detail/index', {
+            spaceId,
+            spaceName,
+          }),
+        })
+        return
+      }
+
+      // 如果是区域节点，就不用跳转到下一级了
       if (spaceLevel === SpaceLevel.area) {
         return
       }
@@ -172,6 +185,12 @@ ComponentWithComputed({
           plevel: spaceLevel,
           rootAsGrandpa: this.data.pid === '0',
         }),
+      })
+    },
+
+    toEditMode() {
+      this.setData({
+        isEditMode: !this.data.isEditMode,
       })
     },
   },

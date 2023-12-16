@@ -46,11 +46,8 @@ export async function addSpace(
  */
 export async function updateSpace(
   data: {
-    projectId: string
-    pid: string
     spaceId: string
     spaceName: string
-    spaceLevel: Space.SpaceLevel
   },
   options?: { loading?: boolean },
 ) {
@@ -65,11 +62,11 @@ export async function updateSpace(
 /**
  * 删除空间
  */
-export async function delHouseRoom(spaceId: string, options?: { loading?: boolean }) {
+export async function delSpace(spaceId: string, options?: { loading?: boolean }) {
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/cl/user/house/delHouseRoom',
+    url: '/v1/mzgd/cl/user/space/del',
     data: { spaceId },
   })
 }
