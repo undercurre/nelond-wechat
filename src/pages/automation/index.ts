@@ -115,7 +115,7 @@ ComponentWithComputed({
       // 加载一键场景列表
       sceneBinding.store.updateAllRoomSceneList()
       // 加载自动化列表
-      autosceneBinding.store.updateAllRoomAutoSceneList()
+      // autosceneBinding.store.updateAllRoomAutoSceneList()
     },
     // onShow() {
     //   this.setData({

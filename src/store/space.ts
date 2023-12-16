@@ -1,10 +1,14 @@
 import { observable, runInAction } from 'mobx-miniprogram'
-import { querySpaceList } from '../apis/index'
+import { querySpaceList, queryAllSpaceByProjectId } from '../apis/index'
 import { deviceStore } from './device'
 import { projectStore } from './project'
 import { IApiRequestOption } from '../utils/index'
 
 export const spaceStore = observable({
+  /**
+   * 当前项目的所有空间列表
+   */
+  allSpaceList: [] as Space.allSpace[],
   /**
    * 当前项目的空间列表
    */
@@ -51,10 +55,21 @@ export const spaceStore = observable({
       })
     }
   },
+
+  async updateAllSpaceList(options?: IApiRequestOption) {
+    const res = await queryAllSpaceByProjectId(projectStore.currentProjectId, options)
+    console.log('updateAllSpaceListres', res)
+    if (res.success) {
+      runInAction(() => {
+        spaceStore.allSpaceList = res.result
+        console.log('updateAllSpaceList', spaceStore.allSpaceList)
+      })
+    }
+  },
 })
 
 export const spaceBinding = {
   store: spaceStore,
-  fields: ['spaceList', 'currentSpaceIndex', 'spaceDeviceList', 'currentSpace'],
+  fields: ['allSpaceList', 'spaceList', 'currentSpaceIndex', 'spaceDeviceList', 'currentSpace'],
   actions: [],
 }

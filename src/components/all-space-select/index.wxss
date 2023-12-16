@@ -3,6 +3,7 @@
   font-size: 16rpx !important;
 }
 .cell-value {
+  flex: 3 !important;
   font-size: 28rpx !important;
   color: #555659 !important;
   margin-right: 16rpx !important;

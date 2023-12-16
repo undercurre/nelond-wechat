@@ -42,6 +42,18 @@ declare namespace Space {
     spaceLevel: SpaceLevel
   }
 
+  interface allSpace {
+    pid: string
+    spaceId: string
+    spaceLevel: number
+    spaceName: string
+    publicSpaceFlag: number
+  }
+
+  interface SpaceTreeNode extends allSpace {
+    child: SpaceTreeNode[]
+  }
+
   /**
    * 空间排序
    */

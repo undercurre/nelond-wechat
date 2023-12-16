@@ -1,37 +1,39 @@
 <import src="/commons/templates/popup.wxml" />
-
-<van-cell
-  title="空间选择"
-  value="{{checkedSpaceName}}"
-  value-class="cell-value"
-  is-link
-  border="{{false}}"
-  bind:click="showPopup"
-></van-cell>
-<view
-  class="bg-white flex-center"
-  wx:if="{{spaceData[firstIndex].child[secondIndex].child[thirdIndex].child.length}}"
->
-  <scroll-view
-    enhanced
-    show-scrollbar="{{false}}"
-    scroll-x
-    class="h-80rpx w-686rpx flex"
-    enable-flex
+<view style="{{cellStyle}}">
+  <van-cell
+    title="空间选择"
+    value="{{checkedSpaceName}}"
+    value-class="cell-value"
+    custom-style="background-color:transparent;"
+    is-link
+    border="{{false}}"
+    bind:click="showPopup"
+  ></van-cell>
+  <view
+    class="flex-center h-80rpx w-686rpx"
+    wx:if="{{isShowTab}}"
   >
-    <view class="flex flex-1 justify-start">
-      <view
-        wx:for="{{spaceData[firstIndex].child[secondIndex].child[thirdIndex].child}}"
-        wx:key="item.spaceId"
-        class="flex-col-center {{index!==0?'ml-90rpx': ''}}"
-        data-index="{{index}}"
-        bind:tap="fourthCheck"
-      >
-        <text class="text-28rpx {{fourthIndex === index ? 'text-black-2a' : 'text-hex-555659'}} whitespace-nowrap">{{item.spaceName}}</text>
-        <view class="w-42rpx h-8rpx mt-8rpx bg-hex-7cd06a rounded-999 {{fourthIndex === index ? 'opacity-100' : 'opacity-0'}}"></view>
+    <scroll-view
+      enhanced
+      show-scrollbar="{{false}}"
+      scroll-x
+      class="flex flex-1"
+      enable-flex
+    >
+      <view class="flex flex-1 justify-start px-32rpx">
+        <view
+          wx:for="{{spaceData[firstIndex].child[secondIndex].child[thirdIndex].child}}"
+          wx:key="spaceId"
+          class="flex-col-center {{index!==0?'ml-90rpx': ''}}"
+          data-index="{{index}}"
+          bind:tap="fourthCheck"
+        >
+          <text class="text-28rpx {{fourthIndex === index ? 'text-black-2a' : 'text-hex-555659'}} whitespace-nowrap">{{item.spaceName}}</text>
+          <view class="w-42rpx h-8rpx mt-8rpx bg-hex-7cd06a rounded-999 {{fourthIndex === index ? 'opacity-100' : 'opacity-0'}}"></view>
+        </view>
       </view>
-    </view>
-  </scroll-view>
+    </scroll-view>
+  </view>
 </view>
 
 <van-popup
@@ -166,7 +168,7 @@
         <van-button
           class="flex-1"
           size="large"
-          bind:click="handleCancel"
+          bind:click="closePopup"
           >取消</van-button
         >
 
@@ -181,5 +183,4 @@
     </view>
   </view>
 </van-popup>
-
 <van-toast id="van-toast" />

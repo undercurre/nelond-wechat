@@ -13,12 +13,12 @@ export async function querySceneList(spaceId: string, options?: { loading?: bool
   })
 }
 
-export async function querySceneListByHouseId(projectId: string, options?: IApiRequestOption) {
+export async function querySceneListByProjectId(projectId: string, options?: IApiRequestOption) {
   return await mzaioRequest.post<Scene.SceneItem[]>({
     log: true,
     loading: options?.loading ?? false,
     isDefaultErrorTips: options?.isDefaultErrorTips ?? true,
-    url: '/v1/mzgd/cl/scene/querySceneListByHouseId',
+    url: '/v1/mzgd/cl/scene/querySceneListByProjectId',
     data: {
       projectId,
     },

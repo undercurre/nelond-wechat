@@ -1,5 +1,5 @@
 import { observable, runInAction } from 'mobx-miniprogram'
-import { querySceneListByHouseId } from '../apis/scene'
+import { querySceneListByProjectId } from '../apis/scene'
 import { PRO_TYPE } from '../config/device'
 import { projectStore } from './project'
 import { spaceStore } from './space'
@@ -69,7 +69,7 @@ export const sceneStore = observable({
   },
 
   async updateAllRoomSceneList(projectId: string = projectStore.currentProjectId, options?: IApiRequestOption) {
-    const res = await querySceneListByHouseId(projectId, options)
+    const res = await querySceneListByProjectId(projectId, options)
     if (res.success) {
       const list = res.result
         .filter((scene) => scene.deviceActions && scene.deviceActions.length)
