@@ -50,9 +50,9 @@ ComponentWithComputed({
       const { clevel, rootAsGrandpa } = data
       return rootAsGrandpa === true && (clevel === SpaceLevel.floor || clevel === SpaceLevel.area)
     },
-    // 父级按钮名称
+    // 父级按钮名称（实际上为爷爷级）
     spaceParentName(data) {
-      const { plevel } = data
+      const plevel = (data.plevel - 1) as SpaceLevel
       return SpaceConfig[plevel]?.name ?? ''
     },
     // 子级按钮名称
@@ -68,14 +68,14 @@ ComponentWithComputed({
   },
 
   methods: {
-    onLoad(query: { pid?: string; pname?: string; plevel?: Space.SpaceLevel; rootAsGrandpa: boolean }) {
-      if (query.pname && query.plevel && query.pid) {
+    onLoad(query: { pid: string; pname: string; plevel: Space.SpaceLevel; rootAsGrandpa: string }) {
+      if (query.pid) {
         this.setData({
           plevel: Number(query.plevel),
           clevel: Number(query.plevel) + 1,
+          rootAsGrandpa: query.rootAsGrandpa === 'true',
         })
         this.data.pid = query.pid
-        this.data.rootAsGrandpa = query.rootAsGrandpa
       }
     },
     onShow() {
@@ -124,7 +124,7 @@ ComponentWithComputed({
     async addParentDialog() {
       this.setData({
         showAddDialog: true,
-        'spaceInfo.spaceLevel': this.data.plevel,
+        'spaceInfo.spaceLevel': this.data.plevel - 1, // 需要添加的空间为爷爷级
       })
     },
     async addChildDialog() {
@@ -139,11 +139,11 @@ ComponentWithComputed({
         return
       }
       const { spaceLevel } = this.data.spaceInfo
-      const isCreateParent = spaceLevel === this.data.plevel
+      const isCreateChild = spaceLevel === this.data.clevel
       const res = await addSpace({
         projectId: projectStore.currentProjectId,
         pid: this.data.pid,
-        cid: isCreateParent ? '1' : '0',
+        cid: isCreateChild ? '0' : '1',
         spaceName,
         spaceLevel,
       })
@@ -152,14 +152,17 @@ ComponentWithComputed({
         return
       }
 
-      if (!isCreateParent) {
+      if (isCreateChild) {
         this.init()
+      } else {
+        this.goBack()
       }
     },
 
     // 点击卡片
     handleCardTap(e: WechatMiniprogram.CustomEvent) {
-      console.log('handleCardTap', e)
+      // console.log('handleCardTap', e)
+
       const { spaceId, spaceName, spaceLevel } = e.detail
 
       // 如果是编辑模式
@@ -169,6 +172,10 @@ ComponentWithComputed({
             spaceId,
             spaceName,
           }),
+        })
+        // 重置为非编辑模式
+        this.setData({
+          isEditMode: false,
         })
         return
       }
