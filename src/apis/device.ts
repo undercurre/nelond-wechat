@@ -1,4 +1,4 @@
-import { delay, mzaioRequest, showLoading, hideLoading, Logger, IApiRequestOption } from '../utils/index'
+import { delay, hideLoading, IApiRequestOption, Logger, mzaioRequest, showLoading } from '../utils/index'
 import { PRO_TYPE } from '../config/index'
 import homOs from 'js-homos'
 import { deviceStore } from '../store/index'
@@ -973,5 +973,20 @@ export async function queryLocalKey(
     loading: options?.loading ?? false,
     url: '/v1/cl/device/queryLocalKey',
     data,
+  })
+}
+
+/**
+ * 标记该网关sn是哪个平台
+ */
+export async function verifySn(sn: string, options?: { loading?: boolean }) {
+  return await mzaioRequest.post({
+    log: true,
+    loading: options?.loading ?? false,
+    url: '/v1/cl/device/verifySn',
+    data: {
+      sn,
+      systemType: '2',
+    },
   })
 }
