@@ -101,7 +101,7 @@
         scroll-y="{{!isMoving}}"
         show-scrollbar="{{false}}"
         class="flex flex-col items-between mx-24rpx"
-        wx:elif="{{!hasDevice}}"
+        wx:else
         style="height: {{scrollViewHeight}}px;"
         scroll-top="{{scrollTop}}"
         scroll-with-animation="{{true}}"
@@ -153,7 +153,7 @@
         <view class="h-64rpx"></view>
       </scroll-view>
       <!-- 无设备时显示 -->
-      <view
+      <!-- <view
         wx:else
         class="w-full mt-68rpx flex flex-col items-center"
       >
@@ -172,7 +172,7 @@
         >
           <text class="text-white text-36rpx font-normal">添加智能设备</text>
         </van-button>
-      </view>
+      </view> -->
     </view>
   </view>
 </block>
