@@ -2,14 +2,14 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
-import { deviceStore, projectBinding, projectStore, sceneBinding, sceneStore } from '../../store/index'
+import { deviceStore, projectBinding, projectStore, sceneBinding, sceneStore, userBinding } from '../../store/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { execScene, updateSceneSort } from '../../apis/scene'
 import { storage, emitter, strUtil } from '../../utils/index'
 import { defaultImgDir } from '../../config/index'
 
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [sceneBinding, projectBinding] }), pageBehavior],
+  behaviors: [BehaviorWithStore({ storeBindings: [sceneBinding, projectBinding, userBinding] }), pageBehavior],
   /**
    * 页面的初始数据
    */
@@ -108,7 +108,7 @@ ComponentWithComputed({
     },
 
     toSetting(e: { detail: Scene.SceneItem }) {
-      if (this.data.isCreator || this.data.isAdmin) {
+      if (this.data.isManager) {
         wx.navigateTo({
           url: strUtil.getUrlWithParams('/package-space-control/scene-edit/index', { sceneId: e.detail.sceneId }),
         })
