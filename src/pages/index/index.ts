@@ -5,6 +5,7 @@ import {
   othersBinding,
   spaceBinding,
   userBinding,
+  projectStore,
   projectBinding,
   othersStore,
   spaceStore,
@@ -91,7 +92,6 @@ ComponentWithComputed({
   computed: {
     // 项目是否有设备
     hasDevice() {
-      return true
       if (deviceStore.allDeviceList) {
         return deviceStore.allDeviceList.length
       }
@@ -134,9 +134,9 @@ ComponentWithComputed({
       this.hideMenu()
     },
     async onShow() {
-      // if (!this.data._isFirstShow || this.data._from === 'addDevice') {
-      //   projectStore.updateSpaceCardList()
-      // }
+      if (!this.data._isFirstShow) {
+        projectStore.updateSpaceCardList()
+      }
       this.data._isFirstShow = false
 
       if (!othersStore.isInit) {

@@ -53,6 +53,9 @@ export const SCREEN_PID: readonly string[] = ['zk527b6c944a454e9fb15d3cc1f4d55b'
 // 旋钮开关pid
 export const KNOB_PID: readonly string[] = ['midea.knob.001.003']
 
+// 无色温调节pid (工矿灯)
+export const NO_COLOR_TEMP: readonly string[] = ['midea.hlight.005.001']
+
 // 设备品类码 -> modelName
 export const proName: Record<string, string> = {
   '0x13': 'light',

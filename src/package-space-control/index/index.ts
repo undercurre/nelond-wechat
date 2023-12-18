@@ -227,7 +227,7 @@ ComponentWithComputed({
     },
     // 判断是否是创建者或者管理员，其他角色不能添加设备
     canAddDevice(data) {
-      return data.isCreator || data.isAdmin
+      return data.isManager
     },
     // 可滚动区域高度
     scrollViewHeight(data) {
@@ -1256,7 +1256,7 @@ ComponentWithComputed({
         return
       }
       // 只有创建者或者管理员能够进入编辑模式
-      if (!this.data.isCreator && !this.data.isAdmin) {
+      if (!this.data.isManager) {
         return
       }
 

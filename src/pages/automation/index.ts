@@ -184,7 +184,7 @@ ComponentWithComputed({
     },
 
     toSetting(e: { detail: Scene.SceneItem }) {
-      if (this.data.isCreator || this.data.isAdmin) {
+      if (this.data.isManager) {
         wx.navigateTo({
           url: strUtil.getUrlWithParams(this.data.urls.automationEditYijian, { yijianSceneId: e.detail.sceneId }),
         })

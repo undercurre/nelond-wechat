@@ -27,7 +27,7 @@ ComponentWithComputed({
       projectStore.updateProjectInfo()
       projectBinding.store.updateHomeMemberList()
 
-      emitter.on('homeInfoEdit', () => {
+      emitter.on('projectInfoEdit', () => {
         projectStore.updateProjectInfo()
         projectBinding.store.updateHomeMemberList()
       })
@@ -37,7 +37,7 @@ ComponentWithComputed({
       })
     },
     detached: function () {
-      emitter.off('homeInfoEdit')
+      emitter.off('projectInfoEdit')
       emitter.off('invite_user_house')
     },
   },
