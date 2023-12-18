@@ -38,7 +38,7 @@ ComponentWithComputed({
       type: Boolean,
       value: false,
     },
-    initIndex: {
+    init: {
       type: Boolean,
       value: true,
     },
@@ -49,25 +49,27 @@ ComponentWithComputed({
    */
   data: {
     show: false,
-    spaceData: [] as Space.SpaceTreeNode[],
-    firstIndex: -1,
-    secondIndex: -1,
-    thirdIndex: -1,
-    fourthIndex: -1,
-    _firstIndex: -1,
-    _secondIndex: -1,
-    _thirdIndex: -1,
-    _fourthIndex: -1,
+    spaceData: {} as { [key: string]: Space.SpaceTreeNode },
+    firstSpaceId: '',
+    secondSpaceId: '',
+    thirdSpaceId: '',
+    fourthSpaceId: '',
+    _firstSpaceId: '',
+    _secondSpaceId: '',
+    _thirdSpaceId: '',
+    _fourthSpaceId: '',
   },
   computed: {
     checkedSpaceName(data: IAnyObject) {
       let desc = ''
-      if (data._firstIndex !== -1) {
-        desc += data.spaceData[data._firstIndex].spaceName
-        if (data._secondIndex !== -1) {
-          desc += `，${data.spaceData[data._firstIndex].child[data._secondIndex].spaceName}`
-          if (data._thirdIndex !== -1) {
-            desc += `，${data.spaceData[data._firstIndex].child[data._secondIndex].child[data._thirdIndex].spaceName}`
+      if (data._firstSpaceId) {
+        desc += data.spaceData[data._firstSpaceId].spaceName
+        if (data._secondSpaceId) {
+          desc += `，${data.spaceData[data._firstSpaceId].child[data._secondSpaceId].spaceName}`
+          if (data._thirdSpaceId) {
+            desc += `，${
+              data.spaceData[data._firstSpaceId].child[data._secondSpaceId].child[data._thirdSpaceId].spaceName
+            }`
           }
         }
       }
@@ -75,8 +77,9 @@ ComponentWithComputed({
     },
     isShowTab(data: IAnyObject) {
       if (!data.showTab) return false
-      if (data.firstIndex !== -1 && data.secondIndex !== -1 && data.thirdIndex !== -1) {
-        return data.spaceData[data.firstIndex].child[data.secondIndex].child[data.thirdIndex].child.length
+      if (data.firstSpaceId && data.secondSpaceId && data.thirdSpaceId) {
+        return Object.keys(data.spaceData[data.firstSpaceId].child[data.secondSpaceId].child[data.thirdSpaceId].child)
+          .length
       } else {
         return false
       }
@@ -115,63 +118,55 @@ ComponentWithComputed({
 
       const result = this.buildTree(spaceList, '0')
       this.setData({ spaceData: result }, () => {
-        if (this.data.initIndex) {
-          this.initDefaultIndex()
+        if (this.data.init) {
+          this.initDefault()
         }
       })
     },
-    buildTree(data: Space.allSpace[], pid: string): Space.SpaceTreeNode[] {
-      const result: Space.SpaceTreeNode[] = []
+
+    buildTree(data: Space.allSpace[], pid: string): { [key: string]: Space.SpaceTreeNode } {
+      const result: { [key: string]: Space.SpaceTreeNode } = {}
       for (const item of data) {
         if (item.pid === pid) {
           const child = this.buildTree(data, item.spaceId)
-          if (child.length > 0) {
-            result.push({ ...item, child })
+          if (child) {
+            result[item.spaceId] = { ...item, child }
           } else {
-            result.push({ ...item, child: [] })
+            result[item.spaceId] = { ...item, child: {} }
           }
         }
       }
       return result
     },
-    initDefaultIndex() {
-      const { spaceData } = this.data
-      if (spaceData[0].child.length) {
-        if (spaceData[0].child[0].child.length) {
-          if (spaceData[0].child[0].child[0].child.length) {
-            this.setData({
-              firstIndex: 0,
-              _firstIndex: 0,
-              secondIndex: 0,
-              _secondIndex: 0,
-              thirdIndex: 0,
-              _thirdIndex: 0,
-              fourthIndex: 0,
-              _fourthIndex: 0,
-            })
-          } else {
-            this.setData({
-              firstIndex: 0,
-              _firstIndex: 0,
-              secondIndex: 0,
-              _secondIndex: 0,
-              thirdIndex: 0,
-              _thirdIndex: 0,
-            })
-          }
-        } else {
-          this.setData({
-            firstIndex: 0,
-            _firstIndex: 0,
-            secondIndex: 0,
-            _secondIndex: 0,
+    initDefault() {
+      const [first = '', second = '', third = '', fourth = ''] = this.getKey(this.data.spaceData)
+      this.setData(
+        {
+          firstSpaceId: first,
+          secondSpaceId: second,
+          thirdSpaceId: third,
+          fourthSpaceId: fourth,
+          _firstSpaceId: first,
+          _secondSpaceId: second,
+          _thirdSpaceId: third,
+          _fourthSpaceId: fourth,
+        },
+        () => {
+          this.triggerEvent('confirm', {
+            firstSpaceId: this.data._firstSpaceId,
+            secondSpaceId: this.data._secondSpaceId,
+            thirdSpaceId: this.data._thirdSpaceId,
+            fourthSpaceId: this.data._fourthSpaceId,
           })
-        }
+        },
+      )
+    },
+    getKey(obj: { [key: string]: Space.SpaceTreeNode }): string[] {
+      const key = Object.keys(obj)[0]
+      if (typeof obj[key].child === 'object' && JSON.stringify(obj[key].child) !== '{}') {
+        return [key, ...this.getKey(obj[key].child)]
       } else {
-        this.setData({
-          firstIndex: 0,
-          _firstIndex: 0,
-        })
+        return [key]
       }
     },
     showPopup() {
@@ -180,42 +175,52 @@ ComponentWithComputed({
     closePopup() {
       this.setData({ show: false })
     },
-    firstCheck(e: { currentTarget: { dataset: { index: number } } }) {
+    firstCheck(e: { currentTarget: { dataset: { id: string } } }) {
       console.log(e)
 
       this.setData({
-        firstIndex: e.currentTarget.dataset.index,
-        secondIndex: -1,
-        thirdIndex: -1,
-        fourthIndex: -1,
+        firstSpaceId: e.currentTarget.dataset.id,
+        secondSpaceId: '',
+        thirdSpaceId: '',
+        fourthSpaceId: '',
       })
     },
-    secondCheck(e: { currentTarget: { dataset: { index: number } } }) {
+    secondCheck(e: { currentTarget: { dataset: { id: string } } }) {
       this.setData({
-        secondIndex: e.currentTarget.dataset.index,
-        thirdIndex: -1,
-        fourthIndex: -1,
+        secondSpaceId: e.currentTarget.dataset.id,
+        thirdSpaceId: '',
+        fourthSpaceId: '',
       })
     },
-    thirdCheck(e: { currentTarget: { dataset: { index: number } } }) {
+    thirdCheck(e: { currentTarget: { dataset: { id: string } } }) {
       this.setData({
-        thirdIndex: e.currentTarget.dataset.index,
-        fourthIndex: -1,
+        thirdSpaceId: e.currentTarget.dataset.id,
+        fourthSpaceId: '',
       })
     },
-    fourthCheck(e: { currentTarget: { dataset: { index: number } } }) {
+    fourthCheck(e: { currentTarget: { dataset: { id: string } } }) {
       this.setData({
-        fourthIndex: e.currentTarget.dataset.index,
+        fourthSpaceId: e.currentTarget.dataset.id,
       })
     },
     handleConfirm() {
-      this.setData({
-        _firstIndex: this.data.firstIndex,
-        _secondIndex: this.data.secondIndex,
-        _thirdIndex: this.data.thirdIndex,
-        _fourthIndex: this.data.fourthIndex,
-        show: false,
-      })
+      this.setData(
+        {
+          _firstSpaceId: this.data.firstSpaceId,
+          _secondSpaceId: this.data.secondSpaceId,
+          _thirdSpaceId: this.data.thirdSpaceId,
+          _fourthSpaceId: this.data.fourthSpaceId,
+          show: false,
+        },
+        () => {
+          this.triggerEvent('confirm', {
+            firstSpaceId: this.data._firstSpaceId,
+            secondSpaceId: this.data._secondSpaceId,
+            thirdSpaceId: this.data._thirdSpaceId,
+            fourthSpaceId: this.data._fourthSpaceId,
+          })
+        },
+      )
     },
   },
 })

@@ -63,6 +63,7 @@
           <all-space-select
             cellStyle="background-color:rgba(255,255,255,0.6);border-radius:36rpx;"
             dataType="scene"
+            bind:confirm="onSpaceSelect"
           ></all-space-select>
           <!-- <van-tabs
             tab-active-class="tab-active"

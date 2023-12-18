@@ -52,7 +52,7 @@ declare namespace Space {
   }
 
   interface SpaceTreeNode extends allSpace {
-    child: SpaceTreeNode[]
+    child: { [key: string]: SpaceTreeNode }
   }
 
   /**

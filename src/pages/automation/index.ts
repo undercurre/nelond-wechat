@@ -17,6 +17,7 @@ import { strUtil } from '../../utils/strUtil'
 import { execScene, updateSceneSort } from '../../apis/index'
 import { emitter } from '../../utils/index'
 import { sceneImgDir, defaultImgDir } from '../../config/index'
+import { runInAction } from 'mobx-miniprogram'
 // import { reaction } from 'mobx-miniprogram'
 // import { emitter } from '../../utils/index'
 
@@ -137,7 +138,7 @@ ComponentWithComputed({
 
     updateList() {
       if (this.data.selectedspaceId === '') {
-        this.data.selectedspaceId = spaceStore.spaceList[0].spaceId
+        this.data.selectedspaceId = spaceStore.currentSpaceInfo.spaceId
       }
       const listData = [] as IAnyObject[]
       const deviceMap = deviceStore.allRoomDeviceMap
@@ -247,6 +248,14 @@ ComponentWithComputed({
     },
     onUnload() {
       emitter.off('sceneEdit')
+    },
+    onSpaceSelect(e: {
+      detail: { firstSpaceId: string; secondSpaceId: string; thirdSpaceId: string; fourthSpaceId: string }
+    }) {
+      console.log('onSpaceSelect', e.detail)
+      runInAction(() => {
+        spaceStore.currentSpaceSelectTree = e.detail
+      })
     },
   },
   lifetimes: {
