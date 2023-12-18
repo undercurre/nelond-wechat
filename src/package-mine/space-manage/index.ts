@@ -4,7 +4,7 @@ import Toast from '@vant/weapp/toast/toast'
 import pageBehaviors from '../../behaviors/pageBehaviors'
 import { projectBinding, projectStore, spaceBinding, userBinding } from '../../store/index'
 import { strUtil } from '../../utils/index'
-import { SpaceConfig, SpaceLevel } from '../../config/index'
+import { SpaceConfig, SpaceLevel, defaultImgDir } from '../../config/index'
 import { addSpace, querySpaceList } from '../../apis/index'
 
 ComponentWithComputed({
@@ -15,6 +15,7 @@ ComponentWithComputed({
    * 页面的初始数据
    */
   data: {
+    defaultImgDir,
     subSpaceList: [] as Space.SpaceInfo[],
     pid: '0',
     plevel: SpaceLevel.undef, // 父层级

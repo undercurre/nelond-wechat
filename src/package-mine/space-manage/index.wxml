@@ -32,6 +32,7 @@
   </view>
 
   <scroll-view
+    wx:if="{{sList.length}}"
     class="mt-40rpx grow shrink h-500 box-border mx-24rpx"
     scroll-y
     enhanced
@@ -48,6 +49,18 @@
       isManagePage
     ></space-card>
   </scroll-view>
+
+  <!-- 无空间时显示 -->
+  <view
+    wx:else
+    class="w-full mt-68rpx flex flex-1 flex-col items-center"
+  >
+    <image
+      src="{{defaultImgDir}}/no-device.png"
+      class="w-300rpx h-300rpx"
+    ></image>
+    <text class="text-32rpx text-black-59 mt-44rpx mb-32rpx">尚未添加空间</text>
+  </view>
 
   <block wx:if="{{isManager}}">
     <van-button

@@ -117,7 +117,7 @@ ComponentWithComputed({
             Toast('删除成功')
             projectStore.updateSpaceCardList()
             emitter.emit('deviceEdit')
-            emitter.emit('homeInfoEdit')
+            emitter.emit('projectInfoEdit')
             wx.navigateBack()
           } else {
             Toast('删除失败')
@@ -150,7 +150,7 @@ ComponentWithComputed({
             projectStore.updateSpaceCardList()
             this.queryGroupInfo()
             emitter.emit('deviceEdit')
-            emitter.emit('homeInfoEdit')
+            emitter.emit('projectInfoEdit')
           } else {
             Toast('删除失败')
           }

@@ -70,7 +70,7 @@ ComponentWithComputed({
       if (res.success) {
         // TODO 优化返回后更新
         spaceBinding.store.updateSpaceList()
-        emitter.emit('homeInfoEdit')
+        emitter.emit('projectInfoEdit')
         this.goBack()
       } else {
         Toast('保存失败')
@@ -78,10 +78,11 @@ ComponentWithComputed({
     },
 
     async delSpace() {
-      if (spaceBinding.store.spaceList.length === 1) {
-        Toast('请至少保留一个空间')
-        return
-      }
+      // 由于顶层空间分不同级别，故此限制应该去掉
+      // if (spaceBinding.store.spaceList.length === 1) {
+      //   Toast('请至少保留一个空间')
+      //   return
+      // }
 
       const dialogRes = await Dialog.confirm({
         title: '确定删除该空间？',
@@ -97,7 +98,7 @@ ComponentWithComputed({
 
       if (res.success) {
         spaceBinding.store.updateSpaceList()
-        emitter.emit('homeInfoEdit')
+        emitter.emit('projectInfoEdit')
 
         wx.navigateBack()
       } else {

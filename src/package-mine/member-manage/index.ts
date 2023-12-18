@@ -258,19 +258,19 @@ ComponentWithComputed({
       setTimeout(() => {
         this.setData({ isEditRole: false })
         this.clearOptionList()
-        emitter.emit('homeInfoEdit')
+        emitter.emit('projectInfoEdit')
       }, 300)
     },
     changeUserRole(userId: string, auth: Project.UserRole) {
       projectBinding.store.updateMemberAuth(userId, auth).then(() => {
         this.updateView()
-        emitter.emit('homeInfoEdit')
+        emitter.emit('projectInfoEdit')
       })
     },
     deleteUser(userId: string) {
       projectBinding.store.deleteMember(userId).then(() => {
         this.updateView()
-        emitter.emit('homeInfoEdit')
+        emitter.emit('projectInfoEdit')
       })
     },
     updateShareSetting() {
