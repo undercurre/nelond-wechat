@@ -55,25 +55,27 @@
           </mz-slider>
         </view>
 
-        <text class="text-32rpx mt-66rpx ml-48rpx {{deviceProp.power ? 'text-black-59' : 'text-hex-a2a2a2'}}">色温 | {{colorTempK}}K</text>
-        <view class="px-48rpx pt-28rpx">
-          <mz-slider
-            catch:tap="sliderTap"
-            catch:slideEnd="handleColorTempChange"
-            catch:slideChange="handleColorTempDrag"
-            disabled="{{!deviceProp.power}}"
-            value="{{lightInfoInner.colorTemperature}}"
-            use-button-slot
-            custom-class="slider-color-temp-bar"
-            active-color="rgba(0,0,0,0)"
-            data-key="colorTemp"
-          >
-            <view
-              slot="button"
-              class="slider-button"
-            />
-          </mz-slider>
-        </view>
+        <block wx:if="{{hasColorTemp}}">
+          <text class="text-32rpx mt-66rpx ml-48rpx {{deviceProp.power ? 'text-black-59' : 'text-hex-a2a2a2'}}">色温 | {{colorTempK}}K</text>
+          <view class="px-48rpx pt-28rpx">
+            <mz-slider
+              catch:tap="sliderTap"
+              catch:slideEnd="handleColorTempChange"
+              catch:slideChange="handleColorTempDrag"
+              disabled="{{!deviceProp.power}}"
+              value="{{lightInfoInner.colorTemperature}}"
+              use-button-slot
+              custom-class="slider-color-temp-bar"
+              active-color="rgba(0,0,0,0)"
+              data-key="colorTemp"
+            >
+              <view
+                slot="button"
+                class="slider-button"
+              />
+            </mz-slider>
+          </view>
+        </block>
       </view>
       <!-- 开关控制 -->
       <view
