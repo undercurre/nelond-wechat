@@ -24,6 +24,22 @@ export const spaceStore = observable({
     return this.spaceList?.length ? this.spaceList[this.currentSpaceIndex] : ({} as Space.SpaceInfo)
   },
 
+  currentSpaceSelectTree: {
+    firstSpaceId: '',
+    secondSpaceId: '',
+    thirdSpaceId: '',
+    fourthSpaceId: '',
+  },
+  get currentSpaceInfo(): { spaceId: string } {
+    const { firstSpaceId, secondSpaceId, thirdSpaceId, fourthSpaceId } = this.currentSpaceSelectTree
+    const currentSpaceId = fourthSpaceId || thirdSpaceId || secondSpaceId || firstSpaceId
+    return { spaceId: currentSpaceId } //暂时只返回id
+  },
+  get hasSpace() {
+    const { spaceList } = this
+    return spaceList?.length
+  },
+
   /**
    * 更新空间开灯数量
    * ButtonMode 0 普通面板或者关联开关 2 场景 3 关联灯
@@ -70,6 +86,6 @@ export const spaceStore = observable({
 
 export const spaceBinding = {
   store: spaceStore,
-  fields: ['allSpaceList', 'spaceList', 'currentSpaceIndex', 'spaceDeviceList', 'currentSpace'],
+  fields: ['hasSpace', 'allSpaceList', 'spaceList', 'currentSpaceIndex', 'spaceDeviceList', 'currentSpace'],
   actions: [],
 }

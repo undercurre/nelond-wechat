@@ -72,7 +72,7 @@ ComponentWithComputed({
       const res = await querySpaceList(projectStore.currentProjectId, query.pid)
       if (res.success) {
         this.setData({
-          subSpaceList: res.result,
+          subSpaceList: res.result.length > 1 ? res.result.filter((space) => space.publicSpaceFlag !== 1) : res.result,
         })
       }
     },
@@ -87,7 +87,6 @@ ComponentWithComputed({
 
     /**
      * 根据坐标位置计算index
-     * TODO 防止超界
      * @returns index
      */
     getIndex(y: number) {

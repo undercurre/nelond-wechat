@@ -73,13 +73,35 @@
       class="flex flex-1 w-full box-border"
       id="content"
     >
+      <!-- 无空间时显示 -->
+      <view
+        wx:if="{{!hasSpace}}"
+        class="w-full mt-68rpx flex flex-col items-center"
+      >
+        <image
+          src="{{defaultImgDir}}/no-device.png"
+          class="w-300rpx h-300rpx"
+        ></image>
+        <text class="text-32rpx text-black-59 mt-44rpx mb-32rpx">尚未添加空间</text>
+        <text class="text-24rpx text-black-59 mb-224rpx opacity-40">立即添加，开启智慧照明</text>
+        <van-button
+          bind:click="goToWhenConnected"
+          data-url="/package-mine/space-new/index"
+          type="primary"
+          custom-class="add-immediately-btn"
+          wx:if="{{isInit && isManager}}"
+        >
+          <text class="text-white text-36rpx font-normal">添加项目空间</text>
+        </van-button>
+      </view>
+
       <!-- 有设备时显示 -->
       <scroll-view
         enhanced="{{true}}"
         scroll-y="{{!isMoving}}"
         show-scrollbar="{{false}}"
         class="flex flex-col items-between mx-24rpx"
-        wx:if="{{hasDevice}}"
+        wx:else
         style="height: {{scrollViewHeight}}px;"
         scroll-top="{{scrollTop}}"
         scroll-with-animation="{{true}}"
@@ -131,7 +153,7 @@
         <view class="h-64rpx"></view>
       </scroll-view>
       <!-- 无设备时显示 -->
-      <view
+      <!-- <view
         wx:else
         class="w-full mt-68rpx flex flex-col items-center"
       >
@@ -140,17 +162,17 @@
           class="w-300rpx h-300rpx"
         ></image>
         <text class="text-32rpx text-black-59 mt-44rpx mb-32rpx">尚未添加设备</text>
-        <text class="text-24rpx text-black-59 mb-224rpx opacity-40">立即添加设备，开启智慧照明</text>
+        <text class="text-24rpx text-black-59 mb-224rpx opacity-40">立即添加，开启智慧照明</text>
         <van-button
           bind:click="goToWhenConnected"
           data-url="/package-distribution/choose-device/index"
-          color="linear-gradient(165deg, #468CFB 0%, #6BA3FC 100%)"
+          type="primary"
           custom-class="add-immediately-btn"
-          wx:if="{{isInit && !hasDevice && (isCreator || isAdmin)}}"
+          wx:if="{{isInit && isManager}}"
         >
           <text class="text-white text-36rpx font-normal">添加智能设备</text>
         </van-button>
-      </view>
+      </view> -->
     </view>
   </view>
 </block>

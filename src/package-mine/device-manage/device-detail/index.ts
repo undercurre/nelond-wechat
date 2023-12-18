@@ -1,7 +1,15 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
-import { deviceStore, projectBinding, projectStore, otaStore, spaceBinding, spaceStore } from '../../../store/index'
+import {
+  deviceStore,
+  projectBinding,
+  projectStore,
+  otaStore,
+  spaceBinding,
+  spaceStore,
+  userBinding,
+} from '../../../store/index'
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { waitingDeleteDevice, editDeviceInfo, queryDeviceInfoByDeviceId, sendDevice } from '../../../apis/index'
 import { proName, PRO_TYPE, SCREEN_PID } from '../../../config/index'
@@ -9,7 +17,7 @@ import Dialog from '@vant/weapp/dialog/dialog'
 import { emitter } from '../../../utils/index'
 
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding, projectBinding] }), pageBehavior],
+  behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding, projectBinding, userBinding] }), pageBehavior],
   /**
    * 页面的初始数据
    */
@@ -75,7 +83,7 @@ ComponentWithComputed({
       return false
     },
     canEditDevice(data) {
-      return data.isCreator || data.isAdmin
+      return data.isManager
     },
     /**
      * @description 是否显示按键设置
@@ -211,7 +219,7 @@ ComponentWithComputed({
           Toast('删除成功')
           projectStore.updateSpaceCardList()
           emitter.emit('deviceEdit')
-          emitter.emit('homeInfoEdit')
+          emitter.emit('projectInfoEdit')
           wx.navigateBack()
         } else {
           Toast('删除失败')

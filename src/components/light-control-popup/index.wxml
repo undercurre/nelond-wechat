@@ -34,24 +34,26 @@
         </mz-slider>
       </view>
 
-      <text class="block text-32rpx text-black-59 pt-48rpx">色温 | {{colorTempShow}}K</text>
-      <view class="pt-28rpx">
-        <mz-slider
-          bind:slideEnd="handleColorTempChange"
-          bind:slideChange="handleColorTempDrag"
-          disabled="{{!power}}"
-          value="{{colorTemperature}}"
-          use-button-slot
-          custom-class="slider-color-temp-bar"
-          active-color="rgba(0,0,0,0)"
-          data-key="colorTemp"
-        >
-          <view
-            slot="button"
-            class="slider-button"
-          />
-        </mz-slider>
-      </view>
+      <block wx:if="{{hasColorTemp}}">
+        <text class="block text-32rpx text-black-59 pt-48rpx">色温 | {{colorTempShow}}K</text>
+        <view class="pt-28rpx">
+          <mz-slider
+            bind:slideEnd="handleColorTempChange"
+            bind:slideChange="handleColorTempDrag"
+            disabled="{{!power}}"
+            value="{{colorTemperature}}"
+            use-button-slot
+            custom-class="slider-color-temp-bar"
+            active-color="rgba(0,0,0,0)"
+            data-key="colorTemp"
+          >
+            <view
+              slot="button"
+              class="slider-button"
+            />
+          </mz-slider>
+        </view>
+      </block>
     </view>
     <view class="h-96rpx"></view>
 

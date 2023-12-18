@@ -22,6 +22,12 @@ ComponentWithComputed({
         path: '/package-distribution/scan/index?scanType=subdevice',
       },
       {
+        icon: `${productImgDir}/downlight.png`,
+        name: '工矿灯',
+        tag: 'zigbee',
+        path: '/package-distribution/scan/index?scanType=subdevice',
+      },
+      {
         icon: `${productImgDir}/magnetic-track-light.png`,
         name: '磁吸灯',
         tag: 'zigbee',

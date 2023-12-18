@@ -34,12 +34,12 @@ Component({
     async attached() {
       await this.queryHomeUsers()
 
-      emitter.on('homeInfoEdit', () => {
+      emitter.on('projectInfoEdit', () => {
         this.queryHomeUsers()
       })
     },
     detached() {
-      emitter.off('homeInfoEdit')
+      emitter.off('projectInfoEdit')
     },
   },
   /**

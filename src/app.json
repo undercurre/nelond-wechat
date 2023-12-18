@@ -32,7 +32,6 @@
         "device-manage/index",
         "device-manage/device-detail/index",
         "device-manage/group-detail/index",
-        "voice-control/index",
         "guideline/index",
         "device-category/index",
         "help/list/index",

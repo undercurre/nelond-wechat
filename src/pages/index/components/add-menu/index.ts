@@ -1,11 +1,10 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { projectBinding } from '../../../../store/index'
-import pageBehavior from '../../../../behaviors/pageBehaviors'
+import { projectBinding, userBinding } from '../../../../store/index'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
 
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding] }), pageBehavior],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, userBinding] })],
   options: {},
   /**
    * 组件的属性列表
@@ -45,7 +44,7 @@ ComponentWithComputed({
   computed: {
     menuList(data) {
       const list = []
-      if (data.isCreator || data.isAdmin) {
+      if (data.isManager) {
         list.push(
           {
             title: '添加设备',

@@ -22,7 +22,11 @@ declare namespace Space {
     /**
      * 离线设备数量
      */
-    offlineDeviceCount: 0
+    offlineDeviceCount: number
+    /**
+     * 是否公共空间
+     */
+    publicSpaceFlag: number
     /**
      * 空间id
      */
@@ -52,7 +56,7 @@ declare namespace Space {
   }
 
   interface SpaceTreeNode extends allSpace {
-    child: SpaceTreeNode[]
+    child: { [key: string]: SpaceTreeNode }
   }
 
   /**

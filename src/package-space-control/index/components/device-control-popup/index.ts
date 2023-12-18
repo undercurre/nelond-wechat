@@ -10,6 +10,7 @@ import {
   SCREEN_PID,
   KNOB_PID,
   defaultImgDir,
+  NO_COLOR_TEMP,
 } from '../../../../config/index'
 import {
   sendDevice,
@@ -66,14 +67,17 @@ ComponentWithComputed({
         diffData.deviceProp = prop
 
         // 色温范围计算
-        if (device.proType === PRO_TYPE.light) {
+        if (NO_COLOR_TEMP.includes(device.proType)) {
+          diffData.hasColorTemp = false
+        } else if (device.proType === PRO_TYPE.light) {
           const { minColorTemp, maxColorTemp } = device.mzgdPropertyDTOList['light'].colorTempRange!
           diffData.minColorTemp = minColorTemp
           diffData.maxColorTemp = maxColorTemp
+          diffData.hasColorTemp = true
         }
-        // 是否智慧屏判断
-        else if (device.proType === PRO_TYPE.switch) {
-          diffData.isScreen = SCREEN_PID.includes(device.productId)
+
+        if (device.proType === PRO_TYPE.switch) {
+          diffData.isScreen = SCREEN_PID.includes(device.productId) // 是否智慧屏判断
           diffData.isKnob = KNOB_PID.includes(device.productId)
         }
         this.setData(diffData)
@@ -130,6 +134,7 @@ ComponentWithComputed({
     _allSwitchLampRelList: Array<Device.IMzgdLampDeviceInfoDTO>(), // 项目所有面板的灯关联关系数据
     isScreen: false, // 当前选中项是否智慧屏
     isKnob: false, // 当前选中项是否旋钮开关
+    isNoColorTemp: false, // 是否禁用色温的灯具
   },
 
   computed: {

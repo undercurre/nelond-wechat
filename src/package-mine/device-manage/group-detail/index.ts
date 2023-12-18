@@ -1,14 +1,14 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
-import { projectBinding, projectStore, spaceBinding } from '../../../store/index'
+import { projectBinding, projectStore, spaceBinding, userBinding } from '../../../store/index'
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { delGroup, queryGroup, renameGroup, updateGroup } from '../../../apis/index'
 import { proName } from '../../../config/index'
 import Dialog from '@vant/weapp/dialog/dialog'
 import { emitter } from '../../../utils/index'
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding, projectBinding] }), pageBehavior],
+  behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding, projectBinding, userBinding] }), pageBehavior],
   /**
    * 页面的初始数据
    */
@@ -30,7 +30,7 @@ ComponentWithComputed({
       return ''
     },
     canEditDevice(data) {
-      return data.isCreator || data.isAdmin
+      return data.isManager
     },
     /**
      * @description 可被添加到灯组的单灯列表
@@ -117,7 +117,7 @@ ComponentWithComputed({
             Toast('删除成功')
             projectStore.updateSpaceCardList()
             emitter.emit('deviceEdit')
-            emitter.emit('homeInfoEdit')
+            emitter.emit('projectInfoEdit')
             wx.navigateBack()
           } else {
             Toast('删除失败')
@@ -150,7 +150,7 @@ ComponentWithComputed({
             projectStore.updateSpaceCardList()
             this.queryGroupInfo()
             emitter.emit('deviceEdit')
-            emitter.emit('homeInfoEdit')
+            emitter.emit('projectInfoEdit')
           } else {
             Toast('删除失败')
           }
