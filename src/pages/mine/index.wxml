@@ -56,14 +56,6 @@
         bind:click="toPage"
       />
       <van-cell
-        icon="/assets/img/mine/voiceControl.png"
-        title="语音控制"
-        is-link
-        center
-        data-url="{{urls.voiceControl}}"
-        bind:click="toPage"
-      />
-      <van-cell
         wx:if="{{!isVisitor}}"
         icon="/assets/img/mine/deviceReplace.png"
         title="设备替换"
