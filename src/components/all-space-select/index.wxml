@@ -1,4 +1,8 @@
 <import src="/commons/templates/popup.wxml" />
+<wxs
+  module="utils"
+  src="./index.wxs"
+></wxs>
 <view style="{{cellStyle}}">
   <van-cell
     title="空间选择"
@@ -22,14 +26,14 @@
     >
       <view class="flex flex-1 justify-start px-32rpx">
         <view
-          wx:for="{{spaceData[firstIndex].child[secondIndex].child[thirdIndex].child}}"
+          wx:for="{{spaceData[firstSpaceId].child[secondSpaceId].child[thirdSpaceId].child}}"
           wx:key="spaceId"
           class="flex-col-center {{index!==0?'ml-90rpx': ''}}"
-          data-index="{{index}}"
+          data-id="{{item.spaceId}}"
           bind:tap="fourthCheck"
         >
-          <text class="text-28rpx {{fourthIndex === index ? 'text-black-2a' : 'text-hex-555659'}} whitespace-nowrap">{{item.spaceName}}</text>
-          <view class="w-42rpx h-8rpx mt-8rpx bg-hex-7cd06a rounded-999 {{fourthIndex === index ? 'opacity-100' : 'opacity-0'}}"></view>
+          <text class="text-28rpx {{fourthSpaceId === item.spaceId ? 'text-black-2a' : 'text-hex-555659'}} whitespace-nowrap">{{item.spaceName}}</text>
+          <view class="w-42rpx h-8rpx mt-8rpx bg-hex-7cd06a rounded-999 {{fourthSpaceId === item.spaceId ? 'opacity-100' : 'opacity-0'}}"></view>
         </view>
       </view>
     </scroll-view>
@@ -69,17 +73,16 @@
             wx:key="index"
             title-style="font-size:28rpx;"
             title="{{item.spaceName}}"
-            custom-class="cell {{firstIndex === index ? 'checked' : 'unchecked'}}"
+            custom-class="cell {{firstSpaceId === item.spaceId ? 'checked' : 'unchecked'}}"
             border="{{false}}"
             data-id="{{item.spaceId}}"
-            data-index="{{index}}"
             bind:click="firstCheck"
           >
             <van-icon
-              wx:if="{{item.child.length || firstIndex === index}}"
-              color="{{!item.child.length && firstIndex === index ?'#7cd06a':'#969799'}}"
+              wx:if="{{utils.isNotEmptyObject(item.child) || firstSpaceId === item.spaceId}}"
+              color="{{!utils.isNotEmptyObject(item.child) && firstSpaceId === item.spaceId ?'#7cd06a':'#969799'}}"
               size="28rpx !important"
-              name="{{!item.child.length && firstIndex === index ? 'location' : 'arrow'}}"
+              name="{{!utils.isNotEmptyObject(item.child) && firstSpaceId === item.spaceId ? 'location' : 'arrow'}}"
               slot="right-icon"
             />
           </van-cell>
@@ -91,28 +94,27 @@
           scroll-y
         >
           <van-cell
-            wx:for="{{spaceData[firstIndex].child}}"
+            wx:for="{{spaceData[firstSpaceId].child}}"
             wx:key="index"
             title-style="font-size:28rpx;"
             title="{{item.spaceName}}"
-            custom-class="cell {{secondIndex === index ? 'checked' : 'unchecked'}}"
+            custom-class="cell {{secondSpaceId === item.spaceId ? 'checked' : 'unchecked'}}"
             border="{{false}}"
             data-id="{{item.spaceId}}"
-            data-index="{{index}}"
             bind:click="secondCheck"
           >
             <van-icon
-              wx:if="{{item.child.length || secondIndex === index}}"
-              color="{{!item.child.length && secondIndex === index ?'#7cd06a':'#969799'}}"
+              wx:if="{{utils.isNotEmptyObject(item.child) || secondSpaceId === item.spaceId}}"
+              color="{{!utils.isNotEmptyObject(item.child) && secondSpaceId === item.spaceId ?'#7cd06a':'#969799'}}"
               size="28rpx !important"
-              name="{{!item.child.length && secondIndex === index ? 'location' : 'arrow'}}"
+              name="{{!utils.isNotEmptyObject(item.child) && secondSpaceId === item.spaceId ? 'location' : 'arrow'}}"
               slot="right-icon"
             />
           </van-cell>
         </scroll-view>
       </view>
       <view
-        wx:if="{{spaceData[firstIndex].child[secondIndex].child.length}}"
+        wx:if="{{firstSpaceId&&secondSpaceId&&utils.isNotEmptyObject(spaceData[firstSpaceId].child[secondSpaceId].child)}}"
         class="flex bg-hex-f5f5f5"
         style="flex: 2"
       >
@@ -121,35 +123,34 @@
           scroll-y
         >
           <view
-            wx:for="{{spaceData[firstIndex].child[secondIndex].child}}"
+            wx:for="{{spaceData[firstSpaceId].child[secondSpaceId].child}}"
             wx:key="index"
           >
             <van-cell
               title-style="font-size:28rpx;"
               title="{{item.spaceName}}"
-              custom-class="cell {{thirdIndex === index ? 'checked' : 'unchecked'}}"
+              custom-class="cell {{thirdSpaceId === item.spaceId ? 'checked' : 'unchecked'}}"
               border="{{false}}"
               data-id="{{item.spaceId}}"
-              data-index="{{index}}"
               bind:click="thirdCheck"
             >
               <van-icon
-                wx:if="{{item.child.length || thirdIndex === index}}"
-                color="{{!item.child.length && thirdIndex === index ?'#7cd06a':'#969799'}}"
+                wx:if="{{utils.isNotEmptyObject(item.child) || thirdSpaceId === item.spaceId}}"
+                color="{{!utils.isNotEmptyObject(item.child) && thirdSpaceId === item.spaceId ?'#7cd06a':'#969799'}}"
                 size="28rpx !important"
-                name="{{thirdIndex === index ? !item.child.length ? 'location' : 'arrow-down' : 'arrow'}}"
+                name="{{thirdSpaceId === item.spaceId ? !utils.isNotEmptyObject(item.child) ? 'location' : 'arrow-down' : 'arrow'}}"
                 slot="right-icon"
               />
             </van-cell>
             <view
-              wx:if="{{thirdIndex === index && item.child.length}}"
+              wx:if="{{thirdSpaceId === item.spaceId && utils.isNotEmptyObject(item.child)}}"
               class="bg-white px-32rpx py-16rpx"
             >
               <view
-                class="h-72rpx my-16rpx leading-72rpx text-center text-28rpx {{fourthIndex === index ? 'text-hex-ffffff checked-background':'bg-hex-f5f5f5'}}"
+                class="h-72rpx my-16rpx leading-72rpx text-center text-28rpx {{fourthSpaceId === item.spaceId ? 'text-hex-ffffff checked-background':'bg-hex-f5f5f5'}}"
                 wx:for="{{item.child}}"
                 wx:key="key"
-                data-index="{{index}}"
+                data-id="{{item.spaceId}}"
                 catch:tap="fourthCheck"
               >
                 {{item.spaceName}}
