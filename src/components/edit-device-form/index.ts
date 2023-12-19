@@ -68,8 +68,13 @@ Component({
    * 组件的方法列表
    */
   methods: {
-    selectRoom(event: WechatMiniprogram.CustomEvent) {
-      const spaceInfo = spaceStore.spaceList[event.currentTarget.dataset.index]
+    onSpaceSelect(e: {
+      detail: { firstSpaceId: string; secondSpaceId: string; thirdSpaceId: string; fourthSpaceId: string }
+    }) {
+      console.log('onSpaceSelect', e.detail)
+      const spaceId = e.detail.fourthSpaceId || e.detail.thirdSpaceId || e.detail.secondSpaceId || e.detail.firstSpaceId
+
+      const spaceInfo = spaceStore.allSpaceList.find((item) => item.spaceId === spaceId) as Space.allSpace
 
       this.setData({
         'deviceInfo.spaceId': spaceInfo.spaceId,

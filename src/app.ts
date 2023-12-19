@@ -5,7 +5,7 @@ import {
   setCurrentEnv,
   Logger,
   isConnect,
-  initHomeOs,
+  // initHomeOs,
   networkStatusListen,
   removeNetworkStatusListen,
   verifyNetwork,
@@ -80,7 +80,8 @@ App<IAppOption>({
       return
     }
 
-    initHomeOs()
+    // todo: 暂时屏蔽homOS相关逻辑，第一期不接屏，不存在host
+    // initHomeOs()
 
     if (!isConnect()) {
       return

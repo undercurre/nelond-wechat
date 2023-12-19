@@ -37,26 +37,12 @@
 
   <text class="label">选择空间</text>
 
-  <view class="flex flex-row flex-wrap gap-32rpx">
-    <text
-      wx:for="{{spaceList}}"
-      wx:key="spaceId"
-      class="px-32rpx rounded-28rpx text-28 leading-56rpx {{ item.spaceId === deviceInfo.spaceId ? 'space-checked text-white' : 'bg-hex-DFE1E5 text-black-59'}}"
-      bind:tap="selectRoom"
-      data-index="{{index}}"
-      >{{ item.spaceName }}</text
-    >
-
-    <view
-      class="px-46rpx bg-hex-DFE1E5 rounded-28rpx text-28 leading-56rpx text-black-59"
-      bind:tap="addRoom"
-    >
-      <svg-icon
-        name="icon-park-outline:plus"
-        color="#555659"
-        height="56rpx"
-      ></svg-icon>
-    </view>
+  <view class="">
+    <all-space-select
+      cellStyle="background-color:rgba(255,255,255,0.6);border-radius:36rpx;"
+      dataType="device"
+      bind:confirm="onSpaceSelect"
+    ></all-space-select>
   </view>
 </view>
 

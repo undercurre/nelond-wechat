@@ -53,7 +53,7 @@ ComponentWithComputed({
     },
     async toUpdateSpace(e: { detail: string }) {
       this.setData({
-        spaceName: e.detail,
+        'spaceInfo.spaceName': e.detail,
       })
     },
 
