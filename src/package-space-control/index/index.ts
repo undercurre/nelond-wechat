@@ -13,7 +13,7 @@ import {
 } from '../../store/index'
 import { runInAction } from 'mobx-miniprogram'
 import pageBehavior from '../../behaviors/pageBehaviors'
-import { sendDevice, execScene, saveDeviceOrder, queryGroup, queryAuthGetStatus } from '../../apis/index'
+import { sendDevice, execScene, saveDeviceOrder, queryAuthGetStatus } from '../../apis/index'
 import Toast from '@vant/weapp/toast/toast'
 import {
   storage,
@@ -153,9 +153,7 @@ ComponentWithComputed({
       if (data.allDeviceList) {
         return (
           (data.allDeviceList as DeviceCard[]).filter(
-            (device) =>
-              device.spaceId === spaceStore.spaceList[spaceStore.currentSpaceIndex].spaceId &&
-              device.proType === PRO_TYPE.light,
+            (device) => device.spaceId === spaceStore.currentSpace.spaceId && device.proType === PRO_TYPE.light,
           ).length > 0
         )
       }
@@ -166,19 +164,14 @@ ComponentWithComputed({
       if (data.allDeviceList?.length) {
         return (
           (data.allDeviceList as DeviceCard[]).filter(
-            (device) =>
-              device.spaceId === spaceStore.spaceList[spaceStore.currentSpaceIndex].spaceId &&
-              device.proType !== PRO_TYPE.gateway,
+            (device) => device.spaceId === spaceStore.currentSpace.spaceId && device.proType !== PRO_TYPE.gateway,
           ).length > 0
         )
       }
       return false
     },
     title(data) {
-      if (data.spaceList && data.spaceList[data.currentSpaceIndex]) {
-        return data.spaceList[data.currentSpaceIndex].spaceName
-      }
-      return ''
+      return data.currentSpace?.spaceName ?? ''
     },
     sceneListInBar(data) {
       if (data.sceneList) {
@@ -284,7 +277,7 @@ ComponentWithComputed({
       if (this.data._firstShow && this.data._from !== 'addDevice') {
         this.updateQueue({ isRefresh: true })
         // sceneStore.updateAllRoomSceneList()
-        this.queryGroupInfo()
+        // this.queryGroupInfo()
         this.data._firstShow = false
       }
       // 从别的页面返回，或从挂起状态恢复
@@ -381,7 +374,7 @@ ComponentWithComputed({
           this.reloadDataThrottle(e)
         } else if (
           e.result.eventType === WSEventType.room_del &&
-          e.result.eventData.spaceId === spaceStore.spaceList[spaceStore.currentSpaceIndex].spaceId
+          e.result.eventData.spaceId === spaceStore.currentSpace.spaceId
         ) {
           // 空间被删除，退出到首页
           await projectStore.updateSpaceCardList()
@@ -411,23 +404,23 @@ ComponentWithComputed({
       })
     },
 
-    // 查询空间分组详情
-    async queryGroupInfo() {
-      const res = await queryGroup({ groupId: spaceStore.currentSpace.groupId })
-      if (res.success) {
-        const roomStatus = res.result.controlAction[0]
-        const { colorTempRangeMap } = res.result
-        this.setData({
-          roomLight: {
-            brightness: roomStatus.brightness,
-            colorTemperature: roomStatus.colorTemperature,
-            maxColorTemp: colorTempRangeMap.maxColorTemp,
-            minColorTemp: colorTempRangeMap.minColorTemp,
-            power: roomStatus.power,
-          },
-        })
-      }
-    },
+    // TODO 查询空间分组详情
+    // async queryGroupInfo() {
+    //   const res = await queryGroup({ groupId: spaceStore.currentSpace.groupId })
+    //   if (res.success) {
+    //     const roomStatus = res.result.controlAction[0]
+    //     const { colorTempRangeMap } = res.result
+    //     this.setData({
+    //       roomLight: {
+    //         brightness: roomStatus.brightness,
+    //         colorTemperature: roomStatus.colorTemperature,
+    //         maxColorTemp: colorTempRangeMap.maxColorTemp,
+    //         minColorTemp: colorTempRangeMap.minColorTemp,
+    //         power: roomStatus.power,
+    //       },
+    //     })
+    //   }
+    // },
 
     async reloadData() {
       Logger.log('reloadData', isConnect())
@@ -439,7 +432,8 @@ ComponentWithComputed({
 
       try {
         // sceneStore.updateAllRoomSceneList(),
-        await Promise.all([projectStore.updateSpaceCardList(), this.queryGroupInfo()])
+        // TODO this.queryGroupInfo()
+        await Promise.all([projectStore.updateSpaceCardList()])
 
         this.updateQueue({ isRefresh: true })
       } finally {
@@ -464,7 +458,7 @@ ComponentWithComputed({
       await deviceStore.updateallDeviceList()
       this.updateQueue({ isRefresh: true })
 
-      this.queryGroupInfo()
+      // this.queryGroupInfo()
     },
 
     // 节流更新设备列表
@@ -1312,38 +1306,43 @@ ComponentWithComputed({
         'roomLight.brightness': e.detail,
       })
     },
-    handleLevelEnd(e: { detail: number }) {
-      this.setData({
-        'roomLight.brightness': e.detail,
-      })
-      this.lightSendDeviceControl('brightness')
-    },
+    // handleLevelEnd(e: { detail: number }) {
+    //   this.setData({
+    //     'roomLight.brightness': e.detail,
+    //   })
+    //   this.lightSendDeviceControl('brightness')
+    // },
     handleColorTempChange(e: { detail: number }) {
       this.setData({
         'roomLight.colorTemperature': e.detail,
       })
     },
-    handleColorTempEnd(e: { detail: number }) {
-      this.setData({
-        'roomLight.colorTemperature': e.detail,
-      })
-      this.lightSendDeviceControl('colorTemperature')
-    },
-    async lightSendDeviceControl(type: 'colorTemperature' | 'brightness') {
-      const deviceId = spaceStore.currentSpace.groupId
+    // handleColorTempEnd(e: { detail: number }) {
+    //   this.setData({
+    //     'roomLight.colorTemperature': e.detail,
+    //   })
+    //   this.lightSendDeviceControl('colorTemperature')
+    // },
+    // async lightSendDeviceControl(type: 'colorTemperature' | 'brightness') {
+    //   const deviceId = spaceStore.currentSpace.groupId
 
-      const res = await sendDevice({
-        proType: PRO_TYPE.light,
-        deviceType: 4,
-        deviceId,
-        property: {
-          [type]: this.data.roomLight[type],
-        },
-      })
+    //   const res = await sendDevice({
+    //     proType: PRO_TYPE.light,
+    //     deviceType: 4,
+    //     deviceId,
+    //     property: {
+    //       [type]: this.data.roomLight[type],
+    //     },
+    //   })
 
-      if (!res.success) {
-        Toast('控制失败')
-      }
+    //   if (!res.success) {
+    //     Toast('控制失败')
+    //   }
+    // },
+
+    goBackAndPop() {
+      runInAction(() => spaceStore.currentSpaceSelect.pop())
+      wx.navigateBack()
     },
   },
 })

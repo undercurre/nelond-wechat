@@ -372,14 +372,19 @@ ComponentWithComputed({
 
     // 点击卡片
     handleCardTap(e: WechatMiniprogram.CustomEvent) {
-      const { spaceId, nodeCount, spaceName, spaceLevel } = e.detail
+      const { spaceId, nodeCount, spaceName, spaceLevel, publicSpaceFlag } = e.detail
       const link = nodeCount ? '/package-space-control/space-list/index' : '/package-space-control/index/index'
 
-      // 更新当前园区 // TODO 确定是否仍需要本状态
-      const index = spaceStore.spaceList.findIndex((space) => space.spaceId === spaceId)
-      runInAction(() => {
-        spaceStore.currentSpaceIndex = index
-      })
+      // 更新当前选中空间
+      runInAction(() =>
+        spaceStore.currentSpaceSelect.push({
+          pid: '0',
+          spaceId,
+          spaceLevel,
+          spaceName,
+          publicSpaceFlag,
+        }),
+      )
 
       wx.navigateTo({
         url: strUtil.getUrlWithParams(link, {

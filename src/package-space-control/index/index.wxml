@@ -16,7 +16,7 @@
     title="{{title}}"
     z-index="{{113}}"
     left-arrow
-    bind:leftTap="goBack"
+    bind:leftTap="goBackAndPop"
     show-go-home
     disabled="{{opacity === 0}}"
   ></nav-bar>

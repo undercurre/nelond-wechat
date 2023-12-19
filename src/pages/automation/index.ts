@@ -111,7 +111,7 @@ ComponentWithComputed({
       // emitter.on('scene_enabled', () => {
       //   autosceneBinding.store.updateAllRoomAutoSceneList()
       // })
-      console.log(spaceStore.currentSpace, spaceStore.currentSpaceIndex)
+      // console.log(spaceStore.currentSpace, spaceStore.currentSpaceIndex)
 
       // 加载一键场景列表
       sceneBinding.store.updateAllRoomSceneList()
@@ -138,7 +138,7 @@ ComponentWithComputed({
 
     updateList() {
       if (this.data.selectedspaceId === '') {
-        this.data.selectedspaceId = spaceStore.currentSpaceInfo.spaceId
+        this.data.selectedspaceId = spaceStore.currentSpace.spaceId
       }
       const listData = [] as IAnyObject[]
       const deviceMap = deviceStore.allRoomDeviceMap
@@ -253,7 +253,7 @@ ComponentWithComputed({
       console.log('onSpaceSelect', e.detail)
       runInAction(() => {
         spaceStore.currentSpaceSelect = e.detail
-        console.log(spaceStore.currentSpaceSelect, spaceStore.currentSpaceInfo)
+        console.log(spaceStore.currentSpaceSelect, spaceStore.currentSpace)
       })
     },
   },

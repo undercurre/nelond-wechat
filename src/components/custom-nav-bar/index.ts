@@ -1,6 +1,7 @@
 import { storage, goHome } from '../../utils/index'
+import { runInAction } from 'mobx-miniprogram'
+import { spaceStore } from '../../store/index'
 
-// components/custom-nav-bar/index.ts
 Component({
   options: {},
   /**
@@ -62,6 +63,10 @@ Component({
       this.triggerEvent('leftTap')
     },
     handleGoHome() {
+      // 清空进入过的空间队列
+      if (spaceStore.currentSpaceSelect?.length) {
+        runInAction(() => (spaceStore.currentSpaceSelect = []))
+      }
       goHome()
     },
   },

@@ -1400,8 +1400,7 @@ ComponentWithComputed({
         deviceActions: [],
         deviceConditions: [],
         projectId: projectStore.currentProjectDetail.projectId,
-        spaceId:
-          this.data.spaceId === '' ? spaceStore.spaceList[spaceStore.currentSpaceIndex].spaceId : this.data.spaceId,
+        spaceId: this.data.spaceId === '' ? spaceStore.currentSpace.spaceId : this.data.spaceId,
         sceneIcon: this.data.sceneIcon,
         sceneName: this.data.sceneName,
         sceneType: '0',

@@ -41,10 +41,7 @@ ComponentWithComputed({
 
   computed: {
     spaceName(data) {
-      if (data.spaceList && data.spaceList[data.currentSpaceIndex]) {
-        return data.spaceList[data.currentSpaceIndex].spaceName
-      }
-      return ''
+      return data.currentSpace?.spaceName ?? ''
     },
   },
 

@@ -103,7 +103,7 @@ ComponentWithComputed({
         deviceActions: [],
         deviceConditions: [],
         projectId: projectStore.currentProjectDetail.projectId,
-        spaceId: spaceStore.spaceList[spaceStore.currentSpaceIndex].spaceId,
+        spaceId: spaceStore.currentSpace.spaceId,
         sceneIcon: this.data.sceneIcon,
         sceneName: this.data.sceneName,
         sceneType: this.data.linkSwitch ? '1' : '0',

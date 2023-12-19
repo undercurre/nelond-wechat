@@ -1,6 +1,7 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
+import { runInAction } from 'mobx-miniprogram'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import { othersBinding, spaceBinding, userBinding, projectStore, projectBinding } from '../../store/index'
+import { othersBinding, spaceBinding, userBinding, spaceStore, projectStore, projectBinding } from '../../store/index'
 import { storage, strUtil, throttle } from '../../utils/index'
 import { ROOM_CARD_H, SpaceConfig, defaultImgDir } from '../../config/index'
 import { updateRoomSort, querySpaceList } from '../../apis/index'
@@ -257,8 +258,19 @@ ComponentWithComputed({
 
     // 点击卡片
     handleCardTap(e: WechatMiniprogram.CustomEvent) {
-      const { spaceId, nodeCount, spaceName, spaceLevel } = e.detail
+      const { spaceId, nodeCount, spaceName, spaceLevel, publicSpaceFlag } = e.detail
       const link = nodeCount ? '/package-space-control/space-list/index' : '/package-space-control/index/index'
+
+      // 更新当前选中空间
+      runInAction(() =>
+        spaceStore.currentSpaceSelect.push({
+          pid: '0',
+          spaceId,
+          spaceLevel,
+          spaceName,
+          publicSpaceFlag,
+        }),
+      )
 
       wx.navigateTo({
         url: strUtil.getUrlWithParams(link, {
@@ -267,6 +279,11 @@ ComponentWithComputed({
           plevel: spaceLevel,
         }),
       })
+    },
+
+    goBackAndPop() {
+      runInAction(() => spaceStore.currentSpaceSelect.pop())
+      wx.navigateBack()
     },
   },
 })

@@ -50,7 +50,7 @@ declare namespace Space {
   interface allSpace {
     pid: string
     spaceId: string
-    spaceLevel: number
+    spaceLevel: SpaceLevel
     spaceName: string
     publicSpaceFlag: number
   }

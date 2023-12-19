@@ -30,7 +30,7 @@
     </view>
 
     <view class="pt-16rpx leading-40rpx text-black-59 text-28 opacity-75">
-      <text>设备{{ currentProjectDetail.deviceTotal }}｜成员{{ currentProjectDetail.userTotal }}</text>
+      <text>设备{{ currentProjectDetail.deviceCount }}｜成员{{ currentProjectDetail.userCount }}</text>
     </view>
   </view>
 

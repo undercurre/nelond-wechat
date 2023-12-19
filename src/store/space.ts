@@ -13,19 +13,15 @@ export const spaceStore = observable({
    * 当前项目的空间列表
    */
   spaceList: [] as Space.SpaceInfo[],
-  /**
-   * 选择进入了哪个空间，在roomList中的index
-   */
-  currentSpaceIndex: 0,
+
   /** 全屋设备，对应空间id作为key，空间的设备列表作为key */
   spaceDeviceList: {} as Record<string, Device.DeviceItem[]>,
 
-  get currentSpace(): Space.SpaceInfo {
-    return this.spaceList?.length ? this.spaceList[this.currentSpaceIndex] : ({} as Space.SpaceInfo)
-  },
+  // 当前选中空间的队列 // TODO 或统一改名为 currentSpaceQueue
+  currentSpaceSelect: [] as Space.allSpace[],
 
-  currentSpaceSelect: [],
-  get currentSpaceInfo() {
+  // 当前选中空间队列的末端，即真正存放内容的空间
+  get currentSpace(): Space.allSpace {
     return this.currentSpaceSelect[this.currentSpaceSelect.length - 1]
   },
   get hasSpace() {
@@ -79,6 +75,6 @@ export const spaceStore = observable({
 
 export const spaceBinding = {
   store: spaceStore,
-  fields: ['hasSpace', 'allSpaceList', 'spaceList', 'currentSpaceIndex', 'spaceDeviceList', 'currentSpace'],
+  fields: ['hasSpace', 'allSpaceList', 'spaceList', 'spaceDeviceList', 'currentSpace', 'currentSpace'],
   actions: [],
 }
