@@ -16,7 +16,7 @@ declare namespace Space {
      */
     deviceCount: number
     /**
-     * 子级节点数量
+     * 子级节点数量，含公共空间
      */
     nodeCount: number
     /**
