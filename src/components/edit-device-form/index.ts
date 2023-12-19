@@ -1,6 +1,6 @@
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
-import { projectBinding, spaceBinding, spaceStore } from '../../store/index'
+import { projectBinding, spaceBinding } from '../../store/index'
 import { checkInputNameIllegal } from '../../utils/index'
 
 Component({
@@ -68,13 +68,10 @@ Component({
    * 组件的方法列表
    */
   methods: {
-    onSpaceSelect(e: {
-      detail: { firstSpaceId: string; secondSpaceId: string; thirdSpaceId: string; fourthSpaceId: string }
-    }) {
+    onSpaceSelect(e: { detail: Space.allSpace[] }) {
       console.log('onSpaceSelect', e.detail)
-      const spaceId = e.detail.fourthSpaceId || e.detail.thirdSpaceId || e.detail.secondSpaceId || e.detail.firstSpaceId
 
-      const spaceInfo = spaceStore.allSpaceList.find((item) => item.spaceId === spaceId) as Space.allSpace
+      const spaceInfo = e.detail[e.detail.length - 1]
 
       this.setData({
         'deviceInfo.spaceId': spaceInfo.spaceId,

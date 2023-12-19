@@ -1,5 +1,5 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { spaceBinding, deviceBinding, spaceStore, sceneStore } from '../../store/index'
+import { spaceBinding, deviceBinding, spaceStore, sceneStore, deviceStore } from '../../store/index'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import pageBehavior from '../../behaviors/pageBehaviors'
 
@@ -42,6 +42,7 @@ ComponentWithComputed({
       value: '',
     },
     /**
+     * 仅开启dataType有效
      * true 过滤包含非公共空间
      * false 仅过滤公共空间
      */
@@ -139,13 +140,20 @@ ComponentWithComputed({
           sceneStore.allRoomSceneList.findIndex(
             (scene) => scene.spaceId === space.spaceId && scene.deviceActions?.length > 0,
           ) >= 0
-        const hasDevice = false
+        const hasDevice = deviceStore.allDeviceList.findIndex((device) => device.spaceId === space.spaceId) >= 0
         const notPublicSpace = space.publicSpaceFlag === 0
         const hasBrotherNode =
           spaceStore.allSpaceList.findIndex((s) => s.pid === space.pid && s.spaceId !== space.spaceId) >= 0
-
+        const hasNotPublicSpaceChild =
+          spaceStore.allSpaceList.findIndex((s) => s.pid === space.spaceId && s.publicSpaceFlag === 0) >= 0
         if (this.data.dataType === 'scene') {
-          return this.data.filter ? hasScene : notPublicSpace || (!notPublicSpace && hasBrotherNode && hasScene) //TODO:filter逻辑错误，未实现
+          return this.data.filter
+            ? hasScene || hasNotPublicSpaceChild
+            : notPublicSpace || (!notPublicSpace && hasBrotherNode && hasScene)
+        } else if (this.data.dataType === 'device') {
+          return this.data.filter
+            ? hasDevice || hasNotPublicSpaceChild
+            : notPublicSpace || (!notPublicSpace && hasBrotherNode && hasDevice)
         } else {
           return notPublicSpace || (!notPublicSpace && hasBrotherNode && (hasScene || hasDevice))
         }
@@ -206,8 +214,6 @@ ComponentWithComputed({
       this.setData({ show: false })
     },
     firstCheck(e: { currentTarget: { dataset: { id: string } } }) {
-      console.log(e)
-
       this.setData({
         firstSpaceId: e.currentTarget.dataset.id,
         secondSpaceId: '',
@@ -244,7 +250,6 @@ ComponentWithComputed({
       )
     },
     handleConfirm() {
-      //TODO:返回公共空间的id
       this.setData(
         {
           _firstSpaceId: this.data.firstSpaceId,
