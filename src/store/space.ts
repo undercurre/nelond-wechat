@@ -24,16 +24,9 @@ export const spaceStore = observable({
     return this.spaceList?.length ? this.spaceList[this.currentSpaceIndex] : ({} as Space.SpaceInfo)
   },
 
-  currentSpaceSelectTree: {
-    firstSpaceId: '',
-    secondSpaceId: '',
-    thirdSpaceId: '',
-    fourthSpaceId: '',
-  },
-  get currentSpaceInfo(): { spaceId: string } {
-    const { firstSpaceId, secondSpaceId, thirdSpaceId, fourthSpaceId } = this.currentSpaceSelectTree
-    const currentSpaceId = fourthSpaceId || thirdSpaceId || secondSpaceId || firstSpaceId
-    return { spaceId: currentSpaceId } //暂时只返回id
+  currentSpaceSelect: [],
+  get currentSpaceInfo() {
+    return this.currentSpaceSelect[this.currentSpaceSelect.length - 1]
   },
   get hasSpace() {
     const { spaceList } = this

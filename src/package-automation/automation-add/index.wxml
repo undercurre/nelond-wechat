@@ -253,13 +253,13 @@
   bind:close="handleConditionClose"
   bind:conditionClicked="onConditionClicked"
 />
-<edit-space-popup
+<!-- <edit-space-popup
   value="{{spaceId}}"
   show="{{showEditRoomPopup}}"
   bind:close="handleSceneRoomEditCancel"
   bind:cancel="handleRoomReturn"
   bind:confirm="handleSceneRoomEditConfirm"
-/>
+/> -->
 <add-action-popup
   show="{{showEditActionPopup}}"
   bind:close="handleActionClose"
@@ -346,6 +346,12 @@
   bind:confirm="handleEditSensorConfirm"
   bind:close="handleEditSensorClose"
 ></edit-sensor-popup>
+<all-space-select
+  show="{{showEditRoomPopup}}"
+  showCell="{{false}}"
+  showTab="{{false}}"
+  bind:confirm="handleSceneRoomEditConfirm"
+></all-space-select>
 <van-toast id="van-toast" />
 <van-dialog
   id="van-dialog"

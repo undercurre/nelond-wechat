@@ -5,6 +5,7 @@
 ></wxs>
 <view style="{{cellStyle}}">
   <van-cell
+    wx:if="{{showCell}}"
     title="空间选择"
     value="{{checkedSpaceName}}"
     value-class="cell-value"
@@ -14,7 +15,7 @@
     bind:click="showPopup"
   ></van-cell>
   <view
-    class="flex-center h-80rpx w-686rpx"
+    class="flex h-80rpx w-686rpx"
     wx:if="{{isShowTab}}"
   >
     <scroll-view
@@ -24,13 +25,13 @@
       class="flex flex-1"
       enable-flex
     >
-      <view class="flex flex-1 justify-start px-32rpx">
+      <view class="flex flex-1 justify-start">
         <view
           wx:for="{{spaceData[firstSpaceId].child[secondSpaceId].child[thirdSpaceId].child}}"
           wx:key="spaceId"
-          class="flex-col-center {{index!==0?'ml-90rpx': ''}}"
+          class="flex-col-center px-32rpx"
           data-id="{{item.spaceId}}"
-          bind:tap="fourthCheck"
+          bind:tap="tabCheck"
         >
           <text class="text-28rpx {{fourthSpaceId === item.spaceId ? 'text-black-2a' : 'text-hex-555659'}} whitespace-nowrap">{{item.spaceName}}</text>
           <view class="w-42rpx h-8rpx mt-8rpx bg-hex-7cd06a rounded-999 {{fourthSpaceId === item.spaceId ? 'opacity-100' : 'opacity-0'}}"></view>
@@ -177,6 +178,7 @@
           type="primary"
           class="flex-1"
           size="large"
+          disabled="{{disableConfirm}}"
           bind:click="handleConfirm"
           >确定</van-button
         >

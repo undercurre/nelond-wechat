@@ -14,6 +14,10 @@ ComponentWithComputed({
    * 组件的属性列表
    */
   properties: {
+    show: {
+      type: Boolean,
+      value: false,
+    },
     cellStyle: {
       type: String,
       value: '',
@@ -21,6 +25,10 @@ ComponentWithComputed({
     tabStyle: {
       type: String,
       value: '',
+    },
+    showCell: {
+      type: Boolean,
+      value: true,
     },
     showTab: {
       type: Boolean,
@@ -33,11 +41,15 @@ ComponentWithComputed({
       type: String,
       value: '',
     },
-
+    /**
+     * true 过滤包含非公共空间
+     * false 仅过滤公共空间
+     */
     filter: {
       type: Boolean,
       value: false,
     },
+    //自动选中首个空间
     init: {
       type: Boolean,
       value: true,
@@ -48,7 +60,6 @@ ComponentWithComputed({
    * 组件的初始数据
    */
   data: {
-    show: false,
     spaceData: {} as { [key: string]: Space.SpaceTreeNode },
     firstSpaceId: '',
     secondSpaceId: '',
@@ -84,6 +95,30 @@ ComponentWithComputed({
         return false
       }
     },
+    /**
+     * 有下级空间而未选择时应该禁用确认
+     */
+    disableConfirm(data) {
+      if (data.firstSpaceId) {
+        if (data.secondSpaceId) {
+          if (data.thirdSpaceId) {
+            if (data.fourthSpaceId) {
+              return false
+            } else {
+              return Object.keys(
+                data.spaceData[data.firstSpaceId].child[data.secondSpaceId].child[data.thirdSpaceId].child,
+              ).length
+            }
+          } else {
+            return Object.keys(data.spaceData[data.firstSpaceId].child[data.secondSpaceId].child).length
+          }
+        } else {
+          return Object.keys(data.spaceData[data.firstSpaceId].child).length
+        }
+      } else {
+        return true
+      }
+    },
   },
   lifetimes: {
     attached() {},
@@ -99,22 +134,22 @@ ComponentWithComputed({
     async initTree() {
       await spaceBinding.store.updateAllSpaceList()
       let spaceList: Space.allSpace[] = spaceStore.allSpaceList
-      if (this.data.dataType) {
-        if (this.data.dataType === 'scene') {
-          spaceList = spaceStore.allSpaceList.filter((space) => {
-            const hasScene = sceneStore.allRoomSceneList.findIndex(
-              (scene) => scene.spaceId === space.spaceId && scene.deviceActions?.length > 0,
-            )
-            const notPublicSpace = space.publicSpaceFlag === 0
-            const hasBrotherNode =
-              spaceStore.allSpaceList.findIndex((s) => s.pid === space.pid && s.spaceId !== space.spaceId) >= 0
+      spaceList = spaceStore.allSpaceList.filter((space) => {
+        const hasScene =
+          sceneStore.allRoomSceneList.findIndex(
+            (scene) => scene.spaceId === space.spaceId && scene.deviceActions?.length > 0,
+          ) >= 0
+        const hasDevice = false
+        const notPublicSpace = space.publicSpaceFlag === 0
+        const hasBrotherNode =
+          spaceStore.allSpaceList.findIndex((s) => s.pid === space.pid && s.spaceId !== space.spaceId) >= 0
 
-            return this.data.filter
-              ? hasScene
-              : notPublicSpace || (!notPublicSpace && hasBrotherNode) || (!notPublicSpace && hasScene) //TODO:filter逻辑错误，未实现
-          })
+        if (this.data.dataType === 'scene') {
+          return this.data.filter ? hasScene : notPublicSpace || (!notPublicSpace && hasBrotherNode && hasScene) //TODO:filter逻辑错误，未实现
+        } else {
+          return notPublicSpace || (!notPublicSpace && hasBrotherNode && (hasScene || hasDevice))
         }
-      }
+      })
 
       const result = this.buildTree(spaceList, '0')
       this.setData({ spaceData: result }, () => {
@@ -152,12 +187,7 @@ ComponentWithComputed({
           _fourthSpaceId: fourth,
         },
         () => {
-          this.triggerEvent('confirm', {
-            firstSpaceId: this.data._firstSpaceId,
-            secondSpaceId: this.data._secondSpaceId,
-            thirdSpaceId: this.data._thirdSpaceId,
-            fourthSpaceId: this.data._fourthSpaceId,
-          })
+          this.triggerEvent('confirm', this.calcConfirmRes())
         },
       )
     },
@@ -203,7 +233,18 @@ ComponentWithComputed({
         fourthSpaceId: e.currentTarget.dataset.id,
       })
     },
+    tabCheck(e: { currentTarget: { dataset: { id: string } } }) {
+      this.setData(
+        {
+          fourthSpaceId: e.currentTarget.dataset.id,
+        },
+        () => {
+          this.handleConfirm()
+        },
+      )
+    },
     handleConfirm() {
+      //TODO:返回公共空间的id
       this.setData(
         {
           _firstSpaceId: this.data.firstSpaceId,
@@ -213,14 +254,46 @@ ComponentWithComputed({
           show: false,
         },
         () => {
-          this.triggerEvent('confirm', {
-            firstSpaceId: this.data._firstSpaceId,
-            secondSpaceId: this.data._secondSpaceId,
-            thirdSpaceId: this.data._thirdSpaceId,
-            fourthSpaceId: this.data._fourthSpaceId,
-          })
+          this.triggerEvent('confirm', this.calcConfirmRes())
         },
       )
+    },
+    calcConfirmRes() {
+      // 选中spaceLevel不为4时，目标挂载空间应该为该空间下的公共空间
+      const result = []
+      const { _firstSpaceId, _secondSpaceId, _thirdSpaceId, _fourthSpaceId } = this.data
+      if (_firstSpaceId) {
+        const firstSpace = spaceStore.allSpaceList.find((space) => space.spaceId === this.data._firstSpaceId)
+        result.push({ key: 'firstSpaceId', ...firstSpace })
+        if (_secondSpaceId) {
+          const secondSpace = spaceStore.allSpaceList.find((space) => space.spaceId === this.data._secondSpaceId)
+          result.push({ key: 'secondSpaceId', ...secondSpace })
+          if (_thirdSpaceId) {
+            const thirdSpace = spaceStore.allSpaceList.find((space) => space.spaceId === this.data._thirdSpaceId)
+            result.push({ key: 'thirdSpaceId', ...thirdSpace })
+            if (_fourthSpaceId) {
+              const fourthSpace = spaceStore.allSpaceList.find((space) => space.spaceId === this.data._fourthSpaceId)
+              result.push({ key: 'fourthSpaceId', ...fourthSpace })
+            } else if (!_fourthSpaceId && thirdSpace?.spaceLevel !== 4) {
+              const v_fourthSpace = spaceStore.allSpaceList.find(
+                (space) => space.pid === this.data._thirdSpaceId && space.publicSpaceFlag === 1,
+              )
+              if (v_fourthSpace) result.push({ key: 'fourthSpaceId', ...v_fourthSpace })
+            }
+          } else if (!_thirdSpaceId && secondSpace?.spaceLevel !== 4) {
+            const v_thirdSpace = spaceStore.allSpaceList.find(
+              (space) => space.pid === this.data._secondSpaceId && space.publicSpaceFlag === 1,
+            )
+            if (v_thirdSpace) result.push({ key: 'thirdSpaceId', ...v_thirdSpace })
+          }
+        } else if (!_secondSpaceId && firstSpace?.spaceLevel !== 4) {
+          const v_secondSpace = spaceStore.allSpaceList.find(
+            (space) => space.pid === this.data._firstSpaceId && space.publicSpaceFlag === 1,
+          )
+          if (v_secondSpace) result.push({ key: 'thirdSpaceId', ...v_secondSpace })
+        }
+      }
+      return result
     },
   },
 })

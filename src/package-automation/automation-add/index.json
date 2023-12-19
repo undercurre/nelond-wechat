@@ -17,6 +17,7 @@
     "van-dialog": "@vant/weapp/dialog/index",
     "cell": "./components/cell/index",
     "drag": "/components/drag/index",
-    "edit-space-popup": "./components/edit-space-popup/index"
+    "edit-space-popup": "./components/edit-space-popup/index",
+    "all-space-select": "../../components/all-space-select/index"
   }
 }

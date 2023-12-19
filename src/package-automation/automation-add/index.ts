@@ -21,7 +21,9 @@ ComponentWithComputed({
     dialogConfirmBtnColor: '#27282A',
     sceneImgDir,
     opearationType: 'yijian', // yijian是一键场景，auto是自动化场景
-    spaceId: '',
+    spaceId: '', //选中的最后一级空间Id
+    // 选中的四级空间信息
+    selectedSpaceInfo: [] as Space.allSpace[],
     showEditRoomPopup: false,
     adviceSceneNameList: adviceSceneNameList,
     navigationBarAndStatusBarHeight:
@@ -488,14 +490,18 @@ ComponentWithComputed({
       })
       this.handleConditionShow()
     },
-    async handleSceneRoomEditConfirm(e: { detail: string }) {
+    async handleSceneRoomEditConfirm(e: { detail: Space.allSpace[] }) {
+      console.log(e)
+      const currentSpaceId = e.detail[e.detail.length - 1].spaceId
+      console.log(currentSpaceId)
       const deviceListInRoom: Device.DeviceItem[] = deviceStore.allRoomDeviceFlattenList.filter(
-        (item) => item.spaceId === e.detail,
+        (item) => item.spaceId === currentSpaceId,
       )
       console.log('默认选中', deviceListInRoom)
       this.setData(
         {
-          spaceId: e.detail,
+          selectedSpaceInfo: e.detail,
+          spaceId: currentSpaceId,
           showEditRoomPopup: false,
           _isEditCondition: true,
           sceneDevicelinkSelectList: deviceListInRoom.map((item) => item.uniId),
@@ -849,13 +855,11 @@ ComponentWithComputed({
       const sceneDeviceConditionsFlatten = [] as AutoScene.AutoSceneFlattenCondition[]
 
       if (this.data.spaceId !== '' && this.data.opearationType === 'yijian') {
+        const desc = this.cmptFullSpaceName()
         sceneDeviceConditionsFlatten.push({
           uniId: 'room',
           name: '手动点击场景',
-          desc: [
-            spaceStore.spaceList.find((item) => item.spaceId === this.data.spaceId)?.spaceName ??
-              spaceStore.spaceList[0].spaceName,
-          ],
+          desc: [desc],
           pic: '/package-automation/assets/imgs/automation/touch-materialized.png',
           productId: 'touch',
           property: {},
@@ -1466,5 +1470,23 @@ ComponentWithComputed({
       }
     },
     /* 执行结果拖拽相关方法 end */
+    cmptFullSpaceName() {
+      const [firstSpace, secondSpace, thirdSpace, fourthSpace] = this.data.selectedSpaceInfo
+
+      let desc = ''
+      if (firstSpace) {
+        desc += firstSpace.spaceName
+        if (secondSpace) {
+          desc += secondSpace.publicSpaceFlag === 0 ? `，${secondSpace.spaceName}` : ''
+          if (thirdSpace) {
+            desc += thirdSpace.publicSpaceFlag === 0 ? `，${thirdSpace.spaceName}` : ''
+            if (fourthSpace) {
+              desc += fourthSpace.publicSpaceFlag === 0 ? `，${fourthSpace.spaceName}` : ''
+            }
+          }
+        }
+      }
+      return desc
+    },
   },
 })

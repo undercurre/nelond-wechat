@@ -249,12 +249,11 @@ ComponentWithComputed({
     onUnload() {
       emitter.off('sceneEdit')
     },
-    onSpaceSelect(e: {
-      detail: { firstSpaceId: string; secondSpaceId: string; thirdSpaceId: string; fourthSpaceId: string }
-    }) {
+    onSpaceSelect(e: IAnyObject) {
       console.log('onSpaceSelect', e.detail)
       runInAction(() => {
-        spaceStore.currentSpaceSelectTree = e.detail
+        spaceStore.currentSpaceSelect = e.detail
+        console.log(spaceStore.currentSpaceSelect, spaceStore.currentSpaceInfo)
       })
     },
   },
