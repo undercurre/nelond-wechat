@@ -6,10 +6,10 @@ import {
   deviceStore,
   projectBinding,
   projectStore,
-  spaceStore,
   sceneBinding,
   sceneStore,
   userBinding,
+  autosceneStore,
 } from '../../store/index'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
@@ -17,7 +17,7 @@ import { strUtil } from '../../utils/strUtil'
 import { execScene, updateSceneSort } from '../../apis/index'
 import { emitter } from '../../utils/index'
 import { sceneImgDir, defaultImgDir } from '../../config/index'
-import { runInAction } from 'mobx-miniprogram'
+// import { runInAction } from 'mobx-miniprogram'
 // import { reaction } from 'mobx-miniprogram'
 // import { emitter } from '../../utils/index'
 
@@ -33,6 +33,10 @@ ComponentWithComputed({
   data: {
     // 用于存储一键场景列表
     listData: [] as IAnyObject[],
+    // 用于存储以时间点为条件触发的自动场景
+    scheduleList: autosceneStore.allRoomAutoSceneListComputed.filter((scene) => scene.timeConditions[0].time),
+    // 用于存储以传感器为条件触发的自动场景
+    autoSceneList: autosceneStore.allRoomAutoSceneListComputed.filter((scene) => !scene.timeConditions[0].time),
     sceneImgDir,
     defaultImgDir,
     hasAutoScene: true,
@@ -55,20 +59,26 @@ ComponentWithComputed({
       32 +
       'px',
 
+    // 可滚动区域高度
+    scrollViewHeight:
+      (storage.get<number>('windowHeight') as number) -
+      (storage.get<number>('statusBarHeight') as number) -
+      (storage.get<number>('bottomBarHeight') as number) - // IPX
+      (storage.get<number>('navigationBarHeight') as number) -
+      80 * (storage.get<number>('divideRpxByPx') as number),
+
     tabIndex: 0, // 当前为一键场景/日程/自动场景
-    active: '',
     scrollTop: 0,
-    selectedspaceId: '',
+    currentSpaceQueue: [] as Space.allSpace[],
+    currentSpaceId: '',
   },
   computed: {
-    roomTab() {
-      const tempRoomList = spaceStore.spaceList.map((item) => {
-        return {
-          spaceId: item.spaceId,
-          roomName: item.spaceName,
-        }
-      })
-      return tempRoomList
+    tabBarHeight(data) {
+      if (data.currentSpaceQueue.length === 4) {
+        return 208
+      } else {
+        return 128
+      }
     },
   },
   methods: {
@@ -77,13 +87,6 @@ ComponentWithComputed({
       this.setData({
         scrollTop: e.scrollTop,
       })
-    },
-    onYijianRoomChange(event: { detail: { name: string } }) {
-      this.data.selectedspaceId = event.detail.name
-      this.setData({
-        selectedspaceId: event.detail.name,
-      })
-      this.updateList()
     },
     onLoad() {
       //更新tabbar状态
@@ -120,8 +123,7 @@ ComponentWithComputed({
     },
     // onShow() {
     //   this.setData({
-    //     selectedspaceId: spaceStore.currentSpace.spaceId,
-    //     active: spaceStore.currentSpaceIndex,
+    //     currentSpaceId: spaceStore.currentSpace.spaceId,
     //   })
     // },
     // onUnload() {
@@ -137,14 +139,14 @@ ComponentWithComputed({
     },
 
     updateList() {
-      if (this.data.selectedspaceId === '') {
-        this.data.selectedspaceId = spaceStore.currentSpace.spaceId
+      if (this.data.currentSpaceId === '') {
+        return
       }
       const listData = [] as IAnyObject[]
       const deviceMap = deviceStore.allRoomDeviceMap
 
       sceneStore.allRoomSceneList
-        .filter((item) => item.spaceId === this.data.selectedspaceId)
+        .filter((item) => item.spaceId === this.data.currentSpaceId && item.sceneCategory === '0')
         .forEach((scene: Scene.SceneItem) => {
           let linkName = ''
           if (scene.deviceConditions?.length > 0) {
@@ -251,19 +253,19 @@ ComponentWithComputed({
     },
     onSpaceSelect(e: IAnyObject) {
       console.log('onSpaceSelect', e.detail)
-      runInAction(() => {
-        spaceStore.currentSpaceSelect = e.detail
-        console.log(spaceStore.currentSpaceSelect, spaceStore.currentSpace)
+      this.setData({
+        currentSpaceQueue: e.detail,
+        currentSpaceId: e.detail[e.detail.length - 1].spaceId,
       })
+      this.updateList()
     },
   },
   lifetimes: {
     ready() {
-      this.setData({
-        selectedspaceId: spaceStore.currentSpace.spaceId,
-        active: spaceStore.currentSpace.spaceId,
-      })
-      this.updateList()
+      // this.setData({
+      //   currentSpaceId: spaceStore.currentSpace.spaceId,
+      // })
+      // this.updateList()
       sceneBinding.store.updateAllRoomSceneList().then(() => {
         this.updateList()
       })

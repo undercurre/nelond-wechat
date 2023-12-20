@@ -1,15 +1,17 @@
 <nav-bar
   z-index="{{113}}"
-  left-arrow
-  bind:leftTap="goBack"
-  title="全屋场景"
+  title="智能场景"
 ></nav-bar>
 <!-- 背景 -->
-<view class="w-100vw h-100vh fixed left-0 top-0 bg-hex-f4f8ff bg-z-index-1"></view>
 <view
-  class="fixed left-0 top-0 w-100vw h-50vh bg-z-index"
-  style="background: linear-gradient(180deg, rgba(87, 105, 255, 0.1) 0%, rgba(87, 105, 255, 0) 100%)"
-></view>
+  class="bg-z-index fixed left-0 top-0 w-100vw h-100vh"
+  bind:touchstart="hideMenu"
+>
+  <image
+    src="{{defaultImgDir}}/bg.jpg"
+    class="bg-image"
+  ></image>
+</view>
 <!-- bindtap="hideMenu" -->
 <view class="flex flex-col">
   <!-- 主体内容 -->
@@ -24,60 +26,50 @@
     <view class="h-32rpx"></view>
     <view class="flex-1 flex flex-col items-between">
       <view
-        style="height: calc(120rpx + {{tabClientTop}});"
-        class="w-full fixed left-0 top-0 z-110 overflow-hidden {{ scrollTop > 0 ? 'bg-hex-f4f8ff' : ''}}"
+        style="height: calc(200rpx + {{tabClientTop}});"
+        class="w-full fixed left-0 top-0 z-10000 overflow-hidden {{ scrollTop > 0 ? 'bg-hex-f4f8ff' : ''}}"
       >
         <view
-          class="absolute left-0 w-686rpx h-120rpx flex justify-between items-center ml-32rpx mr-32rpx z-112"
+          class="absolute left-0 w-686rpx h-120rpx flex justify-between items-center ml-32rpx mr-32rpx z-10000"
           style="top:{{navigationBarAndStatusBarHeight}}"
         >
           <view class="flex flex-row justify-center items-center z-112">
             <marvels-switch
-              checked="{{isYijian}}"
+              checked="{{checkedIndex}}"
               bind:switchchange="handleSceneType"
             ></marvels-switch>
           </view>
           <view class="flex flex-row justify-center items-center z-112">
             <image
               bind:tap="toPage"
-              data-url="{{urls.automationLogYijian}}"
-              src="/package-automation/assets/imgs/automation/auto-scene-log.png"
+              data-url="{{urls.automationLog}}"
+              src="/assets/img/automation/auto-scene-log.png"
               class="w-64rpx h-64rpx mr-32rpx"
             ></image>
             <image
               bind:tap="toPage"
-              data-url="{{urls.automationAddYijian}}"
-              src="/package-automation/assets/imgs/automation/auto-scene-add.png"
+              data-url="{{urls.automationAdd}}"
+              src="/assets/img/automation/auto-scene-add.png"
               class="w-64rpx h-64rpx"
             ></image>
           </view>
         </view>
+
         <view
-          class="absolute left-0 w-686rpx h-120rpx ml-32rpx mr-32rpx z-112"
+          class="absolute left-0 w-686rpx h-120rpx ml-32rpx mr-32rpx z-10000"
           style="top:{{tabClientTop}}"
-          wx:if="{{allRoomSceneList.length && isYijian}}"
+          wx:if="{{allRoomSceneList.length && tabIndex === 0}}"
         >
-          <van-tabs
-            tab-active-class="tab-active"
-            tab-class="tab-common"
-            active="{{ active }}"
-            color="#488FFF"
-            line-width="21"
-            line-height="4"
-            bind:change="onYijianRoomChange"
-          >
-            <van-tab
-              wx:for="{{roomTab}}"
-              wx:key="spaceId"
-              title="{{item.spaceName}}"
-              name="{{item.spaceId}}"
-            ></van-tab>
-          </van-tabs>
+          <all-space-select
+            cellStyle="background-color:rgba(255,255,255,0.6);border-radius:36rpx;"
+            dataType="scene"
+            bind:confirm="onSpaceSelect"
+          ></all-space-select>
         </view>
       </view>
       <view
         class="flex-1"
-        wx:if="{{allRoomSceneList.length && isYijian}}"
+        wx:if="{{allRoomSceneList.length && tabIndex === 0}}"
       >
         <!-- 顶开上面的内容高度 -->
         <view
@@ -103,8 +95,9 @@
           wx:if="{{listData.length === 0}}"
           class="flex flex-col items-center pt-86rpx"
         >
+          <!-- TODO：待替换 -->
           <image
-            src="../assets/imgs/automation/no-scene.png"
+            src="{{defaultImgDir}}/no-log.png"
             class="w-300rpx h-300rpx"
           ></image>
           <text class="text-32rpx text-hex-555659 mt-98rpx">暂无一键场景</text>
@@ -114,11 +107,11 @@
       </view>
       <view
         class="h-96rpx"
-        wx:if="{{allRoomAutoSceneListComputed.length && !isYijian}}"
+        wx:if="{{allRoomAutoSceneListComputed.length && tabIndex !== 0}}"
       ></view>
       <view
         class="flex-1 z-112"
-        wx:if="{{allRoomAutoSceneListComputed.length && !isYijian}}"
+        wx:if="{{allRoomAutoSceneListComputed.length && tabIndex !== 0}}"
       >
         <!-- 空间卡片列表 -->
         <van-cell-group
@@ -206,30 +199,49 @@
     </view>  -->
 
     <view
-      wx:if="{{ isYijian && !allRoomSceneList.length }}"
+      wx:if="{{ tabIndex === 0 && !allRoomSceneList.length }}"
       class="w-full mt-196rpx flex flex-col items-center"
     >
+      <!-- TODO:待替换 -->
       <image
-        src="../assets/imgs/automation/none-scene.png"
+        src="{{defaultImgDir}}/no-log.png"
         class="w-300rpx h-300rpx"
       ></image>
       <text class="text-32rpx text-black-59 mt-98rpx mb-32rpx">暂未创建一键场景</text>
       <text class="text-28rpx text-black-59 mb-224rpx opacity-40 w-422rpx text-center leading-48rpx">通过创建一键触发场景，便携操控全屋效果</text>
+
+      <!-- <van-button bind:click="goToWhenConnected" data-url="{{urls.automationAdd}}" color="linear-gradient(165deg, #468CFB 0%, #6BA3FC 100%)" custom-class="add-immediately-btn" wx:if="{{true}}">
+        <text class="text-white text-36rpx font-normal">立即创建</text>
+      </van-button> -->
+    </view>
+    <view
+      wx:if="{{ tabIndex === 1 && !allRoomAutoSceneListComputed.length }}"
+      class="w-full mt-196rpx flex flex-col items-center"
+    >
+      <!-- TODO:待替换 -->
+      <image
+        src="{{defaultImgDir}}/no-log.png"
+        class="w-300rpx h-300rpx"
+      ></image>
+      <text class="text-32rpx text-black-59 mt-98rpx mb-32rpx">暂未创建日程</text>
+      <text class="text-28rpx text-black-59 mb-224rpx opacity-40 w-422rpx text-center leading-48rpx">通过设定时间自动控制设备</text>
       <!-- <van-button bind:click="goToWhenConnected" data-url="{{urls.automationAdd}}" color="linear-gradient(165deg, #468CFB 0%, #6BA3FC 100%)" custom-class="add-immediately-btn" wx:if="{{true}}">
         <text class="text-white text-36rpx font-normal">立即创建</text>
       </van-button> -->
     </view>
 
     <view
-      wx:if="{{ !isYijian && !allRoomAutoSceneListComputed.length }}"
+      wx:if="{{ tabIndex === 2 && !allRoomAutoSceneListComputed.length }}"
       class="w-full mt-196rpx flex flex-col items-center"
     >
+      <!-- TODO:待替换 -->
       <image
-        src="../assets/imgs/automation/none-scene.png"
+        src="{{defaultImgDir}}/no-log.png"
         class="w-300rpx h-300rpx"
       ></image>
       <text class="text-32rpx text-black-59 mt-98rpx mb-32rpx">暂未创建自动场景</text>
-      <text class="text-28rpx text-black-59 mb-224rpx opacity-40 w-422rpx text-center leading-48rpx">通过传感器、时间等条件自动控制设备</text>
+
+      <text class="text-28rpx text-black-59 mb-224rpx opacity-40 w-422rpx text-center leading-48rpx">通过传感器等设备自动控制设备</text>
       <!-- <van-button bind:click="goToWhenConnected" data-url="{{urls.automationAdd}}" color="linear-gradient(165deg, #468CFB 0%, #6BA3FC 100%)" custom-class="add-immediately-btn" wx:if="{{true}}">
         <text class="text-white text-36rpx font-normal">立即创建</text>
       </van-button> -->
@@ -250,7 +262,6 @@
     </view> -->
   </view>
 </view>
-
 <van-toast id="van-toast" />
 
 <!-- <view class="tabbar-placeholder"></view> -->
