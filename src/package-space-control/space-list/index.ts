@@ -69,11 +69,11 @@ ComponentWithComputed({
           subTitle: SpaceConfig[query.plevel].name,
         })
       }
-      // 加载本空间列表
+      // 加载本空间列表，隐藏设备数为0的公共空间
       const res = await querySpaceList(projectStore.currentProjectId, query.pid)
       if (res.success) {
         this.setData({
-          subSpaceList: res.result.length > 1 ? res.result.filter((space) => space.publicSpaceFlag !== 1) : res.result,
+          subSpaceList: res.result.filter((space) => space.publicSpaceFlag !== 1 || space.deviceCount),
         })
       }
     },
