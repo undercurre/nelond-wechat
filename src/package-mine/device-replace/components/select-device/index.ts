@@ -1,6 +1,6 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import { spaceBinding, deviceBinding } from '../../../../store/index'
+import { spaceBinding, deviceBinding, spaceStore } from '../../../../store/index'
 import { SCREEN_PID } from '../../../../config/index'
 
 ComponentWithComputed({
@@ -29,7 +29,9 @@ ComponentWithComputed({
   data: {
     allDeviceList: Array<Device.DeviceItem>(),
     checkedDevice: {},
-    roomSelect: '0',
+    spaceId: '0',
+    spaceName: spaceStore.currentSpace?.spaceName ?? '全部',
+    showSpaceSelectPopup: false,
   },
 
   computed: {
@@ -51,7 +53,7 @@ ComponentWithComputed({
     /**
      * @description 显示待选设备列表
      * 如正在选择新设备，则传入 deviceList，即使用指定列表；否则显示所有设备
-     * isCurrentRoom 按空间筛选
+     * isCurrentSpace 按空间筛选
      */
     showDeviceList(data) {
       const list = data.choosingNew ? data.list : data.allDeviceList
@@ -59,8 +61,8 @@ ComponentWithComputed({
       return list.filter((device) => {
         const isScreen = SCREEN_PID.includes(device.productId)
         const isSubdevice = device.deviceType === 2
-        const isCurrentRoom = data.roomSelect === '0' ? true : device.spaceId === data.roomSelect
-        return isSubdevice && isCurrentRoom && !isScreen
+        const isCurrentSpace = data.spaceId === '0' ? true : device.spaceId === data.spaceId
+        return isSubdevice && isCurrentSpace && !isScreen
       })
     },
   },
@@ -82,8 +84,15 @@ ComponentWithComputed({
       this.setData({ checkedDevice: event.detail })
     },
 
-    handleRoomSelect(event: { detail: string }) {
-      this.setData({ roomSelect: event.detail })
+    handleSpaceSelectConfirm(e: { detail: Space.allSpace[] }) {
+      if (!e.detail?.length) {
+        return
+      }
+      const spaceInfo = e.detail[e.detail.length - 1]
+      this.setData({
+        spaceId: spaceInfo.spaceId,
+        spaceName: spaceInfo.spaceName,
+      })
     },
 
     handleClose() {
@@ -92,6 +101,10 @@ ComponentWithComputed({
 
     handleConfirm() {
       this.triggerEvent('confirm', this.data.checkedDevice)
+    },
+
+    handleSpaceSelect() {
+      this.setData({ showSpaceSelectPopup: true })
     },
   },
 })

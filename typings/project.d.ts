@@ -77,7 +77,7 @@ declare namespace Project {
     spaceName: string
   }
 
-  export interface HouseUserItem {
+  export interface UserItem {
     /**
      * 成员权限编码
      */
@@ -85,7 +85,7 @@ declare namespace Project {
     /**
      * 成员权限名称
      */
-    userHouseAuthName: string
+    roleName: string
     /**
      * 	成员id
      */
@@ -101,7 +101,7 @@ declare namespace Project {
   }
 
   export interface HomeMemberInfo {
-    houseUserList: HouseUserItem[]
+    projectUserList: UserItem[]
     totalElements: number
   }
 }

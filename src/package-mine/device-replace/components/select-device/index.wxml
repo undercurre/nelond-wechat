@@ -16,10 +16,16 @@
       />
     </view>
 
-    <space-tabs
+    <!-- <space-tabs
       sDeviceList="{{allDeviceList}}"
       bind:roomSelect="handleRoomSelect"
-    ></space-tabs>
+    ></space-tabs> -->
+    <van-cell
+      is-link
+      bind:click="handleSpaceSelect"
+      title="所在空间"
+      value="{{spaceName}}"
+    ></van-cell>
 
     <scroll-view
       enhanced
@@ -57,3 +63,10 @@
     />
   </view>
 </van-popup>
+
+<all-space-select
+  show="{{showSpaceSelectPopup}}"
+  cellStyle="background-color:rgba(255,255,255,0.6);border-radius:36rpx;"
+  dataType="device"
+  bind:confirm="handleSpaceSelectConfirm"
+></all-space-select>

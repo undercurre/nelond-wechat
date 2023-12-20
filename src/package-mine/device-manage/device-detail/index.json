@@ -3,7 +3,7 @@
   "usingComponents": {
     "edit-laundry-popup": "./components/edit-laundry-popup/index",
     "edit-name-popup": "./components/edit-name-popup/index",
-    "edit-space-popup": "./components/edit-space-popup/index",
+    "all-space-select": "/components/all-space-select/index",
     "setting-light": "./components/setting-light/index",
     "setting-switch": "./components/setting-switch/index",
     "setting-gateway": "./components/setting-gateway/index"

@@ -108,7 +108,7 @@ export async function changeUserHouse(
  * 查询项目成员列表
  */
 export async function queryHouseUserList({ projectId = '' }, options?: { loading?: boolean }) {
-  return await mzaioRequest.post<Project.HomeMemberInfo>({
+  return await mzaioRequest.post<Project.UserItem[]>({
     log: true,
     loading: options?.loading ?? false,
     url: '/v1/mzgd/cl/user/project/queryProjectUserList',
