@@ -3,7 +3,7 @@ import { runInAction } from 'mobx-miniprogram'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { othersBinding, spaceBinding, userBinding, spaceStore, projectStore, projectBinding } from '../../store/index'
 import { storage, strUtil, throttle } from '../../utils/index'
-import { ROOM_CARD_H, SpaceConfig, defaultImgDir } from '../../config/index'
+import { ROOM_CARD_H, SpaceConfig, SpaceLevel, defaultImgDir } from '../../config/index'
 import { updateRoomSort, querySpaceList } from '../../apis/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 
@@ -21,6 +21,9 @@ ComponentWithComputed({
     title: '',
     subTitle: '',
     subSpaceList: [] as Space.SpaceInfo[],
+    pid: '0',
+    plevel: SpaceLevel.undef, // 父层级
+    pname: '',
     defaultImgDir,
     navigationBarAndStatusBarHeight:
       (storage.get<number>('statusBarHeight') as number) +
@@ -62,12 +65,15 @@ ComponentWithComputed({
   },
   methods: {
     // 生命周期或者其他钩子
-    async onLoad(query: { pid?: string; pname?: string; plevel?: Space.SpaceLevel }) {
+    async onLoad(query: { pid: string; pname: string; plevel: Space.SpaceLevel }) {
       if (query.pname && query.plevel) {
         this.setData({
           title: query.pname,
           subTitle: SpaceConfig[query.plevel].name,
         })
+        this.data.pid = query.pid
+        this.data.plevel = query.plevel
+        this.data.pname = query.pname
       }
       // 加载本空间列表。只要有兄弟节点就显示公共空间
       const res = await querySpaceList(projectStore.currentProjectId, query.pid)
@@ -77,6 +83,17 @@ ComponentWithComputed({
           subSpaceList: res.result.filter((space) => space.publicSpaceFlag !== 1 || hasSibling),
         })
       }
+    },
+
+    goToSpaceManage() {
+      wx.navigateTo({
+        url: strUtil.getUrlWithParams('/package-mine/space-manage/index', {
+          pid: this.data.pid,
+          pname: this.data.pname,
+          plevel: this.data.plevel,
+          rootAsGrandpa: this.data.pid === '0',
+        }),
+      })
     },
 
     /**

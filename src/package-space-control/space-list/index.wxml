@@ -87,8 +87,7 @@
           size="small"
           custom-class="round-btn-border"
           round
-          bind:click="goTo"
-          data-url="/package-mine/space-manage/index"
+          bind:click="goToSpaceManage"
         >
           <text class="text-26rpx text-hex-555659">空间管理</text>
         </van-button>
