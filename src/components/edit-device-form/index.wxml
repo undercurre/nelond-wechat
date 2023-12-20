@@ -35,15 +35,12 @@
     </view>
   </block>
 
-  <text class="label">选择空间</text>
-
-  <view class="">
-    <all-space-select
-      cellStyle="background-color:rgba(255,255,255,0.6);border-radius:36rpx;"
-      dataType="device"
-      bind:confirm="onSpaceSelect"
-    ></all-space-select>
-  </view>
+  <van-cell
+    is-link
+    bind:click="handleSpaceSelect"
+    title="所在空间"
+    value="{{spaceName}}"
+  ></van-cell>
 </view>
 
 <import src="/commons/templates/popup.wxml" />
@@ -84,5 +81,13 @@
     />
   </view>
 </van-popup>
+
+<all-space-select
+  show="{{showSpaceSelectPopup}}"
+  showCell="{{false}}"
+  cellStyle="background-color:rgba(255,255,255,0.6);border-radius:36rpx;"
+  dataType="device"
+  bind:confirm="onSpaceSelect"
+></all-space-select>
 
 <van-toast id="van-toast" />

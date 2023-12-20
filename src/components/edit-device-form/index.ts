@@ -161,5 +161,11 @@ Component({
         isAddRoom: false,
       })
     },
+
+    handleSpaceSelect() {
+      this.setData({
+        showSpaceSelectPopup: true,
+      })
+    },
   },
 })

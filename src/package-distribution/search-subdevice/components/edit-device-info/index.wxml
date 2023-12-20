@@ -1,5 +1,6 @@
 <van-popup
   show="{{ show }}"
+  z-index="10000"
   position="bottom"
   round
   bind:close="close"
@@ -9,7 +10,7 @@
     <text class="block font-medium text-center text-36 leading-48rpx">设备编辑</text>
 
     <edit-device-form
-      custom-style="max-height: 60vh;overflow: auto;"
+      custom-style="max-height: 80vh;overflow: auto;"
       device-name="{{deviceName}}"
       space-id="{{spaceId}}"
       space-name="{{spaceName}}"
