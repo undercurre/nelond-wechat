@@ -1,6 +1,6 @@
 import {
   setNavigationBarAndBottomBarHeight,
-  // startWebsocketService,
+  startWebsocketService,
   closeWebSocket,
   setCurrentEnv,
   Logger,
@@ -51,8 +51,8 @@ App<IAppOption>({
     reaction(
       () => projectStore.currentProjectDetail.projectId,
       async () => {
-        // closeWebSocket()
-        // startWebsocketService()
+        closeWebSocket()
+        startWebsocketService()
         // await projectStore.updateLocalKey()
         // initHomeOs()
       },
@@ -88,7 +88,7 @@ App<IAppOption>({
     }
 
     // 以下逻辑需要网络连接
-    // startWebsocketService()
+    startWebsocketService()
 
     // 首次进入有onLaunch不必加载
     // homOS本地控制要求场景数据保持尽可能实时，需要小程序回到前台刷新场景和设备列表数据

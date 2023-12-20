@@ -83,7 +83,7 @@ export async function startWebsocketService() {
     try {
       const res = JSON.parse(e.data as string)
 
-      // Logger.console('Ⓦ 收到ws信息：', res)
+      Logger.console('Ⓦ 收到ws信息：', res)
 
       const { topic, message, eventData } = res.result
 
@@ -112,7 +112,7 @@ export async function startWebsocketService() {
     if (socketIsConnect) {
       socketTask?.close({ code: -1 }) // code=-1代码ws报错重连
     } else {
-      // delayConnectWS(15000)
+      delayConnectWS(15000)
     }
   })
 }
@@ -125,7 +125,7 @@ function delayConnectWS(delay = 5000) {
   clearTimeout(connectTimeId)
   connectTimeId = setTimeout(() => {
     Logger.log('socket开始重连')
-    // startWebsocketService()
+    startWebsocketService()
   }, delay)
 }
 
@@ -170,9 +170,9 @@ export function closeWebSocket() {
   }
 }
 
-// emitter.on('networkStatusChange', (res) => {
-//   // 已登录状态下，可以访问外网且当前没有ws连接的情况，发起ws连接
-//   if (res.isConnectStatus && isLogined() && !socketIsConnect) {
-//     startWebsocketService()
-//   }
-// })
+emitter.on('networkStatusChange', (res) => {
+  // 已登录状态下，可以访问外网且当前没有ws连接的情况，发起ws连接
+  if (res.isConnectStatus && isLogined() && !socketIsConnect) {
+    startWebsocketService()
+  }
+})
