@@ -34,8 +34,9 @@ ComponentWithComputed({
 
   computed: {
     spaceName(data) {
-      if (data.spaceList && data.spaceId) {
-        return data.spaceList.find((space: { spaceId: string }) => space.spaceId === data.spaceId)?.spaceName
+      const { allSpaceList, spaceId } = data
+      if (allSpaceList && spaceId) {
+        return data.allSpaceList.find((space: { spaceId: string }) => space.spaceId === data.spaceId)?.spaceName
       }
       return ''
     },
@@ -179,10 +180,14 @@ ComponentWithComputed({
         showEditRoomPopup: false,
       })
     },
-    async handleDeviceRoomEditConfirm(e: { detail: string }) {
+    async handleDeviceRoomEditConfirm(e: { detail: Space.allSpace[] }) {
+      if (!e.detail?.length) {
+        return
+      }
+      const spaceId = e.detail[e.detail.length - 1].spaceId
       this.setData({
         showEditRoomPopup: false,
-        spaceId: e.detail,
+        spaceId,
       })
       const res = await editDeviceInfo({
         type: '1',
