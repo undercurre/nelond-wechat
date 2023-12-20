@@ -3,12 +3,8 @@ import {
   queryProjectList,
   queryProjectInfo,
   queryHouseUserList,
-  updateHouseUserAuth,
-  deleteHouseUser,
-  inviteHouseUser,
   saveOrUpdateUserHouseInfo,
   querySpaceList,
-  getShareId,
   queryAllDevice,
   // queryLocalKey,
 } from '../apis/index'
@@ -26,7 +22,7 @@ export const projectStore = observable({
   /** 当前项目详细信息 */
   currentProjectDetail: {} as Project.IProjectDetail,
 
-  homeMemberInfo: {} as Project.HomeMemberInfo,
+  userList: {} as Project.UserItem[],
 
   shareId: '',
 
@@ -191,81 +187,11 @@ export const projectStore = observable({
     const res = await queryHouseUserList({ projectId: this.currentProjectId })
     if (res.success) {
       runInAction(() => {
-        projectStore.homeMemberInfo = res.result
+        projectStore.userList = res.result
       })
       return
     } else {
       return Promise.reject('获取成员信息失败')
-    }
-  },
-
-  /**
-   * 更改项目成员权限
-   * 项目成员权限，创建者：1 管理员：2 游客：3
-   */
-  async updateMemberAuth(userId: string, auth: Project.UserRole) {
-    const res = await updateHouseUserAuth({ userId, auth, projectId: this.currentProjectId })
-    if (res.success) {
-      runInAction(() => {
-        for (let i = 0; i < projectStore.homeMemberInfo.houseUserList.length; i++) {
-          if (userId === projectStore.homeMemberInfo.houseUserList[i].userId) {
-            if (projectStore.homeMemberInfo.houseUserList[i].userHouseAuth === 1) continue
-            const map = ['', '创建者', '管理员', '访客']
-            projectStore.homeMemberInfo.houseUserList[i].userHouseAuth = auth
-            projectStore.homeMemberInfo.houseUserList[i].userHouseAuthName = map[auth]
-          }
-        }
-      })
-      return
-    } else {
-      return Promise.reject('设置权限失败')
-    }
-  },
-
-  /**
-   * 删除项目成员
-   */
-  async deleteMember(userId: string) {
-    const res = await deleteHouseUser({ projectId: this.currentProjectId, userId })
-    if (res.success) {
-      runInAction(() => {
-        for (let i = 0; i < projectStore.homeMemberInfo.houseUserList.length; i++) {
-          if (userId === projectStore.homeMemberInfo.houseUserList[i].userId) {
-            projectStore.homeMemberInfo.houseUserList.splice(i, 1)
-            break
-          }
-        }
-      })
-      return
-    } else {
-      return Promise.reject('删除项目成员失败')
-    }
-  },
-
-  /**
-   * 邀请项目成员
-   */
-  async inviteMember(projectId: string, auth: number, shareId: string) {
-    const res = await inviteHouseUser({ projectId, auth, shareId })
-    if (res.success) {
-      return
-    } else {
-      return Promise.reject(res)
-    }
-  },
-
-  /**
-   * 获取分享连接ID
-   */
-  async getInviteShareId() {
-    const res = await getShareId({ projectId: this.currentProjectId })
-    if (res.success) {
-      runInAction(() => {
-        projectBinding.store.shareId = res.result.shareId
-      })
-      return
-    } else {
-      return Promise.reject('获取分享链接失败')
     }
   },
 
@@ -348,8 +274,6 @@ export const projectBinding = {
     'updateProjectList',
     'updateCurrentProjectDetail',
     'updateHomeMemberList',
-    'updateMemberAuth',
-    'deleteMember',
     'updateHomeNameOrLocation',
   ],
 }

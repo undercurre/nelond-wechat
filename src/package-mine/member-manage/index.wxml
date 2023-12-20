@@ -18,9 +18,17 @@
           bind:tap="onUserItemClick"
         >
           <image
+            wx:if="{{item.icon}}"
             class="w-80rpx h-80rpx mr-24rpx rounded-full"
             src="{{item.icon}}"
           ></image>
+          <view
+            wx:else
+            class="flex items-center justify-center rounded-full w-80rpx h-80rpx mr-24rpx"
+            style="background-color: #7cd06a"
+          >
+            <text class="text-white text-36rpx font-medium">{{item.iconText}}</text>
+          </view>
 
           <text
             class="grow w-300rpx"
