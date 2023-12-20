@@ -14,6 +14,7 @@ declare namespace Scene {
     orderNum: number
     spaceId: string
     spaceName: string
+    sceneCategory: string //场景类型 0-手动场景 1-自动化场景
   }
   /**
    * 空间列表里的场景列表项

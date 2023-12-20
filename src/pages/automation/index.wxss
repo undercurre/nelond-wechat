@@ -22,18 +22,6 @@
   height: calc(env(safe-area-inset-bottom) + 64rpx);
 }
 
-.tab-common .van-ellipsis {
-  font-size: 28rpx;
-  color: #555659;
-  font-weight: 400;
-}
-
-.tab-active .van-ellipsis {
-  font-size: 32rpx;
-  color: #27282a;
-  font-weight: 500;
-}
-
 .exec-btn {
   padding: 0 !important;
   border-radius: 24rpx !important;
@@ -43,4 +31,9 @@
   font-weight: 400 !important;
   border: 2rpx solid #555659 !important;
   color: #555659 !important;
+}
+
+.hide-tab {
+  /* display: none !important; */
+  height: 0 !important;
 }
