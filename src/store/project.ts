@@ -74,7 +74,7 @@ export const projectStore = observable({
         }
       })
       // 全屋空间、设备加载
-      await this.updateSpaceCardList()
+      await Promise.all([this.updateSpaceCardList(), spaceStore.updateAllSpaceList()])
       othersStore.setIsInit(true)
       console.log('[KS]云端数据加载成功, isInit:', othersStore.isInit)
     }

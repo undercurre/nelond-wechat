@@ -22,7 +22,9 @@ export const spaceStore = observable({
 
   // 当前选中空间队列的末端，即真正存放内容的空间
   get currentSpace(): Space.allSpace {
-    return this.currentSpaceSelect[this.currentSpaceSelect.length - 1]
+    return this.currentSpaceSelect.length
+      ? this.currentSpaceSelect[this.currentSpaceSelect.length - 1]
+      : this.allSpaceList[0] //TODO: 当选中空间队列为空时该如何返回
   },
   get hasSpace() {
     const { spaceList } = this
