@@ -290,7 +290,7 @@
 <select-card-popup
   show="{{showSelectCardPopup}}"
   title="{{selectCardType === 'device'? '选择设备': selectCardType === 'scene' ?'选择场景':'选择传感器'}}"
-  cardType="{{cardType}}"
+  cardType="{{selectCardType}}"
   list="{{list}}"
   selectList="{{linkSelectList}}"
   showCancel="{{selectCardType !== 'sensor'||!sceneDeviceConditionsFlatten.length}}"
@@ -350,6 +350,7 @@
   show="{{showEditRoomPopup}}"
   showCell="{{false}}"
   showTab="{{false}}"
+  initConfirm="{{false}}"
   bind:confirm="handleSceneRoomEditConfirm"
 ></all-space-select>
 <van-toast id="van-toast" />

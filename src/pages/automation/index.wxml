@@ -152,8 +152,8 @@
               src="{{defaultImgDir}}/no-log.png"
               class="w-300rpx h-300rpx"
             ></image>
-            <text class="text-32rpx text-black-59 mt-98rpx mb-32rpx">暂未创建一键场景</text>
-            <text class="text-28rpx text-black-59 mb-224rpx opacity-40 w-422rpx text-center leading-48rpx">通过创建一键触发场景，便携操控全屋效果</text>
+            <text class="text-32rpx text-black-59 mt-98rpx mb-32rpx">暂未创建日程</text>
+            <text class="text-28rpx text-black-59 mb-224rpx opacity-40 w-422rpx text-center leading-48rpx">通过设定时间自动控制设备</text>
           </view>
         </view>
       </scroll-view>
@@ -224,8 +224,8 @@
               src="{{defaultImgDir}}/no-log.png"
               class="w-300rpx h-300rpx"
             ></image>
-            <text class="text-32rpx text-black-59 mt-98rpx mb-32rpx">暂未创建一键场景</text>
-            <text class="text-28rpx text-black-59 mb-224rpx opacity-40 w-422rpx text-center leading-48rpx">通过创建一键触发场景，便携操控全屋效果</text>
+            <text class="text-32rpx text-black-59 mt-98rpx mb-32rpx">暂未创建自动场景</text>
+            <text class="text-28rpx text-black-59 mb-224rpx opacity-40 w-422rpx text-center leading-48rpx">通过传感器等设备自动控制设备</text>
           </view>
         </view>
       </scroll-view>

@@ -162,8 +162,6 @@ ComponentWithComputed({
 
     // 点击卡片
     handleCardTap(e: WechatMiniprogram.CustomEvent) {
-      // console.log('handleCardTap', e)
-
       const { spaceId, spaceName, spaceLevel } = e.detail
 
       // 如果是编辑模式

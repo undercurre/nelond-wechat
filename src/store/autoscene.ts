@@ -1,5 +1,5 @@
 import { observable, runInAction } from 'mobx-miniprogram'
-import { queryAutoSceneListByHouseId, setAutoSceneEnabled } from '../apis/scene'
+import { queryAutoSceneListByProjectId, setAutoSceneEnabled } from '../apis/scene'
 import { projectStore } from './project'
 import { strUtil } from '../utils/index'
 import { PRO_TYPE } from '../config/index'
@@ -12,7 +12,7 @@ export const autosceneStore = observable({
    */
   allRoomAutoSceneList: [] as AutoScene.AutoSceneItem[],
 
-  get allRoomAutoSceneListComputed() {
+  get allRoomAutoSceneListComputed(): AutoScene.AutoSceneItem[] {
     const templist = [...this.allRoomAutoSceneList]
     try {
       return templist.map((item: AutoScene.AutoSceneItem) => {
@@ -50,7 +50,14 @@ export const autosceneStore = observable({
       return []
     }
   },
-
+  // 日程:用于存储以时间点为条件触发的自动场景
+  get scheduleList(): AutoScene.AutoSceneItem[] {
+    return this.allRoomAutoSceneListComputed.filter((scene) => scene.timeConditions[0].time !== '')
+  },
+  // 自动场景：用于存储以传感器为条件触发的自动场景
+  get autoSceneList(): AutoScene.AutoSceneItem[] {
+    return this.allRoomAutoSceneListComputed.filter((scene) => scene.timeConditions[0].time === '')
+  },
   async changeAutoSceneEnabled(data: { sceneId: string; isEnabled: '1' | '0' }) {
     const res = await setAutoSceneEnabled(data)
     if (res.success) {
@@ -66,7 +73,7 @@ export const autosceneStore = observable({
   },
 
   async updateAllRoomAutoSceneList(projectId: string = projectStore.currentProjectId) {
-    const res = await queryAutoSceneListByHouseId(projectId)
+    const res = await queryAutoSceneListByProjectId(projectId)
     console.log('自动化场景列表', res)
 
     if (res.success) {
@@ -82,6 +89,6 @@ export const autosceneStore = observable({
 
 export const autosceneBinding = {
   store: autosceneStore,
-  fields: ['allRoomAutoSceneList', 'allRoomAutoSceneListComputed'],
+  fields: ['allRoomAutoSceneList', 'allRoomAutoSceneListComputed', 'scheduleList', 'autoSceneList'],
   actions: ['updateAllRoomAutoSceneList'],
 }
