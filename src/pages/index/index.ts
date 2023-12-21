@@ -379,16 +379,28 @@ ComponentWithComputed({
 
       // 有子空间则进入下级空间列表页
       const link = hasChildren ? '/package-space-control/space-list/index' : '/package-space-control/index/index'
+      const childPublicSpace = spaceStore.allSpaceList.find((s) => s.pid === spaceId && s.publicSpaceFlag === 1)
 
       // 更新当前选中空间
+      // 如果已没有子空间，则直接push公共空间
       runInAction(() =>
-        spaceStore.currentSpaceSelect.push({
-          pid: '0',
-          spaceId,
-          spaceLevel,
-          spaceName,
-          publicSpaceFlag,
-        }),
+        spaceStore.currentSpaceSelect.push(
+          hasChildren
+            ? {
+                pid: '0',
+                spaceId,
+                spaceLevel,
+                spaceName,
+                publicSpaceFlag,
+              }
+            : {
+                pid: spaceId,
+                spaceId: childPublicSpace!.spaceId,
+                spaceLevel: childPublicSpace!.spaceLevel,
+                spaceName, // 仍显示父级名称
+                publicSpaceFlag: 1,
+              },
+        ),
       )
 
       wx.navigateTo({

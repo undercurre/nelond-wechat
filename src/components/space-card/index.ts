@@ -66,8 +66,8 @@ ComponentWithComputed({
     },
     hasArrow(data) {
       const { isManagePage } = data
-      const { spaceLevel } = data.spaceInfo
-      return !isManagePage || spaceLevel !== SpaceLevel.area
+      const { spaceLevel, publicSpaceFlag } = data.spaceInfo
+      return !isManagePage || (spaceLevel !== SpaceLevel.area && publicSpaceFlag === 0)
     },
   },
 

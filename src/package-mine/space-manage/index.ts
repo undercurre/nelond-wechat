@@ -125,12 +125,14 @@ ComponentWithComputed({
     async addParentDialog() {
       this.setData({
         showAddDialog: true,
+        'spaceInfo.spaceName': '',
         'spaceInfo.spaceLevel': this.data.plevel - 1, // 需要添加的空间为爷爷级
       })
     },
     async addChildDialog() {
       this.setData({
         showAddDialog: true,
+        'spaceInfo.spaceName': '',
         'spaceInfo.spaceLevel': this.data.clevel,
       })
     },
@@ -162,7 +164,7 @@ ComponentWithComputed({
 
     // 点击卡片
     handleCardTap(e: WechatMiniprogram.CustomEvent) {
-      const { spaceId, spaceName, spaceLevel } = e.detail
+      const { spaceId, spaceName, spaceLevel, publicSpaceFlag } = e.detail
 
       // 如果是编辑模式
       if (this.data.isEditMode) {
@@ -179,8 +181,8 @@ ComponentWithComputed({
         return
       }
 
-      // 如果是区域节点，就不用跳转到下一级了
-      if (spaceLevel === SpaceLevel.area) {
+      // 如果是区域节点，或者是公共空间，就不用跳转到下一级了
+      if (spaceLevel === SpaceLevel.area || publicSpaceFlag === 1) {
         return
       }
 
