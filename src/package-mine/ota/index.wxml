@@ -1,33 +1,61 @@
 <!-- 背景 -->
-<view class="fixed left-0 top-0 w-100vw h-100vh bg-hex-eef2f7" style="z-index: -1"></view>
+<view
+  class="fixed left-0 top-0 w-100vw h-100vh bg-hex-eef2f7"
+  style="z-index: -1"
+></view>
 <view class="h-100vh flex flex-col items-center">
   <!-- 标题 -->
-  <nav-bar title="固件升级" show-go-home="{{fromDevice}}" left-arrow bind:leftTap="goBack"></nav-bar>
-  <van-cell-group inset>
-    <van-cell>
-      <view class="flex flex-col items-start pr-44rpx">
-        <text class="text-34rpx text-black-2a">自动升级</text>
-        <text class="text-28rpx text-black-tips font-normal text-justify mt-24rpx">每天凌晨1:00期间自动升级所有设备固件。升级完成时，设备将短暂重启</text>
-      </view>
-      <view slot="right-icon">
-        <van-switch checked="{{autoUpdate}}" loading="{{isLoading}}" disabled="{{!canOTA}}" bind:change="onAutoUpdateChange" />
-      </view>
-    </van-cell>
-  </van-cell-group>
+  <nav-bar
+    title="固件升级"
+    show-go-home="{{fromDevice}}"
+    left-arrow
+    bind:leftTap="goBack"
+  ></nav-bar>
+
+  <view class="rounded-32rpx bg-white m-24rpx p-32rpx flex flex-row">
+    <view class="flex flex-col items-start pr-44rpx">
+      <text class="text-34rpx text-black-2a">自动升级</text>
+      <text class="text-28rpx text-black-tips font-normal text-justify mt-24rpx">每天凌晨1:00期间自动升级所有设备固件。升级完成时，设备将短暂重启</text>
+    </view>
+    <view>
+      <van-switch
+        checked="{{autoUpdate}}"
+        loading="{{isLoading}}"
+        disabled="{{!canOTA}}"
+        bind:change="onAutoUpdateChange"
+      />
+    </view>
+  </view>
 
   <view class="flex justify-between items-center w-686rpx h-56rpx mb-24rpx">
     <text class="text-28rpx text-black-59 ml-16rpx">可升级设备</text>
   </view>
 
-  <view class="flex-1 w-750rpx" id="content">
-    <scroll-view enhanced show-scrollbar="{{false}}" scroll-y="{{true}}" style="height: {{contentHeight}}px;">
-      <van-cell-group wx:for="{{otaProductList}}" wx:key="index" inset custom-class="mt-0_el_">
+  <view
+    class="flex-1 w-750rpx"
+    id="content"
+  >
+    <scroll-view
+      enhanced
+      show-scrollbar="{{false}}"
+      scroll-y="{{true}}"
+      style="height: {{contentHeight}}px;"
+    >
+      <van-cell-group
+        wx:for="{{otaProductList}}"
+        wx:key="index"
+        inset
+        custom-class="mt-0_el_"
+      >
         <van-cell>
           <view class="flex flex-col items-center text-28rpx text-black-2a text-justify">
             <view class="flex w-full items-center mb-32rpx">
               <view class="flex-center">
                 <view class="w-96rpx h-96rpx bg-hex-f6fafd flex-center rounded-999">
-                  <image src="{{item.icon}}" class="w-72rpx h-72rpx" />
+                  <image
+                    src="{{item.icon}}"
+                    class="w-72rpx h-72rpx"
+                  />
                 </view>
                 <view class="ml-32rpx flex flex-col">
                   <text class="text-32rpx">{{item.productName}}</text>
@@ -53,17 +81,32 @@
           </view>
         </van-cell>
       </van-cell-group>
-      <view wx:if="{{!hasUpdate}}" class="w-750rpx flex-center">
+      <view
+        wx:if="{{!hasUpdate}}"
+        class="w-750rpx flex-center"
+      >
         <view class="h-284rpx"></view>
         <text class="text-black-tips text-28rpx">暂无可升级设备</text>
       </view>
     </scroll-view>
   </view>
-  <view wx:if="{{canOTA}}" class="mb-96rpx mt-32rpx w-686rpx flex-col-center">
+  <view
+    wx:if="{{canOTA}}"
+    class="mb-96rpx mt-32rpx w-686rpx flex-col-center"
+  >
     <text class="text-24rpx text-black-tips mb-24rpx {{isUpdating?'':'opacity-0'}}">升级完成时，设备将短暂重启</text>
 
-    <view class="w-full" bind:tap="handleUpdate">
-      <van-button class="w-686rpx" type="primary" size="large" disabled="{{isUpdating || !hasUpdate}}">{{isUpdating?'剩余'+remainOtaDevice+'个设备...':'立即升级'}}</van-button>
+    <view
+      class="w-full"
+      bind:tap="handleUpdate"
+    >
+      <van-button
+        class="w-686rpx"
+        type="primary"
+        size="large"
+        disabled="{{isUpdating || !hasUpdate}}"
+        >{{isUpdating?'剩余'+remainOtaDevice+'个设备...':'立即升级'}}</van-button
+      >
     </view>
   </view>
 </view>

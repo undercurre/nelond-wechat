@@ -4,7 +4,7 @@
     leftArrow="{{true}}"
     show-go-home
     bind:leftTap="goBack"
-    title="成员管理"
+    title="项目成员"
   ></nav-bar>
 
   <view class="grow flex flex-col pt-24rpx">

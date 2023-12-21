@@ -31,6 +31,13 @@ export const spaceStore = observable({
     return this.currentSpace?.spaceName ?? ''
   },
 
+  // 当前选中空间全路径名称
+  get currentSpaceNameFull(): string {
+    return this.currentSpaceSelect.length
+      ? this.currentSpaceSelect.map((item) => item.spaceName).join(',')
+      : this.allSpaceList[0].spaceName
+  },
+
   get hasSpace() {
     const { spaceList } = this
     return spaceList?.length
