@@ -26,6 +26,11 @@ export const spaceStore = observable({
       ? this.currentSpaceSelect[this.currentSpaceSelect.length - 1]
       : this.allSpaceList[0] //TODO: 当选中空间队列为空时该如何返回
   },
+  // 当前选中空间名称 // TODO 显示全路径名称
+  get currentSpaceName(): string {
+    return this.currentSpace?.spaceName ?? ''
+  },
+
   get hasSpace() {
     const { spaceList } = this
     return spaceList?.length
@@ -77,6 +82,6 @@ export const spaceStore = observable({
 
 export const spaceBinding = {
   store: spaceStore,
-  fields: ['hasSpace', 'allSpaceList', 'spaceList', 'spaceDeviceList', 'currentSpace', 'currentSpace'],
+  fields: ['hasSpace', 'allSpaceList', 'spaceList', 'spaceDeviceList', 'currentSpace', 'currentSpaceName'],
   actions: [],
 }

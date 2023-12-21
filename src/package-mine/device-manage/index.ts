@@ -14,13 +14,15 @@ ComponentWithComputed({
    */
   data: {
     defaultImgDir,
-    roomSelect: '0',
+    spaceId: '0',
+    spaceName: spaceStore.currentSpace?.spaceName ?? '全部',
     listHeight: 0,
     roomSelectMenu: {
       x: '0px',
       y: '0px',
       isShow: false,
     },
+    showSpaceSelectPopup: false,
   },
 
   computed: {
@@ -32,12 +34,12 @@ ComponentWithComputed({
         .filter(
           (d) => (d.proType === PRO_TYPE.switch && !SCREEN_PID.includes(d.productId)) || d.proType !== PRO_TYPE.switch,
         )
-      if (data.roomSelect === '0') {
+      if (data.spaceId === '0') {
         return rst
-      } else if (data.roomSelect === '-1') {
+      } else if (data.spaceId === '-1') {
         return rst.filter((d) => !d.onLineStatus)
       } else {
-        return rst.filter((d: Device.DeviceItem) => d.spaceId === data.roomSelect)
+        return rst.filter((d: Device.DeviceItem) => d.spaceId === data.spaceId)
       }
     },
   },
@@ -80,20 +82,20 @@ ComponentWithComputed({
       this.loadData()
       // 状态更新推送
       emitter.on('deviceEdit', async () => {
-        // if (this.data.roomSelect === '0') {
+        // if (this.data.spaceId === '0') {
         await deviceBinding.store.updateallDeviceList()
 
         // 预防修改空间时，造成当前选中空间为空
         setTimeout(() => {
           if (!this.data.deviceListCompited.length) {
             this.setData({
-              roomSelect: spaceBinding.store.spaceList[0].spaceId,
+              spaceId: spaceBinding.store.spaceList[0].spaceId,
             })
           }
         }, 100)
         //   return
-        // } else if (this.data.roomSelect) {
-        //   deviceBinding.store.updateDeviceList(undefined, this.data.roomSelect)
+        // } else if (this.data.spaceId) {
+        //   deviceBinding.store.updateDeviceList(undefined, this.data.spaceId)
         // }
       })
       emitter.on('wsReceive', async (e) => {
@@ -102,7 +104,7 @@ ComponentWithComputed({
           typeof e.result.eventData === 'object' &&
           WSEventType.device_online_status === e.result.eventType &&
           e.result.eventData.spaceId &&
-          (e.result.eventData.spaceId === this.data.roomSelect || this.data.roomSelect === '0')
+          (e.result.eventData.spaceId === this.data.spaceId || this.data.spaceId === '0')
         ) {
           // 如果是当前空间的设备状态发生变化，更新设备状态
           const index = deviceStore.allDeviceList.findIndex((device) => device.deviceId === e.result.eventData.deviceId)
@@ -125,33 +127,33 @@ ComponentWithComputed({
           typeof e.result.eventData === 'object' &&
           WSEventType.device_del === e.result.eventType &&
           e.result.eventData.spaceId &&
-          (e.result.eventData.spaceId === this.data.roomSelect || this.data.roomSelect === '0')
+          (e.result.eventData.spaceId === this.data.spaceId || this.data.spaceId === '0')
         ) {
           // 设备被删除，查空间
-          // if (this.data.roomSelect === '0') {
+          // if (this.data.spaceId === '0') {
           deviceBinding.store.updateallDeviceList()
           // } else {
-          // deviceBinding.store.updateDeviceList(undefined, this.data.roomSelect)
+          // deviceBinding.store.updateDeviceList(undefined, this.data.spaceId)
           // }
         } else if (typeof e.result.eventData === 'object' && e.result.eventType === WSEventType.room_del) {
           // await spaceStore.updateSpaceList()
-          // if (this.data.roomSelect === '0') {
+          // if (this.data.spaceId === '0') {
           deviceBinding.store.updateallDeviceList()
           if (spaceStore.spaceList.length > 0) {
             this.setData({
-              roomSelect: spaceBinding.store.spaceList[0].spaceId,
+              spaceId: spaceBinding.store.spaceList[0].spaceId,
             })
           }
-          // } else if (e.result.eventData.spaceId === this.data.roomSelect) {
+          // } else if (e.result.eventData.spaceId === this.data.spaceId) {
           //   // 空间被删了，切到其他空间
           //   if (spaceStore.spaceList.length > 0) {
           //     this.setData({
-          //       roomSelect: spaceBinding.store.spaceList[0].spaceId,
+          //       spaceId: spaceBinding.store.spaceList[0].spaceId,
           //     })
-          //     deviceBinding.store.updateDeviceList(undefined, this.data.roomSelect)
+          //     deviceBinding.store.updateDeviceList(undefined, this.data.spaceId)
           //   } else {
           //     this.setData({
-          //       roomSelect: '',
+          //       spaceId: '',
           //     })
           //     runInAction(() => {
           //       deviceStore.deviceList = []
@@ -170,9 +172,9 @@ ComponentWithComputed({
     async onPullDownRefresh() {
       try {
         // await spaceStore.updateSpaceList()
-        // if (this.data.roomSelect) {
+        // if (this.data.spaceId) {
         //   // 查空间
-        //   deviceBinding.store.updateDeviceList(undefined, this.data.roomSelect)
+        //   deviceBinding.store.updateDeviceList(undefined, this.data.spaceId)
         // } else {
         // 查全屋
         deviceBinding.store.updateallDeviceList()
@@ -188,11 +190,11 @@ ComponentWithComputed({
       // 先加载ota列表信息，用于设备详情页展示
       otaStore.updateList()
       // await spaceStore.updateSpaceList()
-      // if (this.data.roomSelect === '0') {
+      // if (this.data.spaceId === '0') {
       deviceBinding.store.updateallDeviceList()
       //   return
-      // } else if (this.data.roomSelect) {
-      //   deviceBinding.store.updateDeviceList(undefined, this.data.roomSelect)
+      // } else if (this.data.spaceId) {
+      //   deviceBinding.store.updateDeviceList(undefined, this.data.spaceId)
       // }
     },
 
@@ -218,12 +220,12 @@ ComponentWithComputed({
 
     handleRoomSelect(e: { detail: string }) {
       this.setData({
-        roomSelect: e.detail,
+        spaceId: e.detail,
       })
       // this.hideSelectRoomMenu()
-      // if (this.data.roomSelect === '0') {
+      // if (this.data.spaceId === '0') {
       //   // 查空间
-      //   deviceBinding.store.updateDeviceList(undefined, this.data.roomSelect)
+      //   deviceBinding.store.updateDeviceList(undefined, this.data.spaceId)
       // } else {
       //   // 查全屋
       //   deviceBinding.store.updateallDeviceList()
@@ -288,6 +290,19 @@ ComponentWithComputed({
           200,
         )
       }
+    },
+    handleSpaceSelectConfirm(e: { detail: Space.allSpace[] }) {
+      if (!e.detail?.length) {
+        return
+      }
+      const spaceInfo = e.detail[e.detail.length - 1]
+      this.setData({
+        spaceId: spaceInfo.spaceId,
+        spaceName: spaceInfo.spaceName,
+      })
+    },
+    handleSpaceSelect() {
+      this.setData({ showSpaceSelectPopup: true })
     },
   },
 })

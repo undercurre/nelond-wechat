@@ -16,10 +16,6 @@
       />
     </view>
 
-    <!-- <space-tabs
-      sDeviceList="{{allDeviceList}}"
-      bind:roomSelect="handleRoomSelect"
-    ></space-tabs> -->
     <van-cell
       is-link
       bind:click="handleSpaceSelect"

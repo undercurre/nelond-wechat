@@ -1,6 +1,6 @@
 {
   "component": true,
   "usingComponents": {
-    "space-tabs": "../../components/space-tabs/index"
+    "all-space-select": "/components/all-space-select/index"
   }
 }
