@@ -89,11 +89,6 @@ Component({
       })
     },
 
-    addVirtualDevice() {
-      wx.navigateTo({
-        url: '/package-protocol/add-virtual-device/index',
-      })
-    },
     titlePress() {
       console.log('titlePress triggered, ver: ', this.data.version || this.data.releaseTime)
       this.setData({

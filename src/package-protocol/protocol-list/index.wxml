@@ -29,13 +29,6 @@
       center
       bind:click="toggleEnv"
     />
-    <van-cell
-      icon="/assets/img/mine/deviceReplace.png"
-      title="添加虚拟设备"
-      is-link
-      center
-      bind:click="addVirtualDevice"
-    />
   </block>
 
   <van-cell

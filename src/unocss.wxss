@@ -41,7 +41,6 @@ page,::before,::after{--un-rotate:0;--un-rotate-x:0;--un-rotate-y:0;--un-rotate-
 .py-40rpx{padding-top:40rpx;padding-bottom:40rpx;}
 .py-46rpx{padding-top:46rpx;padding-bottom:46rpx;}
 .py-48rpx{padding-top:48rpx;padding-bottom:48rpx;}
-.py-50rpx{padding-top:50rpx;padding-bottom:50rpx;}
 .py-64rpx{padding-top:64rpx;padding-bottom:64rpx;}
 .py-6rpx{padding-top:6rpx;padding-bottom:6rpx;}
 .pb-140rpx{padding-bottom:140rpx;}

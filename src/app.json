@@ -51,7 +51,7 @@
     },
     {
       "root": "package-protocol",
-      "pages": ["protocol-show/index", "protocol-list/index", "add-virtual-device/index"]
+      "pages": ["protocol-show/index", "protocol-list/index"]
     },
     {
       "root": "package-auth",
