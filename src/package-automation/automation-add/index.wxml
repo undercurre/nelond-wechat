@@ -2,7 +2,7 @@
 <view class="w-100vw h-100vh fixed left-0 top-0 bg-hex-f4f8ff bg-z-index-1"></view>
 <view
   class="fixed left-0 top-0 w-100vw h-50vh bg-z-index"
-  style="background: linear-gradient(180deg, rgba(87, 105, 255, 0.1) 0%, rgba(87, 105, 255, 0) 100%)"
+  style="background: linear-gradient(180deg, rgba(87, 255, 105, 0.1) 0%, rgba(87, 255, 105, 0) 100%)"
 ></view>
 <!-- 遮住顶部 -->
 <view
@@ -12,7 +12,7 @@
   <view class="w-100vw h-100vh absolute left-0 top-0 bg-hex-f4f8ff z-111"></view>
   <view
     class="absolute left-0 top-0 w-100vw h-50vh z-112"
-    style="background: linear-gradient(180deg, rgba(87, 105, 255, 0.1) 0%, rgba(87, 105, 255, 0) 100%)"
+    style="background: linear-gradient(180deg, rgba(87, 255, 105, 0.1) 0%, rgba(87, 255, 105, 0) 100%)"
   ></view>
 </view>
 <nav-bar
