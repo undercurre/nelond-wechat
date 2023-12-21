@@ -1,6 +1,7 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import {
+  userStore,
   userBinding,
   spaceBinding,
   deviceBinding,
@@ -1250,7 +1251,7 @@ ComponentWithComputed({
         return
       }
       // 只有创建者或者管理员能够进入编辑模式
-      if (!this.data.isManager) {
+      if (!userStore.isManager) {
         return
       }
 

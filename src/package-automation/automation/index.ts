@@ -10,6 +10,7 @@ import {
   sceneBinding,
   sceneStore,
   userBinding,
+  userStore,
 } from '../../store/index'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
@@ -185,7 +186,7 @@ ComponentWithComputed({
     },
 
     toSetting(e: { detail: Scene.SceneItem }) {
-      if (this.data.isManager) {
+      if (userStore.isManager) {
         wx.navigateTo({
           url: strUtil.getUrlWithParams(this.data.urls.automationEditYijian, { yijianSceneId: e.detail.sceneId }),
         })

@@ -2,7 +2,15 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
-import { deviceStore, projectBinding, projectStore, sceneBinding, sceneStore, userBinding } from '../../store/index'
+import {
+  deviceStore,
+  projectBinding,
+  projectStore,
+  sceneBinding,
+  sceneStore,
+  userBinding,
+  userStore,
+} from '../../store/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { execScene, updateSceneSort } from '../../apis/scene'
 import { storage, emitter, strUtil } from '../../utils/index'
@@ -108,7 +116,7 @@ ComponentWithComputed({
     },
 
     toSetting(e: { detail: Scene.SceneItem }) {
-      if (this.data.isManager) {
+      if (userStore.isManager) {
         wx.navigateTo({
           url: strUtil.getUrlWithParams('/package-space-control/scene-edit/index', { sceneId: e.detail.sceneId }),
         })
