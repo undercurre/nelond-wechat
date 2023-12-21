@@ -54,6 +54,6 @@ export function getH5BaseUrl() {
 // wx的环境名称 --> 云端环境名称
 export const envMap = {
   develop: 'dev',
-  trial: 'sit',
+  trial: 'dev',
   release: 'prod',
 } as const

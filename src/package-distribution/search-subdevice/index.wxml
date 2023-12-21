@@ -95,7 +95,7 @@
                 />
               </view>
 
-              <text class="text-26 text-black-59 opacity-95">{{ item.spaceName }}</text>
+              <text class="text-26 text-black-59 opacity-95 single-text">{{ item.spaceName }}</text>
             </view>
 
             <view
@@ -233,7 +233,7 @@
                 />
               </view>
 
-              <text class="text-26 text-black-59 opacity-95">{{ item.spaceName }}</text>
+              <text class="text-26 text-black-59 opacity-95 single-text">{{ item.spaceName }}</text>
             </view>
 
             <view
