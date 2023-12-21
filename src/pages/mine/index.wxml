@@ -48,15 +48,6 @@
     <van-cell-group inset>
       <van-cell
         wx:if="{{!isVisitor}}"
-        icon="/assets/img/mine/automation.png"
-        title="全屋场景"
-        is-link
-        center
-        data-url="{{urls.automation}}"
-        bind:click="toPage"
-      />
-      <van-cell
-        wx:if="{{!isVisitor}}"
         icon="/assets/img/mine/deviceReplace.png"
         title="设备替换"
         is-link

@@ -15,12 +15,13 @@
     bind:leftTap="goBack"
   ></nav-bar>
 
-  <space-tabs
-    class="px-32rpx mt-32rpx"
-    sDeviceList="{{allDeviceList}}"
-    bind:roomSelect="handleRoomSelect"
-    showGateway="{{true}}"
-  ></space-tabs>
+  <van-cell
+    is-link
+    bind:click="handleSpaceSelect"
+    title="所在空间"
+    value="{{spaceName}}"
+    class="mt-10rpx"
+  ></van-cell>
 
   <!-- 无设备 -->
   <view
@@ -94,3 +95,10 @@
     </scroll-view>
   </view>
 </view>
+
+<all-space-select
+  show="{{showSpaceSelectPopup}}"
+  cellStyle="background-color:rgba(255,255,255,0.6);border-radius:36rpx;"
+  dataType="device"
+  bind:confirm="handleSpaceSelectConfirm"
+></all-space-select>

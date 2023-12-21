@@ -957,8 +957,8 @@ ComponentWithComputed({
     },
 
     handleSceneTap() {
-      wx.navigateTo({
-        url: '/package-automation/automation/index',
+      wx.switchTab({
+        url: '/pages/automation/index',
       })
     },
     /** 点击创建场景按钮回调 */
