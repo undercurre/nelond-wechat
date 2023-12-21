@@ -35,6 +35,8 @@
     </view>
   </block>
 
+  <text class="label">空间选择</text>
+
   <van-cell
     is-link
     bind:click="handleSpaceSelect"
@@ -85,8 +87,10 @@
 <all-space-select
   show="{{showSpaceSelectPopup}}"
   showCell="{{false}}"
+  showTab="{{false}}"
   cellStyle="background-color:rgba(255,255,255,0.6);border-radius:36rpx;"
   dataType="device"
+  targetSpaceId="{{deviceInfo.spaceId}}"
   bind:confirm="onSpaceSelect"
 ></all-space-select>
 
