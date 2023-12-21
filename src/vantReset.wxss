@@ -92,7 +92,7 @@ page {
 }
 
 .van-button--plain.van-button--primary {
-  color: #488fff !important;
+  color: linear-gradient(-90deg, #7cd06a 0%, #20b86c 96%) !important;
 }
 
 .van-button--plain.van-button--danger {
@@ -101,7 +101,7 @@ page {
 }
 
 .switch-index--btn-class-fix {
-  background-color: #488fff !important;
+  background-color: linear-gradient(-90deg, #7cd06a 0%, #20b86c 96%) !important;
   border-radius: 32rpx !important;
   height: 88rpx;
 }
