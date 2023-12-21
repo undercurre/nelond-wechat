@@ -62,7 +62,6 @@ Component({
       switchId: '',
       switchName: '',
     },
-    spaceName: '',
   },
 
   /**
@@ -71,14 +70,12 @@ Component({
   methods: {
     onSpaceSelect(e: { detail: Space.allSpace[] }) {
       const selectList = e.detail
-      console.log('onSpaceSelect', selectList)
 
       const spaceInfo = selectList[selectList.length - 1]
 
       this.setData({
         'deviceInfo.spaceId': spaceInfo.spaceId,
-        'deviceInfo.spaceName': spaceInfo.spaceName,
-        spaceName: selectList.map((item) => item.spaceName).join(','),
+        'deviceInfo.spaceName': selectList.map((item) => item.spaceName).join(','),
       })
 
       this.triggerEvent('change', Object.assign({}, this.data.deviceInfo))
