@@ -202,23 +202,22 @@ ComponentWithComputed({
             if (this.data.filter) {
               if (hasScene || hasChild) spaceList.push(space)
             } else {
-              if (notPublicSpace || (!notPublicSpace && hasBrotherNode && hasScene)) spaceList.push(space)
+              if (notPublicSpace || (!notPublicSpace && hasBrotherNode)) spaceList.push(space)
             }
           } else if (this.data.dataType === 'device') {
             if (this.data.filter) {
               if (hasDevice || hasChild) spaceList.push(space)
             } else {
-              if (notPublicSpace || (!notPublicSpace && hasBrotherNode && hasDevice)) spaceList.push(space)
+              if (notPublicSpace || (!notPublicSpace && hasBrotherNode)) spaceList.push(space)
             }
           } else if (this.data.dataType === 'sensor') {
             if (this.data.filter) {
               if (hasSensor || hasChild) spaceList.push(space)
             } else {
-              if (notPublicSpace || (!notPublicSpace && hasBrotherNode && hasSensor)) spaceList.push(space)
+              if (notPublicSpace || (!notPublicSpace && hasBrotherNode)) spaceList.push(space)
             }
           } else {
-            if (notPublicSpace || (!notPublicSpace && hasBrotherNode && (hasScene || hasDevice || hasSensor)))
-              spaceList.push(space)
+            if (notPublicSpace || (!notPublicSpace && hasBrotherNode)) spaceList.push(space)
           }
         })
 
