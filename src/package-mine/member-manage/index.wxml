@@ -1,6 +1,6 @@
 <view class="page-container flex flex-col">
   <nav-bar
-    background="#eef2f7"
+    background="#eef7f4"
     leftArrow="{{true}}"
     show-go-home
     bind:leftTap="goBack"
