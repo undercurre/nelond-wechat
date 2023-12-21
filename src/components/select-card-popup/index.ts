@@ -1,5 +1,5 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { spaceStore } from '../../store/index'
+// import { spaceStore } from '../../store/index'
 
 ComponentWithComputed({
   options: {},
@@ -46,41 +46,42 @@ ComponentWithComputed({
     show: {
       type: Boolean,
       value: false,
-      observer(value) {
-        if (!value) return
-        if (this.data.roomListComputed.length) {
-          let roomSelect = spaceStore.currentSpace?.spaceId
+      //TODO: 待确认是否需要此部分逻辑，需要的话方案需更改
+      // observer(value) {
+      //   if (!value) return
+      //   if (this.data.roomListComputed.length) {
+      //     let roomSelect = spaceStore.currentSpace?.spaceId
 
-          if (this.data.roomListComputed.findIndex((item) => item.spaceId === roomSelect) < 0) {
-            roomSelect = this.data.roomListComputed[0].spaceId
-          }
+      //     if (this.data.roomListComputed.findIndex((item) => item.spaceId === roomSelect) < 0) {
+      //       roomSelect = this.data.roomListComputed[0].spaceId
+      //     }
 
-          if (this.data.selectList.length) {
-            let selectItem = { spaceId: '' }
-            this.data.selectList.forEach((id: string) => {
-              if (selectItem === undefined || !selectItem.spaceId) {
-                selectItem = this.data.list.find(
-                  (item: Device.DeviceItem & Scene.SceneItem) => item.sceneId === id || item.uniId === id,
-                )
-              }
-            })
+      //     if (this.data.selectList.length) {
+      //       let selectItem = { spaceId: '' }
+      //       this.data.selectList.forEach((id: string) => {
+      //         if (selectItem === undefined || !selectItem.spaceId) {
+      //           selectItem = this.data.list.find(
+      //             (item: Device.DeviceItem & Scene.SceneItem) => item.sceneId === id || item.uniId === id,
+      //           )
+      //         }
+      //       })
 
-            if (selectItem && selectItem.spaceId) {
-              roomSelect = selectItem.spaceId
-            } else {
-              roomSelect = this.data.roomListComputed[0].spaceId
-            }
-          }
-          if (this.data.defaultRoomId) {
-            roomSelect = this.data.defaultRoomId
-          }
-          this.setData({
-            roomSelect,
-          })
-        }
-      },
+      //       if (selectItem && selectItem.spaceId) {
+      //         roomSelect = selectItem.spaceId
+      //       } else {
+      //         roomSelect = this.data.roomListComputed[0].spaceId
+      //       }
+      //     }
+      //     if (this.data.defaultRoomId) {
+      //       roomSelect = this.data.defaultRoomId
+      //     }
+      //     this.setData({
+      //       roomSelect,
+      //     })
+      //   }
+      // },
     },
-    /** 展示类型：light switch scene */
+    /** 展示类型：light switch scene sensor*/
     cardType: {
       type: String,
       value: 'device',
@@ -112,22 +113,22 @@ ComponentWithComputed({
   },
 
   computed: {
-    roomListComputed(data) {
-      const spaceList = [] as Space.SpaceInfo[]
-      // 从roomList遍历，保证空间顺序， 仅显示list的数据所在的空间列表
-      spaceStore.spaceList.forEach((space) => {
-        const isIncludes = data.list.some((item: { spaceId: string }) => {
-          if (item.spaceId === space.spaceId) {
-            return true
-          }
-          return false
-        })
-        if (isIncludes) {
-          spaceList.push(space)
-        }
-      })
-      return spaceList
-    },
+    // roomListComputed(data) {
+    //   const spaceList = [] as Space.SpaceInfo[]
+    //   // 从roomList遍历，保证空间顺序， 仅显示list的数据所在的空间列表
+    //   spaceStore.spaceList.forEach((space) => {
+    //     const isIncludes = data.list.some((item: { spaceId: string }) => {
+    //       if (item.spaceId === space.spaceId) {
+    //         return true
+    //       }
+    //       return false
+    //     })
+    //     if (isIncludes) {
+    //       spaceList.push(space)
+    //     }
+    //   })
+    //   return spaceList
+    // },
     listComputed(data) {
       if (data.list) {
         return data.list.filter((item: Scene.SceneItem | Device.DeviceItem) => item.spaceId === data.roomSelect)
@@ -155,9 +156,9 @@ ComponentWithComputed({
     handleCancel() {
       this.triggerEvent('cancel')
     },
-    handleRoomSelect(e: WechatMiniprogram.TouchEvent) {
+    handleRoomSelect(e: { detail: Space.allSpace[] }) {
       this.setData({
-        roomSelect: e.currentTarget.dataset.item.spaceId,
+        roomSelect: e.detail[e.detail.length - 1].spaceId,
       })
     },
     blank() {},

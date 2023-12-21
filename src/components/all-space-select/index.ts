@@ -2,6 +2,7 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import { spaceBinding, deviceBinding, spaceStore, sceneStore, deviceStore } from '../../store/index'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import pageBehavior from '../../behaviors/pageBehaviors'
+import { PRO_TYPE } from '../../config/index'
 
 ComponentWithComputed({
   options: {
@@ -32,7 +33,7 @@ ComponentWithComputed({
       value: true,
     },
     /**
-     * 数据类型：device设备/scene场景
+     * 数据类型：device设备/scene场景/sensor传感器
      */
     dataType: {
       type: String,
@@ -49,6 +50,11 @@ ComponentWithComputed({
     },
     // 初始化自动选中首个空间
     init: {
+      type: Boolean,
+      value: true,
+    },
+    // 初始化自动选中首个空间时是否需要触发confirm方法
+    initConfirm: {
       type: Boolean,
       value: true,
     },
@@ -168,30 +174,53 @@ ComponentWithComputed({
   methods: {
     async initTree() {
       await spaceBinding.store.updateAllSpaceList()
-      let spaceList: Space.allSpace[] = spaceStore.allSpaceList
-      spaceList = spaceStore.allSpaceList.filter((space) => {
-        const hasScene =
-          sceneStore.allRoomSceneList.findIndex(
-            (scene) => scene.spaceId === space.spaceId && scene.deviceActions?.length > 0,
-          ) >= 0
-        const hasDevice = deviceStore.allDeviceList.findIndex((device) => device.spaceId === space.spaceId) >= 0
-        const notPublicSpace = space.publicSpaceFlag === 0
-        const hasBrotherNode =
-          spaceStore.allSpaceList.findIndex((s) => s.pid === space.pid && s.spaceId !== space.spaceId) >= 0
-        const hasNotPublicSpaceChild =
-          spaceStore.allSpaceList.findIndex((s) => s.pid === space.spaceId && s.publicSpaceFlag === 0) >= 0
-        if (this.data.dataType === 'scene') {
-          return this.data.filter
-            ? hasScene || hasNotPublicSpaceChild
-            : notPublicSpace || (!notPublicSpace && hasBrotherNode && hasScene)
-        } else if (this.data.dataType === 'device') {
-          return this.data.filter
-            ? hasDevice || hasNotPublicSpaceChild
-            : notPublicSpace || (!notPublicSpace && hasBrotherNode && hasDevice)
-        } else {
-          return notPublicSpace || (!notPublicSpace && hasBrotherNode && (hasScene || hasDevice))
-        }
-      })
+      const spaceList: Space.allSpace[] = []
+      spaceStore.allSpaceList
+        .sort((a, b) => b.spaceLevel - a.spaceLevel)
+        .forEach((space) => {
+          // 该空间存在场景
+          const hasScene =
+            sceneStore.allRoomSceneList.findIndex(
+              (scene) => scene.spaceId === space.spaceId && scene.deviceActions?.length > 0,
+            ) >= 0
+          // 该空间存在设备
+          const hasDevice = deviceStore.allDeviceList.findIndex((device) => device.spaceId === space.spaceId) >= 0
+          // 该空间存在传感器
+          const hasSensor =
+            deviceStore.allDeviceList.findIndex(
+              (device) => device.spaceId === space.spaceId && device.proType === PRO_TYPE.sensor,
+            ) >= 0
+          const notPublicSpace = space.publicSpaceFlag === 0
+          const hasBrotherNode =
+            spaceStore.allSpaceList.findIndex((s) => s.pid === space.pid && s.spaceId !== space.spaceId) >= 0
+          // 下层空间是否存在非公共空间
+          // const hasNotPublicSpaceChild =
+          //   spaceStore.allSpaceList.findIndex((s) => s.pid === space.spaceId && s.publicSpaceFlag === 0) >= 0
+          // 下层空间是否存在空间
+          const hasChild = spaceList.findIndex((s) => s.pid === space.spaceId) >= 0
+          if (this.data.dataType === 'scene') {
+            if (this.data.filter) {
+              if (hasScene || hasChild) spaceList.push(space)
+            } else {
+              if (notPublicSpace || (!notPublicSpace && hasBrotherNode && hasScene)) spaceList.push(space)
+            }
+          } else if (this.data.dataType === 'device') {
+            if (this.data.filter) {
+              if (hasDevice || hasChild) spaceList.push(space)
+            } else {
+              if (notPublicSpace || (!notPublicSpace && hasBrotherNode && hasDevice)) spaceList.push(space)
+            }
+          } else if (this.data.dataType === 'sensor') {
+            if (this.data.filter) {
+              if (hasSensor || hasChild) spaceList.push(space)
+            } else {
+              if (notPublicSpace || (!notPublicSpace && hasBrotherNode && hasSensor)) spaceList.push(space)
+            }
+          } else {
+            if (notPublicSpace || (!notPublicSpace && hasBrotherNode && (hasScene || hasDevice || hasSensor)))
+              spaceList.push(space)
+          }
+        })
 
       const result = this.buildTree(spaceList, '0')
       this.setData({ spaceData: result }, () => {
@@ -229,7 +258,7 @@ ComponentWithComputed({
           _fourthSpaceId: fourth,
         },
         () => {
-          this.triggerEvent('confirm', this.calcConfirmRes())
+          if (this.data.initConfirm) this.triggerEvent('confirm', this.calcConfirmRes())
         },
       )
     },

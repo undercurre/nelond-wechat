@@ -109,11 +109,11 @@ export async function updateSceneSort(
   })
 }
 
-export async function queryAutoSceneListByHouseId(projectId: string, options?: { loading?: boolean }) {
+export async function queryAutoSceneListByProjectId(projectId: string, options?: { loading?: boolean }) {
   return await mzaioRequest.post<AutoScene.AutoSceneItem[]>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/cl/scene/queryAutoSceneListByHouseId',
+    url: '/v1/mzgd/cl/scene/queryAutoSceneListByProjectId',
     data: {
       projectId,
     },

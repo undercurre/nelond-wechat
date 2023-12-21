@@ -107,9 +107,9 @@ ComponentWithComputed({
         )
       }
     },
-    cardType(data) {
-      return data.selectCardType === 'device' || data.selectCardType === 'sensor' ? 'device' : 'scene'
-    },
+    // cardType(data) {
+    //   return data.selectCardType === 'device' || data.selectCardType === 'sensor' ? 'device' : 'scene'
+    // },
 
     isAllday(data) {
       const start = data.effectiveTime.startTime.split(':')

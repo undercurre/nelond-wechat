@@ -23,8 +23,14 @@
       >
       <text class="h-50rpx text-36rpx text-black-2a mt-44rpx font-medium">{{title}}</text>
     </view>
-
-    <scroll-view
+    <view class="w-750rpx">
+      <all-space-select
+        dataType="{{cardType}}"
+        filter="{{true}}"
+        bind:confirm="handleRoomSelect"
+      ></all-space-select>
+    </view>
+    <!-- <scroll-view
       enhanced
       show-scrollbar="{{false}}"
       scroll-x
@@ -47,7 +53,7 @@
         </view>
         <view class="w-50rpx"></view>
       </view>
-    </scroll-view>
+    </scroll-view> -->
 
     <view class="h-44rpx"></view>
 

@@ -9,7 +9,7 @@ import {
   sceneBinding,
   sceneStore,
   userBinding,
-  autosceneStore,
+  // autosceneStore,
 } from '../../store/index'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
@@ -34,9 +34,9 @@ ComponentWithComputed({
     // 用于存储一键场景列表
     listData: [] as IAnyObject[],
     // 用于存储以时间点为条件触发的自动场景
-    scheduleList: autosceneStore.allRoomAutoSceneListComputed.filter((scene) => scene.timeConditions[0].time),
+    // scheduleList:[] as AutoScene.AutoSceneItem[],
     // 用于存储以传感器为条件触发的自动场景
-    autoSceneList: autosceneStore.allRoomAutoSceneListComputed.filter((scene) => !scene.timeConditions[0].time),
+    // autoSceneList:[] as AutoScene.AutoSceneItem[],
     sceneImgDir,
     defaultImgDir,
     hasAutoScene: true,
@@ -117,7 +117,7 @@ ComponentWithComputed({
       // console.log(spaceStore.currentSpace, spaceStore.currentSpaceIndex)
 
       // 加载一键场景列表
-      sceneBinding.store.updateAllRoomSceneList()
+      // sceneBinding.store.updateAllRoomSceneList()
       // 加载自动化列表
       // autosceneBinding.store.updateAllRoomAutoSceneList()
     },
@@ -137,7 +137,16 @@ ComponentWithComputed({
         url: e.currentTarget.dataset.url,
       })
     },
-
+    // updateScheduleList(){
+    //   this.setData({
+    //     scheduleList:autosceneStore.allRoomAutoSceneListComputed.filter((scene) => scene.timeConditions[0].time !== '')
+    //   })
+    // },
+    // updateAutoSceneList(){
+    //   this.setData({
+    //     autoSceneList:autosceneStore.allRoomAutoSceneListComputed.filter((scene) => scene.timeConditions[0].time === '')
+    //   })
+    // },
     updateList() {
       if (this.data.currentSpaceId === '') {
         return
@@ -266,6 +275,12 @@ ComponentWithComputed({
       //   currentSpaceId: spaceStore.currentSpace.spaceId,
       // })
       // this.updateList()
+      // 加载自动化列表
+      autosceneBinding.store.updateAllRoomAutoSceneList().then(() => {
+        // this.updateScheduleList()
+        // this.updateAutoSceneList()
+      })
+      // 加载一键场景列表
       sceneBinding.store.updateAllRoomSceneList().then(() => {
         this.updateList()
       })
