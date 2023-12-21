@@ -67,7 +67,7 @@ ComponentWithComputed({
         diffData.deviceProp = prop
 
         // 色温范围计算
-        if (NO_COLOR_TEMP.includes(device.proType)) {
+        if (NO_COLOR_TEMP.includes(device.productId)) {
           diffData.hasColorTemp = false
         } else if (device.proType === PRO_TYPE.light) {
           const { minColorTemp, maxColorTemp } = device.mzgdPropertyDTOList['light'].colorTempRange!

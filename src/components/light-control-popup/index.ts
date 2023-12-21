@@ -1,8 +1,9 @@
+import { deviceStore } from './../../store/index'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import Toast from '@vant/weapp/toast/toast'
 import { throttle } from '../../utils/index'
 import { sendDevice } from '../../apis/index'
-import { PRO_TYPE } from '../../config/index'
+import { NO_COLOR_TEMP, PRO_TYPE } from '../../config/index'
 
 ComponentWithComputed({
   options: {
@@ -81,6 +82,12 @@ ComponentWithComputed({
       const { maxColorTemp, minColorTemp } = data.lightInfo.colorTempRange || data.lightInfo
 
       return (data.colorTemperature / 100) * (maxColorTemp - minColorTemp) + minColorTemp
+    },
+    hasColorTemp(data) {
+      const { deviceId } = data.lightInfo
+      const { productId = '0' } = deviceStore.allRoomDeviceMap[deviceId] ?? {}
+      console.log('hasColorTemp productId', productId)
+      return !NO_COLOR_TEMP.includes(productId)
     },
   },
 
