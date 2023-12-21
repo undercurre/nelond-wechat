@@ -1,5 +1,5 @@
 // service模块存放项目的相关业务代码
-import { connectHouseSocket } from '../apis/websocket'
+import { connectSocket } from '../apis/websocket'
 import { projectStore, userStore } from '../store/index'
 import { isLogined, Logger, storage, isConnect, verifyNetwork } from './index'
 import { emitter } from './eventBus'
@@ -42,7 +42,7 @@ export async function startWebsocketService() {
     Logger.log('已存在ws连接，正在关闭已有连接')
     await socketTask?.close({ code: 1000 })
   }
-  socketTask = connectHouseSocket(projectStore.currentProjectDetail.projectId)
+  socketTask = connectSocket(projectStore.currentProjectDetail.projectId)
   socketTask.onClose(onSocketClose)
   socketTask.onOpen((res) => {
     isConnecting = false
