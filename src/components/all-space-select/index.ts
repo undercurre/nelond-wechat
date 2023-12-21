@@ -131,27 +131,32 @@ ComponentWithComputed({
     },
     isShowTab(data: IAnyObject) {
       if (!data.showTab) return false
-      if (data.firstSpaceId && data.secondSpaceId && data.thirdSpaceId) {
-        return Object.keys(data.spaceData[data.firstSpaceId].child[data.secondSpaceId].child[data.thirdSpaceId].child)
-          .length
-      } else {
-        return false
+      const { firstSpaceId, secondSpaceId, thirdSpaceId, spaceData } = data
+
+      if (firstSpaceId && secondSpaceId && thirdSpaceId) {
+        const child = spaceData[firstSpaceId]?.child[secondSpaceId]?.child[thirdSpaceId]?.child
+        if (child) {
+          return Object.keys(child).length
+        }
       }
+      return false
     },
     /**
      * 有下级空间而未选择时应该禁用确认
      */
     disableConfirm(data) {
       let count = 0
-      if (data.firstSpaceId) {
-        count = Object.keys(data.spaceData[data.firstSpaceId].child).length
-        if (data.secondSpaceId) {
-          count = Object.keys(data.spaceData[data.firstSpaceId].child[data.secondSpaceId].child).length
-          if (data.thirdSpaceId) {
-            count = Object.keys(
-              data.spaceData[data.firstSpaceId].child[data.secondSpaceId].child[data.thirdSpaceId].child,
-            ).length
-            if (data.fourthSpaceId) {
+      const { firstSpaceId, secondSpaceId, thirdSpaceId, fourthSpaceId, spaceData } = data
+      if (firstSpaceId) {
+        const firstSpace = spaceData[firstSpaceId]
+        if (firstSpace) count = Object.keys(firstSpace.child).length
+        if (secondSpaceId && firstSpace) {
+          const secondSpace = firstSpace.child[secondSpaceId]
+          if (secondSpace) count = Object.keys(secondSpace.child).length
+          if (thirdSpaceId && secondSpace) {
+            const thirdSpace = secondSpace.child[thirdSpaceId]
+            if (thirdSpace) count = Object.keys(thirdSpace.child).length
+            if (fourthSpaceId && thirdSpace) {
               return false
             }
           }
@@ -161,19 +166,21 @@ ComponentWithComputed({
     },
   },
   lifetimes: {
-    created() {
-      this.initTree()
-    },
     attached() {},
     ready() {},
     detached() {},
+  },
+  watch: {
+    allSpaceList: function () {
+      this.initTree()
+    },
   },
   /**
    * 组件的方法列表
    */
   methods: {
-    async initTree() {
-      await spaceBinding.store.updateAllSpaceList()
+    initTree() {
+      // await spaceBinding.store.updateAllSpaceList()
       const spaceList: Space.allSpace[] = []
       spaceStore.allSpaceList
         .sort((a, b) => b.spaceLevel - a.spaceLevel)
@@ -263,6 +270,7 @@ ComponentWithComputed({
     },
     getKey(obj: { [key: string]: Space.SpaceTreeNode }): string[] {
       const key = Object.keys(obj)[0]
+      if (!key) return []
       if (typeof obj[key].child === 'object' && JSON.stringify(obj[key].child) !== '{}') {
         return [key, ...this.getKey(obj[key].child)]
       } else {

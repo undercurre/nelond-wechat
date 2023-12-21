@@ -10,6 +10,7 @@ import {
   sceneStore,
   userBinding,
   userStore,
+  spaceStore,
   // autosceneStore,
 } from '../../store/index'
 import { ComponentWithComputed } from 'miniprogram-computed'
@@ -88,6 +89,13 @@ ComponentWithComputed({
       this.setData({
         scrollTop: e.scrollTop,
       })
+    },
+    onShow() {
+      sceneBinding.store.updateAllRoomSceneList().then(() => {
+        this.updateList()
+      })
+      autosceneBinding.store.updateAllRoomAutoSceneList()
+      spaceStore.updateAllSpaceList()
     },
     onLoad() {
       //更新tabbar状态
@@ -261,11 +269,11 @@ ComponentWithComputed({
     onUnload() {
       emitter.off('sceneEdit')
     },
-    onSpaceSelect(e: IAnyObject) {
+    onSpaceSelect(e: { detail: Space.allSpace[] }) {
       console.log('onSpaceSelect', e.detail)
       this.setData({
         currentSpaceQueue: e.detail,
-        currentSpaceId: e.detail[e.detail.length - 1].spaceId,
+        currentSpaceId: e.detail[e.detail.length - 1]?.spaceId,
       })
       this.updateList()
     },
@@ -277,14 +285,14 @@ ComponentWithComputed({
       // })
       // this.updateList()
       // 加载自动化列表
-      autosceneBinding.store.updateAllRoomAutoSceneList().then(() => {
-        // this.updateScheduleList()
-        // this.updateAutoSceneList()
-      })
+      // autosceneBinding.store.updateAllRoomAutoSceneList().then(() => {
+      //   // this.updateScheduleList()
+      //   // this.updateAutoSceneList()
+      // })
       // 加载一键场景列表
-      sceneBinding.store.updateAllRoomSceneList().then(() => {
-        this.updateList()
-      })
+      // sceneBinding.store.updateAllRoomSceneList().then(() => {
+      //   this.updateList()
+      // })
       emitter.off('sceneEdit')
       emitter.on('sceneEdit', () => {
         sceneStore.updateAllRoomSceneList().then(() => {
