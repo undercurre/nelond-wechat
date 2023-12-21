@@ -277,7 +277,12 @@ ComponentWithComputed({
     // 点击卡片
     handleCardTap(e: WechatMiniprogram.CustomEvent) {
       const { spaceId, nodeCount, spaceName, spaceLevel, publicSpaceFlag } = e.detail
-      const link = nodeCount ? '/package-space-control/space-list/index' : '/package-space-control/index/index'
+
+      // 有超过2个下级空间，说明有公共空间以外的子空间
+      const hasChildren = nodeCount > 1
+
+      // 有子空间则进入下级空间列表页
+      const link = hasChildren ? '/package-space-control/space-list/index' : '/package-space-control/index/index'
 
       // 更新当前选中空间
       runInAction(() =>
