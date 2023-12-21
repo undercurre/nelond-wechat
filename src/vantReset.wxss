@@ -130,6 +130,11 @@ page {
   font-size: 32rpx;
 }
 
+.van-cell__value {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* cell end */
 
 /* 遮罩 start */
