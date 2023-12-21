@@ -26,9 +26,9 @@ export const storageExpire = 60 * 60 * 24 * 30
  * 美智云后端websocket地址
  */
 export const mzaioWSURL: ConfigWithEnv<string> = {
-  dev: 'wss://test.meizgd.com/mzaio/v1/cl/wss/',
-  sit: 'wss://sit.meizgd.com/mzaio/v1/cl/wss/',
-  prod: 'wss://mzaio.meizgd.com/mzaio/v1/cl/wss/',
+  dev: 'wss://test.meizgd.com/mzaio/v1/mzgd/cl/wss',
+  sit: 'wss://sit.meizgd.com/mzaio/v1/mzgd/cl/wss',
+  prod: 'wss://mzaio.meizgd.com/mzaio/v1/mzgd/cl/wss',
 }
 
 // export const QQMapConfig = {

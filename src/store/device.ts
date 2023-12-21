@@ -109,10 +109,10 @@ export const deviceStore = observable({
           list.push({
             ...device,
             property: device.mzgdPropertyDTOList[switchItem.switchId],
-            // mzgdPropertyDTOList: {
-            //   [switchItem.switchId]: device.mzgdPropertyDTOList[switchItem.switchId],
-            // },
-            // switchInfoDTOList: [switchItem],
+            mzgdPropertyDTOList: {
+              [switchItem.switchId]: device.mzgdPropertyDTOList[switchItem.switchId],
+            },
+            switchInfoDTOList: [switchItem],
             uniId: `${device.deviceId}:${switchItem.switchId}`,
             orderNum: switchItem.orderNum,
           })

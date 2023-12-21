@@ -75,7 +75,7 @@
     </van-cell-group>
 
     <van-cell-group inset>
-      <van-cell
+      <!-- <van-cell
         icon="/assets/img/mine/help.png"
         title="帮助中心"
         is-link
@@ -83,7 +83,7 @@
         data-url="{{urls.help}}"
         data-auth="no"
         bind:click="toPage"
-      />
+      /> -->
 
       <van-cell is-link>
         <button
