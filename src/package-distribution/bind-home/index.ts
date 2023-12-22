@@ -89,6 +89,7 @@ ComponentWithComputed({
 
       this.setData({
         'deviceInfo.spaceId': event.detail.spaceId,
+        'deviceInfo.spaceName': event.detail.spaceName,
         'deviceInfo.deviceName': event.detail.deviceName,
         'deviceInfo.switchList': event.detail.switchList,
       })
