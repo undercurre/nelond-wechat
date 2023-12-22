@@ -14,7 +14,7 @@ import {
 } from '../../store/index'
 import { runInAction } from 'mobx-miniprogram'
 import pageBehavior from '../../behaviors/pageBehaviors'
-import { sendDevice, execScene, saveDeviceOrder } from '../../apis/index'
+import { sendDevice, execScene, saveDeviceOrder, queryGroupBySpaceId } from '../../apis/index'
 import Toast from '@vant/weapp/toast/toast'
 import {
   storage,
@@ -130,19 +130,20 @@ ComponentWithComputed({
       x: '',
       y: '',
     },
-    roomLight: {
+    spaceLight: {
       brightness: 0,
       colorTemperature: 0,
       maxColorTemp,
       minColorTemp,
       power: 0,
+      groupId: '',
     },
   },
 
   computed: {
     // 空间亮度toast格式化
     colorTempFormatter(data) {
-      const { maxColorTemp, minColorTemp } = data.roomLight
+      const { maxColorTemp, minColorTemp } = data.spaceLight
       return (value: number) => {
         return `${(value / 100) * (maxColorTemp - minColorTemp) + minColorTemp}K`
       }
@@ -272,7 +273,7 @@ ComponentWithComputed({
       if (this.data._firstShow && this.data._from !== 'addDevice') {
         this.updateQueue({ isRefresh: true })
         // sceneStore.updateAllRoomSceneList()
-        // this.queryGroupInfo()
+        this.queryGroupInfo()
         this.data._firstShow = false
       }
       // 从别的页面返回，或从挂起状态恢复
@@ -383,7 +384,7 @@ ComponentWithComputed({
       emitter.on('msgPush', () => {
         const hasLightOn = deviceStore.deviceList.some((d) => d.mzgdPropertyDTOList?.light?.power === 1)
         this.setData({
-          'roomLight.power': hasLightOn ? 1 : 0,
+          'spaceLight.power': hasLightOn ? 1 : 0,
         })
       })
     },
@@ -394,28 +395,29 @@ ComponentWithComputed({
 
       const { brightness, colorTemperature } = deviceStore.lightStatusInRoom
       this.setData({
-        'roomLight.brightness': brightness,
-        'roomLight.colorTemperature': colorTemperature,
+        'spaceLight.brightness': brightness,
+        'spaceLight.colorTemperature': colorTemperature,
       })
     },
 
-    // TODO 查询空间分组详情
-    // async queryGroupInfo() {
-    //   const res = await queryGroup({ groupId: spaceStore.currentSpace.groupId })
-    //   if (res.success) {
-    //     const roomStatus = res.result.controlAction[0]
-    //     const { colorTempRangeMap } = res.result
-    //     this.setData({
-    //       roomLight: {
-    //         brightness: roomStatus.brightness,
-    //         colorTemperature: roomStatus.colorTemperature,
-    //         maxColorTemp: colorTempRangeMap.maxColorTemp,
-    //         minColorTemp: colorTempRangeMap.minColorTemp,
-    //         power: roomStatus.power,
-    //       },
-    //     })
-    //   }
-    // },
+    // 查询空间分组详情
+    async queryGroupInfo() {
+      const res = await queryGroupBySpaceId({ spaceId: spaceStore.currentSpace.spaceId })
+      if (res.success) {
+        const spaceStatus = res.result.controlAction[0]
+        const { colorTempRangeMap, groupId } = res.result
+        this.setData({
+          spaceLight: {
+            brightness: spaceStatus.brightness,
+            colorTemperature: spaceStatus.colorTemperature,
+            maxColorTemp: colorTempRangeMap.maxColorTemp,
+            minColorTemp: colorTempRangeMap.minColorTemp,
+            power: spaceStatus.power,
+            groupId,
+          },
+        })
+      }
+    },
 
     async reloadData() {
       Logger.log('reloadData', isConnect())
@@ -427,7 +429,7 @@ ComponentWithComputed({
 
       try {
         // sceneStore.updateAllRoomSceneList(),
-        // TODO this.queryGroupInfo()
+        this.queryGroupInfo()
         await Promise.all([projectStore.updateSpaceCardList()])
 
         this.updateQueue({ isRefresh: true })
@@ -453,7 +455,7 @@ ComponentWithComputed({
       await deviceStore.updateallDeviceList()
       this.updateQueue({ isRefresh: true })
 
-      // this.queryGroupInfo()
+      this.queryGroupInfo()
     },
 
     // 节流更新设备列表
@@ -1248,42 +1250,42 @@ ComponentWithComputed({
     },
     handleLevelChange(e: { detail: number }) {
       this.setData({
-        'roomLight.brightness': e.detail,
+        'spaceLight.brightness': e.detail,
       })
     },
-    // handleLevelEnd(e: { detail: number }) {
-    //   this.setData({
-    //     'roomLight.brightness': e.detail,
-    //   })
-    //   this.lightSendDeviceControl('brightness')
-    // },
+    handleLevelEnd(e: { detail: number }) {
+      this.setData({
+        'spaceLight.brightness': e.detail,
+      })
+      this.lightSendDeviceControl('brightness')
+    },
     handleColorTempChange(e: { detail: number }) {
       this.setData({
-        'roomLight.colorTemperature': e.detail,
+        'spaceLight.colorTemperature': e.detail,
       })
     },
-    // handleColorTempEnd(e: { detail: number }) {
-    //   this.setData({
-    //     'roomLight.colorTemperature': e.detail,
-    //   })
-    //   this.lightSendDeviceControl('colorTemperature')
-    // },
-    // async lightSendDeviceControl(type: 'colorTemperature' | 'brightness') {
-    //   const deviceId = spaceStore.currentSpace.groupId
+    handleColorTempEnd(e: { detail: number }) {
+      this.setData({
+        'spaceLight.colorTemperature': e.detail,
+      })
+      this.lightSendDeviceControl('colorTemperature')
+    },
+    async lightSendDeviceControl(type: 'colorTemperature' | 'brightness') {
+      const deviceId = this.data.spaceLight.groupId
 
-    //   const res = await sendDevice({
-    //     proType: PRO_TYPE.light,
-    //     deviceType: 4,
-    //     deviceId,
-    //     property: {
-    //       [type]: this.data.roomLight[type],
-    //     },
-    //   })
+      const res = await sendDevice({
+        proType: PRO_TYPE.light,
+        deviceType: 4,
+        deviceId,
+        property: {
+          [type]: this.data.spaceLight[type],
+        },
+      })
 
-    //   if (!res.success) {
-    //     Toast('控制失败')
-    //   }
-    // },
+      if (!res.success) {
+        Toast('控制失败')
+      }
+    },
 
     goBackAndPop() {
       runInAction(() => spaceStore.currentSpaceSelect.pop())

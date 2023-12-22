@@ -829,7 +829,7 @@ export async function updateGroup(
 }
 
 /**
- * 查询分组详情
+ * 根据分组id查询分组详情
  */
 export async function queryGroup(
   data: {
@@ -841,6 +841,23 @@ export async function queryGroup(
     log: true,
     loading: options?.loading ?? false,
     url: '/v1/mzgd/cl/scene/queryGroupByGroupId',
+    data,
+  })
+}
+
+/**
+ * 根据空间id查询分组详情
+ */
+export async function queryGroupBySpaceId(
+  data: {
+    spaceId: string
+  },
+  options?: { loading?: boolean },
+) {
+  return await mzaioRequest.post<Device.DeviceItem>({
+    log: true,
+    loading: options?.loading ?? false,
+    url: '/v1/mzgd/cl/scene/queryGroupDetailBySpaceId',
     data,
   })
 }
