@@ -92,7 +92,7 @@ page {
 }
 
 .van-button--plain.van-button--primary {
-  color: linear-gradient(-90deg, #7cd06a 0%, #20b86c 96%) !important;
+  color: #7cd06a !important;
 }
 
 .van-button--plain.van-button--danger {

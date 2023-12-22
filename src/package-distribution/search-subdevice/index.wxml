@@ -110,7 +110,7 @@
                 bind:click="tryControl"
                 data-id="{{item.deviceUuid}}"
                 loading="{{item.mac === flashInfo.mac && flashInfo.isConnecting}}"
-                custom-style="background: rgba(72,143,255,0.10) !important;border-radius: 12rpx; font-size: 24rpx; width: 120rpx;padding: 0;"
+                custom-style="background: rgba(139,195,74,0.1) !important;border-radius: 12rpx; font-size: 24rpx; width: 120rpx;padding: 0;"
               >
                 {{ item.mac === flashInfo.mac ? '正在闪烁' : '找一找'}}
               </van-button>
@@ -248,7 +248,7 @@
                 bind:click="tryControl"
                 data-id="{{item.deviceUuid}}"
                 loading="{{item.mac === flashInfo.mac && flashInfo.isConnecting}}"
-                custom-style="background: rgba(72,143,255,0.10) !important;border-radius: 12rpx; font-size: 24rpx; width: 120rpx;padding: 0;"
+                custom-style="background: rgba(139,195,74,0.1) !important;border-radius: 12rpx; font-size: 24rpx; width: 120rpx;padding: 0;"
               >
                 {{ item.mac === flashInfo.mac ? '正在闪烁' : '找一找'}}
               </van-button>

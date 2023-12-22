@@ -41,6 +41,7 @@
     is-link
     bind:click="handleSpaceSelect"
     title="所在空间"
+    border="{{false}}"
     value="{{deviceInfo.spaceName}}"
   ></van-cell>
 </view>

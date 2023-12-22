@@ -40,7 +40,7 @@
           block
           type="primary"
           size="small"
-          custom-style="height: 52rpx;background: rgba(72,143,255,0.10);font-size: 24rpx;"
+          custom-style="height: 52rpx;background: rgba(139,195,74,0.1);font-size: 24rpx;"
           bind:click="copy"
           >复制</van-button
         >
