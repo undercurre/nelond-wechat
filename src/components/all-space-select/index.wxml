@@ -58,16 +58,11 @@
         data="{{title: '空间选择'}}"
       />
     </view>
-    <view
-      class="h-32rpx"
-      style="background: linear-gradient(to bottom, #ffffff, #f5f5f5)"
-    ></view>
-    <view class="h-16rpx w-full bg-hex-f5f5f5"></view>
 
     <!-- 多层级选择 -->
-    <view class="h-900rpx flex">
+    <view class="h-900rpx mt-48rpx mb-32rpx flex">
       <!-- 第一列 -->
-      <view class="flex flex-1 bg-hex-f5f5f5">
+      <view class="flex flex-1">
         <scroll-view
           class="flex-1"
           scroll-y
@@ -77,7 +72,7 @@
             wx:key="index"
             title-style="font-size:28rpx;"
             title="{{item.spaceName}}"
-            custom-class="cell {{firstSpaceId === item.spaceId ? 'checked' : 'unchecked'}}"
+            custom-class="cell {{firstSpaceId === item.spaceId ? 'checked-1' : 'unchecked-1'}}"
             border="{{false}}"
             data-id="{{item.spaceId}}"
             bind:click="firstCheck"
@@ -94,7 +89,7 @@
       </view>
 
       <!-- 第二列 -->
-      <view class="flex flex-1 bg-hex-f5f5f5">
+      <view class="flex flex-1 bg-hex-f9f9f9">
         <scroll-view
           class="flex-1"
           scroll-y
@@ -104,7 +99,7 @@
             wx:key="index"
             title-style="font-size:28rpx;"
             title="{{item.spaceName}}"
-            custom-class="cell {{secondSpaceId === item.spaceId ? 'checked' : 'unchecked'}}"
+            custom-class="cell {{secondSpaceId === item.spaceId ? 'checked-2' : 'unchecked-2'}}"
             border="{{false}}"
             data-id="{{item.spaceId}}"
             bind:click="secondCheck"
@@ -137,7 +132,7 @@
             <van-cell
               title-style="font-size:28rpx;"
               title="{{item.spaceName}}"
-              custom-class="cell {{thirdSpaceId === item.spaceId ? 'checked' : 'unchecked'}}"
+              custom-class="cell {{thirdSpaceId === item.spaceId ? 'checked-3' : 'unchecked-3'}}"
               border="{{false}}"
               data-id="{{item.spaceId}}"
               bind:click="thirdCheck"
@@ -152,10 +147,10 @@
             </van-cell>
             <view
               wx:if="{{thirdSpaceId === item.spaceId && utils.isNotEmptyObject(item.child)}}"
-              class="bg-white px-32rpx py-16rpx"
+              class="bg-hex-f0f0f0 px-32rpx py-16rpx"
             >
               <view
-                class="h-72rpx my-16rpx leading-72rpx text-center text-28rpx {{fourthSpaceId === item.spaceId ? 'text-hex-ffffff checked-background':'bg-hex-f5f5f5'}}"
+                class="h-72rpx my-16rpx rounded-18rpx leading-72rpx text-center text-28rpx {{fourthSpaceId === item.spaceId ? 'text-hex-ffffff checked-background':'bg-hex-a2a2a2'}}"
                 wx:for="{{item.child}}"
                 wx:key="key"
                 data-id="{{item.spaceId}}"
@@ -170,10 +165,7 @@
     </view>
 
     <!-- 底部按钮 -->
-    <view
-      class="h-32rpx"
-      style="background: linear-gradient(to bottom, #f5f5f5, #ffffff)"
-    ></view>
+    <view class="h-32rpx"></view>
     <view class="flex-center">
       <view class="flex w-686rpx gap-x-46rpx">
         <van-button
