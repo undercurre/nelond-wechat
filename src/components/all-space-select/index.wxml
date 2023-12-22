@@ -60,7 +60,10 @@
     </view>
 
     <!-- 多层级选择 -->
-    <view class="h-900rpx mt-48rpx mb-32rpx flex">
+    <view
+      class="h-900rpx mt-48rpx mb-32rpx flex"
+      style="box-shadow: inset 0px 2px 12px 0px rgba(97, 109, 136, 0.15)"
+    >
       <!-- 第一列 -->
       <view class="flex flex-1">
         <scroll-view

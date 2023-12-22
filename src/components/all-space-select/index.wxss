@@ -1,5 +1,5 @@
 .cell {
-  padding: 16rpx !important;
+  padding: 16rpx 24rpx !important;
   font-size: 16rpx !important;
 }
 
@@ -16,7 +16,8 @@
   background-color: #f9f9f9 !important;
 }
 
-.checked-1 {
+.checked-1,
+.checked-2 {
   border-radius: 32rpx 0 0 32rpx;
 }
 
