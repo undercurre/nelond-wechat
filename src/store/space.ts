@@ -1,5 +1,5 @@
 import { observable, runInAction } from 'mobx-miniprogram'
-import { querySpaceList, queryAllSpaceByProjectId } from '../apis/index'
+import { queryAllSpaceByProjectId, querySpaceList } from '../apis/index'
 import { deviceStore } from './device'
 import { projectStore } from './project'
 import { IApiRequestOption } from '../utils/index'
@@ -22,9 +22,19 @@ export const spaceStore = observable({
 
   // 当前选中空间队列的末端，即真正存放内容的空间
   get currentSpace(): Space.allSpace {
-    return this.currentSpaceSelect.length
-      ? this.currentSpaceSelect[this.currentSpaceSelect.length - 1]
-      : this.allSpaceList[0] //TODO: 当选中空间队列为空时该如何返回
+    if (this.currentSpaceSelect.length) {
+      return this.currentSpaceSelect[this.currentSpaceSelect.length - 1]
+    } else {
+      const defaultSpace = this.allSpaceList.find((item) => item.publicSpaceFlag === 1 || item.spaceLevel === 4) || {
+        pid: '',
+        spaceId: '',
+        spaceLevel: 4,
+        spaceName: '找不到空间，请选择',
+        publicSpaceFlag: 0,
+      } // 当选中空间队列为空时,取第一个叶子节点
+
+      return defaultSpace
+    }
   },
   // 当前选中空间名称 // TODO 显示全路径名称
   get currentSpaceName(): string {
@@ -33,14 +43,25 @@ export const spaceStore = observable({
 
   // 当前选中空间全路径名称
   get currentSpaceNameFull(): string {
-    return this.currentSpaceSelect.length
-      ? this.currentSpaceSelect.map((item) => item.spaceName).join(',')
-      : this.allSpaceList[0].spaceName
+    return this.getSpaceFullName(this.currentSpace)
   },
 
   get hasSpace() {
     const { spaceList } = this
     return spaceList?.length
+  },
+
+  /**
+   * 获取指定空间的完整名称
+   */
+  getSpaceFullName(space: Space.allSpace): string {
+    if (space.pid === '0') {
+      return space.spaceName
+    }
+
+    const parentSpace = spaceStore.allSpaceList.find((item) => item.spaceId === space.pid) as Space.allSpace
+
+    return `${parentSpace.pid === '0' ? parentSpace.spaceName : this.getSpaceFullName(parentSpace)},${space.spaceName}`
   },
 
   /**
