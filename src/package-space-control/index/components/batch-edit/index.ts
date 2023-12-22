@@ -167,7 +167,7 @@ ComponentWithComputed({
     editDeviceName: '',
     editSwitchName: '',
     editProType: '',
-    showEditRoom: false,
+    showSpaceSelectPopup: false,
     spaceId: '',
     showConfirmDelete: false,
     moveWaitlist: [] as string[],
@@ -264,7 +264,7 @@ ComponentWithComputed({
       const uniId = this.data.editSelectList[0]
       const device = deviceStore.deviceFlattenMap[uniId]
       this.setData({
-        showEditRoom: true,
+        showSpaceSelectPopup: true,
         spaceId: device.spaceId,
       })
     },
@@ -284,7 +284,7 @@ ComponentWithComputed({
     handleClose() {
       this.setData({
         showEditName: false,
-        showEditRoom: false,
+        showSpaceSelectPopup: false,
       })
 
       this.triggerEvent('close')
@@ -516,7 +516,7 @@ ComponentWithComputed({
             })
           }
         }
-      } else if (this.data.showEditRoom) {
+      } else if (this.data.showSpaceSelectPopup) {
         this.initMoveWaitlist()
         this.handleBatchMove()
         this.handleClose()
@@ -539,10 +539,16 @@ ComponentWithComputed({
         })
       }
     },
-    handleRoomSelect(e: { currentTarget: { dataset: { id: string } } }) {
+    handleSpaceSelectConfirm(e: { detail: Space.allSpace[] }) {
+      if (!e.detail?.length) {
+        return
+      }
+      const spaceInfo = e.detail[e.detail.length - 1]
       this.setData({
-        spaceId: e.currentTarget.dataset.id,
+        spaceId: spaceInfo.spaceId,
       })
+
+      this.handleConfirm()
     },
     // 初始化等待移动的列表
     initMoveWaitlist() {

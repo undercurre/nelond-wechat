@@ -217,21 +217,6 @@ ComponentWithComputed({
           })
       }
     },
-
-    handleRoomSelect(e: { detail: string }) {
-      this.setData({
-        spaceId: e.detail,
-      })
-      // this.hideSelectRoomMenu()
-      // if (this.data.spaceId === '0') {
-      //   // 查空间
-      //   deviceBinding.store.updateDeviceList(undefined, this.data.spaceId)
-      // } else {
-      //   // 查全屋
-      //   deviceBinding.store.updateallDeviceList()
-      // }
-    },
-
     handleCardClick(e: { currentTarget: { dataset: { deviceId: string; deviceType: number } } }) {
       const { deviceId, deviceType } = e.currentTarget.dataset
       console.log('handleCardClick', deviceId, deviceType)
