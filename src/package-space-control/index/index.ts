@@ -14,7 +14,7 @@ import {
 } from '../../store/index'
 import { runInAction } from 'mobx-miniprogram'
 import pageBehavior from '../../behaviors/pageBehaviors'
-import { sendDevice, execScene, saveDeviceOrder, queryAuthGetStatus } from '../../apis/index'
+import { sendDevice, execScene, saveDeviceOrder } from '../../apis/index'
 import Toast from '@vant/weapp/toast/toast'
 import {
   storage,
@@ -109,7 +109,6 @@ ComponentWithComputed({
     /** 弹层要控制的设备品类 */
     controlType: '',
     showAddScenePopup: false,
-    showAuthDialog: false, // 显示确权弹层
     deviceIdForQueryAuth: '', // 用于确权的设备id
     _cardEventType: '' as 'card' | 'control', // 触发确权前的操作类型
     // 设备卡片列表，二维数组
@@ -981,38 +980,9 @@ ComponentWithComputed({
         this.handleCardEditSelect(e)
         return
       }
-      // 不在编辑状态，如果是WIFI设备
-      else if (e.detail.deviceType === 3) {
-        const { deviceId } = e.detail
-        const res = await queryAuthGetStatus({ projectId: projectStore.currentProjectId, deviceId })
-        // 若设备未确权、待确权，则弹出指引弹窗
-        if (!res.success) {
-          Toast('设备确权异常')
-          return
-        } else if (res.result.status === 1 || res.result.status === 2) {
-          this.setData({ showAuthDialog: true, deviceIdForQueryAuth: deviceId })
-          this.data._cardEventType = 'card'
-          return
-        }
-      }
 
       // 其余情况正常响应点击
       this.handleCardCommonTap(e)
-    },
-
-    handleAuthSuccess() {
-      const detail = deviceStore.deviceList.find((d) => d.deviceId === this.data.deviceIdForQueryAuth) as DeviceCard
-
-      if (this.data._cardEventType === 'card') {
-        this.handleCardCommonTap({ detail })
-      } else {
-        this.handleControlTap({ detail })
-      }
-      this.setData({ showAuthDialog: false })
-    },
-
-    handleAuthCancel() {
-      this.setData({ showAuthDialog: false })
     },
 
     // 编辑模式下再点选
@@ -1104,27 +1074,6 @@ ComponentWithComputed({
       // this.setData({
       //   scrollTop: this.data.scrollTop + e.detail.clientRect.top - this.data.scrollViewHeight / 2,
       // })
-    },
-
-    /**
-     * @description 卡片控制事件处理
-     * @param e 设备属性
-     */
-    async queryAuthBeforeControlTap(e: { detail: DeviceCard }) {
-      // 如果是WIFI设备
-      if (e.detail.deviceType === 3) {
-        const { deviceId } = e.detail
-        const res = await queryAuthGetStatus({ projectId: projectStore.currentProjectId, deviceId })
-        // 若设备未确权、待确权，则弹出指引弹窗
-        if (res.result.status === 1 || res.result.status === 2) {
-          this.setData({ showAuthDialog: true, deviceIdForQueryAuth: deviceId })
-          this.data._cardEventType = 'control'
-          return
-        }
-      }
-
-      // 其余情况正常响应控制事件
-      this.handleControlTap(e)
     },
 
     // 卡片点击时，按品类调用对应方法

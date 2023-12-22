@@ -194,7 +194,7 @@
                 device-info="{{item}}"
                 data-item="{{item}}"
                 select="{{item.select}}"
-                bind:controlTap="queryAuthBeforeControlTap"
+                bind:controlTap="handleControlTap"
                 bind:cardTap="handleCardTap"
                 bind:offlineTap="handleShowDeviceOffline"
                 bind:longPress="handleLongpress"
