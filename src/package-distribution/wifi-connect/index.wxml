@@ -168,7 +168,7 @@
   show="{{ isShowWifiTips }}"
   show-cancel-button
   bind:close="toggleWifiTips"
-  confirm-button-color="#488FFF"
+  confirm-button-color="#7cd06a"
   confirm-button-text="立即前往"
   bind:confirm="getWifiList"
   width="654rpx"

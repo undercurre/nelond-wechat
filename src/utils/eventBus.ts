@@ -136,7 +136,7 @@ emitter.on('msgPush', (res) => {
       content: `你已被退出“${projectStore.currentProjectDetail.projectName}”项目`,
       showCancel: false,
       confirmText: '我知道了',
-      confirmColor: '#488FFF',
+      confirmColor: '#7cd06a',
       complete() {
         projectStore.updateProjectInfo()
         goHome()

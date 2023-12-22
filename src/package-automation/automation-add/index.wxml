@@ -38,8 +38,8 @@
           class="absolute top-15 left-16 h-80rpx w-80rpx bg-hex-F5F5F5 rounded-full"
           src="{{sceneImgDir}}/{{sceneIcon}}.png"
         />
-        <view class="absolute bottom-0 left-15 h-32rpx w-80rpx border-1rpx border-solid border-hex-488FFF bg-white leading-28rpx text-center rounded-18rpx">
-          <text class="text-22rpx text-hex-488FFF">编辑</text>
+        <view class="absolute bottom-0 left-15 h-32rpx w-80rpx border-1rpx border-solid border-hex-7cd06a bg-white leading-28rpx text-center rounded-18rpx">
+          <text class="text-22rpx text-hex-7cd06a">编辑</text>
         </view>
       </view>
       <van-field

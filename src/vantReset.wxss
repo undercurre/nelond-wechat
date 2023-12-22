@@ -57,7 +57,7 @@ page {
   --switch-width: 96rpx;
   --switch-node-size: 35rpx;
   --switch-background-color: #c8c7cc;
-  --switch-on-background-color: #488fff;
+  --switch-on-background-color: #7cd06a;
   /* switch end */
 
   /* skeleton start */

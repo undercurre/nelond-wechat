@@ -19,6 +19,7 @@
       <edit-device-form
         device-name="{{deviceInfo.deviceName}}"
         space-id="{{deviceInfo.spaceId}}"
+        space-name="{{deviceInfo.spaceName}}"
         switch-list="{{deviceInfo.switchList}}"
         bind:change="changeDeviceInfo"
       ></edit-device-form>

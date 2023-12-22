@@ -305,7 +305,7 @@
   use-slot
   title="{{offlineDevice.deviceName}}离线"
   show="{{ showDeviceOffline }}"
-  confirm-button-color="#488FFF"
+  confirm-button-color="#7cd06a"
   confirmButtonText="我知道了"
   bind:close="handleCloseDeviceOffline"
 >

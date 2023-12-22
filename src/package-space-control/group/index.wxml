@@ -151,7 +151,7 @@
   use-slot
   title="分组失败"
   show="{{ showGroupFailTips }}"
-  confirmButtonColor="#488FFF"
+  confirmButtonColor="#7cd06a"
   confirmButtonText="我知道了"
   bind:close="handleCloseDialog"
 >

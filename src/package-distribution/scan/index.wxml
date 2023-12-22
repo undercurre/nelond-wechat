@@ -175,7 +175,7 @@
 <van-dialog
   id="van-dialog"
   use-slot="{{isShowNoGatewayTips}}"
-  confirm-button-color="#488FFF"
+  confirm-button-color="#7cd06a"
 >
   <view class="flex flex-col items-center px-40rpx py-48rpx leading-48rpx">
     <text class="w-full block text-28 text-hex-666 pb-24rpx">添加此类网关子设备前，请先在项目中添加智能网关或智慧屏，支持的型号有：</text>

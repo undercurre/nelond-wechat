@@ -407,7 +407,7 @@ ComponentWithComputed({
             content: '请打开手机系统的位置信息开关',
             showCancel: false,
             confirmText: '我知道了',
-            confirmColor: '#488FFF',
+            confirmColor: '#7cd06a',
           })
 
           this.data._listenLocationTimeId = setInterval(() => {

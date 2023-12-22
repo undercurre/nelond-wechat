@@ -37,7 +37,7 @@
         wx:for="{{sceneList}}"
         wx:key="index"
         class="w-128rpx h-128rpx rounded-32rpx bg-hex-f6fafd box-border flex-center"
-        style="border: 4rpx solid {{sceneIcon === item[0]?'#488FFF':'transparent'}};"
+        style="border: 4rpx solid {{sceneIcon === item[0]?'#7cd06a':'transparent'}};"
       >
         <image
           class="w-72rpx h-72rpx m-24rpx"

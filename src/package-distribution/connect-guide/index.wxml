@@ -116,7 +116,7 @@
 <van-dialog
   id="van-dialog"
   use-slot="{{isShowNoGatewayTips}}"
-  confirm-button-color="#488FFF"
+  confirm-button-color="#7cd06a"
 >
   <view class="flex flex-col items-center px-40rpx pb-48rpx leading-48rpx">
     <image

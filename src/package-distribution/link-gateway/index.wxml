@@ -102,7 +102,7 @@
   show="{{ isShowForceBindTips }}"
   show-cancel-button="{{false}}"
   confirm-button-text="退出"
-  confirm-button-color="#488FFF"
+  confirm-button-color="#7cd06a"
   bind:confirm="reScan"
 >
   <view class="text-center pt-20rpx">
@@ -120,7 +120,7 @@
   show="{{ status === 'error' }}"
   show-cancel-button="{{false}}"
   confirm-button-text="我知道了"
-  confirm-button-color="#488FFF"
+  confirm-button-color="#7cd06a"
   bind:confirm="goBack"
 >
   <view class="flex flex-col items-center py-46rpx text-28 text-hex-666 leading-48rpx">

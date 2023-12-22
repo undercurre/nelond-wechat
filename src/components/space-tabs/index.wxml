@@ -14,7 +14,7 @@
       bindtap="handleRoomSelect"
     >
       <text class="{{roomSelect === item.spaceId ? 'text-32rpx text-black-2a' : 'text-28rpx text-hex-555659'}} whitespace-nowrap">{{item.spaceName}}</text>
-      <view class="w-42rpx h-8rpx mt-8rpx bg-hex-488fff rounded-999 {{roomSelect === item.spaceId ? 'opacity-100' : 'opacity-0'}}"></view>
+      <view class="w-42rpx h-8rpx mt-8rpx bg-hex-7cd06a rounded-999 {{roomSelect === item.spaceId ? 'opacity-100' : 'opacity-0'}}"></view>
     </view>
   </view>
 </scroll-view>

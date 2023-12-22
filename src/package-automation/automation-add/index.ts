@@ -1132,7 +1132,7 @@ ComponentWithComputed({
       if (isToast) {
         this.setData(
           {
-            dialogConfirmBtnColor: '#488FFF',
+            dialogConfirmBtnColor: '#7cd06a',
           },
           () => {
             Dialog.confirm({

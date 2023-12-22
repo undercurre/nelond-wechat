@@ -36,7 +36,7 @@ ComponentWithComputed({
     },
     bgColorActive: {
       type: String,
-      value: '#488fff',
+      value: '#7cd06a',
     },
     isOn: {
       type: Boolean,

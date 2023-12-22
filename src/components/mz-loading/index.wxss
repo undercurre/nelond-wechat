@@ -16,7 +16,7 @@
   margin: 0 auto;
   width: 15%;
   height: 15%;
-  background-color: #488fff;
+  background-color: #7cd06a;
   border-radius: 100%;
   animation: sk-circleBounceDelay 1.2s infinite ease-in-out both;
 }

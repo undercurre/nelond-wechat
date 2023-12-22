@@ -4,7 +4,7 @@ import Toast from '@vant/weapp/toast/toast'
 import pageBehaviors from '../../behaviors/pageBehaviors'
 import { getCurrentPageParams, checkInputNameIllegal, Logger } from '../../utils/index'
 import { queryDeviceInfoByDeviceId, editDeviceInfo, batchUpdate } from '../../apis/index'
-import { projectBinding, projectStore, spaceBinding, deviceStore } from '../../store/index'
+import { projectBinding, projectStore, spaceBinding, deviceStore, spaceStore } from '../../store/index'
 import { PRO_TYPE, defaultImgDir } from '../../config/index'
 import cacheData from '../common/cacheData'
 
@@ -21,7 +21,15 @@ ComponentWithComputed({
    */
   data: {
     defaultImgDir,
-    deviceInfo: { deviceId: '', deviceName: '', spaceId: '', proType: '', sn: '', switchList: [] as IAnyObject[] },
+    deviceInfo: {
+      deviceId: '',
+      deviceName: '',
+      spaceId: '',
+      spaceName: '',
+      proType: '',
+      sn: '',
+      switchList: [] as IAnyObject[],
+    },
   },
 
   computed: {
@@ -53,13 +61,16 @@ ComponentWithComputed({
 
       const res = await queryDeviceInfoByDeviceId({ deviceId: pageParams.deviceId }, { loading: true })
 
+      const spaceInfo = spaceStore.allSpaceList.find((item) => item.spaceId === res.result.spaceId) as Space.allSpace
+
       if (res.success) {
         this.setData({
           deviceInfo: {
             deviceId: pageParams.deviceId,
             deviceName: res.result.deviceName,
             sn: res.result.sn,
-            spaceId: res.result.spaceId,
+            spaceId: spaceInfo.spaceId,
+            spaceName: spaceStore.getSpaceFullName(spaceInfo),
             proType: res.result.proType,
             switchList:
               res.result.proType === PRO_TYPE.switch && res.result.switchInfoDTOList
