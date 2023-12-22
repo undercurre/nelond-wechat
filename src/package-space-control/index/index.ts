@@ -101,7 +101,6 @@ ComponentWithComputed({
       (storage.get<number>('statusBarHeight') as number) +
       (storage.get<number>('navigationBarHeight') as number) +
       'px',
-    movableAreaHeight: 236, // 可移动区域高度
     toolboxTop: (storage.get('statusBarHeight') as number) + (storage.get('navigationBarHeight') as number), // 工具栏上边补白
     /** 展示点中离线设备弹窗 */
     showDeviceOffline: false,
@@ -249,14 +248,10 @@ ComponentWithComputed({
       const { controlType } = data
       return controlType && controlType !== PRO_TYPE.bathHeat && controlType !== PRO_TYPE.clothesDryingRack
     },
-  },
-
-  watch: {
-    // 设备数变化时，刷新可移动区域高度
-    'currentSpace.endCount'(value) {
-      this.setData({
-        movableAreaHeight: Math.ceil(value / 4) * 236,
-      })
+    // 设备卡片可移动区域高度
+    movableAreaHeight(data) {
+      const { deviceFlattenList } = data
+      return Math.ceil((deviceFlattenList?.length ?? 4) / 4) * 236
     },
   },
 
