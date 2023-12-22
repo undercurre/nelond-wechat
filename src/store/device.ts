@@ -9,12 +9,21 @@ import { IApiRequestOption } from '../utils'
 
 export const deviceStore = observable({
   /**
-   * 全屋设备
+   * 项目所有设备列表
    */
   allDeviceList: [] as Device.DeviceItem[],
 
+  /**
+   * 当前空间设备列表
+   */
   get deviceList(): Device.DeviceItem[] {
-    const { spaceId = 0 } = spaceStore.currentSpace ?? {}
+    let { spaceId = 0 } = spaceStore.currentSpace ?? {}
+    const children = spaceStore.allSpaceList.filter((s) => s.pid === spaceId)
+    // 如果只有唯一的子空间，即公共空间，则平铺子公共空间设备列表
+    if (children.length === 1) {
+      spaceId = children[0].spaceId
+    }
+
     return this.allDeviceList.filter((device) => device.spaceId === spaceId)
   },
   /**

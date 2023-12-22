@@ -9,7 +9,6 @@
     "dryer-control-popup": "/components/dryer-control-popup/index",
     "before-add-scene-popup": "./components/before-add-scene-popup/index",
     "add-scene-popup": "./components/add-scene-popup/index",
-    "device-auth-dialog": "/components/device-auth-dialog/index",
     "batch-edit": "./components/batch-edit/index",
     "mz-slider": "/components/mz-slider/index"
   }

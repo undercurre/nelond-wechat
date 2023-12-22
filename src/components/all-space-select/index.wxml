@@ -63,7 +63,10 @@
       style="background: linear-gradient(to bottom, #ffffff, #f5f5f5)"
     ></view>
     <view class="h-16rpx w-full bg-hex-f5f5f5"></view>
+
+    <!-- 多层级选择 -->
     <view class="h-900rpx flex">
+      <!-- 第一列 -->
       <view class="flex flex-1 bg-hex-f5f5f5">
         <scroll-view
           class="flex-1"
@@ -89,6 +92,8 @@
           </van-cell>
         </scroll-view>
       </view>
+
+      <!-- 第二列 -->
       <view class="flex flex-1 bg-hex-f5f5f5">
         <scroll-view
           class="flex-1"
@@ -114,6 +119,8 @@
           </van-cell>
         </scroll-view>
       </view>
+
+      <!-- 第三列 -->
       <view
         wx:if="{{firstSpaceId&&secondSpaceId&&utils.isNotEmptyObject(spaceData[firstSpaceId].child[secondSpaceId].child)}}"
         class="flex bg-hex-f5f5f5"
@@ -161,6 +168,8 @@
         </scroll-view>
       </view>
     </view>
+
+    <!-- 底部按钮 -->
     <view
       class="h-32rpx"
       style="background: linear-gradient(to bottom, #f5f5f5, #ffffff)"

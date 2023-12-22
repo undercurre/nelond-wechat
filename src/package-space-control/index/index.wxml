@@ -161,11 +161,6 @@
           wx:if="{{devicePageList.length}}"
           style="height: {{movableAreaHeight}}rpx; width: 600rpx;"
         >
-          <!-- 拖动占位符 -->
-          <!-- <movable-view wx:if="{{isMoving}}" x="{{placeholder.x}}" y="{{placeholder.y}}" direction="all" class="z-1">
-            <view class="w-160rpx h-216rpx rounded-32rpx ml-10rpx mt-16rpx border border-solid border-blue opacity-25"></view>
-          </movable-view> -->
-
           <view
             wx:for="{{devicePageList}}"
             wx:for-item="group"
@@ -199,7 +194,7 @@
                 device-info="{{item}}"
                 data-item="{{item}}"
                 select="{{item.select}}"
-                bind:controlTap="queryAuthBeforeControlTap"
+                bind:controlTap="handleControlTap"
                 bind:cardTap="handleCardTap"
                 bind:offlineTap="handleShowDeviceOffline"
                 bind:longPress="handleLongpress"
@@ -334,10 +329,3 @@
     <view class="h-80rpx"></view>
   </view>
 </van-dialog>
-
-<device-auth-dialog
-  device-id="{{deviceIdForQueryAuth}}"
-  is-show="{{showAuthDialog}}"
-  bind:success="handleAuthSuccess"
-  bind:cancel="handleAuthCancel"
-></device-auth-dialog>
