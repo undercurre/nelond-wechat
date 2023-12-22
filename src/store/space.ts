@@ -10,7 +10,7 @@ export const spaceStore = observable({
    */
   allSpaceList: [] as Space.allSpace[],
   /**
-   * 当前项目的空间列表
+   * 当前项目指定父空间下的子空间列表
    */
   spaceList: [] as Space.SpaceInfo[],
 

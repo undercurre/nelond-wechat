@@ -278,21 +278,33 @@ ComponentWithComputed({
     handleCardTap(e: WechatMiniprogram.CustomEvent) {
       const { spaceId, nodeCount, spaceName, spaceLevel, publicSpaceFlag } = e.detail
 
-      // 有超过2个下级空间，说明有公共空间以外的子空间
-      const hasChildren = nodeCount > 1
+      // 有且仅有1个下级空间，即为公共空间
+      const hasOnlyChildren = nodeCount === 1
 
-      // 有子空间则进入下级空间列表页
-      const link = hasChildren ? '/package-space-control/space-list/index' : '/package-space-control/index/index'
+      // 有多于一个子空间，则进入下级空间列表页
+      const link = nodeCount < 2 ? '/package-space-control/index/index' : '/package-space-control/space-list/index'
+      const childPublicSpace = spaceStore.allSpaceList.find((s) => s.pid === spaceId && s.publicSpaceFlag === 1)
 
       // 更新当前选中空间
+      // 如果已没有子空间，则直接push公共空间
       runInAction(() =>
-        spaceStore.currentSpaceSelect.push({
-          pid: '0',
-          spaceId,
-          spaceLevel,
-          spaceName,
-          publicSpaceFlag,
-        }),
+        spaceStore.currentSpaceSelect.push(
+          hasOnlyChildren
+            ? {
+                pid: spaceId,
+                spaceId: childPublicSpace!.spaceId,
+                spaceLevel: childPublicSpace!.spaceLevel,
+                spaceName, // 仍显示父级名称
+                publicSpaceFlag: 1,
+              }
+            : {
+                pid: '0',
+                spaceId,
+                spaceLevel,
+                spaceName,
+                publicSpaceFlag,
+              },
+        ),
       )
 
       wx.navigateTo({
