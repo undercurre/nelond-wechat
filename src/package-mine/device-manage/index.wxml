@@ -24,6 +24,7 @@
       bind:click="handleSpaceSelect"
       title="所在空间"
       value="{{spaceName}}"
+      border="{{false}}"
     ></van-cell>
   </van-cell-group>
 
@@ -39,15 +40,13 @@
     <text class="text-28rpx text-black-59 mt-48rpx mb-64rpx">暂无设备</text>
   </view>
   <!-- 设备列表 -->
-  <view
-    id="content"
-    class="flex-1"
-  >
+  <view class="flex-1">
     <scroll-view
+      enable-flex
       enhanced
       scroll-y
       show-scrollbar="{{false}}"
-      style="height: {{listHeight}}px;"
+      style="flex-1"
       refresher-triggered="{{isRefresh}}"
       bindrefresherrefresh="onPullDownRefresh"
       refresher-enabled
@@ -102,6 +101,8 @@
 
 <all-space-select
   show="{{showSpaceSelectPopup}}"
+  showCell="{{false}}"
+  showTab="{{false}}"
   cellStyle="background-color:rgba(255,255,255,0.6);border-radius:36rpx;"
   dataType="device"
   bind:confirm="handleSpaceSelectConfirm"
