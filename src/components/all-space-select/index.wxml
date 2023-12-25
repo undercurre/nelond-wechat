@@ -65,7 +65,10 @@
       style="box-shadow: inset 0px 2px 12px 0px rgba(97, 109, 136, 0.15)"
     >
       <!-- 第一列 -->
-      <view class="flex flex-1">
+      <view
+        class="transition-all"
+        style="width:{{firstSpaceId&&secondSpaceId&&utils.isNotEmptyObject(spaceData[firstSpaceId].child[secondSpaceId].child) ?'187.5rpx' :'375rpx'}}"
+      >
         <scroll-view
           class="flex-1"
           scroll-y
@@ -92,7 +95,10 @@
       </view>
 
       <!-- 第二列 -->
-      <view class="flex flex-1 bg-hex-f9f9f9">
+      <view
+        class="bg-hex-f9f9f9 transition-all"
+        style="width:{{firstSpaceId&&secondSpaceId&&utils.isNotEmptyObject(spaceData[firstSpaceId].child[secondSpaceId].child) ?'187.5rpx' :'375rpx'}}"
+      >
         <scroll-view
           class="flex-1"
           scroll-y
@@ -121,7 +127,7 @@
       <!-- 第三列 -->
       <view
         wx:if="{{firstSpaceId&&secondSpaceId&&utils.isNotEmptyObject(spaceData[firstSpaceId].child[secondSpaceId].child)}}"
-        class="flex bg-hex-f5f5f5"
+        class="flex bg-hex-f5f5f5 transition-all"
         style="flex: 2"
       >
         <scroll-view
@@ -148,9 +154,10 @@
                 slot="right-icon"
               />
             </van-cell>
+            <!-- 第四层 -->
             <view
-              wx:if="{{thirdSpaceId === item.spaceId && utils.isNotEmptyObject(item.child)}}"
-              class="bg-hex-f0f0f0 px-32rpx py-16rpx"
+              style="{{thirdSpaceId === item.spaceId && utils.isNotEmptyObject(item.child) ? 'padding: 16rpx 32rpx;' : 'height:0;'}}"
+              class="bg-hex-f0f0f0 transition-all overflow-hidden"
             >
               <view
                 class="h-72rpx my-16rpx rounded-18rpx leading-72rpx text-center text-28rpx {{fourthSpaceId === item.spaceId ? 'text-hex-ffffff checked-background':'bg-hex-a2a2a2'}}"

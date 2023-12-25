@@ -10,7 +10,7 @@ import {
   sceneStore,
   userBinding,
   userStore,
-  spaceStore,
+  // spaceStore,
   // autosceneStore,
 } from '../../store/index'
 import { ComponentWithComputed } from 'miniprogram-computed'
@@ -95,7 +95,7 @@ ComponentWithComputed({
         this.updateList()
       })
       autosceneBinding.store.updateAllRoomAutoSceneList()
-      spaceStore.updateAllSpaceList()
+      // spaceStore.updateAllSpaceList()
     },
     onLoad() {
       //更新tabbar状态
