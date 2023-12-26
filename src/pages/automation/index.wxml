@@ -65,7 +65,7 @@
               scroll-top="{{scrollTop}}"
               item-height="{{180}}"
               generic:item="cell"
-              bind:toSetting="toSetting"
+              bind:toSetting="toEditYijianScene"
               bind:exec="execYijianScene"
               bind:change="handleChange"
               bind:sortend="handleSortEnd"
