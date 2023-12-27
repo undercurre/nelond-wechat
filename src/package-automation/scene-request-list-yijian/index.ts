@@ -66,7 +66,7 @@ ComponentWithComputed({
 
       const sceneData = storage.get('scene_data') as Scene.AddSceneDto | Scene.UpdateSceneDto
 
-      const sceneDeviceActionsFlatten = storage.get('sceneDeviceActionsFlatten') as Device.ActionItem[]
+      const sceneDeviceActionsFlatten = storage.get('sceneDeviceActionsFlatten') as AutoScene.AutoSceneFlattenAction[]
 
       console.log('scene-request-flatten', sceneDeviceActionsFlatten)
 
@@ -99,20 +99,19 @@ ComponentWithComputed({
 
       // 处理发送请求的deviceActions字段数据
       const deviceMap = deviceStore.allRoomDeviceMap
-      // switch需要特殊处理
-      const switchDeviceMap = {} as Record<string, IAnyObject[]>
 
       sceneDeviceActionsFlatten.forEach((action) => {
-        const device = deviceMap[action.uniId]
+        const device = deviceMap[action.uniId] || deviceMap[action.uniId.split(':')[0]]
         console.log('该设备', device)
-
         if (action.proType === PRO_TYPE.switch) {
+          //是开关面板
           const deviceId = action.uniId.split(':')[0]
-          if (switchDeviceMap[deviceId]) {
-            switchDeviceMap[deviceId].push(action.value)
-          } else {
-            switchDeviceMap[deviceId] = [action.value]
-          }
+          sceneData?.deviceActions?.push({
+            controlAction: [action.value],
+            deviceId,
+            deviceType: action.type,
+            proType: action.proType,
+          })
         } else {
           const property = action.value
           const ctrlAction = {} as IAnyObject
@@ -152,16 +151,6 @@ ComponentWithComputed({
           })
         }
       })
-
-      // 再将switch放到要发送的数据里面
-      sceneData?.deviceActions?.push(
-        ...Object.entries(switchDeviceMap).map(([deviceId, actions]) => ({
-          controlAction: actions,
-          deviceId: deviceId,
-          deviceType: deviceMap[deviceId].deviceType,
-          proType: deviceMap[deviceId].proType,
-        })),
-      )
 
       this.setData({
         _sceneData: sceneData,
