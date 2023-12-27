@@ -113,8 +113,6 @@ ComponentWithComputed({
     _cardEventType: '' as 'card' | 'control', // 触发确权前的操作类型
     // 设备卡片列表，二维数组
     devicePageList: [] as DeviceCard[][],
-    /** 待创建面板的设备选择弹出框 */
-    showBeforeAddScenePopup: false,
     scrollTop: 0,
     checkedList: [] as string[], // 已选择设备的id列表
     editSelectList: [] as string[], // 编辑状态下，已勾选的设备id列表
@@ -1141,33 +1139,6 @@ ComponentWithComputed({
 
       // 首页需要更新灯光打开个数
       projectStore.updateCurrentProjectDetail()
-    },
-    handleAddScenePopupClose() {
-      this.setData({
-        showAddScenePopup: false,
-      })
-    },
-    handleAddScenePopupReturn() {
-      this.setData({
-        showAddScenePopup: false,
-        showBeforeAddScenePopup: true,
-      })
-    },
-    handleBeforeAddScenePopupClose() {
-      this.setData({
-        showBeforeAddScenePopup: false,
-      })
-    },
-    handleBeforeAddScenePopupNext() {
-      this.setData({
-        showBeforeAddScenePopup: false,
-        showAddScenePopup: true,
-      })
-    },
-    handleShowAddSceneSuccess() {
-      wx.navigateTo({
-        url: '/package-space-control/scene-request-list/index',
-      })
     },
     /** 点击空位的操作 */
     handleScreenTap() {
