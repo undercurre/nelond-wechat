@@ -52,7 +52,7 @@
 
         <text
           class="grow text-hex-F4F8FF px-16rpx"
-          bind:tap="checkSystemBleSwitch"
+          bind:tap="clickTips"
           >{{tipsText}}</text
         >
 

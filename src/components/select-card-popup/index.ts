@@ -157,6 +157,10 @@ ComponentWithComputed({
       this.triggerEvent('cancel')
     },
     handleRoomSelect(e: { detail: Space.allSpace[] }) {
+      if (!e.detail?.length) {
+        return
+      }
+
       this.setData({
         roomSelect: e.detail[e.detail.length - 1].spaceId,
       })

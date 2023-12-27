@@ -275,21 +275,6 @@
   bind:lightStatusChange="refreshLightStatus"
 ></device-control-popup>
 
-<before-add-scene-popup
-  show="{{showBeforeAddScenePopup}}"
-  bind:close="handleBeforeAddScenePopupClose"
-  bind:next="handleBeforeAddScenePopupNext"
-  bind:delete="handleBeforeAddScenePopupDelete"
-/>
-
-<add-scene-popup
-  actions="{{addSceneActions}}"
-  show="{{showAddScenePopup}}"
-  bind:close="handleAddScenePopupClose"
-  bind:confirm="handleShowAddSceneSuccess"
-  bind:return="handleAddScenePopupReturn"
-/>
-
 <batch-edit
   bind:updateDevice="updateQueue"
   bind:updateList="reloadDeviceListThrottle"
