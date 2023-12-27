@@ -581,20 +581,25 @@ ComponentWithComputed({
           showTimeConditionPopup: true,
         })
       } else if (e.detail === 'touch') {
-        this.setData({
-          opearationType: 'yijian',
-          showEditRoomPopup: true,
-        })
+        if (spaceStore.allSpaceList.length) {
+          this.setData({
+            opearationType: 'yijian',
+            showEditRoomPopup: true,
+          })
+        } else {
+          Toast({ message: '尚未添加空间', zIndex: 9999 })
+          return
+        }
       } else {
-        this.setData({
-          opearationType: 'auto',
-        })
         if (this.data.sensorList.length) {
           this.addSensorPopup()
         } else {
           Toast({ message: '尚未添加传感器', zIndex: 9999 })
           return
         }
+        this.setData({
+          opearationType: 'auto',
+        })
       }
       this.setData({
         showEditConditionPopup: false,
