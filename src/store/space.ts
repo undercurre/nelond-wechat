@@ -2,7 +2,7 @@ import { observable, runInAction } from 'mobx-miniprogram'
 import { queryAllSpaceByProjectId, querySpaceList } from '../apis/index'
 import { deviceStore } from './device'
 import { projectStore } from './project'
-import { IApiRequestOption } from '../utils/index'
+import { IApiRequestOption, Logger } from '../utils/index'
 
 export const spaceStore = observable({
   /**
@@ -29,7 +29,7 @@ export const spaceStore = observable({
         pid: '',
         spaceId: '',
         spaceLevel: 4,
-        spaceName: '找不到空间，请选择',
+        spaceName: '找不到空间，请手动选择',
         publicSpaceFlag: 0,
       } // 当选中空间队列为空时,取第一个叶子节点
 
@@ -43,6 +43,7 @@ export const spaceStore = observable({
 
   // 当前选中空间全路径名称
   get currentSpaceNameFull(): string {
+    Logger.debug('this.currentSpaceSelect', this.currentSpaceSelect)
     return this.getSpaceFullName(this.currentSpace)
   },
 
