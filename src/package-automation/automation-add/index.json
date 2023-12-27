@@ -16,6 +16,7 @@
     "edit-sensor-popup": "./components/edit-sensor-popup/index",
     "van-dialog": "@vant/weapp/dialog/index",
     "cell": "./components/cell/index",
+    "cell-default": "./components/cell-default/index",
     "drag": "/components/drag/index",
     "edit-space-popup": "./components/edit-space-popup/index",
     "all-space-select": "../../components/all-space-select/index"

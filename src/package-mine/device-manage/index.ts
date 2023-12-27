@@ -34,10 +34,13 @@ ComponentWithComputed({
         .filter(
           (d) => (d.proType === PRO_TYPE.switch && !SCREEN_PID.includes(d.productId)) || d.proType !== PRO_TYPE.switch,
         )
+      console.log(
+        'deviceListCompited data.spaceId',
+        data.spaceId,
+        rst.filter((d: Device.DeviceItem) => d.spaceId === data.spaceId),
+      )
       if (data.spaceId === '0') {
         return rst
-      } else if (data.spaceId === '-1') {
-        return rst.filter((d) => !d.onLineStatus)
       } else {
         return rst.filter((d: Device.DeviceItem) => d.spaceId === data.spaceId)
       }
@@ -54,16 +57,17 @@ ComponentWithComputed({
       emitter.off('deviceEdit')
       // 防止boundingClientRect获取错误数据
       setTimeout(() => {
-        wx.createSelectorQuery()
-          .select('#content')
-          .boundingClientRect()
-          .exec((res) => {
-            if (res[0] && res[0].height) {
-              this.setData({
-                listHeight: res[0].height,
-              })
-            }
-          })
+        // wx.createSelectorQuery()
+        //   .select('#content')
+        //   .boundingClientRect()
+        //   .exec((res) => {
+        //     console.log(res)
+        //     if (res[0] && res[0].height) {
+        //       this.setData({
+        //         listHeight: res[0].height,
+        //       })
+        //     }
+        //   })
         wx.createSelectorQuery()
           .select('#selectRoomBtn')
           .boundingClientRect()

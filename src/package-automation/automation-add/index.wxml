@@ -157,6 +157,7 @@
           </view>
 
           <view
+            wx:if="{{!isDefaultYijianScene}}"
             class="px-24rpx py-16rpx absolute right-0 top-0"
             catchtap="handleConditionDelete"
             data-index="{{index}}"
@@ -173,7 +174,7 @@
     <view class="h-48rpx mt-64rpx mb-36rpx mx-48rpx flex justify-between align-center">
       <text class="text-40rpx font-medium text-hex-1a1a1c leading-48rpx">就执行</text>
       <image
-        wx:if="{{sceneDeviceActionsFlatten.length}}"
+        wx:if="{{sceneDeviceActionsFlatten.length && !isDefaultYijianScene}}"
         class="w-48 h-48"
         src="/package-automation/assets/imgs/automation/add.png"
         bindtap="handleActionShow"
@@ -202,11 +203,23 @@
 
     <view wx:else>
       <drag
+        wx:if="{{!isDefaultYijianScene}}"
         id="drag"
         list-data="{{sceneDeviceActionsFlatten}}"
         scroll-top="{{scrollTop}}"
         item-height="{{208}}"
         generic:item="cell"
+        bind:actionEdit="handleAutoSceneActionEdit"
+        bind:actionDelete="handleActionDelete"
+        bind:sortend="handleSortEnd"
+      ></drag>
+      <drag
+        wx:if="{{isDefaultYijianScene}}"
+        id="drag"
+        list-data="{{sceneDeviceActionsFlatten}}"
+        scroll-top="{{scrollTop}}"
+        item-height="{{208}}"
+        generic:item="cell-default"
         bind:actionEdit="handleAutoSceneActionEdit"
         bind:actionDelete="handleActionDelete"
         bind:sortend="handleSortEnd"

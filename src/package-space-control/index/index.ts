@@ -967,7 +967,7 @@ ComponentWithComputed({
 
       wx.navigateTo({
         url: strUtil.getUrlWithParams('/package-automation/automation-add/index', {
-          roomid: spaceStore.currentSpace.spaceId,
+          spaceid: spaceStore.currentSpace.spaceId,
         }),
       })
     },

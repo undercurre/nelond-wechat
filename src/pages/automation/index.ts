@@ -10,7 +10,7 @@ import {
   sceneStore,
   userBinding,
   userStore,
-  spaceStore,
+  // spaceStore,
   // autosceneStore,
 } from '../../store/index'
 import { ComponentWithComputed } from 'miniprogram-computed'
@@ -45,7 +45,7 @@ ComponentWithComputed({
     // autoSceneList: [] as AutoScene.AutoSceneItem[],
 
     urls: {
-      automationEditYijian: '/package-automation/automation-edit-yijian/index',
+      automationEditYijian: '/package-automation/automation-add/index',
       automationLog: '/package-automation/automation-log/index',
       automationAdd: '/package-automation/automation-add/index',
     },
@@ -95,7 +95,7 @@ ComponentWithComputed({
         this.updateList()
       })
       autosceneBinding.store.updateAllRoomAutoSceneList()
-      spaceStore.updateAllSpaceList()
+      // spaceStore.updateAllSpaceList()
     },
     onLoad() {
       //更新tabbar状态
@@ -203,10 +203,14 @@ ComponentWithComputed({
       }
     },
 
-    toSetting(e: { detail: Scene.SceneItem }) {
+    toEditYijianScene(e: { detail: Scene.SceneItem }) {
       if (userStore.isManager) {
         wx.navigateTo({
-          url: strUtil.getUrlWithParams(this.data.urls.automationEditYijian, { yijianSceneId: e.detail.sceneId }),
+          url: strUtil.getUrlWithParams(this.data.urls.automationEditYijian, {
+            yijianSceneId: e.detail.sceneId,
+            selectedSpaceInfo: JSON.stringify(this.data.currentSpaceQueue),
+            spaceid: this.data.currentSpaceId,
+          }),
         })
       } else {
         Toast('您当前身份为访客，无法编辑场景')
@@ -243,13 +247,6 @@ ComponentWithComputed({
 
       wx.navigateTo({
         url: strUtil.getUrlWithParams(this.data.urls.automationAdd, { autosceneid }),
-      })
-    },
-    toEditYijianScene(e: { currentTarget: { dataset: { sceneid: string } } }) {
-      const { sceneid } = e.currentTarget.dataset
-
-      wx.navigateTo({
-        url: strUtil.getUrlWithParams(this.data.urls.automationEditYijian, { yijianSceneId: sceneid }),
       })
     },
     //阻止事件冒泡
