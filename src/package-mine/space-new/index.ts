@@ -21,11 +21,16 @@ ComponentWithComputed({
   },
 
   computed: {
-    spaceLevelList() {
-      return Object.keys(SpaceConfig).map((spaceLevel) => ({
-        ...SpaceConfig[spaceLevel as unknown as Space.SpaceLevel],
-        spaceLevel,
-      }))
+    spaceLevelList(data) {
+      const { spaceLevel } = data.spaceInfo
+      return Object.keys(SpaceConfig).map((key) => {
+        const _level = key as unknown as SpaceLevel
+        return {
+          ...SpaceConfig[_level],
+          spaceLevel: _level,
+          checked: String(spaceLevel) === String(_level),
+        }
+      })
     },
     spaceLevelName(data) {
       const { spaceLevel } = data.spaceInfo
