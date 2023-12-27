@@ -91,8 +91,10 @@ export const spaceStore = observable({
     const res = await querySpaceList(projectStore.currentProjectId, '0', options)
     if (res.success) {
       runInAction(() => {
-        spaceStore.spaceList = res.result
-        console.log('updateSpaceList', spaceStore.spaceList)
+        spaceStore.spaceList = res.result.map((s) => ({
+          ...s,
+          pid: '0',
+        }))
       })
     }
   },

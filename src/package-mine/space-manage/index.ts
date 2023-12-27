@@ -20,7 +20,6 @@ ComponentWithComputed({
     pid: '0',
     plevel: SpaceLevel.undef, // 父层级
     clevel: SpaceLevel.park, // 子层级
-    rootAsGrandpa: false, // 爷爷节点即根节点
     showAddDialog: false,
     isEditMode: false,
     spaceInfo: {
@@ -34,47 +33,51 @@ ComponentWithComputed({
       const { sList, plevel } = data
       return `${SpaceConfig[plevel]?.name ?? '空间'}管理（${sList?.length ?? 0}）`
     },
+    // 如果上级为0，则显示一层的空间列表，否则显示指定的子空间列表
     sList(data) {
       const { plevel, subSpaceList, spaceList } = data
       return plevel === SpaceLevel.undef ? spaceList : subSpaceList
     },
-    showParkAdding(data) {
+    // 显示空间添加按钮（可添加不同层级）
+    showSpaceAdding(data) {
       const { plevel } = data
-      console.log('plevel', plevel)
       return plevel === SpaceLevel.undef
     },
     showChildAdding(data) {
       const { plevel } = data
-      return plevel !== SpaceLevel.undef
+      return plevel === SpaceLevel.park || plevel === SpaceLevel.building || plevel === SpaceLevel.floor
     },
     showParentAdding(data) {
-      const { clevel, rootAsGrandpa } = data
-      return rootAsGrandpa === true && (clevel === SpaceLevel.floor || clevel === SpaceLevel.area)
+      const { plevel, pid } = data
+      return pid !== '0' && plevel !== SpaceLevel.park
     },
     // 父级按钮名称（实际上为爷爷级）
     spaceParentName(data) {
       const plevel = (data.plevel - 1) as SpaceLevel
-      return SpaceConfig[plevel]?.name ?? ''
+      return (SpaceConfig[plevel]?.name ?? '') + '（上级空间）'
     },
     // 子级按钮名称
     spaceChildName(data) {
       const { clevel } = data
-      return SpaceConfig[clevel]?.name ?? ''
+      return (SpaceConfig[clevel]?.name ?? '') + '（下级空间）'
     },
     // 当前添加层级名称
     spaceLevelName(data) {
       const { spaceLevel } = data.spaceInfo
       return SpaceConfig[spaceLevel].name
     },
+    emptyDesc(data) {
+      const { plevel } = data
+      return plevel === SpaceLevel.area ? '当前为末级空间' : '尚未添加空间'
+    },
   },
 
   methods: {
-    onLoad(query: { pid: string; pname: string; plevel: Space.SpaceLevel; rootAsGrandpa: string }) {
+    onLoad(query: { pid: string; pname: string; plevel: Space.SpaceLevel }) {
       if (query.pid) {
         this.setData({
           plevel: Number(query.plevel),
           clevel: Number(query.plevel) + 1,
-          rootAsGrandpa: query.rootAsGrandpa === 'true',
         })
         this.data.pid = query.pid
       }
@@ -85,10 +88,16 @@ ComponentWithComputed({
 
     // 加载本空间列表
     async init() {
+      if (this.data.plevel === SpaceLevel.undef) {
+        return
+      }
       const res = await querySpaceList(projectStore.currentProjectId, this.data.pid)
       if (res.success) {
         this.setData({
-          subSpaceList: res.result,
+          subSpaceList: res.result.map((s) => ({
+            ...s,
+            pid: this.data.pid, // 填充当前父节点
+          })),
         })
       }
     },
@@ -101,7 +110,6 @@ ComponentWithComputed({
         url: strUtil.getUrlWithParams('/package-mine/space-detail/index', {
           spaceId: item.spaceId,
           spaceName: item.spaceName,
-          // roomIcon: item.roomIcon,
         }),
       })
     },
@@ -182,7 +190,7 @@ ComponentWithComputed({
       }
 
       // 如果是区域节点，或者是公共空间，就不用跳转到下一级了
-      if (spaceLevel === SpaceLevel.area || publicSpaceFlag === 1) {
+      if ((spaceLevel === SpaceLevel.area && this.data.pid !== '0') || publicSpaceFlag === 1) {
         return
       }
 
@@ -191,7 +199,6 @@ ComponentWithComputed({
           pid: spaceId,
           pname: spaceName,
           plevel: spaceLevel,
-          rootAsGrandpa: this.data.pid === '0',
         }),
       })
     },

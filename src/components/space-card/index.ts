@@ -1,11 +1,8 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import { spaceBinding } from '../../store/index'
 import { SpaceLevel, SpaceConfig } from '../../config/index'
 
 ComponentWithComputed({
   options: {},
-  behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding] })],
   /**
    * 组件的属性列表
    */
@@ -31,12 +28,6 @@ ComponentWithComputed({
   },
 
   computed: {
-    deviceListComputed(data) {
-      if (data.spaceDeviceList && data.spaceInfo && data.spaceInfo.spaceId) {
-        return data.spaceDeviceList[data.spaceInfo.spaceId] ?? []
-      }
-      return []
-    },
     desc(data) {
       const list = [] as { text: string; type: string }[]
       const { deviceCount, offlineDeviceCount, nodeCount } = (data.spaceInfo || {}) as Space.SpaceInfo
@@ -66,8 +57,12 @@ ComponentWithComputed({
     },
     hasArrow(data) {
       const { isManagePage } = data
-      const { spaceLevel, publicSpaceFlag } = data.spaceInfo
-      return !isManagePage || (spaceLevel !== SpaceLevel.area && publicSpaceFlag === 0)
+      const { spaceLevel, publicSpaceFlag, pid } = data.spaceInfo
+      return (
+        !isManagePage ||
+        (spaceLevel !== SpaceLevel.area && publicSpaceFlag === 0) ||
+        (spaceLevel === SpaceLevel.area && pid === '0')
+      )
     },
   },
 
