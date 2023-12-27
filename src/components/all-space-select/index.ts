@@ -198,8 +198,10 @@ ComponentWithComputed({
               (device) => device.spaceId === space.spaceId && device.proType === PRO_TYPE.sensor,
             ) >= 0
           const notPublicSpace = space.publicSpaceFlag === 0
-          const hasBrotherNode =
-            spaceStore.allSpaceList.findIndex((s) => s.pid === space.pid && s.spaceId !== space.spaceId) >= 0
+          // const hasBrotherNode =
+          //   spaceStore.allSpaceList.findIndex((s) => s.pid === space.pid && s.spaceId !== space.spaceId) >= 0
+          // 所有公共空间都展示
+          const hasBrotherNode = true
           // 下层空间是否存在非公共空间
           // const hasNotPublicSpaceChild =
           //   spaceStore.allSpaceList.findIndex((s) => s.pid === space.spaceId && s.publicSpaceFlag === 0) >= 0
@@ -284,24 +286,36 @@ ComponentWithComputed({
       this.setData({ show: false })
     },
     firstCheck(e: { currentTarget: { dataset: { id: string } } }) {
+      // 下层空间是否存在空间
+      let nextSpaceId = ''
+      const childList = spaceStore.allSpaceList.filter((s) => s.pid === e.currentTarget.dataset.id)
+      if (childList.length === 1 && childList[0].publicSpaceFlag === 1) nextSpaceId = childList[0].spaceId
       this.setData({
         firstSpaceId: e.currentTarget.dataset.id,
-        secondSpaceId: '',
+        secondSpaceId: nextSpaceId,
         thirdSpaceId: '',
         fourthSpaceId: '',
       })
     },
     secondCheck(e: { currentTarget: { dataset: { id: string } } }) {
+      // 下层空间是否存在空间
+      let nextSpaceId = ''
+      const childList = spaceStore.allSpaceList.filter((s) => s.pid === e.currentTarget.dataset.id)
+      if (childList.length === 1 && childList[0].publicSpaceFlag === 1) nextSpaceId = childList[0].spaceId
       this.setData({
         secondSpaceId: e.currentTarget.dataset.id,
-        thirdSpaceId: '',
+        thirdSpaceId: nextSpaceId,
         fourthSpaceId: '',
       })
     },
     thirdCheck(e: { currentTarget: { dataset: { id: string } } }) {
+      // 下层空间是否存在空间
+      let nextSpaceId = ''
+      const childList = spaceStore.allSpaceList.filter((s) => s.pid === e.currentTarget.dataset.id)
+      if (childList.length === 1 && childList[0].publicSpaceFlag === 1) nextSpaceId = childList[0].spaceId
       this.setData({
         thirdSpaceId: e.currentTarget.dataset.id,
-        fourthSpaceId: '',
+        fourthSpaceId: nextSpaceId,
       })
     },
     fourthCheck(e: { currentTarget: { dataset: { id: string } } }) {
