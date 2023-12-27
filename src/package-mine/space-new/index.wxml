@@ -16,12 +16,16 @@
       <view
         wx:for="{{spaceLevelList}}"
         wx:key="item"
-        class="flex items-center justify-center bg-blue rounded-full w-96 h-96"
-        style="background: {{item.color}}"
+        class="flex-center p-10rpx border-8rpx border-solid rounded-full"
         bind:tap="selectLevel"
         data-type="{{item.spaceLevel}}"
+        style="box-shadow: 0 0 20rpx rgba(0, 0, 0, 0.1);border-color: {{item.checked ? item.color: '#e0e0e0'}}"
       >
-        <text class="text-white text-36rpx font-medium">{{item.text}}</text>
+        <text
+          class="flex-center bg-blue rounded-full w-96 h-96 text-white text-36rpx font-medium"
+          style="background: {{item.color}}"
+          >{{item.text}}</text
+        >
       </view>
     </view>
 
