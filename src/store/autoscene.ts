@@ -52,11 +52,11 @@ export const autosceneStore = observable({
   },
   // 日程:用于存储以时间点为条件触发的自动场景
   get scheduleList(): AutoScene.AutoSceneItem[] {
-    return this.allRoomAutoSceneListComputed.filter((scene) => scene.timeConditions[0].time !== '')
+    return this.allRoomAutoSceneListComputed.filter((scene) => scene.timeConditions.length)
   },
   // 自动场景：用于存储以传感器为条件触发的自动场景
   get autoSceneList(): AutoScene.AutoSceneItem[] {
-    return this.allRoomAutoSceneListComputed.filter((scene) => scene.timeConditions[0].time === '')
+    return this.allRoomAutoSceneListComputed.filter((scene) => !scene.timeConditions.length)
   },
   async changeAutoSceneEnabled(data: { sceneId: string; isEnabled: '1' | '0' }) {
     const res = await setAutoSceneEnabled(data)

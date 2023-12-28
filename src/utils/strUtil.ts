@@ -152,13 +152,27 @@ export const strUtil = {
     if (timeConditions && timeConditions.time) {
       return `${timeConditions.time} ${strUtil.transPeriodDesc(timeConditions.timeType, timeConditions.timePeriod)}`
     } else {
-      return `${effectiveTime.startTime.substring(0, 5)}-${strUtil.transEndTimeDesc(
-        effectiveTime.startTime.substring(0, 5),
-        effectiveTime.endTime.substring(0, 5),
-      )} ${strUtil.transPeriodDesc(effectiveTime.timeType, effectiveTime.timePeriod)}`
+      if (strUtil.isAllday(effectiveTime)) {
+        return `${strUtil.transPeriodDesc(effectiveTime.timeType, effectiveTime.timePeriod)}`
+      } else {
+        return `${effectiveTime.startTime.substring(0, 5)}-${strUtil.transEndTimeDesc(
+          effectiveTime.startTime.substring(0, 5),
+          effectiveTime.endTime.substring(0, 5),
+        )} ${strUtil.transPeriodDesc(effectiveTime.timeType, effectiveTime.timePeriod)}`
+      }
     }
   },
-
+  isAllday(effectiveTime: AutoScene.effectiveTime) {
+    const start = effectiveTime.startTime.split(':')
+    const startMin = Number(start[0]) * 60 + Number(start[1])
+    const end = effectiveTime.endTime.split(':')
+    const endMin = Number(end[0]) * 60 + Number(end[1])
+    if (startMin - endMin === 1 || (startMin === 0 && endMin === 1439)) {
+      return true
+    } else {
+      return false
+    }
+  },
   /**
    * 传入秒数，转化为时分秒格式
    * @param seconds
