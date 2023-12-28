@@ -175,7 +175,6 @@
     </view>
 
     <!-- 底部按钮 -->
-    <view class="h-32rpx"></view>
     <view class="flex-center">
       <view class="flex w-686rpx gap-x-46rpx">
         <van-button
