@@ -166,7 +166,7 @@ ComponentWithComputed({
       return data.sceneDeviceActionsFlatten.filter((item) => item.uniId.indexOf('DLY') === -1).length
     },
     okBtnText(data) {
-      return data.autoSceneId ? '确定' : '设置好了'
+      return data.autoSceneId || data.yijianSceneId ? '确定' : '设置好了'
     },
   },
   lifetimes: {

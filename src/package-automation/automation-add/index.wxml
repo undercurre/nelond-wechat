@@ -232,7 +232,7 @@
     style="height: calc(146rpx + env(safe-area-inset-bottom))"
   >
     <van-button
-      wx:if="{{autoSceneId}}"
+      wx:if="{{autoSceneId || yijianSceneId}}"
       custom-class="double-btn"
       custom-style="border: 2rpx solid #A2A2A2;"
       color="transparent"
@@ -242,8 +242,8 @@
     </van-button>
     <van-button
       type="primary"
-      custom-class="{{autoSceneId ? 'double-btn' : 'single-btn'}}"
-      disabled="{{!autoSceneId &&(sceneDeviceActionsLength === 0 || sceneDeviceConditionsFlatten.length === 0)}}"
+      custom-class="{{autoSceneId || yijianSceneId ? 'double-btn' : 'single-btn'}}"
+      disabled="{{!(autoSceneId || yijianSceneId) &&(sceneDeviceActionsLength === 0 || sceneDeviceConditionsFlatten.length === 0)}}"
       bind:click="handleSave"
     >
       <text class="text-36rpx">{{ okBtnText }}</text>
