@@ -1218,7 +1218,7 @@ ComponentWithComputed({
       }
 
       actionItem.value = {
-        // ...actionItem.value,
+        ...actionItem.value,
         ...e.detail,
       }
 
