@@ -91,7 +91,6 @@ ComponentWithComputed({
           pid: this.data.pid,
           pname: this.data.pname,
           plevel: this.data.plevel,
-          rootAsGrandpa: this.data.pid === '0',
         }),
       })
     },

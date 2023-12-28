@@ -157,7 +157,10 @@ export const projectStore = observable({
     }
     if (data[1].success) {
       runInAction(() => {
-        spaceStore.spaceList = data[1].result
+        spaceStore.spaceList = data[1].result.map((s) => ({
+          ...s,
+          pid: '0',
+        }))
       })
     }
     this.saveProjectDate()

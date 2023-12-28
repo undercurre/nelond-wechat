@@ -336,9 +336,9 @@ ComponentWithComputed({
                 })
                 console.log('添加开关面板', tempSceneDeviceActionsFlatten)
               } else {
-                // const modelName = getModelName(device.proType, device.productId)
+                const modelName = getModelName(device.proType, device.productId)
                 const property = {
-                  // ...device.mzgdPropertyDTOList[modelName],
+                  ...device.mzgdPropertyDTOList[modelName],
                   ...action.controlAction[0],
                 }
                 const desc = toPropertyDesc(device.proType, property)
@@ -439,11 +439,13 @@ ComponentWithComputed({
                 }
               })
             } else {
-              // const modelName = getModelName(device.proType, device.productId)
+              const modelName = getModelName(device.proType, device.productId)
               const property = {
-                // ...device.mzgdPropertyDTOList[modelName],
+                ...device.mzgdPropertyDTOList[modelName],
                 ...action.controlAction[0],
               }
+              console.log('propertyproperty', property)
+
               const desc = toPropertyDesc(device.proType, property)
               tempSceneDevicelinkSelectList.push(device.uniId)
               tempSceneDeviceActionsFlatten.push({
@@ -1216,7 +1218,7 @@ ComponentWithComputed({
       }
 
       actionItem.value = {
-        // ...actionItem.value,
+        ...actionItem.value,
         ...e.detail,
       }
 

@@ -58,12 +58,12 @@
       src="{{defaultImgDir}}/no-device.png"
       class="w-300rpx h-300rpx"
     ></image>
-    <text class="text-32rpx text-black-59 mt-44rpx mb-32rpx">尚未添加空间</text>
+    <text class="text-32rpx text-black-59 mt-44rpx mb-32rpx">{{emptyDesc}}</text>
   </view>
 
   <block wx:if="{{isManager}}">
     <van-button
-      wx:if="{{showParkAdding}}"
+      wx:if="{{showSpaceAdding}}"
       class="mx-32rpx"
       size="large"
       type="primary"
@@ -73,7 +73,7 @@
     >
     <van-button
       wx:if="{{showParentAdding}}"
-      class="mx-32rpx mb-32rpx"
+      class="mx-32rpx mt-32rpx"
       size="large"
       type="primary"
       block
@@ -82,7 +82,7 @@
     >
     <van-button
       wx:if="{{showChildAdding}}"
-      class="mx-32rpx"
+      class="mx-32rpx mt-32rpx"
       size="large"
       type="primary"
       block
