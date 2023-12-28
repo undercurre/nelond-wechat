@@ -67,7 +67,7 @@ ComponentWithComputed({
       (storage.get<number>('statusBarHeight') as number) -
       (storage.get<number>('bottomBarHeight') as number) - // IPX
       (storage.get<number>('navigationBarHeight') as number) -
-      80 * (storage.get<number>('divideRpxByPx') as number),
+      128 * (storage.get<number>('divideRpxByPx') as number),
 
     tabIndex: 0, // 当前为一键场景/日程/自动场景
     scrollTop: 0,

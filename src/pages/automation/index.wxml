@@ -57,7 +57,7 @@
         style="height: {{scrollViewHeight}}px;padding-top: {{tabBarHeight}}rpx;"
         class="box-border"
       >
-        <view class="pb-180rpx">
+        <view class="pb-106rpx">
           <view wx:if="{{listData.length}}">
             <drag
               id="yijian"
@@ -95,7 +95,7 @@
         style="height: {{scrollViewHeight}}px;"
         class="box-border"
       >
-        <view class="pb-180rpx">
+        <view class="pb-106rpx">
           <view wx:if="{{scheduleList.length}}">
             <van-cell-group
               wx:for="{{scheduleList}}"
@@ -167,7 +167,7 @@
         style="height: {{scrollViewHeight}}px;"
         class="box-border"
       >
-        <view class="pb-180rpx">
+        <view class="pb-106rpx">
           <view wx:if="{{autoSceneList.length}}">
             <van-cell-group
               wx:for="{{autoSceneList}}"
