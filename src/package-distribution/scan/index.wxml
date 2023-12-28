@@ -15,6 +15,7 @@
     class="absolute"
     background="transparent"
     leftArrow="{{true}}"
+    showGoHome="hide"
     left-icon="/package-distribution/assets/scan/back.png"
     bind:leftTap="goBack"
   ></nav-bar>

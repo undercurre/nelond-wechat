@@ -10,7 +10,6 @@
   <nav-bar
     title="编辑场景"
     left-arrow
-    show-go-home
     bind:leftTap="handleExit"
   ></nav-bar>
 

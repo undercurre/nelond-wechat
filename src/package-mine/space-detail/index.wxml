@@ -4,7 +4,6 @@
     leftArrow="{{true}}"
     bind:leftTap="goBack"
     title="{{spaceInfo.spaceName}}"
-    show-go-home
   ></nav-bar>
 
   <view class="grow">

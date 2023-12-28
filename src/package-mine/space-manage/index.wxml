@@ -2,7 +2,6 @@
   <nav-bar
     background="transparent"
     leftArrow="{{true}}"
-    show-go-home
     bind:leftTap="goBack"
     title="空间管理"
   ></nav-bar>

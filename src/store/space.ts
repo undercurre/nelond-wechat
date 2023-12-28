@@ -2,7 +2,7 @@ import { observable, runInAction } from 'mobx-miniprogram'
 import { queryAllSpaceByProjectId, querySpaceList } from '../apis/index'
 import { deviceStore } from './device'
 import { projectStore } from './project'
-import { IApiRequestOption, Logger } from '../utils/index'
+import { IApiRequestOption } from '../utils/index'
 
 export const spaceStore = observable({
   /**
@@ -43,7 +43,6 @@ export const spaceStore = observable({
 
   // 当前选中空间全路径名称
   get currentSpaceNameFull(): string {
-    Logger.debug('this.currentSpaceSelect', this.currentSpaceSelect)
     return this.getSpaceFullName(this.currentSpace)
   },
 
