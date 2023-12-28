@@ -2,7 +2,6 @@
   <nav-bar
     background="#eef7f4"
     leftArrow="{{true}}"
-    show-go-home
     bind:leftTap="goBack"
     title="项目成员"
   ></nav-bar>

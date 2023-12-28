@@ -8,7 +8,6 @@
   <nav-bar
     title="{{deviceInfo.deviceName}}"
     left-arrow
-    show-go-home
     bind:leftTap="goBack"
   ></nav-bar>
 

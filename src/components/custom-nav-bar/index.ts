@@ -33,8 +33,8 @@ Component({
       value: false,
     },
     showGoHome: {
-      type: Boolean,
-      value: false,
+      type: String,
+      value: 'auto',
     },
   },
 
@@ -53,6 +53,17 @@ Component({
       (storage.get<number>('statusBarHeight') as number) +
       (storage.get<number>('navigationBarHeight') as number) +
       'px',
+    routerLength: 0,
+  },
+
+  lifetimes: {
+    attached() {
+      const pages = getCurrentPages()
+
+      this.setData({
+        routerLength: pages.length,
+      })
+    },
   },
 
   /**

@@ -3,7 +3,7 @@ import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
 import Dialog from '@vant/weapp/dialog/dialog'
 import dayjs from 'dayjs'
-import { deviceBinding } from '../../store/index'
+import { deviceBinding, spaceStore } from '../../store/index'
 import { bleDevicesBinding, bleDevicesStore } from '../store/bleDeviceStore'
 import pageBehaviors from '../../behaviors/pageBehaviors'
 import {
@@ -82,6 +82,8 @@ ComponentWithComputed({
 
   lifetimes: {
     async ready() {
+      Logger.debug('this.currentSpaceSelect', spaceStore.currentSpaceSelect, 'currentSpace', spaceStore.currentSpace)
+
       bleDevicesBinding.store.reset()
 
       const params = wx.getEnterOptionsSync()

@@ -4,7 +4,6 @@
   class="fixed left-0 top-0 w-100vw h-50vh bg-z-index"
   style="background: linear-gradient(180deg, rgba(87, 255, 105, 0.1) 0%, rgba(87, 255, 105, 0) 100%)"
 ></view>
-
 <!-- 遮住顶部 -->
 <view
   style="height: {{navigationBarAndStatusBarHeight}};"
@@ -16,16 +15,13 @@
     style="background: linear-gradient(180deg, rgba(87, 255, 105, 0.1) 0%, rgba(87, 255, 105, 0) 100%)"
   ></view>
 </view>
-
 <!-- 标题 -->
 <nav-bar
   title="场景"
   z-index="{{113}}"
   left-arrow
-  show-go-home
   bind:leftTap="goBack"
 ></nav-bar>
-
 <!-- 没有场景时 -->
 <view
   wx:if="{{listData.length === 0}}"
@@ -38,7 +34,6 @@
   ></image>
   <text class="text-black-59 text-28rpx mt-48rpx">目前无场景</text>
 </view>
-
 <!-- 有场景 -->
 <view
   class="mt-32rpx ml-48rpx"
@@ -46,7 +41,6 @@
 >
   <text class="text-hex-555659 text-28rpx">长按可调整首页顺序</text>
 </view>
-
 <view class="h-32rpx"></view>
 <drag
   wx:if="{{listData.length > 0}}"
@@ -62,5 +56,4 @@
   bind:scroll="handleScroll"
 ></drag>
 <view class="h-64rpx"></view>
-
 <van-toast id="van-toast" />
