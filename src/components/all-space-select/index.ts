@@ -38,6 +38,9 @@ ComponentWithComputed({
     dataType: {
       type: String,
       value: '',
+      observer() {
+        this.initTree()
+      },
     },
     /**
      * 仅开启dataType有效
@@ -47,6 +50,9 @@ ComponentWithComputed({
     filter: {
       type: Boolean,
       value: false,
+      observer() {
+        this.initTree()
+      },
     },
     // 初始化自动选中首个空间
     init: {
@@ -95,6 +101,7 @@ ComponentWithComputed({
    */
   data: {
     spaceData: {} as { [key: string]: Space.SpaceTreeNode },
+    _filterSpaceList: [] as Space.allSpace[], //过滤后的全屋空间平铺列表
     firstSpaceId: '',
     secondSpaceId: '',
     thirdSpaceId: '',
@@ -229,7 +236,9 @@ ComponentWithComputed({
             if (notPublicSpace || (!notPublicSpace && hasBrotherNode)) spaceList.push(space)
           }
         })
-
+      this.setData({
+        _filterSpaceList: spaceList,
+      })
       const result = this.buildTree(spaceList, '0')
       this.setData({ spaceData: result }, () => {
         if (this.data.init && !this.data.targetSpaceId) {
@@ -288,7 +297,7 @@ ComponentWithComputed({
     firstCheck(e: { currentTarget: { dataset: { id: string } } }) {
       // 下层空间是否存在空间
       let nextSpaceId = ''
-      const childList = spaceStore.allSpaceList.filter((s) => s.pid === e.currentTarget.dataset.id)
+      const childList = this.data._filterSpaceList.filter((s) => s.pid === e.currentTarget.dataset.id)
       if (childList.length === 1 && childList[0].publicSpaceFlag === 1) nextSpaceId = childList[0].spaceId
       this.setData({
         firstSpaceId: e.currentTarget.dataset.id,
@@ -300,7 +309,7 @@ ComponentWithComputed({
     secondCheck(e: { currentTarget: { dataset: { id: string } } }) {
       // 下层空间是否存在空间
       let nextSpaceId = ''
-      const childList = spaceStore.allSpaceList.filter((s) => s.pid === e.currentTarget.dataset.id)
+      const childList = this.data._filterSpaceList.filter((s) => s.pid === e.currentTarget.dataset.id)
       if (childList.length === 1 && childList[0].publicSpaceFlag === 1) nextSpaceId = childList[0].spaceId
       this.setData({
         secondSpaceId: e.currentTarget.dataset.id,
@@ -311,7 +320,7 @@ ComponentWithComputed({
     thirdCheck(e: { currentTarget: { dataset: { id: string } } }) {
       // 下层空间是否存在空间
       let nextSpaceId = ''
-      const childList = spaceStore.allSpaceList.filter((s) => s.pid === e.currentTarget.dataset.id)
+      const childList = this.data._filterSpaceList.filter((s) => s.pid === e.currentTarget.dataset.id)
       if (childList.length === 1 && childList[0].publicSpaceFlag === 1) nextSpaceId = childList[0].spaceId
       this.setData({
         thirdSpaceId: e.currentTarget.dataset.id,
