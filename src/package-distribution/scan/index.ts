@@ -82,7 +82,7 @@ ComponentWithComputed({
 
   lifetimes: {
     async ready() {
-      Logger.debug('this.currentSpaceSelect', spaceStore.currentSpaceSelect, 'currentSpace', spaceStore.currentSpace)
+      Logger.debug('currentSpace', spaceStore.currentSpace, spaceStore.currentSpaceNameFull)
 
       bleDevicesBinding.store.reset()
 
