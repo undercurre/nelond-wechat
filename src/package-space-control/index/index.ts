@@ -336,27 +336,12 @@ ComponentWithComputed({
           }
 
           this.updateQueue(device)
+
+          // 子设备状态变更，刷新全空间灯光可控状态
+          this.refreshLightStatus()
+
           return
         }
-        // 额外的更新设备在线状态
-        // FIXME 面板按键未处理
-        // TODO 一般使用device_online_status即可，暂时删除，如有遗漏需要云端支持，以减少信息的数量
-        // else if (
-        //   e.result.eventType === WSEventType.screen_online_status_sub_device ||
-        //   e.result.eventType === WSEventType.screen_online_status_wifi_device
-        // ) {
-        //   const { deviceId, status } = e.result.eventData
-        //   const deviceInRoom = deviceStore.deviceMap[deviceId]
-        //   if (!deviceInRoom || deviceInRoom.onLineStatus === status) {
-        //     return
-        //   }
-        //   const modelName = getModelName(deviceInRoom.proType, deviceInRoom.productId)
-        //   const device = {} as DeviceCard
-        //   device.deviceId = deviceId
-        //   device.uniId = modelName ? `${deviceId}:${modelName}` : deviceId
-        //   device.onLineStatus = status
-        //   this.updateQueue(device)
-        // }
         // 节流更新本地数据
         else if (
           [
@@ -382,15 +367,7 @@ ComponentWithComputed({
         }
       })
 
-      // 子设备状态变更，刷新全空间灯光可控状态
-      emitter.on('msgPush', () => {
-        const hasLightOn = deviceStore.deviceList.some((d) => d.mzgdPropertyDTOList?.light?.power === 1)
-        this.setData({
-          'spaceLight.power': hasLightOn ? 1 : 0,
-        })
-      })
-
-      console.log('onShow', values(spaceStore.currentSpaceSelect))
+      console.log('[onShow]currentSpaceSelect', values(spaceStore.currentSpaceSelect))
     },
 
     // 响应控制弹窗中单灯/灯组的控制变化，直接按本地设备列表数值以及设置值，刷新空间灯的状态
@@ -398,7 +375,9 @@ ComponentWithComputed({
       console.log('本地更新空间灯状态', deviceStore.lightStatusInRoom)
 
       const { brightness, colorTemperature } = deviceStore.lightStatusInRoom
+      const hasLightOn = deviceStore.deviceList.some((d) => d.mzgdPropertyDTOList?.light?.power === 1)
       this.setData({
+        'spaceLight.power': hasLightOn ? 1 : 0,
         'spaceLight.brightness': brightness,
         'spaceLight.colorTemperature': colorTemperature,
       })
