@@ -9,10 +9,7 @@
   <view class="w-750rpx flex justify-between pt-28rpx z-112">
     <!-- 副标题信息 -->
     <view class="ml-24rpx">
-      <view
-        class="bg-hex-ffffff_42 w-250rpx h-80rpx rounded-40rpx flex items-center flex-center"
-        id="all-off"
-      >
+      <view class="bg-hex-ffffff_42 h-80rpx rounded-40rpx px-10rpx flex items-center flex-center">
         <text class="text-28rpx font-semibold">{{subTitle}}</text>
       </view>
     </view>

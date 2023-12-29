@@ -18,6 +18,7 @@ ComponentWithComputed({
     defaultImgDir,
     subSpaceList: [] as Space.SpaceInfo[],
     pid: '0',
+    pname: '', // 父空间名称
     plevel: SpaceLevel.undef, // 父层级
     clevel: SpaceLevel.park, // 子层级
     showAddDialog: false,
@@ -30,8 +31,8 @@ ComponentWithComputed({
 
   computed: {
     subTitle(data) {
-      const { sList, plevel } = data
-      return `${SpaceConfig[plevel]?.name ?? '空间'}管理（${sList?.length ?? 0}）`
+      const { sList, pname } = data
+      return `${pname.slice(0, 8) || '空间管理'}（${sList?.length ?? 0}）`
     },
     // 如果上级为0，则显示一层的空间列表，否则显示指定的子空间列表
     sList(data) {
@@ -81,6 +82,7 @@ ComponentWithComputed({
     onLoad(query: { pid: string; pname: string; plevel: Space.SpaceLevel }) {
       if (query.pid) {
         this.setData({
+          pname: query.pname,
           plevel: Number(query.plevel),
           clevel: Number(query.plevel) + 1,
         })
