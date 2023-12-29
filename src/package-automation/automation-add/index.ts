@@ -319,7 +319,7 @@ ComponentWithComputed({
               if (device.proType === PRO_TYPE.switch) {
                 //是开关面板
                 const power = action.controlAction[0].power
-                const desc = toPropertyDesc(device.proType, action.controlAction[0])
+                const desc = toPropertyDesc(device.proType, device.productId, action.controlAction[0])
                 tempSceneDeviceActionsFlatten.push({
                   uniId: device.uniId,
                   name: `${device.switchInfoDTOList[0].switchName} | ${device.deviceName}`,
@@ -331,6 +331,7 @@ ComponentWithComputed({
                     modelName: action.controlAction[0].modelName,
                     power,
                   },
+                  productId: device.productId,
                   orderNum: 0,
                   dragId: device.uniId + Math.floor(Math.random() * 1001),
                 })
@@ -341,7 +342,7 @@ ComponentWithComputed({
                   ...device.mzgdPropertyDTOList[modelName],
                   ...action.controlAction[0],
                 }
-                const desc = toPropertyDesc(device.proType, property)
+                const desc = toPropertyDesc(device.proType, device.productId, property)
                 tempSceneDeviceActionsFlatten.push({
                   uniId: device.uniId,
                   name: device.deviceName,
@@ -353,6 +354,7 @@ ComponentWithComputed({
                     ...property,
                     modelName: getModelName(device.proType, device.productId),
                   },
+                  productId: device.productId,
                   orderNum: 0,
                   dragId: device.uniId + Math.floor(Math.random() * 1001),
                 })
@@ -415,7 +417,7 @@ ComponentWithComputed({
                 if (device) {
                   console.log('找到选项', device)
                   const power = action.controlAction[switchIndex].power
-                  const desc = toPropertyDesc(device.proType, action.controlAction[switchIndex])
+                  const desc = toPropertyDesc(device.proType, device.productId, action.controlAction[switchIndex])
                   tempSceneDevicelinkSelectList.push(device.uniId)
                   tempSceneDeviceActionsFlatten.push({
                     uniId: device.uniId,
@@ -428,6 +430,7 @@ ComponentWithComputed({
                       modelName: action.controlAction[switchIndex].modelName,
                       power,
                     },
+                    productId: device.productId,
                     orderNum: 0,
                     dragId: device.uniId + Math.floor(Math.random() * 1001),
                   })
@@ -446,7 +449,7 @@ ComponentWithComputed({
               }
               console.log('propertyproperty', property)
 
-              const desc = toPropertyDesc(device.proType, property)
+              const desc = toPropertyDesc(device.proType, device.productId, property)
               tempSceneDevicelinkSelectList.push(device.uniId)
               tempSceneDeviceActionsFlatten.push({
                 uniId: device.uniId,
@@ -459,6 +462,7 @@ ComponentWithComputed({
                   ...property,
                   modelName: getModelName(device.proType, device.productId),
                 },
+                productId: device.productId,
                 orderNum: 0,
                 dragId: device.uniId + Math.floor(Math.random() * 1001),
               })
@@ -931,7 +935,7 @@ ComponentWithComputed({
           const name = isSwitch ? `${device.switchInfoDTOList[0].switchName} | ${device.deviceName}` : device.deviceName
           const modelName = isSwitch ? device.uniId.split(':')[1] : getModelName(device.proType, device.productId)
           const pic = isSwitch ? device.switchInfoDTOList[0].pic : device.pic
-          const desc = toPropertyDesc(device.proType, device.property!)
+          const desc = toPropertyDesc(device.proType, device.productId, device.property!)
 
           tempSceneDeviceActionsFlatten.push({
             uniId: device.uniId,
@@ -940,6 +944,7 @@ ComponentWithComputed({
             desc,
             pic,
             proType: device.proType,
+            productId: device.productId,
             value: {
               modelName,
               ...device.property,
@@ -1024,7 +1029,7 @@ ComponentWithComputed({
         sceneDeviceConditionsFlatten.push({
           uniId: item.uniId,
           name: item.deviceName,
-          desc: toPropertyDesc(item.proType, item.property!),
+          desc: toPropertyDesc(item.proType, item.productId, item.property!),
           pic: item.pic,
           productId: item.productId,
           property: item.property!,
@@ -1084,7 +1089,7 @@ ComponentWithComputed({
       conditionItem.property = {
         ...e.detail,
       }
-      conditionItem.desc = toPropertyDesc(conditionItem.proType!, conditionItem.property)
+      conditionItem.desc = toPropertyDesc(conditionItem.proType!, conditionItem.productId, conditionItem.property)
       listItem.property = {
         ...e.detail,
       }
@@ -1222,7 +1227,7 @@ ComponentWithComputed({
         ...e.detail,
       }
 
-      actionItem.desc = toPropertyDesc(actionItem.proType as string, actionItem.value)
+      actionItem.desc = toPropertyDesc(actionItem.proType as string, actionItem.productId as string, actionItem.value)
 
       this.setData(
         {

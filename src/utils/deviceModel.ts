@@ -1,4 +1,4 @@
-import { PRO_TYPE } from '../config/index'
+import { PRO_TYPE, NO_COLOR_TEMP } from '../config/index'
 import { isNullOrUnDef } from './index'
 
 /**
@@ -89,14 +89,14 @@ export function toWifiProperty(proType: string, properties: IAnyObject) {
  * @param proType
  * @param property 设备属性
  */
-export function toPropertyDesc(proType: string, property: IAnyObject) {
+export function toPropertyDesc(proType: string, productId: string, property: IAnyObject) {
   const descList = [] as string[]
   if (proType === PRO_TYPE.light) {
     !isNullOrUnDef(property.power) && descList.push(property.power ? '打开' : '关闭')
     if (property.power === 1) {
       !isNullOrUnDef(property.brightness) && descList.push(`亮度${property.brightness}%`)
 
-      if (!isNullOrUnDef(property.colorTemperature)) {
+      if (!isNullOrUnDef(property.colorTemperature) && !NO_COLOR_TEMP.includes(productId)) {
         const { maxColorTemp, minColorTemp } = property.colorTempRange || property
         const color = (property.colorTemperature / 100) * (maxColorTemp - minColorTemp) + minColorTemp
         descList.push(`色温${color}K`)
