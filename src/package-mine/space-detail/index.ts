@@ -15,7 +15,7 @@ ComponentWithComputed({
    * 页面的初始数据
    */
   data: {
-    isEdit: false,
+    showAddDialog: false,
     editType: '',
     spaceInfo: {
       spaceId: '',
@@ -48,10 +48,28 @@ ComponentWithComputed({
       }
 
       this.setData({
-        isEdit: true,
+        showAddDialog: true,
       })
     },
     async toUpdateSpace(e: { detail: string }) {
+      if (!e.detail) {
+        Toast({
+          message: '空间名称不能为空',
+          zIndex: 99999,
+        })
+        return
+      }
+      if (e.detail.length > 8) {
+        Toast({
+          message: '空间名称不能超过8个字符',
+          zIndex: 99999,
+        })
+        return
+      }
+      this.setData({
+        showAddDialog: false,
+      })
+
       this.setData({
         'spaceInfo.spaceName': e.detail,
       })
@@ -59,9 +77,6 @@ ComponentWithComputed({
 
     async saveSpaceInfo() {
       const { spaceId, spaceName } = this.data.spaceInfo
-      if (!spaceName) {
-        return
-      }
       const res = await updateSpace({
         spaceId,
         spaceName,

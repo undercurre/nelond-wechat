@@ -18,6 +18,7 @@ ComponentWithComputed({
     defaultImgDir,
     subSpaceList: [] as Space.SpaceInfo[],
     pid: '0',
+    pname: '', // 父空间名称
     plevel: SpaceLevel.undef, // 父层级
     clevel: SpaceLevel.park, // 子层级
     showAddDialog: false,
@@ -30,8 +31,8 @@ ComponentWithComputed({
 
   computed: {
     subTitle(data) {
-      const { sList, plevel } = data
-      return `${SpaceConfig[plevel]?.name ?? '空间'}管理（${sList?.length ?? 0}）`
+      const { sList, pname } = data
+      return `${pname.slice(0, 8) || '空间管理'}（${sList?.length ?? 0}）`
     },
     // 如果上级为0，则显示一层的空间列表，否则显示指定的子空间列表
     sList(data) {
@@ -70,12 +71,18 @@ ComponentWithComputed({
       const { plevel } = data
       return plevel === SpaceLevel.area ? '当前为末级空间' : '尚未添加空间'
     },
+    // 显示编辑按钮：管理角色；或者子空间数大于1，即拥有除公共空间外的节点
+    showEditBtn(data) {
+      const { isManager, sList } = data
+      return isManager && sList?.length > 1
+    },
   },
 
   methods: {
     onLoad(query: { pid: string; pname: string; plevel: Space.SpaceLevel }) {
       if (query.pid) {
         this.setData({
+          pname: query.pname,
           plevel: Number(query.plevel),
           clevel: Number(query.plevel) + 1,
         })
@@ -147,8 +154,24 @@ ComponentWithComputed({
     async toAddSpace(e: { detail: string }) {
       const spaceName = e.detail
       if (!spaceName) {
+        Toast({
+          message: '空间名称不能为空',
+          zIndex: 99999,
+        })
         return
       }
+      if (spaceName.length > 8) {
+        Toast({
+          message: '空间名称不能超过8个字符',
+          zIndex: 99999,
+        })
+        return
+      }
+
+      this.setData({
+        showAddDialog: false,
+      })
+
       const { spaceLevel } = this.data.spaceInfo
       const isCreateChild = spaceLevel === this.data.clevel
       const res = await addSpace({
@@ -176,6 +199,10 @@ ComponentWithComputed({
 
       // 如果是编辑模式
       if (this.data.isEditMode) {
+        // 如果是公共空间，则不能编辑
+        if (publicSpaceFlag === 1) {
+          return
+        }
         wx.navigateTo({
           url: strUtil.getUrlWithParams('/package-mine/space-detail/index', {
             spaceId,

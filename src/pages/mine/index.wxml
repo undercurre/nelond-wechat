@@ -28,7 +28,7 @@
       class="flex flex-col pl-40rpx grow"
       bindtap="handleUserInfoTap"
     >
-      <text class="text-40 text-hex-000 font-medium">{{isLogin?userInfo.nickName:'未登录'}}</text>
+      <text class="text-40 text-hex-000 font-medium">{{isLogin?userInfo.userName:'未登录'}}</text>
     </view>
   </view>
 

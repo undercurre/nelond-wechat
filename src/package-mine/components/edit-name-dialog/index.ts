@@ -22,6 +22,13 @@ Component({
     show: {
       type: Boolean,
       value: false,
+      observer(s) {
+        if (s) {
+          this.setData({
+            innerValue: this.data.value,
+          })
+        }
+      },
     },
     // 输入框占位文本
     placeholder: {
@@ -35,6 +42,10 @@ Component({
    */
   data: {
     innerValue: '',
+    // 拦截确认关闭操作
+    beforeClose() {
+      return
+    },
   },
 
   /**
@@ -51,11 +62,9 @@ Component({
         show: false,
       })
     },
+
     onConfirm() {
       this.triggerEvent('confirm', this.data.innerValue)
-      this.setData({
-        show: false,
-      })
     },
   },
 })

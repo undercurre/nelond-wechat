@@ -28,6 +28,10 @@ ComponentWithComputed({
   },
 
   computed: {
+    title(data) {
+      const { spaceName } = data.spaceInfo
+      return spaceName.length > 8 ? spaceName.slice(0, 6) + '...' + spaceName.slice(-2) : spaceName
+    },
     desc(data) {
       const list = [] as { text: string; type: string }[]
       const { deviceCount, offlineDeviceCount, nodeCount } = (data.spaceInfo || {}) as Space.SpaceInfo
@@ -54,6 +58,10 @@ ComponentWithComputed({
     icon(data) {
       const spaceLevel = (data.spaceInfo?.spaceLevel ?? 1) as Space.SpaceLevel
       return SpaceConfig[spaceLevel]
+    },
+    showEditIcon(data) {
+      const { isEditMode, spaceInfo } = data
+      return isEditMode && spaceInfo.publicSpaceFlag === 0
     },
     hasArrow(data) {
       const { isManagePage } = data

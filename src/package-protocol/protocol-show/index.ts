@@ -32,7 +32,7 @@ Component({
       console.log(e)
       if (e.protocal === 'privacyPolicy') {
         this.setData({
-          title: '美的照明隐私协议',
+          title: '美的商照隐私协议',
           type: 'doc',
           doc: privacyPolicy,
         })
@@ -52,7 +52,7 @@ Component({
         })
       } else if (e.protocal === 'authList') {
         this.setData({
-          title: '美的照明权限列表',
+          title: '美的商照权限列表',
           type: 'img',
           url: '/package-protocol/assets/img/authList.png',
           width: '141vh',

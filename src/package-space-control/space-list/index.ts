@@ -274,42 +274,30 @@ ComponentWithComputed({
     },
 
     // 点击卡片
-    handleCardTap(e: WechatMiniprogram.CustomEvent) {
+    handleCardTap(e: { detail: Space.SpaceInfo }) {
       const { spaceId, nodeCount, spaceName, spaceLevel, publicSpaceFlag } = e.detail
 
-      // 有且仅有1个下级空间，即为公共空间
-      const hasOnlyChildren = nodeCount === 1
-
-      // 有多于一个子空间，则进入下级空间列表页
+      // 只少于等于一个子空间，则进入设备列表页；否则进入下级空间列表页
       const link = nodeCount < 2 ? '/package-space-control/index/index' : '/package-space-control/space-list/index'
       const childPublicSpace = spaceStore.allSpaceList.find((s) => s.pid === spaceId && s.publicSpaceFlag === 1)
 
       // 更新当前选中空间
-      // 如果已没有子空间，则直接push公共空间
-      runInAction(() =>
-        spaceStore.currentSpaceSelect.push(
-          hasOnlyChildren
-            ? {
-                pid: spaceId,
-                spaceId: childPublicSpace!.spaceId,
-                spaceLevel: childPublicSpace!.spaceLevel,
-                spaceName, // 仍显示父级名称
-                publicSpaceFlag: 1,
-              }
-            : {
-                pid: '0',
-                spaceId,
-                spaceLevel,
-                spaceName,
-                publicSpaceFlag,
-              },
-        ),
-      )
+      const hasOnlyChildren = nodeCount === 1 // 有且仅有1个下级空间，即为公共空间
+      runInAction(() => {
+        spaceStore.currentSpaceSelect.push({
+          ...e.detail,
+          pid: this.data.pid,
+        })
+        // 如果只有一个子空间，则同时push公共空间
+        if (hasOnlyChildren) {
+          spaceStore.currentSpaceSelect.push(childPublicSpace!)
+        }
+      })
 
       wx.navigateTo({
         url: strUtil.getUrlWithParams(link, {
           pid: spaceId,
-          pname: spaceName,
+          pname: publicSpaceFlag === 1 ? this.data.pname : spaceName,
           plevel: spaceLevel,
         }),
       })

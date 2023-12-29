@@ -58,6 +58,14 @@ ComponentWithComputed({
     },
     async toAddSpace() {
       const { spaceLevel, spaceName } = this.data.spaceInfo
+      if (spaceName.length > 8) {
+        Toast({
+          message: '空间名称不能超过8个字符',
+          zIndex: 99999,
+        })
+        return
+      }
+
       const res = await addSpace({
         projectId: projectStore.currentProjectId,
         pid: '0',

@@ -54,6 +54,6 @@
   value="{{ spaceInfo.spaceName }}"
   placeholder="请输入{{spaceLevelName}}名称"
   title="修改{{spaceLevelName}}名称"
-  show="{{isEdit}}"
+  show="{{showAddDialog}}"
   bind:confirm="toUpdateSpace"
 ></edit-name-dialog>

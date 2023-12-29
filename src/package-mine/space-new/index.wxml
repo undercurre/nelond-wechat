@@ -40,6 +40,7 @@
       bind:clear="changeName"
       bind:change="changeName"
       border="{{false}}"
+      maxlength="{{8}}"
     ></van-field>
   </view>
 

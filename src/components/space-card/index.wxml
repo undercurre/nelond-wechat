@@ -11,7 +11,7 @@
       <text class="text-white text-36rpx font-medium">{{icon.text}}</text>
     </view>
     <view class="flex flex-1 flex-col ml-24rpx">
-      <text class="text-36rpx font-medium">{{spaceInfo.spaceName}}</text>
+      <text class="text-36rpx font-medium">{{title}}</text>
       <view class="flex flex-1 flex-row mt-4rpx">
         <text
           wx:for="{{desc}}"
@@ -22,7 +22,7 @@
       </view>
     </view>
     <image
-      wx:if="{{isEditMode}}"
+      wx:if="{{showEditIcon}}"
       src="/assets/img/base/edit.png"
       class="w-48rpx h-48rpx mr-32rpx"
     ></image>

@@ -15,11 +15,11 @@ Component({
   data: {
     list: [
       {
-        title: '美的照明隐私协议',
+        title: '美的商照隐私协议',
         value: 'privacyPolicy',
       },
       {
-        title: '美的照明权限列表',
+        title: '美的商照权限列表',
         value: 'authList',
       },
       {
