@@ -47,14 +47,14 @@ export default BehaviorWithComputed({
      */
     onShareAppMessage() {
       return {
-        title: '欢迎使用美的照明Homlux',
+        title: '欢迎使用美的商照',
         path: '/pages/index/index',
         imageUrl: `${ossDomain}/homlux/welcome.png`,
       }
     },
     // onShareTimeline() {
     //   return {
-    //     title: '欢迎使用美的照明Homlux',
+    //     title: '欢迎使用美的商照',
     //     path: '/pages/index/index',
     //   }
     // },
