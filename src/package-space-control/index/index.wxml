@@ -251,20 +251,6 @@
 </view>
 
 <!-- 设备控制弹窗 -->
-<bath-control-popup
-  show="{{controlType === '0x26'}}"
-  isShowSetting="{{true}}"
-  deviceInfo="{{checkedDeviceInfo}}"
-  bind:close="cancelCheckAndPops"
-></bath-control-popup>
-
-<dryer-control-popup
-  show="{{controlType === '0x17'}}"
-  isShowSetting="{{true}}"
-  deviceInfo="{{checkedDeviceInfo}}"
-  bind:close="cancelCheckAndPops"
-></dryer-control-popup>
-
 <device-control-popup
   show="{{isShowCommonControl}}"
   deviceInfo="{{checkedDeviceInfo}}"

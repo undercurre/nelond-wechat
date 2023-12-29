@@ -11,8 +11,6 @@
     "curtain-control-popup": "/components/curtain-control-popup/index",
     "light-control-popup": "/components/light-control-popup/index",
     "switch-control-popup": "/components/switch-control-popup/index",
-    "bath-control-popup": "/components/bath-control-popup/index",
-    "dryer-control-popup": "/components/dryer-control-popup/index",
     "edit-sensor-popup": "./components/edit-sensor-popup/index",
     "van-dialog": "@vant/weapp/dialog/index",
     "cell": "./components/cell/index",

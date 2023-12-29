@@ -175,7 +175,7 @@ ComponentWithComputed({
       console.log('title', currentSpace, pname)
       const _title =
         (currentSpace?.publicSpaceFlag === 1 ? `${pname}-${currentSpace?.spaceName}` : currentSpace?.spaceName) ?? ''
-      return _title.length > 12 ? _title.slice(0, 6) + '...' + _title.slice(-6) : _title
+      return _title.length > 10 ? _title.slice(0, 4) + '...' + _title.slice(-6) : _title
     },
     sceneListInBar(data) {
       if (data.sceneList) {
@@ -563,23 +563,6 @@ ComponentWithComputed({
             })
             if (linkSceneName !== originDevice.linkSceneName) {
               this.data._diffCards.data[`devicePageList[${groupIndex}][${index}].linkSceneName`] = linkSceneName
-            }
-
-            // 如果控制弹框为显示状态，则同步选中设备的状态
-            if (
-              device!.mzgdPropertyDTOList &&
-              this.data.checkedList.includes(originDevice!.deviceId) &&
-              originDevice!.select &&
-              (originDevice.proType === PRO_TYPE.curtain ||
-                originDevice.proType === PRO_TYPE.bathHeat ||
-                originDevice.proType === PRO_TYPE.clothesDryingRack) // 因为【灯】异常推送较多，暂时不对弹框中的设备状态进行更新
-            ) {
-              const newVal = {
-                ...originDevice,
-                ...device,
-                ...device.mzgdPropertyDTOList[modelName], // 设备属性扁平化（一维、冗余），以便与场景弹框统一逻辑
-              }
-              this.data._diffCards.data.checkedDeviceInfo = newVal
             }
 
             // 处理更新逻辑

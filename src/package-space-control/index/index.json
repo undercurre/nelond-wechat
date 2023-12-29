@@ -5,8 +5,6 @@
   "usingComponents": {
     "van-skeleton": "@vant/weapp/skeleton/index",
     "device-control-popup": "./components/device-control-popup/index",
-    "bath-control-popup": "/components/bath-control-popup/index",
-    "dryer-control-popup": "/components/dryer-control-popup/index",
     "batch-edit": "./components/batch-edit/index",
     "mz-slider": "/components/mz-slider/index"
   }
