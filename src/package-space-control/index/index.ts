@@ -169,11 +169,13 @@ ComponentWithComputed({
       }
       return false
     },
-    // 空间显示名称：如果为公共空间，则显示父空间名称
+    // 空间显示名称：如果为公共空间，则显示{父空间名称}-公共空间
     title(data) {
       const { currentSpace, pname } = data
-      const _title = (currentSpace?.publicSpaceFlag === 1 ? pname : currentSpace?.spaceName) ?? ''
-      return _title.length > 8 ? _title.slice(0, 6) + '...' + _title.slice(-2) : _title
+      console.log('title', currentSpace, pname)
+      const _title =
+        (currentSpace?.publicSpaceFlag === 1 ? `${pname}-${currentSpace?.spaceName}` : currentSpace?.spaceName) ?? ''
+      return _title.length > 12 ? _title.slice(0, 6) + '...' + _title.slice(-6) : _title
     },
     sceneListInBar(data) {
       if (data.sceneList) {
