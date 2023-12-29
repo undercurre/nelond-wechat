@@ -71,6 +71,8 @@
             value="{{mac}}"
             border="{{false}}"
             bind:click="clickMac"
+            value-class="longValue"
+            title-class="shortTitle"
           ></van-cell>
 
           <van-cell
