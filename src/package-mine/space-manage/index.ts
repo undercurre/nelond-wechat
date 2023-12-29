@@ -147,8 +147,24 @@ ComponentWithComputed({
     async toAddSpace(e: { detail: string }) {
       const spaceName = e.detail
       if (!spaceName) {
+        Toast({
+          message: '空间名称不能为空',
+          zIndex: 99999,
+        })
         return
       }
+      if (spaceName.length > 8) {
+        Toast({
+          message: '空间名称不能超过8个字符',
+          zIndex: 99999,
+        })
+        return
+      }
+
+      this.setData({
+        showAddDialog: false,
+      })
+
       const { spaceLevel } = this.data.spaceInfo
       const isCreateChild = spaceLevel === this.data.clevel
       const res = await addSpace({

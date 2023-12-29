@@ -6,6 +6,7 @@
   bind:close="onClose"
   bind:cancel="onClose"
   bind:confirm="onConfirm"
+  before-close="{{beforeClose}}"
 >
   <view class="px-32rpx py-32rpx">
     <van-field
@@ -15,6 +16,7 @@
       bind:clear="changeName"
       bind:change="changeName"
       border="{{false}}"
+      maxlength="{{8}}"
     ></van-field>
   </view>
 </van-dialog>

@@ -28,6 +28,10 @@ ComponentWithComputed({
   },
 
   computed: {
+    title(data) {
+      const { spaceName } = data.spaceInfo
+      return spaceName.length > 8 ? spaceName.slice(0, 6) + '...' + spaceName.slice(-2) : spaceName
+    },
     desc(data) {
       const list = [] as { text: string; type: string }[]
       const { deviceCount, offlineDeviceCount, nodeCount } = (data.spaceInfo || {}) as Space.SpaceInfo
