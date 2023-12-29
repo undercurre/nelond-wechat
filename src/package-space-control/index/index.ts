@@ -12,7 +12,7 @@ import {
   spaceStore,
   projectStore,
 } from '../../store/index'
-import { runInAction } from 'mobx-miniprogram'
+import { runInAction, values } from 'mobx-miniprogram'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { sendDevice, execScene, saveDeviceOrder, queryGroupBySpaceId } from '../../apis/index'
 import Toast from '@vant/weapp/toast/toast'
@@ -136,6 +136,7 @@ ComponentWithComputed({
       power: 0,
       groupId: '',
     },
+    pname: '', // 父空间名称
   },
 
   computed: {
@@ -168,8 +169,11 @@ ComponentWithComputed({
       }
       return false
     },
+    // 空间显示名称：如果为公共空间，则显示父空间名称
     title(data) {
-      return data.currentSpace?.spaceName ?? ''
+      const { currentSpace, pname } = data
+      const _title = (currentSpace?.publicSpaceFlag === 1 ? pname : currentSpace?.spaceName) ?? ''
+      return _title.length > 8 ? _title.slice(0, 6) + '...' + _title.slice(-2) : _title
     },
     sceneListInBar(data) {
       if (data.sceneList) {
@@ -257,12 +261,10 @@ ComponentWithComputed({
     /**
      * 生命周期函数--监听页面加载
      */
-    async onLoad(query: { from?: string }) {
+    async onLoad(query: { from?: string; pname?: string }) {
       Logger.log('space-onLoad', query)
       this.data._from = query.from ?? ''
-      // this.setUpdatePerformanceListener({withDataPaths: true}, (res) => {
-      //   console.debug('setUpdatePerformanceListener', res, res.pendingStartTimestamp - res.updateStartTimestamp, res.updateEndTimestamp - res.updateStartTimestamp, dayjs().format('YYYY-MM-DD HH:mm:ss'))
-      // })
+      this.setData({ pname: query.pname })
     },
 
     async onShow() {
@@ -385,6 +387,8 @@ ComponentWithComputed({
           'spaceLight.power': hasLightOn ? 1 : 0,
         })
       })
+
+      console.log('onShow', values(spaceStore.currentSpaceSelect))
     },
 
     // 响应控制弹窗中单灯/灯组的控制变化，直接按本地设备列表数值以及设置值，刷新空间灯的状态

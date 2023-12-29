@@ -289,13 +289,7 @@ ComponentWithComputed({
       runInAction(() =>
         spaceStore.currentSpaceSelect.push(
           hasOnlyChildren
-            ? {
-                pid: spaceId,
-                spaceId: childPublicSpace!.spaceId,
-                spaceLevel: childPublicSpace!.spaceLevel,
-                spaceName, // 仍显示父级名称
-                publicSpaceFlag: 1,
-              }
+            ? childPublicSpace!
             : {
                 pid: '0',
                 spaceId,

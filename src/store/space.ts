@@ -17,10 +17,10 @@ export const spaceStore = observable({
   /** 全屋设备，对应空间id作为key，空间的设备列表作为key */
   spaceDeviceList: {} as Record<string, Device.DeviceItem[]>,
 
-  // 当前选中空间的队列 // TODO 或统一改名为 currentSpaceQueue
+  // 当前选中的空间栈
   currentSpaceSelect: [] as Space.allSpace[],
 
-  // 当前选中空间队列的末端，即真正存放内容的空间
+  // 当前选中空间栈的末端，即真正存放内容的空间
   get currentSpace(): Space.allSpace {
     if (this.currentSpaceSelect.length) {
       return this.currentSpaceSelect[this.currentSpaceSelect.length - 1]
@@ -36,7 +36,7 @@ export const spaceStore = observable({
       return defaultSpace
     }
   },
-  // 当前选中空间名称 // TODO 显示全路径名称
+  // 当前选中空间名称
   get currentSpaceName(): string {
     return this.currentSpace?.spaceName ?? ''
   },
