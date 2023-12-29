@@ -920,8 +920,11 @@ ComponentWithComputed({
     },
 
     handleSceneTap() {
-      wx.switchTab({
-        url: '/pages/automation/index',
+      // wx.switchTab({
+      //   url: '/pages/automation/index',
+      // })
+      wx.navigateTo({
+        url: '/package-space-control/scene-list/index',
       })
     },
     /** 点击创建场景按钮回调 */

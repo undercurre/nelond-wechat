@@ -8,6 +8,7 @@ import {
   projectStore,
   sceneBinding,
   sceneStore,
+  spaceStore,
   userBinding,
   userStore,
 } from '../../store/index'
@@ -81,7 +82,7 @@ ComponentWithComputed({
           ...scene,
           dragId: scene.sceneId,
           linkName,
-          sceneIcon: scene.sceneIcon + '-gray',
+          sceneIcon: scene.sceneIcon,
         })
       })
       this.setData({
@@ -116,9 +117,21 @@ ComponentWithComputed({
     },
 
     toSetting(e: { detail: Scene.SceneItem }) {
+      // if (userStore.isManager) {
+      //   wx.navigateTo({
+      //     url: strUtil.getUrlWithParams('/package-space-control/scene-edit/index', { sceneId: e.detail.sceneId }),
+      //   })
+      // } else {
+      //   Toast('您当前身份为访客，无法编辑场景')
+      // }
+
       if (userStore.isManager) {
         wx.navigateTo({
-          url: strUtil.getUrlWithParams('/package-space-control/scene-edit/index', { sceneId: e.detail.sceneId }),
+          url: strUtil.getUrlWithParams('/package-automation/automation-add/index', {
+            yijianSceneId: e.detail.sceneId,
+            selectedSpaceInfo: JSON.stringify(spaceStore.currentSpaceSelect),
+            spaceid: spaceStore.currentSpace.spaceId,
+          }),
         })
       } else {
         Toast('您当前身份为访客，无法编辑场景')

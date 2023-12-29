@@ -40,14 +40,7 @@
     },
     {
       "root": "package-space-control",
-      "pages": [
-        "index/index",
-        "space-list/index",
-        "scene-edit/index",
-        "scene-request-list/index",
-        "scene-list/index",
-        "group/index"
-      ]
+      "pages": ["index/index", "space-list/index", "scene-list/index", "group/index"]
     },
     {
       "root": "package-protocol",
@@ -60,10 +53,8 @@
     {
       "root": "package-automation",
       "pages": [
-        "automation/index",
         "automation-log/index",
         "automation-add/index",
-        "automation-edit-yijian/index",
         "scene-request-list-yijian/index",
         "scene-success/index"
       ]
