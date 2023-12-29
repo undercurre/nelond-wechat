@@ -29,7 +29,7 @@
 
   <!-- 无设备 -->
   <view
-    wx:if="{{deviceListCompited.length === 0}}"
+    wx:if="{{deviceListCompited.length === 0 && isLoaded && spaceId !=='0' }}"
     class="w-750rpx h-100vh mt-80rpx flex flex-col items-center"
   >
     <image

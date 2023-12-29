@@ -13,6 +13,7 @@ ComponentWithComputed({
    * 页面的初始数据
    */
   data: {
+    isLoaded: false,
     defaultImgDir,
     spaceId: '0',
     spaceName: spaceStore.currentSpace?.spaceName ?? '全部',
@@ -40,7 +41,7 @@ ComponentWithComputed({
         rst.filter((d: Device.DeviceItem) => d.spaceId === data.spaceId),
       )
       if (data.spaceId === '0') {
-        return rst
+        return []
       } else {
         return rst.filter((d: Device.DeviceItem) => d.spaceId === data.spaceId)
       }
@@ -193,13 +194,12 @@ ComponentWithComputed({
     async loadData() {
       // 先加载ota列表信息，用于设备详情页展示
       otaStore.updateList()
-      // await spaceStore.updateSpaceList()
-      // if (this.data.spaceId === '0') {
-      deviceBinding.store.updateallDeviceList()
-      //   return
-      // } else if (this.data.spaceId) {
-      //   deviceBinding.store.updateDeviceList(undefined, this.data.spaceId)
-      // }
+
+      await deviceBinding.store.updateallDeviceList()
+
+      this.setData({
+        isLoaded: true,
+      })
     },
 
     handleFullPageTap(e?: { detail: { x: number; y: number } }) {
