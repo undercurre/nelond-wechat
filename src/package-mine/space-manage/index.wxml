@@ -17,7 +17,7 @@
       </view>
     </view>
     <view
-      wx:if="{{isManager}}"
+      wx:if="{{showEditBtn}}"
       class="mr-36rpx mt-16rpx"
       data-mark="addIcon"
       id="addIcon"

@@ -22,7 +22,7 @@
       </view>
     </view>
     <image
-      wx:if="{{isEditMode}}"
+      wx:if="{{showEditIcon}}"
       src="/assets/img/base/edit.png"
       class="w-48rpx h-48rpx mr-32rpx"
     ></image>

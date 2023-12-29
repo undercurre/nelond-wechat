@@ -70,6 +70,11 @@ ComponentWithComputed({
       const { plevel } = data
       return plevel === SpaceLevel.area ? '当前为末级空间' : '尚未添加空间'
     },
+    // 显示编辑按钮：管理角色；或者子空间数大于1，即拥有除公共空间外的节点
+    showEditBtn(data) {
+      const { isManager, sList } = data
+      return isManager && sList?.length > 1
+    },
   },
 
   methods: {
@@ -192,6 +197,10 @@ ComponentWithComputed({
 
       // 如果是编辑模式
       if (this.data.isEditMode) {
+        // 如果是公共空间，则不能编辑
+        if (publicSpaceFlag === 1) {
+          return
+        }
         wx.navigateTo({
           url: strUtil.getUrlWithParams('/package-mine/space-detail/index', {
             spaceId,

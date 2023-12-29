@@ -59,6 +59,10 @@ ComponentWithComputed({
       const spaceLevel = (data.spaceInfo?.spaceLevel ?? 1) as Space.SpaceLevel
       return SpaceConfig[spaceLevel]
     },
+    showEditIcon(data) {
+      const { isEditMode, spaceInfo } = data
+      return isEditMode && spaceInfo.publicSpaceFlag === 0
+    },
     hasArrow(data) {
       const { isManagePage } = data
       const { spaceLevel, publicSpaceFlag, pid } = data.spaceInfo
