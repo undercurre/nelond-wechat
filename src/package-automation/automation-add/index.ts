@@ -1709,11 +1709,11 @@ ComponentWithComputed({
       if (firstSpace) {
         desc += firstSpace.spaceName
         if (secondSpace) {
-          desc += secondSpace.publicSpaceFlag === 0 ? `，${secondSpace.spaceName}` : ''
+          desc += `，${secondSpace.spaceName}`
           if (thirdSpace) {
-            desc += thirdSpace.publicSpaceFlag === 0 ? `，${thirdSpace.spaceName}` : ''
+            desc += `，${thirdSpace.spaceName}`
             if (fourthSpace) {
-              desc += fourthSpace.publicSpaceFlag === 0 ? `，${fourthSpace.spaceName}` : ''
+              desc += `，${fourthSpace.spaceName}`
             }
           }
         }
