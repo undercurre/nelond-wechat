@@ -2,6 +2,7 @@
 .marvels-switch {
   position: relative;
   height: 64rpx;
+  width: 444rpx;
   border-radius: 40rpx;
   background-color: rgba(255, 255, 255, 0.6);
   padding: 8rpx;

@@ -16,7 +16,7 @@
         class="flex items-center h-100rpx"
       >
         <image
-          src="/assets/img/scene/{{item.data.sceneIcon}}.png"
+          src="https://mzgd-oss-bucket.oss-cn-shenzhen.aliyuncs.com/homlux/auto-scene/{{item.data.sceneIcon}}.png"
           class="w-72rpx h-72rpx"
         />
         <view class="flex flex-col items-start ml-24rpx">
@@ -31,6 +31,7 @@
         slot="right-icon"
         class="btn-raw w-110rpx h-64rpx relative rounded-24rpx flex-center"
         data-item="{{item.data}}"
+        style="background: rgba(139, 195, 74, 0.1)"
         catchtap="handleExecScene"
       >
         <text class="text-blue text-28rpx">执行</text>

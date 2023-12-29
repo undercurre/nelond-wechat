@@ -17,9 +17,10 @@
 </view>
 <!-- 标题 -->
 <nav-bar
-  title="场景"
+  title="一键场景"
   z-index="{{113}}"
   left-arrow
+  showGoHome="false"
   bind:leftTap="goBack"
 ></nav-bar>
 <!-- 没有场景时 -->
@@ -35,12 +36,12 @@
   <text class="text-black-59 text-28rpx mt-48rpx">目前无场景</text>
 </view>
 <!-- 有场景 -->
-<view
+<!-- <view
   class="mt-32rpx ml-48rpx"
   wx:if="{{listData.length > 0}}"
 >
   <text class="text-hex-555659 text-28rpx">长按可调整首页顺序</text>
-</view>
+</view> -->
 <view class="h-32rpx"></view>
 <drag
   wx:if="{{listData.length > 0}}"
