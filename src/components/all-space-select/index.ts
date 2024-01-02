@@ -298,7 +298,7 @@ ComponentWithComputed({
       // 下层空间是否存在空间
       let nextSpaceId = ''
       const childList = this.data._filterSpaceList.filter((s) => s.pid === e.currentTarget.dataset.id)
-      if (childList.length === 1 && childList[0].publicSpaceFlag === 1) nextSpaceId = childList[0].spaceId
+      if (childList.length === 1) nextSpaceId = childList[0].spaceId
       this.setData({
         firstSpaceId: e.currentTarget.dataset.id,
         secondSpaceId: nextSpaceId,
@@ -310,7 +310,7 @@ ComponentWithComputed({
       // 下层空间是否存在空间
       let nextSpaceId = ''
       const childList = this.data._filterSpaceList.filter((s) => s.pid === e.currentTarget.dataset.id)
-      if (childList.length === 1 && childList[0].publicSpaceFlag === 1) nextSpaceId = childList[0].spaceId
+      if (childList.length === 1) nextSpaceId = childList[0].spaceId
       this.setData({
         secondSpaceId: e.currentTarget.dataset.id,
         thirdSpaceId: nextSpaceId,
@@ -321,7 +321,7 @@ ComponentWithComputed({
       // 下层空间是否存在空间
       let nextSpaceId = ''
       const childList = this.data._filterSpaceList.filter((s) => s.pid === e.currentTarget.dataset.id)
-      if (childList.length === 1 && childList[0].publicSpaceFlag === 1) nextSpaceId = childList[0].spaceId
+      if (childList.length === 1) nextSpaceId = childList[0].spaceId
       this.setData({
         thirdSpaceId: e.currentTarget.dataset.id,
         fourthSpaceId: nextSpaceId,
