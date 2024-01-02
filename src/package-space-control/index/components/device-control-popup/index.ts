@@ -15,7 +15,7 @@ import {
 import {
   sendDevice,
   findDevice,
-  getLampDeviceByHouseId,
+  getLampDeviceByProjectId,
   updateScene,
   getRelLampInfo,
   editLampAndSwitchAssociated,
@@ -427,7 +427,7 @@ ComponentWithComputed({
       })
 
       if (type === 'switch') {
-        const res = await getLampDeviceByHouseId({ projectId: projectStore.currentProjectId })
+        const res = await getLampDeviceByProjectId({ projectId: projectStore.currentProjectId })
 
         if (res.success) {
           this.data._allSwitchLampRelList = res.result

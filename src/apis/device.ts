@@ -20,28 +20,28 @@ export async function queryAllDevice(projectId: string, spaceId: string, options
 }
 
 /**
- * 全屋设备开或者关
+ * 全屋设备开或者关 TODO 暂不需要此功能
  * 1：开 0：关
  */
 export async function allDevicePowerControl(
   data: { projectId: string; onOff: number },
   options?: { loading?: boolean },
 ) {
-  // TODO 判断是否局域网控制
-  if (homOs.isHostConnected()) {
-    const localRes = await homOs.houseControl({
-      projectId: data.projectId,
-      power: data.onOff,
-    })
+  // // TODO 判断是否局域网控制
+  // if (homOs.isHostConnected()) {
+  //   const localRes = await homOs.houseControl({
+  //     projectId: data.projectId,
+  //     power: data.onOff,
+  //   })
 
-    Logger.log('localRes', localRes)
+  //   Logger.log('localRes', localRes)
 
-    if (localRes.success) {
-      return localRes
-    } else {
-      Logger.error('局域网调用失败，改走云端链路')
-    }
-  }
+  //   if (localRes.success) {
+  //     return localRes
+  //   } else {
+  //     Logger.error('局域网调用失败，改走云端链路')
+  //   }
+  // }
 
   return await mzaioRequest.post<IAnyObject>({
     log: false,
@@ -780,11 +780,11 @@ export async function delSwitchAndSwitchAssociated(data: { relIds: string }, opt
 /**
  * 根据项目id获取面板是否已经关联过灯
  */
-export async function getLampDeviceByHouseId(data: { projectId: string }, options?: { loading?: boolean }) {
+export async function getLampDeviceByProjectId(data: { projectId: string }, options?: { loading?: boolean }) {
   return await mzaioRequest.post<Array<Device.IMzgdLampDeviceInfoDTO>>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/cl/device/getLampDeviceByHouseId',
+    url: '/v1/cl/device/getLampDeviceByProjectId',
     data,
   })
 }
