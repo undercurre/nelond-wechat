@@ -274,7 +274,7 @@ ComponentWithComputed({
       // 首次进入
       if (this.data._firstShow && this.data._from !== 'addDevice') {
         this.updateQueue({ isRefresh: true })
-        // sceneStore.updateAllRoomSceneList()
+        sceneStore.updateAllRoomSceneList()
         this.queryGroupInfo()
         this.data._firstShow = false
       }
@@ -411,8 +411,7 @@ ComponentWithComputed({
       }
 
       try {
-        // sceneStore.updateAllRoomSceneList(),
-        this.queryGroupInfo()
+        sceneStore.updateAllRoomSceneList(), this.queryGroupInfo()
         await Promise.all([projectStore.updateSpaceCardList()])
 
         this.updateQueue({ isRefresh: true })
