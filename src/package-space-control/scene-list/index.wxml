@@ -56,5 +56,22 @@
   bind:sortend="handleSortEnd"
   bind:scroll="handleScroll"
 ></drag>
+<!-- 有列表时的添加按钮 -->
+<view
+  class="flex-col-center py-20rpx"
+  wx:if="{{listData.length > 0}}"
+>
+  <van-button
+    wx:if="{{canAddScene}}"
+    type="default"
+    color="rgba(255,255,255,0.60)"
+    size="small"
+    custom-class="round-btn-border"
+    round
+    bind:tap="addScene"
+  >
+    <text class="text-26rpx text-hex-555659">添加一键场景</text>
+  </van-button>
+</view>
 <view class="h-64rpx"></view>
 <van-toast id="van-toast" />

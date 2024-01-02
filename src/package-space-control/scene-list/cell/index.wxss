@@ -10,7 +10,7 @@
 }
 .cell {
   margin: 0 16px !important;
-  box-shadow: 0px 4px 40px 0px rgba(97, 109, 136, 0.12);
+  /* box-shadow: 0px 4px 40px 0px rgba(97, 109, 136, 0.12); */
 }
 .btn-raw {
   background: rgba(72, 143, 255, 0.12);

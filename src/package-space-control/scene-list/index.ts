@@ -35,7 +35,12 @@ ComponentWithComputed({
     scrollTop: 0,
   },
 
-  computed: {},
+  computed: {
+    // 判断是否是创建者或者管理员，其他角色不能添加场景
+    canAddScene(data) {
+      return data.isManager
+    },
+  },
 
   lifetimes: {
     ready() {
@@ -156,6 +161,19 @@ ComponentWithComputed({
       await sceneStore.updateAllRoomSceneList()
       projectStore.updateSpaceCardList()
       this.updateList()
+    },
+    /** 点击创建场景按钮回调 */
+    addScene() {
+      if (this.data.isVisitor) {
+        Toast('仅创建者与管理员可创建场景')
+        return
+      }
+
+      wx.navigateTo({
+        url: strUtil.getUrlWithParams('/package-automation/automation-add/index', {
+          spaceid: spaceStore.currentSpace.spaceId,
+        }),
+      })
     },
   },
 })
