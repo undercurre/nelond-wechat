@@ -38,10 +38,10 @@ function propObserver(newValue, oldValue, ownerInstance) {
   var dataset = ownerInstance.getDataset()
   if (dataset.key !== undefined) key = dataset.key
 
-  ownerInstance.setTimeout(function () {
-    // 如果正在拖动，则不响应值变化
-    if (isMoving[key]) return
+  // 如果正在拖动，则不响应值变化
+  if (isMoving[key]) return
 
+  ownerInstance.setTimeout(function () {
     init(ownerInstance)
     // console.log('propObserver', newValue, oldValue, key, 'min:', min[key])
 
@@ -96,7 +96,7 @@ function onTouchend(event, ownerInstance) {
   // 延迟结束点拖动状态
   ownerInstance.setTimeout(function () {
     isMoving[key] = false
-  }, 300)
+  }, 800)
 
   // 气泡提示
   if (dataset.showToast) {
