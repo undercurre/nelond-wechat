@@ -141,6 +141,7 @@
     show="{{showSpaceSelectPopup}}"
     showCell="{{false}}"
     showTab="{{false}}"
+    initConfirm="{{false}}"
     bind:confirm="handleSpaceSelectConfirm"
   ></all-space-select>
 
