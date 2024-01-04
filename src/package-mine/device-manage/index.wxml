@@ -102,6 +102,7 @@
   show="{{showSpaceSelectPopup}}"
   showCell="{{false}}"
   showTab="{{false}}"
+  initConfirm="{{false}}"
   cellStyle="background-color:rgba(255,255,255,0.6);border-radius:36rpx;"
   dataType="device"
   bind:confirm="handleSpaceSelectConfirm"
