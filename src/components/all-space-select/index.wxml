@@ -27,14 +27,14 @@
     >
       <view class="flex flex-1 justify-start">
         <view
-          wx:for="{{spaceData[firstSpaceId].child[secondSpaceId].child[thirdSpaceId].child}}"
+          wx:for="{{spaceData[_firstSpaceId].child[_secondSpaceId].child[_thirdSpaceId].child}}"
           wx:key="spaceId"
           class="flex-col-center px-32rpx"
           data-id="{{item.spaceId}}"
           bind:tap="tabCheck"
         >
-          <text class="text-28rpx {{fourthSpaceId === item.spaceId ? 'text-black-2a' : 'text-hex-555659'}} whitespace-nowrap">{{item.spaceName}}</text>
-          <view class="w-42rpx h-8rpx mt-8rpx bg-hex-7cd06a rounded-999 {{fourthSpaceId === item.spaceId ? 'opacity-100' : 'opacity-0'}}"></view>
+          <text class="text-28rpx {{_fourthSpaceId === item.spaceId ? 'text-black-2a' : 'text-hex-555659'}} whitespace-nowrap">{{item.spaceName}}</text>
+          <view class="w-42rpx h-8rpx mt-8rpx bg-hex-7cd06a rounded-999 {{_fourthSpaceId === item.spaceId ? 'opacity-100' : 'opacity-0'}}"></view>
         </view>
       </view>
     </scroll-view>

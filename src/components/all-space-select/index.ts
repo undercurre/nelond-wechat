@@ -5,9 +5,9 @@ import pageBehavior from '../../behaviors/pageBehaviors'
 import { PRO_TYPE } from '../../config/index'
 
 ComponentWithComputed({
-  options: {
-    pureDataPattern: /^_/, // 指定所有 _ 开头的数据字段为纯数据字段
-  },
+  // options: {
+  //   pureDataPattern: /^_/, // 指定所有 _ 开头的数据字段为纯数据字段
+  // },
 
   behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding, deviceBinding] }), pageBehavior],
 
@@ -138,10 +138,10 @@ ComponentWithComputed({
     },
     isShowTab(data: IAnyObject) {
       if (!data.showTab) return false
-      const { firstSpaceId, secondSpaceId, thirdSpaceId, spaceData } = data
+      const { _firstSpaceId, _secondSpaceId, _thirdSpaceId, spaceData } = data
 
-      if (firstSpaceId && secondSpaceId && thirdSpaceId) {
-        const child = spaceData[firstSpaceId]?.child[secondSpaceId]?.child[thirdSpaceId]?.child
+      if (_firstSpaceId && _secondSpaceId && _thirdSpaceId) {
+        const child = spaceData[_firstSpaceId]?.child[_secondSpaceId]?.child[_thirdSpaceId]?.child
         if (child) {
           return Object.keys(child).length
         }
