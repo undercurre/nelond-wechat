@@ -16,6 +16,9 @@ export async function queryProjectList(options?: IApiRequestOption) {
     loading: options?.loading ?? false,
     isDefaultErrorTips: options?.isDefaultErrorTips ?? true,
     url: '/v1/mzgd/cl/user/project/query',
+    data: {
+      pageSize: 999,
+    },
   })
 }
 
