@@ -1,0 +1,36 @@
+<nav-bar
+  title="HomOS调试"
+  left-arrow
+  bind:leftTap="goBack"
+></nav-bar>
+
+<van-button
+  type="primary"
+  bind:click="readLogNative"
+  >刷新本地日志</van-button
+>
+
+<van-button
+  type="primary"
+  bind:click="clearLogNative"
+  >清空本地日志</van-button
+>
+
+<scroll-view
+  class="h-1000"
+  scroll-y
+>
+  <view
+    wx:for="{{logList}}"
+    wx:key="index"
+    class="border-b-1 border-hex-d3d3d3 border-solid"
+  >
+    <text class="text-24 leading-30rpx">{{item}}</text>
+  </view>
+</scroll-view>
+
+<rich-text
+  nodes="{{logText}}"
+  user-select="{{true}}"
+  type="text"
+></rich-text>
