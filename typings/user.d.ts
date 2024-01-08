@@ -3,10 +3,11 @@
 declare namespace User {
   // 用户角色
   enum UserRole {
-    UnDef = '',
-    Creator = '1',
-    Admin = '2',
-    Visitor = '3',
+    UnDef = '', // 未定义
+    SuperAdmin = '0', // 总部管理员
+    Creator = '1', // 项目超管
+    Admin = '2', // 项目管理员
+    Visitor = '3', // 使用者
   }
   interface UserLoginRes {
     /**
