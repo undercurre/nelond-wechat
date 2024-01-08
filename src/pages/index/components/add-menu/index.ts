@@ -1,5 +1,5 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { projectBinding, userBinding } from '../../../../store/index'
+import { projectBinding, spaceStore, userBinding } from '../../../../store/index'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
 
@@ -73,6 +73,12 @@ ComponentWithComputed({
       const res = await wx.getNetworkType()
       if (res.networkType === 'none') {
         Toast('当前无法连接网络\n请检查网络设置')
+        this.hideAnimate()
+        return
+      }
+      if (!spaceStore.allSpaceList.length) {
+        Toast('请先添加空间')
+        this.hideAnimate()
         return
       }
       const url = e.currentTarget.dataset.url

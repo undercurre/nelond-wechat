@@ -6,6 +6,7 @@ import { emitter, WSEventType } from '../../utils/eventBus'
 import { queryDeviceInfoByDeviceId } from '../../apis/index'
 import { runInAction } from 'mobx-miniprogram'
 import { PRO_TYPE, SCREEN_PID, defaultImgDir } from '../../config/index'
+import Toast from '@vant/weapp/toast/toast'
 
 ComponentWithComputed({
   behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding, deviceBinding] }), pageBehavior],
@@ -291,6 +292,10 @@ ComponentWithComputed({
       })
     },
     handleSpaceSelect() {
+      if (!spaceStore.allSpaceList.length) {
+        Toast('请先添加空间')
+        return
+      }
       this.setData({ showSpaceSelectPopup: true })
     },
   },

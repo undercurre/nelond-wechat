@@ -29,7 +29,7 @@ export const spaceStore = observable({
         pid: '',
         spaceId: '',
         spaceLevel: 4,
-        spaceName: '找不到空间，请手动选择',
+        spaceName: '',
         publicSpaceFlag: 0,
       } // 当选中空间队列为空时,取第一个叶子节点
 
