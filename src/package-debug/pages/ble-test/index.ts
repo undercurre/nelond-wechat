@@ -98,7 +98,7 @@ ComponentWithComputed({
 
       this.data.deviceList.push(bleDevice)
 
-      if (this.data._bleDevice.deviceId) {
+      if (!this.data._bleDevice.deviceId) {
         this.data._bleDevice = bleDevice
       }
     },
@@ -141,7 +141,11 @@ ComponentWithComputed({
     },
 
     async toggleConnect() {
+      this.stopScanBle()
       const { mac, deviceId } = this.data._bleDevice
+      this.setData({
+        result: '',
+      })
 
       if (!this.data.bleClient) {
         const bleClient = new BleClient({
@@ -156,6 +160,10 @@ ComponentWithComputed({
         this.setData({
           bleClient: bleClient,
         })
+
+        wx.showToast({
+          title: '连接成功',
+        })
       } else {
         this.data.bleClient.close()
 
@@ -166,6 +174,10 @@ ComponentWithComputed({
     },
 
     async sendCmd() {
+      this.setData({
+        result: '',
+      })
+
       const regex = /.{1,2}/g
       let cmdData: number[] = []
 
@@ -178,6 +190,10 @@ ComponentWithComputed({
       const res = await this.data.bleClient?.sendCmd({ cmdType: this.data.cmdType, data: cmdData })
 
       Logger.log('sendCmd', res)
+      wx.showToast({
+        title: res?.success ? '发送成功' : '发送失败',
+        icon: res?.success ? 'success' : 'error',
+      })
 
       this.setData({
         result: JSON.stringify(res) + `收到回复： ${res?.resMsg}`,
