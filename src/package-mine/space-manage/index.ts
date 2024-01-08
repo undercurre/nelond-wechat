@@ -49,8 +49,14 @@ ComponentWithComputed({
       return plevel === SpaceLevel.park || plevel === SpaceLevel.building || plevel === SpaceLevel.floor
     },
     showParentAdding(data) {
-      const { plevel, pid } = data
-      return pid !== '0' && plevel !== SpaceLevel.park
+      const { plevel, pid, allSpaceList } = data
+      // 父节点为园区节点，直接返回，不能添加上级
+      if (plevel === SpaceLevel.park) {
+        return false
+      }
+      // 找到爷爷节点
+      const gNode = allSpaceList?.find((s: Space.allSpace) => s.spaceId === pid)
+      return gNode?.pid === '0'
     },
     // 父级按钮名称（实际上为爷爷级）
     spaceParentName(data) {
