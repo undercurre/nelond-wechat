@@ -96,6 +96,17 @@
 
       <van-cell
         icon="/assets/img/mine/about.png"
+        title="调试工具"
+        is-link
+        center
+        data-url="{{urls.debug}}"
+        data-auth="no"
+        bind:click="toPage"
+        border="{{true}}"
+      />
+
+      <van-cell
+        icon="/assets/img/mine/about.png"
         title="关于"
         is-link
         center

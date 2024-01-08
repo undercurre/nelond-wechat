@@ -58,6 +58,10 @@
         "scene-request-list-yijian/index",
         "scene-success/index"
       ]
+    },
+    {
+      "root": "package-debug",
+      "pages": ["pages/index/index", "pages/homos-debug/index", "pages/ble-test/index"]
     }
   ],
   "preloadRule": {

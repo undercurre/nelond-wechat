@@ -1,0 +1,9 @@
+{
+  "component": true,
+  "usingComponents": {
+    "van-picker": "@vant/weapp/picker/index",
+    "van-divider": "@vant/weapp/divider/index",
+    "van-dropdown-menu": "@vant/weapp/dropdown-menu/index",
+    "van-dropdown-item": "@vant/weapp/dropdown-item/index"
+  }
+}

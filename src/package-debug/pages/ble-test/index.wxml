@@ -1,0 +1,76 @@
+<nav-bar
+  title="蓝牙调试"
+  left-arrow
+  bind:leftTap="goBack"
+></nav-bar>
+
+<van-button
+  type="primary"
+  bind:click="toggleDiscoverBle"
+  >{{ !isDiscovering ? '开始扫描蓝牙' : '停止扫描蓝牙'}}</van-button
+>
+
+<van-button
+  class="ml-32rpx"
+  type="primary"
+  bind:click="toggleConnect"
+  >{{ bleClient ? '断开蓝牙' : '连接蓝牙'}}</van-button
+>
+
+<van-divider />
+
+<van-picker
+  columns="{{ deviceList }}"
+  value-key="mac"
+  item-height="30"
+  visible-item-count="4"
+  bind:change="changeBle"
+  loading="{{deviceList.length <= 0}}"
+/>
+
+<van-divider />
+<van-dropdown-menu>
+  <van-dropdown-item
+    value="{{ cmdType }}"
+    options="{{ cmdTypeList }}"
+    bind:change="changeCmdType"
+  />
+</van-dropdown-menu>
+
+<van-divider />
+<van-cell-group>
+  <van-field
+    model:value="{{ cmd }}"
+    center
+    clearable
+    label="控制指令"
+    placeholder="请输入指令"
+    border="{{ false }}"
+    use-button-slot
+    show-word-limit
+    maxlength="100"
+  >
+    <van-button
+      slot="button"
+      size="small"
+      type="primary"
+      bind:click="sendCmd"
+    >
+      发送指令
+    </van-button>
+  </van-field>
+</van-cell-group>
+
+<scroll-view
+  class="h-1000"
+  scroll-y
+>
+  <text class="text-40 leading-60rpx">返回结果</text>
+  <text class="text-24 leading-30rpx bg-hex-ddd">{{result}}</text>
+</scroll-view>
+
+<rich-text
+  nodes="{{logText}}"
+  user-select="{{true}}"
+  type="text"
+></rich-text>
