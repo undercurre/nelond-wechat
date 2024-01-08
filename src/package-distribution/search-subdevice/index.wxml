@@ -95,7 +95,20 @@
                 />
               </view>
 
-              <text class="text-26 text-black-59 opacity-95 single-text">{{ item.spaceName }}</text>
+              <!-- 尝试滚动显示空间名称 -->
+              <scroll-view
+                enhanced
+                show-scrollbar="{{false}}"
+                scroll-x
+                class="flex w-300rpx"
+                enable-flex
+              >
+                <text
+                  class="text-26 text-black-59 opacity-95"
+                  style="white-space: nowrap"
+                  >{{ item.spaceName }}</text
+                >
+              </scroll-view>
             </view>
 
             <view
