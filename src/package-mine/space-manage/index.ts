@@ -2,7 +2,7 @@ import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import Toast from '@vant/weapp/toast/toast'
 import pageBehaviors from '../../behaviors/pageBehaviors'
-import { projectBinding, projectStore, spaceBinding, userBinding } from '../../store/index'
+import { projectBinding, projectStore, spaceBinding, spaceStore, userBinding } from '../../store/index'
 import { strUtil } from '../../utils/index'
 import { SpaceConfig, SpaceLevel, defaultImgDir } from '../../config/index'
 import { addSpace, querySpaceList } from '../../apis/index'
@@ -188,6 +188,7 @@ ComponentWithComputed({
 
       if (isCreateChild) {
         this.init()
+        spaceStore.updateAllSpaceList()
       } else {
         this.goBack()
       }

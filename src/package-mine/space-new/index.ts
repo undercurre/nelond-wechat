@@ -3,7 +3,7 @@ import Toast from '@vant/weapp/toast/toast'
 import pageBehaviors from '../../behaviors/pageBehaviors'
 import { SpaceConfig, SpaceLevel } from '../../config/index'
 import { addSpace } from '../../apis/index'
-import { projectStore } from '../../store/index'
+import { projectStore, spaceStore } from '../../store/index'
 
 ComponentWithComputed({
   options: {},
@@ -80,6 +80,7 @@ ComponentWithComputed({
 
       // 刷新数据 // TODO 解耦空间和设备的更新方法
       await projectStore.updateSpaceCardList()
+      await spaceStore.updateAllSpaceList()
 
       this.goBack()
     },

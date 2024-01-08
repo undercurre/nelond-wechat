@@ -3,7 +3,7 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import Dialog from '@vant/weapp/dialog/dialog'
 import Toast from '@vant/weapp/toast/toast'
 import pageBehaviors from '../../behaviors/pageBehaviors'
-import { projectBinding, spaceBinding, userBinding, userStore } from '../../store/index'
+import { projectBinding, spaceBinding, spaceStore, userBinding, userStore } from '../../store/index'
 import { emitter, getCurrentPageParams } from '../../utils/index'
 import { delSpace, updateSpace } from '../../apis/index'
 
@@ -84,7 +84,8 @@ ComponentWithComputed({
 
       if (res.success) {
         // TODO 优化返回后更新
-        spaceBinding.store.updateSpaceList()
+        spaceStore.updateSpaceList()
+        spaceStore.updateAllSpaceList()
         emitter.emit('projectInfoEdit')
         this.goBack()
       } else {
@@ -112,7 +113,8 @@ ComponentWithComputed({
       const res = await delSpace(this.data.spaceInfo.spaceId)
 
       if (res.success) {
-        spaceBinding.store.updateSpaceList()
+        spaceStore.updateSpaceList()
+        spaceStore.updateAllSpaceList()
         emitter.emit('projectInfoEdit')
 
         wx.navigateBack()
