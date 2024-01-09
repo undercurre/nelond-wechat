@@ -3,6 +3,7 @@ import { spaceBinding, deviceBinding, spaceStore, sceneStore, deviceStore } from
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { PRO_TYPE } from '../../config/index'
+import Toast from '@vant/weapp/toast/toast'
 
 ComponentWithComputed({
   // options: {
@@ -289,6 +290,10 @@ ComponentWithComputed({
       }
     },
     showPopup() {
+      if (!spaceStore.allSpaceList.length) {
+        Toast('请先添加空间')
+        return
+      }
       this.setData({ show: true })
     },
     closePopup() {
