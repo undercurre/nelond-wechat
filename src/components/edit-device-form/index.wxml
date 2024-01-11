@@ -42,6 +42,7 @@
     bind:click="handleSpaceSelect"
     title="所在空间"
     border="{{false}}"
+    custom-class="space-cell"
     value="{{deviceInfo.spaceName}}"
   ></van-cell>
 </view>

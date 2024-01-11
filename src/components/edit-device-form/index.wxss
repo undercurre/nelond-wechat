@@ -14,3 +14,8 @@
   display: none;
   /* Chrome Safari */
 }
+
+.space-cell {
+  border-radius: 32rpx;
+  background-color: #f6fafd !important;
+}
