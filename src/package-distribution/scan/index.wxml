@@ -149,7 +149,7 @@
       </view>
     </view>
 
-    <view class="h-96"></view>
+    <view class="shrink-0 h-96"></view>
 
     <view class="flex flex-row gap-46rpx px-24rpx">
       <van-button
@@ -169,7 +169,7 @@
       >
     </view>
 
-    <view class="h-96"></view>
+    <view class="shrink-0 h-96"></view>
   </view>
 </van-popup>
 

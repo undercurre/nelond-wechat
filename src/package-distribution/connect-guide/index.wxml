@@ -56,7 +56,7 @@
   round
   closeable
 >
-  <view class="flex flex-col items-stretch">
+  <view class="max-h-70vh flex flex-col items-stretch">
     <text class="block pt-40rpx pb-16rpx leading-46rpx text-center text-36 opacity-90 text-black-2a font-medium">选择智能网关</text>
 
     <text class="block text-center leading-36rpx text-26 text-black-tips">选择子设备要关联的智能网关</text>
@@ -89,7 +89,7 @@
       </view>
     </view>
 
-    <view class="h-96"></view>
+    <view class="shrink-0 h-96"></view>
 
     <view class="flex flex-row gap-46rpx px-24rpx">
       <van-button
@@ -109,7 +109,7 @@
       >
     </view>
 
-    <view class="h-96"></view>
+    <view class="shrink-0 h-96"></view>
   </view>
 </van-popup>
 
