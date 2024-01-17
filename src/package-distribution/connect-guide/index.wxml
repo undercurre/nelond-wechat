@@ -118,16 +118,10 @@
   use-slot="{{isShowNoGatewayTips}}"
   confirm-button-color="#7cd06a"
 >
-  <view class="flex flex-col items-center px-40rpx pb-48rpx leading-48rpx">
-    <image
-      class="w-160 h-160 mb-48rpx mt-28rpx"
-      src="{{deviceInfo.icon}}"
-    ></image>
+  <view class="flex flex-col items-center px-40rpx py-48rpx leading-48rpx">
+    <text class="w-full block text-28 text-hex-666 pb-24rpx">添加此类网关子设备前，请先在项目中添加智能网关或智慧屏，支持的型号有：</text>
 
-    <text class="w-full block text-28 text-hex-666">添加此设备前，需要先在项目中添加网关设备。</text>
-    <text class="w-full block pb-24rpx text-28 text-hex-666">支持的智能网关型号有：</text>
-
-    <text class="block w-full text-32 text-black-2a">1、MGW-D3</text>
-    <text class="block w-full text-32 text-black-2a">2、D3ZZKP-Z</text>
+    <text class="block w-full text-32 text-black-2a">1、智能网关MSGW-15</text>
+    <!--    <text class="block w-full text-32 text-black-2a">2、智慧屏D3ZZKP-Z</text>-->
   </view>
 </van-dialog>
