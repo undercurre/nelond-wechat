@@ -25,7 +25,7 @@ export const userStore = observable({
   // 是否管理员权限+
   get isManager() {
     const { roleId } = this.userInfo
-    return roleId === UserRole.SuperAdmin || UserRole.Creator || roleId === UserRole.Admin
+    return roleId === UserRole.SuperAdmin || roleId === UserRole.Creator || roleId === UserRole.Admin
   },
 
   logout() {

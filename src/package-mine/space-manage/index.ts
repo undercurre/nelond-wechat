@@ -41,15 +41,18 @@ ComponentWithComputed({
     },
     // 显示空间添加按钮（可添加不同层级）
     showSpaceAdding(data) {
-      const { plevel } = data
-      return plevel === SpaceLevel.undef
+      const { plevel, isManager } = data
+      return isManager && plevel === SpaceLevel.undef
     },
     showChildAdding(data) {
-      const { plevel } = data
-      return plevel === SpaceLevel.park || plevel === SpaceLevel.building || plevel === SpaceLevel.floor
+      const { plevel, isManager } = data
+      return isManager && (plevel === SpaceLevel.park || plevel === SpaceLevel.building || plevel === SpaceLevel.floor)
     },
     showParentAdding(data) {
-      const { plevel, pid, allSpaceList } = data
+      const { plevel, pid, allSpaceList, isManager } = data
+      if (!isManager) {
+        return false
+      }
       // 父节点为园区节点，直接返回，不能添加上级
       if (plevel === SpaceLevel.park) {
         return false
