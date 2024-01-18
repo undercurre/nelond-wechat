@@ -1,3 +1,4 @@
+<page-meta page-style="overflow: hidden;" />
 <nav-bar
   z-index="{{113}}"
   title="智能场景"

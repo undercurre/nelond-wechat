@@ -34,3 +34,7 @@
   /* background-image: linear-gradient(-90deg, #7cd06a 0%, #20b86c 96%); */
   background-color: #7cd06a;
 }
+
+view {
+  --button-large-height: 5.5vh;
+}
