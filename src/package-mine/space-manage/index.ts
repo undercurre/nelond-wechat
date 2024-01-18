@@ -195,10 +195,10 @@ ComponentWithComputed({
         return
       }
 
-      if (isCreateChild) {
-        this.init()
-        spaceStore.updateAllSpaceList()
-      } else {
+      this.init()
+      spaceStore.updateAllSpaceList()
+
+      if (!isCreateChild) {
         this.goBack()
       }
     },
