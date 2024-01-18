@@ -17,7 +17,7 @@ ComponentWithComputed({
     isLoaded: false,
     defaultImgDir,
     spaceId: '0',
-    spaceName: spaceStore.currentSpace?.spaceName ?? '全部',
+    spaceName: spaceStore.currentSpaceNameFull ?? '全部',
     listHeight: 0,
     roomSelectMenu: {
       x: '0px',
@@ -288,7 +288,7 @@ ComponentWithComputed({
       const spaceInfo = e.detail[e.detail.length - 1]
       this.setData({
         spaceId: spaceInfo.spaceId,
-        spaceName: spaceInfo.spaceName,
+        spaceName: spaceStore.getSpaceFullName(spaceInfo),
       })
     },
     handleSpaceSelect() {
