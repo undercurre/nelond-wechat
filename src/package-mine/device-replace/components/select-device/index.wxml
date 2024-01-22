@@ -59,11 +59,11 @@
     />
   </view>
 </van-popup>
-
+<!-- TODO:dataTypeList可优化为在选择新设备时直接传入旧设备的type，即可筛选只有该类设备的空间 -->
 <all-space-select
   show="{{showSpaceSelectPopup}}"
   cellStyle="background-color:rgba(255,255,255,0.6);border-radius:36rpx;"
-  dataType="device"
+  dataTypeList="{{['device']}}"
   initConfirm="{{false}}"
   bind:confirm="handleSpaceSelectConfirm"
 ></all-space-select>

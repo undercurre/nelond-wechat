@@ -25,8 +25,7 @@
     </view>
     <view class="w-750rpx">
       <all-space-select
-        dataType="{{cardType}}"
-        filter="{{true}}"
+        dataTypeList="{{[cardType]}}"
         bind:confirm="handleRoomSelect"
       ></all-space-select>
     </view>
