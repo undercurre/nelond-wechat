@@ -168,7 +168,10 @@ ComponentWithComputed({
       }
       return false
     },
-    // 空间显示名称：如果为公共空间，则显示{父空间名称}-公共空间
+    /**
+     * 空间显示名称
+     * @returns 如果为公共空间，则显示{父空间名称}-公共空间；如果非公共空间，则直接显示当前空间名称
+     */
     title(data) {
       const currentSpace = data.currentSpace as Space.allSpace
       if (currentSpace?.publicSpaceFlag === 0) {
@@ -177,6 +180,11 @@ ComponentWithComputed({
 
       const parentSpace = spaceStore.currentSpaceSelect[spaceStore.currentSpaceSelect.length - 2]
       console.log('title', currentSpace, parentSpace?.spaceName)
+
+      // 如果父空间不存在
+      if (!parentSpace?.spaceName) {
+        return currentSpace?.spaceName ?? ''
+      }
 
       const _title = `${parentSpace?.spaceName}-${currentSpace?.spaceName}`
       return _title.length > 10 ? _title.slice(0, 4) + '...' + _title.slice(-6) : _title
@@ -1232,7 +1240,13 @@ ComponentWithComputed({
     },
 
     goBackAndPop() {
-      runInAction(() => spaceStore.currentSpaceSelect.pop())
+      runInAction(() => {
+        // 如果当前是公共空间，要多退出一层
+        if (spaceStore.currentSpaceSelect[spaceStore.currentSpaceSelect.length - 1].publicSpaceFlag === 1) {
+          spaceStore.currentSpaceSelect.pop()
+        }
+        spaceStore.currentSpaceSelect.pop()
+      })
       wx.navigateBack()
     },
   },
