@@ -136,7 +136,6 @@ ComponentWithComputed({
       power: 0,
       groupId: '',
     },
-    pname: '', // 父空间名称
   },
 
   computed: {
@@ -171,10 +170,15 @@ ComponentWithComputed({
     },
     // 空间显示名称：如果为公共空间，则显示{父空间名称}-公共空间
     title(data) {
-      const { currentSpace, pname } = data
-      console.log('title', currentSpace, pname)
-      const _title =
-        (currentSpace?.publicSpaceFlag === 1 ? `${pname}-${currentSpace?.spaceName}` : currentSpace?.spaceName) ?? ''
+      const currentSpace = data.currentSpace as Space.allSpace
+      if (currentSpace?.publicSpaceFlag === 0) {
+        return currentSpace?.spaceName ?? ''
+      }
+
+      const parentSpace = spaceStore.currentSpaceSelect[spaceStore.currentSpaceSelect.length - 2]
+      console.log('title', currentSpace, parentSpace?.spaceName)
+
+      const _title = `${parentSpace?.spaceName}-${currentSpace?.spaceName}`
       return _title.length > 10 ? _title.slice(0, 4) + '...' + _title.slice(-6) : _title
     },
     sceneListInBar(data) {
@@ -263,10 +267,9 @@ ComponentWithComputed({
     /**
      * 生命周期函数--监听页面加载
      */
-    async onLoad(query: { from?: string; pname?: string }) {
+    async onLoad(query: { from?: string }) {
       Logger.log('space-onLoad', query)
       this.data._from = query.from ?? ''
-      this.setData({ pname: query.pname })
     },
 
     async onShow() {

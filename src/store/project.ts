@@ -58,6 +58,13 @@ export const projectStore = observable({
     const res = await this.updateProjectList()
     // 如果当前选中的项目ID未存在，则选择第一个 // TODO 即时项目ID已有值，也要与项目列表比较，是否真实存在
     if (res.success) {
+      // 如果项目列表为空
+      if (!res.result?.content?.length) {
+        this.setProjectId('0')
+        othersStore.setIsInit(true)
+        console.log('[KS]项目列表为空')
+        return
+      }
       const pIndex = res.result.content.findIndex((p) => p.projectId === this.currentProjectId)
 
       // 如果未指定项目ID，或者项目ID已被删除

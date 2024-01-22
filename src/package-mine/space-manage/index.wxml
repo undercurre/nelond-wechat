@@ -27,24 +27,28 @@
     </view>
   </view>
 
-  <scroll-view
+  <view
     wx:if="{{sList.length}}"
-    class="mt-40rpx grow shrink h-500 box-border mx-24rpx"
-    scroll-y
-    enhanced
-    enable-flex
-    show-scrollbar="{{false}}"
+    class="flex flex-1 mt-40rpx"
   >
-    <space-card
-      wx:for="{{sList}}"
-      wx:key="spaceId"
-      space-info="{{item}}"
-      data-space="{{item.spaceId}}"
-      bind:cardtap="handleCardTap"
-      isEditMode="{{isEditMode}}"
-      isManagePage
-    ></space-card>
-  </scroll-view>
+    <scroll-view
+      class="flex flex-col h-500 mx-24rpx"
+      scroll-y
+      enhanced
+      enable-flex
+      show-scrollbar="{{false}}"
+    >
+      <space-card
+        wx:for="{{sList}}"
+        wx:key="spaceId"
+        space-info="{{item}}"
+        data-space="{{item.spaceId}}"
+        bind:cardtap="handleCardTap"
+        isEditMode="{{isEditMode}}"
+        isManagePage
+      ></space-card>
+    </scroll-view>
+  </view>
 
   <!-- 无空间时显示 -->
   <view
