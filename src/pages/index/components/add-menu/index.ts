@@ -21,7 +21,7 @@ ComponentWithComputed({
     isShow: {
       type: Boolean,
       value: false,
-      observer: function (newVal: boolean) {
+      observer(newVal: boolean) {
         if (newVal) {
           this.setData({
             isRender: true,
@@ -76,7 +76,7 @@ ComponentWithComputed({
         this.hideAnimate()
         return
       }
-      if (!spaceStore.allSpaceList.length) {
+      if (!spaceStore.spaceList.length) {
         Toast('请先添加空间')
         this.hideAnimate()
         return
