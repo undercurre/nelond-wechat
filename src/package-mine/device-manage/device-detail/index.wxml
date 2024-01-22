@@ -134,9 +134,9 @@
 />
 <all-space-select
   show="{{showEditRoomPopup}}"
+  showCell="{{false}}"
+  showTab="{{false}}"
   initConfirm="{{false}}"
-  cellStyle="background-color:rgba(255,255,255,0.6);border-radius:36rpx;"
-  dataType="device"
   bind:confirm="handleDeviceRoomEditConfirm"
 ></all-space-select>
 <edit-laundry-popup

@@ -2,7 +2,7 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import { spaceBinding, deviceBinding, spaceStore, sceneStore, deviceStore } from '../../store/index'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import pageBehavior from '../../behaviors/pageBehaviors'
-import { PRO_TYPE } from '../../config/index'
+import { PRO_TYPE, SCREEN_PID } from '../../config/index'
 import Toast from '@vant/weapp/toast/toast'
 
 ComponentWithComputed({
@@ -34,11 +34,11 @@ ComponentWithComputed({
       value: true,
     },
     /**
-     * 数据类型：device设备/scene场景/sensor传感器
+     * 数据类型：device存在任意可控设备/scene场景/sensor传感器/switch开关和智慧屏/light灯光/gateway网关
      */
-    dataType: {
-      type: String,
-      value: '',
+    dataTypeList: {
+      type: Array,
+      value: [],
       observer() {
         this.initTree()
       },
@@ -47,10 +47,11 @@ ComponentWithComputed({
      * 仅开启dataType有效
      * true 过滤包含非公共空间
      * false 仅过滤公共空间
+     * 因为目前需求为展示所有公共空间，则无需用filter该属性，默认为true即可
      */
     filter: {
       type: Boolean,
-      value: false,
+      value: true,
       observer() {
         this.initTree()
       },
@@ -193,18 +194,6 @@ ComponentWithComputed({
       spaceStore.allSpaceList
         .sort((a, b) => b.spaceLevel - a.spaceLevel)
         .forEach((space) => {
-          // 该空间存在场景
-          const hasScene =
-            sceneStore.allRoomSceneList.findIndex(
-              (scene) => scene.spaceId === space.spaceId && scene.deviceActions?.length > 0,
-            ) >= 0
-          // 该空间存在设备
-          const hasDevice = deviceStore.allDeviceList.findIndex((device) => device.spaceId === space.spaceId) >= 0
-          // 该空间存在传感器
-          const hasSensor =
-            deviceStore.allDeviceList.findIndex(
-              (device) => device.spaceId === space.spaceId && device.proType === PRO_TYPE.sensor,
-            ) >= 0
           const notPublicSpace = space.publicSpaceFlag === 0
           // const hasBrotherNode =
           //   spaceStore.allSpaceList.findIndex((s) => s.pid === space.pid && s.spaceId !== space.spaceId) >= 0
@@ -215,26 +204,88 @@ ComponentWithComputed({
           //   spaceStore.allSpaceList.findIndex((s) => s.pid === space.spaceId && s.publicSpaceFlag === 0) >= 0
           // 下层空间是否存在空间
           const hasChild = spaceList.findIndex((s) => s.pid === space.spaceId) >= 0
-          if (this.data.dataType === 'scene') {
-            if (this.data.filter) {
-              if (hasScene || hasChild) spaceList.push(space)
-            } else {
-              if (notPublicSpace || (!notPublicSpace && hasBrotherNode)) spaceList.push(space)
-            }
-          } else if (this.data.dataType === 'device') {
-            if (this.data.filter) {
-              if (hasDevice || hasChild) spaceList.push(space)
-            } else {
-              if (notPublicSpace || (!notPublicSpace && hasBrotherNode)) spaceList.push(space)
-            }
-          } else if (this.data.dataType === 'sensor') {
-            if (this.data.filter) {
-              if (hasSensor || hasChild) spaceList.push(space)
-            } else {
-              if (notPublicSpace || (!notPublicSpace && hasBrotherNode)) spaceList.push(space)
-            }
-          } else {
+
+          if (this.data.dataTypeList.length === 0) {
+            //hasBrotherNode始终为true，所以所有空间都展示，如果有filter的需求要改一下
             if (notPublicSpace || (!notPublicSpace && hasBrotherNode)) spaceList.push(space)
+          } else {
+            if (this.data.dataTypeList.includes('scene')) {
+              // 该空间存在场景
+              const hasScene =
+                sceneStore.allRoomSceneList.findIndex(
+                  (scene) => scene.spaceId === space.spaceId && scene.deviceActions?.length > 0,
+                ) >= 0
+
+              if (this.data.filter) {
+                // 只有有场景或者有子空间的空间会展示
+                if (hasScene || hasChild) spaceList.push(space)
+              } else {
+                // 非公共空间或者公共空间里有场景或公共空间有兄弟节点时会展示
+                if (notPublicSpace || (!notPublicSpace && hasBrotherNode && hasScene)) spaceList.push(space)
+              }
+            }
+            if (this.data.dataTypeList.includes('device')) {
+              // 该空间存在可控设备
+              const hasDevice =
+                deviceStore.allDeviceList.findIndex(
+                  (device) => device.spaceId === space.spaceId && device.proType !== PRO_TYPE.gateway,
+                ) >= 0
+              if (this.data.filter) {
+                if (hasDevice || hasChild) spaceList.push(space)
+              } else {
+                if (notPublicSpace || (!notPublicSpace && hasBrotherNode && hasDevice)) spaceList.push(space)
+              }
+            }
+            if (this.data.dataTypeList.includes('sensor')) {
+              // 该空间存在传感器
+              const hasSensor =
+                deviceStore.allDeviceList.findIndex(
+                  (device) => device.spaceId === space.spaceId && device.proType === PRO_TYPE.sensor,
+                ) >= 0
+              if (this.data.filter) {
+                if (hasSensor || hasChild) spaceList.push(space)
+              } else {
+                if (notPublicSpace || (!notPublicSpace && hasBrotherNode && hasSensor)) spaceList.push(space)
+              }
+            }
+            if (this.data.dataTypeList.includes('light')) {
+              // 该空间存在灯具
+              const hasLight =
+                deviceStore.allDeviceList.findIndex(
+                  (device) => device.spaceId === space.spaceId && device.proType === PRO_TYPE.light,
+                ) >= 0
+              if (this.data.filter) {
+                if (hasLight || hasChild) spaceList.push(space)
+              } else {
+                if (notPublicSpace || (!notPublicSpace && hasBrotherNode && hasLight)) spaceList.push(space)
+              }
+            }
+            if (this.data.dataTypeList.includes('switch')) {
+              // 该空间存在开关包括智慧屏开关
+              const hasSwitch =
+                deviceStore.allDeviceList.findIndex(
+                  (device) =>
+                    device.spaceId === space.spaceId &&
+                    (device.proType === PRO_TYPE.switch || SCREEN_PID.includes(device.productId)),
+                ) >= 0
+              if (this.data.filter) {
+                if (hasSwitch || hasChild) spaceList.push(space)
+              } else {
+                if (notPublicSpace || (!notPublicSpace && hasBrotherNode && hasSwitch)) spaceList.push(space)
+              }
+            }
+            if (this.data.dataTypeList.includes('gateway')) {
+              // 该空间存在网关
+              const hasGateway =
+                deviceStore.allDeviceList.findIndex(
+                  (device) => device.spaceId === space.spaceId && device.proType === PRO_TYPE.gateway,
+                ) >= 0
+              if (this.data.filter) {
+                if (hasGateway || hasChild) spaceList.push(space)
+              } else {
+                if (notPublicSpace || (!notPublicSpace && hasBrotherNode && hasGateway)) spaceList.push(space)
+              }
+            }
           }
         })
       this.setData({
