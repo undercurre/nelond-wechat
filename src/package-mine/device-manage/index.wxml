@@ -102,7 +102,7 @@
   show="{{showSpaceSelectPopup}}"
   showCell="{{false}}"
   showTab="{{false}}"
-  initConfirm="{{false}}"
+  initConfirm="{{true}}"
   bind:confirm="handleSpaceSelectConfirm"
 ></all-space-select>
 

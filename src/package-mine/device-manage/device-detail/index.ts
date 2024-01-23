@@ -33,12 +33,8 @@ ComponentWithComputed({
   },
 
   computed: {
-    spaceName(data) {
-      const { allSpaceList, spaceId } = data
-      if (allSpaceList && spaceId) {
-        return data.allSpaceList.find((space: { spaceId: string }) => space.spaceId === data.spaceId)?.spaceName
-      }
-      return ''
+    spaceName() {
+      return spaceStore.currentSpaceNameFull ?? ''
     },
     mac(data) {
       // 网关规则

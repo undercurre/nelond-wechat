@@ -142,6 +142,7 @@
     showCell="{{false}}"
     showTab="{{false}}"
     initConfirm="{{false}}"
+    targetSpaceId="{{currentSpace.spaceId}}"
     bind:confirm="handleSpaceSelectConfirm"
   ></all-space-select>
 
