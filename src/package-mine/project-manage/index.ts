@@ -1,8 +1,9 @@
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import pageBehaviors from '../../behaviors/pageBehaviors'
-import { projectBinding, projectStore } from '../../store/index'
+import { deviceStore, projectBinding, projectStore, spaceStore } from '../../store/index'
 import { emitter } from '../../utils/index'
+import Toast from '@vant/weapp/toast/toast'
 
 ComponentWithComputed({
   options: {},
@@ -65,6 +66,20 @@ ComponentWithComputed({
       this.setData({
         'selectHomeMenu.isShow': false,
       })
+    },
+
+    toPage(e: { currentTarget: { dataset: { url: string; auth: string; param: string } } }) {
+      console.log('e.currentTarget.dataset', e.currentTarget)
+      const { url } = e.currentTarget.dataset
+
+      // 拦截未有空间的情况
+      if (!spaceStore.spaceList?.length || !deviceStore.deviceList?.length) {
+        Toast('请先添加空间和设备')
+        return
+      }
+
+      // 如果用户已经登录
+      wx.navigateTo({ url })
     },
   },
 })

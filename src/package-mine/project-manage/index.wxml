@@ -49,8 +49,8 @@
           title="设备管理"
           is-link
           center
-          link-type="navigateTo"
-          url="/package-mine/device-manage/index"
+          bind:click="toPage"
+          data-url="/package-mine/device-manage/index"
         />
 
         <van-cell
@@ -72,3 +72,5 @@
   isShow="{{selectHomeMenu.isShow}}"
   bind:select="hideMenu"
 ></project-select-menu>
+
+<van-toast id="van-toast" />
