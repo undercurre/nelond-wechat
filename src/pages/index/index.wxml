@@ -12,6 +12,7 @@
 <block wx:if="{{isLogin}}">
   <!-- 导航下按钮位置，现为副标题 -->
   <view
+    wx:if="{{projectList.length}}"
     style="height: calc(120rpx + {{navigationBarAndStatusBarHeight}});"
     class="fixed left-0 top-0 z-110 overflow-hidden w-750rpx"
     bind:tap="hideMenu"
@@ -82,14 +83,14 @@
           src="{{defaultImgDir}}/no-device.png"
           class="w-300rpx h-300rpx"
         ></image>
-        <text class="text-32rpx text-black-59 mt-44rpx mb-32rpx">尚未添加空间</text>
+        <text class="text-32rpx text-black-59 mt-44rpx mb-32rpx">尚未添加{{projectList.length ? '空间' : '项目'}}</text>
         <text class="text-24rpx text-black-59 mb-224rpx opacity-40">立即添加，开启智慧照明</text>
         <van-button
           bind:click="goToWhenConnected"
           data-url="/package-mine/space-new/index"
           type="primary"
           custom-class="add-immediately-btn"
-          wx:if="{{isInit && isManager}}"
+          wx:if="{{isInit && isManager && projectList.length}}"
         >
           <text class="text-white text-36rpx font-normal">添加项目空间</text>
         </van-button>
