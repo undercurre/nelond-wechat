@@ -168,6 +168,10 @@ ComponentWithComputed({
       }
       return false
     },
+    parentSpace() {
+      const { currentSpaceSelect } = spaceStore
+      return currentSpaceSelect[currentSpaceSelect.length - 2]
+    },
     /**
      * 空间显示名称
      * @returns 如果为公共空间，则显示{父空间名称}-公共空间；如果非公共空间，则直接显示当前空间名称
@@ -177,8 +181,8 @@ ComponentWithComputed({
       if (currentSpace?.publicSpaceFlag === 0) {
         return currentSpace?.spaceName ?? ''
       }
+      const { parentSpace } = data
 
-      const parentSpace = spaceStore.currentSpaceSelect[spaceStore.currentSpaceSelect.length - 2]
       console.log('title', currentSpace, parentSpace?.spaceName)
 
       // 如果父空间不存在
@@ -461,7 +465,16 @@ ComponentWithComputed({
       this.data.scrollTop = e?.detail?.scrollTop || 0
     },
 
-    // onUnload() {},
+    onUnload() {
+      const parentSpace = this.data.parentSpace as Space.SpaceInfo
+      runInAction(() => {
+        // 如果当前是公共空间，要多退出一层
+        if (spaceStore.currentSpace.publicSpaceFlag === 1 && parentSpace.nodeCount <= 1) {
+          spaceStore.currentSpaceSelect.pop()
+        }
+        spaceStore.currentSpaceSelect.pop()
+      })
+    },
     onHide() {
       console.log('onHide')
 
@@ -1237,17 +1250,6 @@ ComponentWithComputed({
       if (!res.success) {
         Toast('控制失败')
       }
-    },
-
-    goBackAndPop() {
-      runInAction(() => {
-        // 如果当前是公共空间，要多退出一层
-        if (spaceStore.currentSpaceSelect[spaceStore.currentSpaceSelect.length - 1].publicSpaceFlag === 1) {
-          spaceStore.currentSpaceSelect.pop()
-        }
-        spaceStore.currentSpaceSelect.pop()
-      })
-      wx.navigateBack()
     },
   },
 })

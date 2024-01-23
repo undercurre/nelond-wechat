@@ -18,10 +18,10 @@ export const spaceStore = observable({
   spaceDeviceList: {} as Record<string, Device.DeviceItem[]>,
 
   // 当前选中的空间栈
-  currentSpaceSelect: [] as Space.allSpace[],
+  currentSpaceSelect: [] as (Space.allSpace | Space.SpaceInfo)[],
 
   // 当前选中空间栈的末端，即真正存放内容的空间
-  get currentSpace(): Space.allSpace {
+  get currentSpace(): Space.allSpace | Space.SpaceInfo {
     if (this.currentSpaceSelect.length) {
       return this.currentSpaceSelect[this.currentSpaceSelect.length - 1]
     } else {
@@ -43,7 +43,7 @@ export const spaceStore = observable({
 
   // 当前选中空间全路径名称
   get currentSpaceNameFull(): string {
-    return this.getSpaceFullName(this.currentSpace)
+    return this.getSpaceFullName(this.currentSpace as Space.allSpace)
   },
 
   get hasSpace() {

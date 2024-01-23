@@ -1,5 +1,5 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { runInAction } from 'mobx-miniprogram'
+import { runInAction, toJS } from 'mobx-miniprogram'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { othersBinding, spaceBinding, userBinding, spaceStore, projectStore, projectBinding } from '../../store/index'
 import { storage, strUtil, throttle } from '../../utils/index'
@@ -83,6 +83,12 @@ ComponentWithComputed({
           subSpaceList: res.result.filter((space) => space.publicSpaceFlag !== 1 || hasSibling),
         })
       }
+    },
+    onShow() {
+      console.log('onShow', toJS(spaceStore.currentSpaceSelect))
+    },
+    onUnload() {
+      runInAction(() => spaceStore.currentSpaceSelect.pop())
     },
 
     goToSpaceManage() {
@@ -301,11 +307,6 @@ ComponentWithComputed({
           plevel: spaceLevel,
         }),
       })
-    },
-
-    goBackAndPop() {
-      runInAction(() => spaceStore.currentSpaceSelect.pop())
-      wx.navigateBack()
     },
   },
 })

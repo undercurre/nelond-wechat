@@ -492,7 +492,7 @@ ComponentWithComputed({
         this.setData(
           {
             spaceId: spaceid,
-            selectedSpaceInfo: spaceStore.currentSpaceSelect,
+            selectedSpaceInfo: spaceStore.currentSpaceSelect as Space.allSpace[],
             _isEditCondition: true,
             sceneDevicelinkSelectList: deviceListInRoom.map((item) => item.uniId),
             opearationType: 'yijian',

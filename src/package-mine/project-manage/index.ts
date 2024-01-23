@@ -73,7 +73,7 @@ ComponentWithComputed({
       const { url } = e.currentTarget.dataset
 
       // 拦截未有空间的情况
-      if (!spaceStore.spaceList?.length || !deviceStore.deviceList?.length) {
+      if (!spaceStore.spaceList?.length || !deviceStore.allDeviceList?.length) {
         Toast('请先添加空间和设备')
         return
       }

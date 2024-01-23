@@ -30,7 +30,7 @@
   z-index="{{113}}"
   title="{{title}}"
   left-arrow
-  bind:leftTap="goBackAndPop"
+  bind:leftTap="goBack"
 >
 </nav-bar>
 <view class="h-114rpx"></view>

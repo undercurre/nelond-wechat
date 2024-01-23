@@ -16,7 +16,7 @@
     title="{{title}}"
     z-index="{{113}}"
     left-arrow
-    bind:leftTap="goBackAndPop"
+    bind:leftTap="goBack"
     disabled="{{opacity === 0}}"
   ></nav-bar>
   <!-- 项目无设备，或只有网关 -->
