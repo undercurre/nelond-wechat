@@ -27,6 +27,7 @@ ComponentWithComputed({
       spaceLevel: SpaceLevel.park,
       spaceName: '',
     } as Space.SpaceInfo,
+    scrollHeight: 0,
   },
 
   computed: {
@@ -97,6 +98,17 @@ ComponentWithComputed({
         })
         this.data.pid = query.pid
       }
+
+      wx.createSelectorQuery()
+        .select('#content')
+        .boundingClientRect()
+        .exec((res) => {
+          if (res[0]?.height) {
+            this.setData({
+              scrollHeight: res[0].height,
+            })
+          }
+        })
     },
     onShow() {
       this.init()

@@ -30,13 +30,15 @@
   <view
     wx:if="{{sList.length}}"
     class="flex flex-1 mt-40rpx"
+    id="content"
   >
     <scroll-view
-      class="flex flex-col h-500 mx-24rpx"
+      class="flex flex-1 flex-col mx-24rpx"
       scroll-y
       enhanced
       enable-flex
       show-scrollbar="{{false}}"
+      style="height: {{scrollHeight}}px;"
     >
       <space-card
         wx:for="{{sList}}"
