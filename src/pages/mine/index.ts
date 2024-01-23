@@ -1,8 +1,9 @@
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { logout, storage, strUtil } from '../../utils/index'
-import { userBinding, projectBinding, userStore } from '../../store/index'
+import { userBinding, projectBinding, userStore, projectStore } from '../../store/index'
 import { defaultImgDir } from '../../config/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
+import Toast from '@vant/weapp/toast/toast'
 
 Component({
   behaviors: [BehaviorWithStore({ storeBindings: [userBinding, projectBinding] }), pageBehavior],
@@ -64,14 +65,19 @@ Component({
     toPage(e: { currentTarget: { dataset: { url: string; auth: string; param: string } } }) {
       console.log('e.currentTarget.dataset', e.currentTarget)
       const { url, auth, param } = e.currentTarget.dataset
-      // 如果用户已经登录，开始请求数据
       if (auth !== 'no' && !storage.get<string>('token')) {
         wx.navigateTo({
           url: '/pages/login/index',
         })
         return
       }
+      // 拦截未有项目的情况
+      if (!projectStore.projectList?.length) {
+        Toast('请先在管理端添加或关联项目')
+        return
+      }
 
+      // 如果用户已经登录
       wx.navigateTo({
         url: strUtil.getUrlWithParams(url, param === undefined ? {} : { param }),
       })
