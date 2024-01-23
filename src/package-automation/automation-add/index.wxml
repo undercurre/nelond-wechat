@@ -346,6 +346,7 @@
   showCell="{{false}}"
   showTab="{{false}}"
   initConfirm="{{false}}"
+  targetSpaceId="{{spaceId}}"
   bind:confirm="handleSceneRoomEditConfirm"
 ></all-space-select>
 <van-toast id="van-toast" />
