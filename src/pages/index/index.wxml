@@ -46,7 +46,10 @@
   </view>
 
   <!-- 项目导航栏 -->
-  <nav-bar z-index="{{113}}">
+  <nav-bar
+    z-index="{{113}}"
+    wx:if="{{projectList.length}}"
+  >
     <view
       catch:tap="handleShowHomeSelectMenu"
       wx:if="{{currentProjectName}}"
