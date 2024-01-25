@@ -48,15 +48,15 @@ Component({
   pageLifetimes: {
     show() {
       if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-        if (!this.data.isLogin || !this.data.isManager) {
-          this.getTabBar().setData({
-            selected: 1,
-          })
-        } else {
-          this.getTabBar().setData({
-            selected: 2,
-          })
-        }
+        // if (!this.data.isLogin || !this.data.isManager) {
+        //   this.getTabBar().setData({
+        //     selected: 1,
+        //   })
+        // } else {
+        this.getTabBar().setData({
+          selected: 2,
+        })
+        // }
       }
     },
   },

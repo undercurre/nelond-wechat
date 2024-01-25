@@ -122,14 +122,6 @@ ComponentWithComputed({
     },
 
     toSetting(e: { detail: Scene.SceneItem }) {
-      // if (userStore.isManager) {
-      //   wx.navigateTo({
-      //     url: strUtil.getUrlWithParams('/package-space-control/scene-edit/index', { sceneId: e.detail.sceneId }),
-      //   })
-      // } else {
-      //   Toast('您当前身份为访客，无法编辑场景')
-      // }
-
       if (userStore.isManager) {
         wx.navigateTo({
           url: strUtil.getUrlWithParams('/package-automation/automation-add/index', {
@@ -139,7 +131,7 @@ ComponentWithComputed({
           }),
         })
       } else {
-        Toast('您当前身份为访客，无法编辑场景')
+        Toast('您当前身份为项目使用者，无法编辑场景')
       }
     },
 
@@ -165,7 +157,7 @@ ComponentWithComputed({
     /** 点击创建场景按钮回调 */
     addScene() {
       if (!this.data.isManager) {
-        Toast('仅创建者与管理员可创建场景')
+        Toast('您当前身份为项目使用者，无法创建场景')
         return
       }
 

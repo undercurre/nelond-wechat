@@ -953,7 +953,7 @@ ComponentWithComputed({
     /** 点击创建场景按钮回调 */
     handleCollect() {
       if (!this.data.isManager) {
-        Toast('仅创建者与管理员可创建场景')
+        Toast('您当前身份为项目使用者，无法创建场景')
         return
       }
 
