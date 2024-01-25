@@ -4,8 +4,15 @@
   bind:leftTap="goBack"
 ></nav-bar>
 
-<view class="h-24rpx"> </view>
+<view class="h-24rpx"></view>
 <van-cell-group inset>
+  <van-cell
+    title="切换环境【{{curEnv}}】"
+    is-link
+    center
+    bind:click="toggleEnv"
+  />
+
   <van-cell
     title="蓝牙调试"
     is-link
