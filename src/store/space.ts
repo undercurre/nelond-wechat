@@ -20,6 +20,9 @@ export const spaceStore = observable({
   // 当前选中的空间栈
   currentSpaceSelect: [] as (Space.allSpace | Space.SpaceInfo)[],
 
+  // 临时使用的当前选中空间
+  currentSpaceTemp: {} as Space.SpaceInfo,
+
   // 当前选中空间栈的末端，即真正存放内容的空间
   get currentSpace(): Space.allSpace | Space.SpaceInfo {
     if (this.currentSpaceSelect.length) {
@@ -49,6 +52,12 @@ export const spaceStore = observable({
   get hasSpace() {
     const { spaceList } = this
     return spaceList?.length
+  },
+
+  setCurrentSpaceTemp(space: Space.SpaceInfo) {
+    runInAction(() => {
+      this.currentSpaceTemp = space
+    })
   },
 
   /**
@@ -112,6 +121,14 @@ export const spaceStore = observable({
 
 export const spaceBinding = {
   store: spaceStore,
-  fields: ['hasSpace', 'allSpaceList', 'spaceList', 'spaceDeviceList', 'currentSpace', 'currentSpaceName'],
+  fields: [
+    'hasSpace',
+    'allSpaceList',
+    'spaceList',
+    'spaceDeviceList',
+    'currentSpace',
+    'currentSpaceTemp',
+    'currentSpaceName',
+  ],
   actions: [],
 }

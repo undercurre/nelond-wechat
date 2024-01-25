@@ -385,9 +385,14 @@ ComponentWithComputed({
           ...e.detail,
           pid: '0',
         })
+        spaceStore.setCurrentSpaceTemp({
+          ...e.detail,
+          pid: this.data.pid,
+        } as Space.SpaceInfo)
         // 如果只有一个子空间，则同时push公共空间
         if (hasOnlyChildren) {
           spaceStore.currentSpaceSelect.push(childPublicSpace!)
+          spaceStore.setCurrentSpaceTemp(childPublicSpace as unknown as Space.SpaceInfo)
         }
       })
 

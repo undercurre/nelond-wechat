@@ -152,7 +152,7 @@ ComponentWithComputed({
       if (data.allDeviceList) {
         return (
           (data.allDeviceList as DeviceCard[]).filter(
-            (device) => device.spaceId === spaceStore.currentSpace.spaceId && device.proType === PRO_TYPE.light,
+            (device) => device.spaceId === spaceStore.currentSpaceTemp.spaceId && device.proType === PRO_TYPE.light,
           ).length > 0
         )
       }
@@ -163,7 +163,7 @@ ComponentWithComputed({
       if (data.allDeviceList?.length) {
         return (
           (data.allDeviceList as DeviceCard[]).filter(
-            (device) => device.spaceId === spaceStore.currentSpace.spaceId && device.proType !== PRO_TYPE.gateway,
+            (device) => device.spaceId === spaceStore.currentSpaceTemp.spaceId && device.proType !== PRO_TYPE.gateway,
           ).length > 0
         )
       }
@@ -171,14 +171,14 @@ ComponentWithComputed({
     },
     parentSpace(data) {
       const { allSpaceList } = data
-      return allSpaceList?.find((s: Space.SpaceInfo) => s.spaceId === data.currentSpace?.pid) ?? {}
+      return allSpaceList?.find((s: Space.SpaceInfo) => s.spaceId === data.currentSpaceTemp?.pid) ?? {}
     },
     /**
      * 空间显示名称
      * @returns 如果为公共空间，则显示{父空间名称}-公共空间；如果非公共空间，则直接显示当前空间名称
      */
     title(data) {
-      const currentSpace = data.currentSpace as Space.allSpace
+      const currentSpace = (data.currentSpaceTemp as Space.allSpace) ?? data.currentSpace
       if (currentSpace?.publicSpaceFlag === 0) {
         return currentSpace?.spaceName ?? ''
       }
@@ -192,6 +192,7 @@ ComponentWithComputed({
       }
 
       const _title = `${parentSpace?.spaceName}-${currentSpace?.spaceName}`
+      console.log('_title', _title)
       return _title.length > 10 ? _title.slice(0, 4) + '...' + _title.slice(-6) : _title
     },
     sceneListInBar(data) {
@@ -287,7 +288,7 @@ ComponentWithComputed({
     },
 
     async onShow() {
-      Logger.log('space-onShow, _firstShow', this.data._firstShow)
+      Logger.log('space-onShow, _firstShow', this.data._firstShow, spaceStore.currentSpace)
       // 首次进入
       if (this.data._firstShow && this.data._from !== 'addDevice') {
         this.updateQueue({ isRefresh: true })
@@ -374,7 +375,7 @@ ComponentWithComputed({
           this.reloadDataThrottle(e)
         } else if (
           e.result.eventType === WSEventType.room_del &&
-          e.result.eventData.spaceId === spaceStore.currentSpace.spaceId
+          e.result.eventData.spaceId === spaceStore.currentSpaceTemp.spaceId
         ) {
           // 空间被删除，退出到首页
           await projectStore.updateSpaceCardList()
@@ -402,7 +403,7 @@ ComponentWithComputed({
 
     // 查询空间分组详情
     async queryGroupInfo() {
-      const res = await queryGroupBySpaceId({ spaceId: spaceStore.currentSpace.spaceId })
+      const res = await queryGroupBySpaceId({ spaceId: spaceStore.currentSpaceTemp.spaceId })
       if (res.success) {
         const spaceStatus = res.result.controlAction[0]
         const { colorTempRangeMap, groupId } = res.result
@@ -468,20 +469,21 @@ ComponentWithComputed({
     },
 
     onUnload() {
+      console.log('onUnload spaceStore.currentSpaceTemp', spaceStore.currentSpaceTemp)
       if (!this.data._isPopSpace) {
         return
       }
       const parentSpace = this.data.parentSpace as Space.SpaceInfo
       runInAction(() => {
         // 如果当前是公共空间，要多退出一层
-        if (spaceStore.currentSpace.publicSpaceFlag === 1 && parentSpace.nodeCount <= 1) {
+        if (spaceStore.currentSpaceTemp.publicSpaceFlag === 1 && parentSpace.nodeCount <= 1) {
           spaceStore.currentSpaceSelect.pop()
         }
         spaceStore.currentSpaceSelect.pop()
       })
     },
     onHide() {
-      console.log('onHide')
+      console.log('【onHide】')
 
       // 解除监听
       emitter.off('wsReceive')
