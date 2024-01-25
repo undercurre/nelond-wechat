@@ -2,7 +2,8 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import pageBehavior from '../behaviors/pageBehaviors'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import { projectBinding, userBinding } from '../store/index'
+import { projectBinding, projectStore, userBinding } from '../store/index'
+import Toast from '@vant/weapp/toast/toast'
 
 ComponentWithComputed({
   options: {},
@@ -56,6 +57,10 @@ ComponentWithComputed({
    */
   methods: {
     switchTab(data: { currentTarget: { dataset: { index: number; path: string } } }) {
+      if (data.currentTarget.dataset.index === 1 && !projectStore.projectList.length) {
+        Toast('请先在管理端添加或关联项目')
+        return
+      }
       wx.switchTab({
         url: data.currentTarget.dataset.path,
       })
