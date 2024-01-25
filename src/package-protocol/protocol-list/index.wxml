@@ -10,7 +10,7 @@
   bind:leftTap="goBack"
   bind:longpress="titlePress"
 ></nav-bar>
-<view class="h-24rpx"> </view>
+<view class="h-24rpx"></view>
 <van-cell-group inset>
   <van-cell
     wx:for="{{list}}"
@@ -21,15 +21,15 @@
     bind:click="handleTap"
   ></van-cell>
 
-  <block wx:if="{{envVersion !== 'release'}}">
-    <van-cell
-      icon="/assets/img/mine/about.png"
-      title="切换环境【{{curEnv}}】"
-      is-link
-      center
-      bind:click="toggleEnv"
-    />
-  </block>
+  <van-cell
+    wx:if="{{envVersion !== 'release'}}"
+    title="调试工具"
+    is-link
+    center
+    link-type="navigateTo"
+    url="/package-debug/pages/index/index"
+    border="{{true}}"
+  />
 
   <van-cell
     wx:if="{{envVersion === 'release' && version}}"

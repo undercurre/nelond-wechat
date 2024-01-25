@@ -35,7 +35,6 @@ Component({
       feedback: '/package-mine/feedback/index',
       help: '/package-mine/help/list/index',
       about: '/package-protocol/protocol-list/index',
-      debug: '/package-debug/pages/index/index',
       deviceCategory: '/package-mine/device-category/index',
       setting: '/package-mine/setting/index',
     },
