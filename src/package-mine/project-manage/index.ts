@@ -1,13 +1,13 @@
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import pageBehaviors from '../../behaviors/pageBehaviors'
-import { deviceStore, projectBinding, projectStore, spaceStore } from '../../store/index'
+import { deviceStore, projectBinding, projectStore, spaceStore, userBinding } from '../../store/index'
 import { emitter } from '../../utils/index'
 import Toast from '@vant/weapp/toast/toast'
 
 ComponentWithComputed({
   options: {},
-  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding] }), pageBehaviors],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, userBinding] }), pageBehaviors],
 
   /**
    * 页面的初始数据

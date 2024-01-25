@@ -54,6 +54,7 @@
         />
 
         <van-cell
+          wx:if="{{isManager}}"
           title="项目成员"
           is-link
           center

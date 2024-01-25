@@ -49,7 +49,7 @@ Component({
   pageLifetimes: {
     show() {
       if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-        if (!this.data.isLogin || this.data.isVisitor) {
+        if (!this.data.isLogin || !this.data.isManager) {
           this.getTabBar().setData({
             selected: 1,
           })
