@@ -136,6 +136,7 @@ ComponentWithComputed({
       power: 0,
       groupId: '',
     },
+    _isPopSpace: true, // 离开页面时是否弹出空间栈
   },
 
   computed: {
@@ -168,9 +169,9 @@ ComponentWithComputed({
       }
       return false
     },
-    parentSpace() {
-      const { currentSpaceSelect } = spaceStore
-      return currentSpaceSelect[currentSpaceSelect.length - 2]
+    parentSpace(data) {
+      const { allSpaceList } = data
+      return allSpaceList?.find((s: Space.SpaceInfo) => s.spaceId === data.currentSpace?.pid) ?? {}
     },
     /**
      * 空间显示名称
@@ -282,6 +283,7 @@ ComponentWithComputed({
     async onLoad(query: { from?: string }) {
       Logger.log('space-onLoad', query)
       this.data._from = query.from ?? ''
+      this.data._isPopSpace = true
     },
 
     async onShow() {
@@ -466,6 +468,9 @@ ComponentWithComputed({
     },
 
     onUnload() {
+      if (!this.data._isPopSpace) {
+        return
+      }
       const parentSpace = this.data.parentSpace as Space.SpaceInfo
       runInAction(() => {
         // 如果当前是公共空间，要多退出一层
@@ -946,6 +951,7 @@ ComponentWithComputed({
       // wx.switchTab({
       //   url: '/pages/automation/index',
       // })
+      this.data._isPopSpace = false
       wx.navigateTo({
         url: '/package-space-control/scene-list/index',
       })
@@ -956,6 +962,7 @@ ComponentWithComputed({
         Toast('您当前身份为项目使用者，无法创建场景')
         return
       }
+      this.data._isPopSpace = false
 
       wx.navigateTo({
         url: strUtil.getUrlWithParams('/package-automation/automation-add/index', {
@@ -1205,10 +1212,13 @@ ComponentWithComputed({
         Toast('当前无法连接网络\n请检查网络设置')
         return
       }
+      this.data._isPopSpace = false
+
       wx.navigateTo({ url: '/package-distribution/choose-device/index' })
     },
     handleRebindGateway() {
       const gateway = deviceStore.allRoomDeviceMap[this.data.offlineDevice.gatewayId]
+      this.data._isPopSpace = false
       wx.navigateTo({
         url: `/package-distribution/wifi-connect/index?type=changeWifi&sn=${gateway.sn}`,
       })
