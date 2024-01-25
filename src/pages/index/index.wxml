@@ -79,7 +79,7 @@
     >
       <!-- 无空间时显示 -->
       <view
-        wx:if="{{!hasSpace}}"
+        wx:if="{{!projectList.length || !hasSpace}}"
         class="w-full mt-68rpx flex flex-col items-center"
       >
         <image

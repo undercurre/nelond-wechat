@@ -72,7 +72,7 @@ Component({
         return
       }
       // 拦截未有项目的情况
-      if (!projectStore.projectList?.length) {
+      if (auth !== 'no' && !projectStore.projectList?.length) {
         Toast('请先在管理端添加或关联项目')
         return
       }
