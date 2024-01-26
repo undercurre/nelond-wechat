@@ -288,12 +288,7 @@ ComponentWithComputed({
     },
 
     async onShow() {
-      Logger.log(
-        'space-onShow, _firstShow',
-        this.data._firstShow,
-        spaceStore.currentSpaceSelect,
-        spaceStore.currentSpace,
-      )
+      Logger.log('space-onShow, _firstShow', this.data._firstShow, spaceStore.currentSpace)
       // 首次进入
       if (this.data._firstShow && this.data._from !== 'addDevice') {
         this.updateQueue({ isRefresh: true })

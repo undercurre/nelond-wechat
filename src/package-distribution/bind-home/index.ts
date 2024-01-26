@@ -145,7 +145,6 @@ ComponentWithComputed({
         wx.closeBluetoothAdapter()
 
         Logger.console('cacheData', cacheData)
-        Logger.console('currentSpaceSelect', spaceStore.currentSpaceSelect)
         if (cacheData.pageEntry) {
           wx.reLaunch({
             url: cacheData.pageEntry,
