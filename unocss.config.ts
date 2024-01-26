@@ -11,7 +11,7 @@ export default defineConfig({
   },
   theme: {
     colors: {
-      blue: '#488fff',
+      blue: '#7cd06a',
       black: {
         '2a': '#27282A',
         '59': '#555659',

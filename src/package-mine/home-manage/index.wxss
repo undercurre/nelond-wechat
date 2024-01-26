@@ -1,5 +1,0 @@
-/* package-mine/hoom-manage/index.wxss */
-.home-select-arrow {
-  right: -64rpx;
-  top: 10rpx;
-}

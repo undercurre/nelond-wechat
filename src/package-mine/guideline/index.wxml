@@ -1,7 +1,15 @@
 <view class="page-container">
-  <nav-bar background="#eef2f7" leftArrow="{{true}}" show-go-home bind:leftTap="goBack" title="操作步骤"></nav-bar>
-
+  <nav-bar
+    background="#eef7f4"
+    leftArrow="{{true}}"
+    bind:leftTap="goBack"
+    title="操作步骤"
+  ></nav-bar>
   <scroll-view>
-    <image class="image-intro m-24rpx" src="{{showImg}}" mode="widthFix"></image>
+    <image
+      class="image-intro m-24rpx"
+      src="{{showImg}}"
+      mode="widthFix"
+    ></image>
   </scroll-view>
 </view>

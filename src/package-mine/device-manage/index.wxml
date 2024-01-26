@@ -11,20 +11,25 @@
   <nav-bar
     title="设备管理"
     left-arrow
-    show-go-home
     bind:leftTap="goBack"
   ></nav-bar>
 
-  <room-tabs
-    class="px-32rpx mt-32rpx"
-    sDeviceList="{{allRoomDeviceList}}"
-    bind:roomSelect="handleRoomSelect"
-    showGateway="{{true}}"
-  ></room-tabs>
+  <van-cell-group
+    border="{{false}}"
+    inset
+  >
+    <van-cell
+      is-link
+      bind:click="handleSpaceSelect"
+      title="所在空间"
+      value="{{spaceName}}"
+      border="{{false}}"
+    ></van-cell>
+  </van-cell-group>
 
   <!-- 无设备 -->
   <view
-    wx:if="{{deviceListCompited.length === 0}}"
+    wx:if="{{deviceListCompited.length === 0 && isLoaded && spaceId !=='0' }}"
     class="w-750rpx h-100vh mt-80rpx flex flex-col items-center"
   >
     <image
@@ -34,15 +39,13 @@
     <text class="text-28rpx text-black-59 mt-48rpx mb-64rpx">暂无设备</text>
   </view>
   <!-- 设备列表 -->
-  <view
-    id="content"
-    class="flex-1"
-  >
+  <view class="flex-1">
     <scroll-view
+      enable-flex
       enhanced
       scroll-y
       show-scrollbar="{{false}}"
-      style="height: {{listHeight}}px;"
+      style="flex-1"
       refresher-triggered="{{isRefresh}}"
       bindrefresherrefresh="onPullDownRefresh"
       refresher-enabled
@@ -94,3 +97,13 @@
     </scroll-view>
   </view>
 </view>
+
+<all-space-select
+  show="{{showSpaceSelectPopup}}"
+  showCell="{{false}}"
+  showTab="{{false}}"
+  initConfirm="{{true}}"
+  bind:confirm="handleSpaceSelectConfirm"
+></all-space-select>
+
+<van-toast id="van-toast" />

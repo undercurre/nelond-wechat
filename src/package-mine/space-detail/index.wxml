@@ -1,0 +1,59 @@
+<view class="page-container flex flex-col pt-40rpx">
+  <nav-bar
+    background="transparent"
+    leftArrow="{{true}}"
+    bind:leftTap="goBack"
+    title="{{spaceInfo.spaceName}}"
+  ></nav-bar>
+
+  <view class="grow">
+    <van-cell-group inset>
+      <van-cell
+        title="空间名称"
+        is-link="{{isManager}}"
+        clickable="{{isManager}}"
+        value="{{spaceInfo.spaceName}}"
+        center
+        bind:click="editSpace"
+      >
+      </van-cell>
+    </van-cell-group>
+  </view>
+
+  <view
+    class="flex px-32rpx gap-x-46rpx"
+    wx:if="{{isManager}}"
+  >
+    <van-button
+      class="flex-1"
+      size="large"
+      bind:click="delSpace"
+      custom-style="background-color: transparent;"
+      >删除</van-button
+    >
+
+    <van-button
+      type="primary"
+      class="flex-1"
+      size="large"
+      bind:click="saveSpaceInfo"
+      >确认</van-button
+    >
+  </view>
+</view>
+
+<van-dialog
+  id="van-dialog"
+  confirm-button-color="#27282A"
+  cancel-button-color="#27282A"
+/>
+
+<van-toast id="van-toast" />
+
+<edit-name-dialog
+  value="{{ spaceInfo.spaceName }}"
+  placeholder="请输入{{spaceLevelName}}名称"
+  title="修改{{spaceLevelName}}名称"
+  show="{{showAddDialog}}"
+  bind:confirm="toUpdateSpace"
+></edit-name-dialog>

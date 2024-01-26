@@ -4,10 +4,7 @@
     title="添加设备"
   ></nav-bar>
 
-  <scroll-view
-    class="box-border h-1000 grow flex flex-col justify-between pt-100rpx"
-    scroll-y
-  >
+  <view class="box-border h-1000 grow flex flex-col justify-between pt-100rpx pb-24rpx overflow-auto">
     <tips-box
       text="设备添加成功！"
       icon="{{defaultImgDir}}/success.png"
@@ -18,12 +15,13 @@
     <view class="grow px-24rpx mt-28rpx">
       <edit-device-form
         device-name="{{deviceInfo.deviceName}}"
-        room-id="{{deviceInfo.spaceId}}"
+        space-id="{{deviceInfo.spaceId}}"
+        space-name="{{deviceInfo.spaceName}}"
         switch-list="{{deviceInfo.switchList}}"
         bind:change="changeDeviceInfo"
       ></edit-device-form>
     </view>
-  </scroll-view>
+  </view>
 
   <view class="flex flex-col items-center pt-24rpx px-32rpx">
     <van-button

@@ -1,0 +1,300 @@
+<page-meta page-style="{{ showBeforeAddScenePopup || showAddScenePopup ? 'overflow: hidden;' : '' }}" />
+<!-- 背景 -->
+<view class="w-100vw h-100vh fixed left-0 top-0 bg-hex-f4f8ff bg-z-index-1"></view>
+<view
+  class="fixed left-0 top-0 w-100vw h-50vh bg-z-index"
+  style="background: linear-gradient(180deg, rgba(87, 255, 105, 0.1) 0%, rgba(87, 255, 105, 0) 100%)"
+></view>
+
+<!-- 页面主体，全屏幕点击捕获 -->
+<view
+  bindtap="handleScreenTap"
+  bindtouchmove="handleScreenTap"
+>
+  <!-- 标题 -->
+  <nav-bar
+    title="{{title}}"
+    z-index="{{113}}"
+    left-arrow
+    bind:leftTap="goBack"
+    disabled="{{opacity === 0}}"
+  ></nav-bar>
+  <!-- 项目无设备，或只有网关 -->
+  <view
+    wx:if="{{!roomHasDevice}}"
+    class="w-full flex flex-col items-center"
+  >
+    <image
+      src="{{defaultImgDir}}/no-device.png"
+      class="w-300rpx h-300rpx mt-240rpx"
+    ></image>
+    <text class="text-black-59 text-28rpx mt-48rpx text-center leading-48rpx">{{'空间内还未添加\n可控制的设备'}}</text>
+    <van-button
+      wx:if="{{canAddDevice}}"
+      type="primary"
+      class="mt-240rpx w-686rpx"
+      size="large"
+      bind:click="handleAddDevice"
+      >立即添加</van-button
+    >
+  </view>
+
+  <!-- 场景 -->
+  <view
+    class="tool-box fixed"
+    style="padding-top: {{toolboxTop}}px; height: {{toolboxTop + toolboxContentHeight}}px;"
+  >
+    <view class="scene-box {{roomHasLight ? 'scene-border-bottom' : ''}}">
+      <image
+        src="/assets/img/base/scene.png"
+        class="w-64rpx h-64rpx"
+      ></image>
+      <text
+        id="scene-title"
+        class="text-32rpx text-hex-333333 font-medium ml-16rpx"
+        >场景</text
+      >
+      <view
+        class="flex flex-1 justify-end items-center"
+        bind:tap="handleSceneTap"
+      >
+        <view class="mr-38rpx flex">
+          <view
+            class="scene-icon p-4rpx bg-hex-fff rounded-999"
+            wx:for="{{sceneListInBar}}"
+            wx:key="sceneId"
+          >
+            <view class="bg-hex-eff0f3 rounded-999">
+              <image
+                class="block w-52 h-52"
+                src="{{sceneImgDir}}/{{item.sceneIcon}}.png"
+              ></image>
+            </view>
+          </view>
+        </view>
+        <van-button
+          catchtap="handleCollect"
+          custom-class="fav-btn"
+          type="primary"
+          >创建场景</van-button
+        >
+      </view>
+    </view>
+
+    <block wx:if="{{roomHasLight}}">
+      <!-- 全空间亮度控制 -->
+      <view class="slider-box">
+        <image
+          src="/package-space-control/assets/img/bright.png"
+          class="w-48rpx h-48rpx"
+        />
+        <mz-slider
+          disabled="{{!spaceLight.power}}"
+          catch:slideChange="handleLevelChange"
+          catch:slideEnd="handleLevelEnd"
+          value="{{spaceLight.brightness}}"
+          custom-class="slider-brightness-bar"
+          active-color="linear-gradient(90deg, rgba(80, 127, 255, 1) 0%, #ffffff 100%)"
+          bar-height="{{16}}"
+          use-button-slot
+          data-min="{{1}}"
+          data-is-btn-inset="{{false}}"
+          data-key="roomBrightness"
+          data-show-toast="{{true}}"
+        >
+          <image
+            slot="button"
+            src="/package-space-control/assets/img/btn.png"
+            class="w-72rpx h-72rpx"
+          />
+        </mz-slider>
+      </view>
+
+      <!-- 全空间色温控制 -->
+      <view class="slider-box">
+        <image
+          src="/package-space-control/assets/img/colorTemp.png"
+          class="w-48rpx h-48rpx"
+        />
+        <mz-slider
+          disabled="{{!spaceLight.power}}"
+          catch:slideChange="handleColorTempChange"
+          catch:slideEnd="handleColorTempEnd"
+          value="{{spaceLight.colorTemperature}}"
+          custom-class="slider-color-temp-bar"
+          active-color="rgba(0,0,0,0)"
+          bar-height="{{16}}"
+          use-button-slot
+          data-is-btn-inset="{{false}}"
+          data-key="roomColorTemp"
+          data-show-toast="{{true}}"
+          formatter="{{colorTempFormatter}}"
+        >
+          <image
+            slot="button"
+            src="/package-space-control/assets/img/btn.png"
+            class="w-72rpx h-72rpx"
+          />
+        </mz-slider>
+      </view>
+    </block>
+  </view>
+
+  <!-- 有设备页面主体 -->
+  <view
+    wx:if="{{roomHasDevice}}"
+    class="w-750rpx flex flex-col items-center"
+  >
+    <view class="w-720rpx">
+      <!-- 设备卡片列表 -->
+      <scroll-view
+        scroll-y
+        enhanced
+        show-scrollbar="{{false}}"
+        style="height: {{ scrollViewHeight }}; margin-top: {{toolboxContentHeight}}px"
+        bindscroll="onPageScroll"
+        scroll-top="{{scrollTop}}"
+        scroll-with-animation="{{true}}"
+      >
+        <movable-area
+          wx:if="{{devicePageList.length}}"
+          style="height: {{movableAreaHeight}}rpx; width: 600rpx;"
+        >
+          <view
+            wx:for="{{devicePageList}}"
+            wx:for-item="group"
+            wx:key="g"
+            wx:for-index="g"
+            class="flex flex-row flex-wrap"
+          >
+            <movable-view
+              wx:for="{{group}}"
+              wx:key="uniId"
+              data-index="{{index}}"
+              data-group="{{g}}"
+              data-ordernum="{{item.orderNum}}"
+              x="{{item.x}}"
+              y="{{item.y}}"
+              direction="all"
+              friction="{{999}}"
+              damping="{{100}}"
+              bind:longpress="movableTouchStart"
+              bind:touchend="movableTouchEnd"
+              catch:change="movableChange"
+              class="{{ index === placeholder.index && g === placeholder.groupIndex ? 'z-100' : 'z-1' }}"
+              disabled="{{!isMoving}}"
+            >
+              <device-card
+                class="w-180rpx pb-16rpx pt-16rpx flex justify-center {{editSelectMode && (index !== placeholder.index || g !== placeholder.groupIndex) ? 'shake' : ''}}"
+                showControl="{{!editSelectMode}}"
+                showShadow
+                showGradientBg
+                edit-mode="{{editSelectMode}}"
+                device-info="{{item}}"
+                data-item="{{item}}"
+                select="{{item.select}}"
+                bind:controlTap="handleControlTap"
+                bind:cardTap="handleCardTap"
+                bind:offlineTap="handleShowDeviceOffline"
+                bind:longPress="handleLongpress"
+              />
+            </movable-view>
+          </view>
+        </movable-area>
+
+        <van-skeleton
+          wx:if="{{!deviceListInited}}"
+          row="1"
+          row-width="700rpx"
+          row-class="mt-16rpx rounded-32rpx skeleton_fix"
+        />
+        <van-skeleton
+          wx:if="{{!deviceListInited}}"
+          row="1"
+          row-width="700rpx"
+          row-class="mt-32rpx rounded-32rpx skeleton_fix"
+        />
+        <van-skeleton
+          wx:if="{{!deviceListInited}}"
+          row="1"
+          row-width="700rpx"
+          row-class="mt-32rpx rounded-32rpx skeleton_fix"
+        />
+        <van-skeleton
+          wx:if="{{!deviceListInited}}"
+          row="1"
+          row-width="700rpx"
+          row-class="mt-32rpx rounded-32rpx skeleton_fix"
+        />
+
+        <!-- 有列表时的添加按钮 -->
+        <view
+          class="flex-col-center py-20rpx"
+          wx:if="{{roomHasDevice}}"
+        >
+          <van-button
+            wx:if="{{canAddDevice}}"
+            type="default"
+            color="rgba(255,255,255,0.60)"
+            size="small"
+            custom-class="round-btn-border"
+            round
+            bind:tap="handleAddDevice"
+          >
+            <text class="text-26rpx text-hex-555659">添加设备</text>
+          </van-button>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>
+
+<!-- 设备控制弹窗 -->
+<device-control-popup
+  show="{{isShowCommonControl}}"
+  deviceInfo="{{checkedDeviceInfo}}"
+  checkedList="{{checkedList}}"
+  bind:close="cancelCheckAndPops"
+  bind:updateDevice="updateQueue"
+  bind:lightStatusChange="refreshLightStatus"
+></device-control-popup>
+
+<batch-edit
+  bind:updateDevice="updateQueue"
+  bind:updateList="reloadDeviceListThrottle"
+  bind:close="exitEditMode"
+  bind:selectAll="editSelectAll"
+  editSelectMode="{{editSelectMode}}"
+  editSelectList="{{editSelectList}}"
+></batch-edit>
+
+<van-toast id="van-toast" />
+
+<van-dialog
+  use-slot
+  title="{{offlineDevice.deviceName}}离线"
+  show="{{ showDeviceOffline }}"
+  confirm-button-color="#7cd06a"
+  confirmButtonText="我知道了"
+  bind:close="handleCloseDeviceOffline"
+>
+  <view class="flex-col-center w-full">
+    <image
+      src="{{offlineDevice.pic}}"
+      class="w-160rpx h-160rpx mt-70rpx"
+    />
+    <view class="flex flex-col mt-88rpx">
+      <text class="text-hex-555659 text-32rpx">可能的原因：</text>
+      <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">1、路由器密码被修改，建议将智能网关 </text>
+      <text
+        class="text-28rpx text-blue decoration-solid decoration-blue ml-46rpx mt-8rpx"
+        bindtap="handleRebindGateway"
+        >重新联网</text
+      >
+      <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">2、设备与网关未通电</text>
+      <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">3、设备与网关距离过远，或有其他遮挡物</text>
+      <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">4、路由器未通电或网络异常</text>
+    </view>
+    <view class="h-80rpx"></view>
+  </view>
+</van-dialog>

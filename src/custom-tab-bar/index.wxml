@@ -3,7 +3,7 @@
   <view class="w-750rpx h-106rpx flex">
     <view
       class="flex-1 flex justify-center items-center flex-col"
-      wx:for="{{menuList}}"
+      wx:for="{{list}}"
       data-path="{{item.path}}"
       wx:key="text"
       bindtap="switchTab"
@@ -18,3 +18,4 @@
   </view>
   <view style="height: env(safe-area-inset-bottom)"></view>
 </view>
+<van-toast id="van-toast" />

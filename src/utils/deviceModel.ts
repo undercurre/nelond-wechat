@@ -1,4 +1,4 @@
-import { PRO_TYPE } from '../config/index'
+import { PRO_TYPE, NO_COLOR_TEMP } from '../config/index'
 import { isNullOrUnDef } from './index'
 
 /**
@@ -24,7 +24,7 @@ export function transferDeviceProperty(proType: string, properties: IAnyObject) 
 
   // 灯光属性
   if (proType === PRO_TYPE.light) {
-    const { maxColorTemp, minColorTemp } = properties.colorTempRange || properties // 色温范围，房间首页的数据的色温属性可能已经被转换过，可能不存在colorTempRange属性
+    const { maxColorTemp, minColorTemp } = properties.colorTempRange || properties // 色温范围，空间首页的数据的色温属性可能已经被转换过，可能不存在colorTempRange属性
 
     result.maxColorTemp = maxColorTemp
     result.minColorTemp = minColorTemp
@@ -89,14 +89,14 @@ export function toWifiProperty(proType: string, properties: IAnyObject) {
  * @param proType
  * @param property 设备属性
  */
-export function toPropertyDesc(proType: string, property: IAnyObject) {
+export function toPropertyDesc(proType: string, productId: string, property: IAnyObject) {
   const descList = [] as string[]
   if (proType === PRO_TYPE.light) {
     !isNullOrUnDef(property.power) && descList.push(property.power ? '打开' : '关闭')
     if (property.power === 1) {
       !isNullOrUnDef(property.brightness) && descList.push(`亮度${property.brightness}%`)
 
-      if (!isNullOrUnDef(property.colorTemperature)) {
+      if (!isNullOrUnDef(property.colorTemperature) && !NO_COLOR_TEMP.includes(productId)) {
         const { maxColorTemp, minColorTemp } = property.colorTempRange || property
         const color = (property.colorTemperature / 100) * (maxColorTemp - minColorTemp) + minColorTemp
         descList.push(`色温${color}K`)

@@ -1,14 +1,14 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
-import { homeBinding, homeStore, roomBinding } from '../../../store/index'
+import { deviceStore, projectBinding, projectStore, spaceBinding, userBinding } from '../../../store/index'
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { delGroup, queryGroup, renameGroup, updateGroup } from '../../../apis/index'
-import { proName } from '../../../config/index'
+import { PRO_TYPE, proName } from '../../../config/index'
 import Dialog from '@vant/weapp/dialog/dialog'
 import { emitter } from '../../../utils/index'
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [roomBinding, homeBinding] }), pageBehavior],
+  behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding, projectBinding, userBinding] }), pageBehavior],
   /**
    * 页面的初始数据
    */
@@ -30,19 +30,21 @@ ComponentWithComputed({
       return ''
     },
     canEditDevice(data) {
-      return data.isCreator || data.isAdmin
+      return data.isManager
     },
     /**
      * @description 可被添加到灯组的单灯列表
      * 不能已在灯组中
      */
-    lightListToAdd() {
-      return true
-      // const { deviceFlattenList, lightsInGroup } = deviceStore
-      // return deviceFlattenList.filter(
-      //   (device) =>
-      //     device.proType === PRO_TYPE.light && device.deviceType !== 4 && !lightsInGroup.includes(device.deviceId),
-      // )
+    lightListToAdd(data) {
+      const { groupDeviceList } = data.deviceInfo
+      const { deviceFlattenList } = deviceStore
+      return deviceFlattenList.filter(
+        (device) =>
+          device.proType === PRO_TYPE.light &&
+          device.deviceType !== 4 &&
+          !groupDeviceList?.map((d) => d.deviceId).includes(device.deviceId),
+      )
     },
     canAddDevice(data) {
       return data.canEditDevice && data.lightListToAdd?.length
@@ -115,9 +117,9 @@ ComponentWithComputed({
           })
           if (res.success) {
             Toast('删除成功')
-            homeStore.updateRoomCardList()
+            projectStore.updateSpaceCardList()
             emitter.emit('deviceEdit')
-            emitter.emit('homeInfoEdit')
+            emitter.emit('projectInfoEdit')
             wx.navigateBack()
           } else {
             Toast('删除失败')
@@ -147,10 +149,10 @@ ComponentWithComputed({
 
           if (res.success) {
             Toast('删除成功')
-            homeStore.updateRoomCardList()
+            projectStore.updateSpaceCardList()
             this.queryGroupInfo()
             emitter.emit('deviceEdit')
-            emitter.emit('homeInfoEdit')
+            emitter.emit('projectInfoEdit')
           } else {
             Toast('删除失败')
           }
@@ -174,7 +176,7 @@ ComponentWithComputed({
       const { groupDeviceList = [] } = this.data.deviceInfo
 
       wx.navigateTo({
-        url: '/package-room-control/group/index',
+        url: '/package-space-control/group/index',
         success: (res) => {
           res.eventChannel.emit('createGroup', {
             lightList: [...groupDeviceList, ...e.detail].map((device) => device.deviceId),

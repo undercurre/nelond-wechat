@@ -31,9 +31,9 @@ ComponentWithComputed({
 
   computed: {
     gatewayList(data) {
-      const allRoomDeviceList: Device.DeviceItem[] = (data as IAnyObject).allRoomDeviceList || []
+      const allDeviceList: Device.DeviceItem[] = (data as IAnyObject).allDeviceList || []
 
-      return allRoomDeviceList.filter((item) => item.deviceType === 1)
+      return allDeviceList.filter((item) => item.deviceType === 1)
     },
     currentGuide(data) {
       return data.sensorList.find((sensor) => sensor.productId === data.currentSensor)

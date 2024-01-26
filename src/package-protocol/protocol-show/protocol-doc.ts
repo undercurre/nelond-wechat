@@ -6,7 +6,7 @@ export const privacyPolicy = `
     <span style=";font-family:宋体">您的信任对我们至关重要，我们深知个人信息对您的重要性。我们将按照法律法规要求，在合理、必要的范围内，向您收集个人信息。我们竭尽全力通过合理有效的信息安全技术和管理流程，采取相应的安全保护措施，防止您的信息泄露、损毁或丢失。鉴于此，我们制定本《隐私协议》，并提示您注意：</span>
 </p>
 <p style="text-indent:28px">
-    <span style=";font-family:宋体">本协议适用于美智光电平台所有产品和服务。美智光电小程序是指美智光电股份有限公司及其关联公司运营的美智光电微信小程序（</span>AppID<span style="font-family:宋体">：</span>wxd534524a35f2b601<span style=";font-family:宋体">）。</span>
+    <span style=";font-family:宋体">本协议适用于美智光电平台所有产品和服务。美智光电小程序是指美智光电股份有限公司及其关联公司运营的美智光电微信小程序（</span>AppID<span style="font-family:宋体">：</span>wxdb95761d4a60d268<span style=";font-family:宋体">）。</span>
 </p>
 <p style="text-indent:28px">
     <span style=";font-family:宋体">需要特别说明的是，本协议不适用于第三方向您提供的服务，例如通过美智光电跳转到第三方网站、客户端或程序，您向该第三方服务商提供的个人信息不适用本协议。</span>
@@ -502,7 +502,7 @@ export const privacyPolicy = `
 
 export const userService = `
 <p style="line-height:27px">
-    <span style=";font-family:宋体">欢迎您使用美的照明！</span>
+    <span style=";font-family:宋体">欢迎您使用美的商照！</span>
 </p>
 <p style="line-height:27px">
     <span style=";font-family:宋体">本协议系由您与美智光电（美智光电客户端APP、应用程序、微信小程序、支付宝小程序、网页以及随技术发展出现的新形态）的小程序及服务提供者美智光电科技股份有限公司及其关联公司之间签署。<strong>请您仔细并完整地阅读本协议，特别是以加粗方式显著标识的条款，以及任何链接的条款（该等条款同等重要且共同构成适用于您的协议）。您确认所有服务条款并完成注册程序成为美智光电用户时，即表示您已充分阅读、理解并接受本协议的全部内容，本协议在您与美智光电之间生效并发生法律效力。</strong>如果您不同意本协议或其中任何条款约定，请您咨询美智光电客服或立即停止注册程序。</span>

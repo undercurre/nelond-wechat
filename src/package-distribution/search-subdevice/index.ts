@@ -2,7 +2,7 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { runInAction } from 'mobx-miniprogram'
 import Toast from '@vant/weapp/toast/toast'
-import { deviceStore, homeBinding, homeStore, roomBinding } from '../../store/index'
+import { deviceStore, projectBinding, projectStore, spaceBinding } from '../../store/index'
 import { bleDevicesBinding, bleDevicesStore } from '../store/bleDeviceStore'
 import { delay, emitter, getCurrentPageParams, Logger, strUtil } from '../../utils/index'
 import pageBehaviors from '../../behaviors/pageBehaviors'
@@ -21,7 +21,7 @@ ComponentWithComputed({
     pureDataPattern: /^_/, // 指定所有 _ 开头的数据字段为纯数据字段
   },
 
-  behaviors: [BehaviorWithStore({ storeBindings: [homeBinding, roomBinding, bleDevicesBinding] }), pageBehaviors],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, spaceBinding, bleDevicesBinding] }), pageBehaviors],
 
   /**
    * 页面的初始数据
@@ -185,7 +185,7 @@ ComponentWithComputed({
      */
     async findSensor() {
       // 已绑定的相同设备数量
-      const bindNum = deviceStore.allRoomDeviceList.filter(
+      const bindNum = deviceStore.allDeviceList.filter(
         (item) => item.proType === PRO_TYPE.sensor && item.productId === this.data._productId,
       ).length
 
@@ -205,7 +205,7 @@ ComponentWithComputed({
             isChecked: true,
             status: 'waiting' as const,
             deviceUuid: device.deviceId,
-            spaceId: roomBinding.store.currentRoom.spaceId, // 默认为当前房间
+            spaceId: spaceBinding.store.currentSpace.spaceId, // 默认为当前空间
             mac: device.deviceId,
           }
         })
@@ -400,7 +400,7 @@ ComponentWithComputed({
         for (const device of list) {
           const res = await bindDevice({
             deviceId: device.deviceId,
-            projectId: homeBinding.store.currentProjectId,
+            projectId: projectBinding.store.currentProjectId,
             spaceId: device.spaceId,
             sn: '',
             deviceName: device.name,
@@ -431,7 +431,7 @@ ComponentWithComputed({
 
         if (!res.success) {
           Toast(res.code === 9882 ? '当前网关已离线，请重新选择' : res.msg)
-          deviceStore.updateAllRoomDeviceList() // 刷新设备列表数据，防止返回后还能选择到离线的网关
+          deviceStore.updateallDeviceList() // 刷新设备列表数据，防止返回后还能选择到离线的网关
           return
         }
 
@@ -661,7 +661,7 @@ ComponentWithComputed({
     async bindBleDeviceToCloud(device: Device.ISubDevice) {
       const res = await bindDevice({
         deviceId: device.zigbeeMac,
-        projectId: homeBinding.store.currentProjectId,
+        projectId: projectBinding.store.currentProjectId,
         spaceId: device.spaceId,
         sn: '',
         deviceName: device.name,
@@ -669,7 +669,7 @@ ComponentWithComputed({
 
       if (res.success && res.result.isBind) {
         device.status = 'success'
-        Logger.log(`${device.mac}绑定家庭成功`)
+        Logger.log(`${device.mac}绑定项目成功`)
         // 仅2-4路面板需要更改按键名称
         if (device.switchList.length > 1) {
           await this.editDeviceInfo({ deviceId: res.result.deviceId, switchList: device.switchList })
@@ -685,7 +685,7 @@ ComponentWithComputed({
         })
       } else {
         device.status = 'fail'
-        Logger.error(`${device.mac}绑定家庭失败`, res)
+        Logger.error(`${device.mac}绑定项目失败`, res)
       }
     },
 
@@ -695,7 +695,7 @@ ComponentWithComputed({
       const deviceInfoUpdateVoList = switchList.map((item) => {
         return {
           deviceId: deviceId,
-          projectId: homeStore.currentProjectId,
+          projectId: projectStore.currentProjectId,
           switchId: item.switchId,
           switchName: item.switchName,
           type: '3',
@@ -859,7 +859,7 @@ ComponentWithComputed({
     },
 
     finish() {
-      homeBinding.store.updateCurrentHomeDetail()
+      projectBinding.store.updateCurrentProjectDetail()
       wx.closeBluetoothAdapter()
       bleDevicesStore.reset()
 

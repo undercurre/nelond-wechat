@@ -1,6 +1,13 @@
-<!--package-room-control/index/components/scene-card/index.wxml-->
-<view class="w-340rpx h-140rpx rounded-32rpx box-border flex-center bg-hex-F9FBFE" style="{{style}}" bindtap="handleCardTap">
-  <image class="w-72rpx h-72rpx ml-40rpx bg-white rounded-full" src="https://mzgd-oss-bucket.oss-cn-shenzhen.aliyuncs.com/homlux/auto-scene/{{sceneInfo.sceneIcon}}.png" />
+<!--package-space-control/index/components/scene-card/index.wxml-->
+<view
+  class="w-340rpx h-140rpx rounded-32rpx box-border flex-center bg-hex-F9FBFE"
+  style="{{style}}"
+  bindtap="handleCardTap"
+>
+  <image
+    class="w-72rpx h-72rpx ml-40rpx bg-white rounded-full"
+    src="https://mzgd-oss-bucket.oss-cn-shenzhen.aliyuncs.com/homlux/auto-scene/{{sceneInfo.sceneIcon}}.png"
+  />
   <view class="flex-1 px-40rpx">
     <text class="text-32rpx text-hex-353535 single-text max-w-110rpx">{{sceneInfoCustomName}}</text>
   </view>

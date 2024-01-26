@@ -1,4 +1,0 @@
-/* package-mine/device-manage/components/edit-room-popup/index.wxss */
-.bg-select {
-  background-image: linear-gradient(155deg, #468cfb 6%, #6ba3fc 96%);
-}

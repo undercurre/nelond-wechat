@@ -13,7 +13,7 @@ export const CARD_REFRESH_TIME = 1000
 // 卡片尺寸
 export const CARD_W = rpx2px(180)
 export const CARD_H = rpx2px(236)
-export const ROOM_CARD_H = rpx2px(184) // 房间卡片高度
+export const ROOM_CARD_H = rpx2px(184) // 空间卡片高度
 
 // 设备 modelName -> 品类码
 export const PRO_TYPE = {
@@ -52,6 +52,9 @@ export const SCREEN_PID: readonly string[] = ['zk527b6c944a454e9fb15d3cc1f4d55b'
 
 // 旋钮开关pid
 export const KNOB_PID: readonly string[] = ['midea.knob.001.003']
+
+// 无色温调节pid (工矿灯)
+export const NO_COLOR_TEMP: readonly string[] = ['midea.hlight.005.001']
 
 // 设备品类码 -> modelName
 export const proName: Record<string, string> = {

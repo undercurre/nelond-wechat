@@ -1,6 +1,7 @@
 import { storage, goHome } from '../../utils/index'
+import { runInAction } from 'mobx-miniprogram'
+import { spaceStore } from '../../store/index'
 
-// components/custom-nav-bar/index.ts
 Component({
   options: {},
   /**
@@ -32,8 +33,8 @@ Component({
       value: false,
     },
     showGoHome: {
-      type: Boolean,
-      value: false,
+      type: String,
+      value: 'auto',
     },
   },
 
@@ -52,6 +53,17 @@ Component({
       (storage.get<number>('statusBarHeight') as number) +
       (storage.get<number>('navigationBarHeight') as number) +
       'px',
+    routerLength: 0,
+  },
+
+  lifetimes: {
+    attached() {
+      const pages = getCurrentPages()
+
+      this.setData({
+        routerLength: pages.length,
+      })
+    },
   },
 
   /**
@@ -62,6 +74,10 @@ Component({
       this.triggerEvent('leftTap')
     },
     handleGoHome() {
+      // 清空进入过的空间队列
+      if (spaceStore.currentSpaceSelect?.length) {
+        runInAction(() => (spaceStore.currentSpaceSelect = []))
+      }
       goHome()
     },
   },

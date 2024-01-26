@@ -2,7 +2,6 @@
   "component": true,
   "usingComponents": {
     "tips-box": "/components/tips-box/index",
-    "edit-device-form": "/components/edit-device-form/index",
     "mz-loading": "/components/mz-loading/index",
     "mz-progress": "/components/mz-progress/index"
   }

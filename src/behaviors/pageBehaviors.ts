@@ -1,6 +1,5 @@
 import Toast from '@vant/weapp/toast/toast'
 import { BehaviorWithComputed } from 'miniprogram-computed'
-import { userRole } from '../config/home'
 import { ossDomain } from '../config/index'
 
 export default BehaviorWithComputed({
@@ -48,36 +47,17 @@ export default BehaviorWithComputed({
      */
     onShareAppMessage() {
       return {
-        title: '欢迎使用美的照明Homlux',
+        title: '欢迎使用美的商照',
         path: '/pages/index/index',
         imageUrl: `${ossDomain}/homlux/welcome.png`,
       }
     },
     // onShareTimeline() {
     //   return {
-    //     title: '欢迎使用美的照明Homlux',
+    //     title: '欢迎使用美的商照',
     //     path: '/pages/index/index',
     //   }
     // },
   },
-  computed: {
-    isCreator(data) {
-      if (data.currentProjectDetail) {
-        return data.currentProjectDetail.houseUserAuth === userRole.creator
-      }
-      return false
-    },
-    isAdmin(data) {
-      if (data.currentProjectDetail) {
-        return data.currentProjectDetail.houseUserAuth === userRole.admin
-      }
-      return false
-    },
-    isVisitor(data) {
-      if (data.currentProjectDetail) {
-        return data.currentProjectDetail.houseUserAuth === userRole.visitor
-      }
-      return true
-    },
-  },
+  computed: {},
 })

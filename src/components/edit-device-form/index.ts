@@ -1,10 +1,10 @@
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
-import { homeBinding, roomBinding, roomStore } from '../../store/index'
+import { projectBinding, spaceBinding } from '../../store/index'
 import { checkInputNameIllegal } from '../../utils/index'
 
 Component({
-  behaviors: [BehaviorWithStore({ storeBindings: [homeBinding, roomBinding] })],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, spaceBinding] })],
   /**
    * 组件的属性列表
    */
@@ -68,20 +68,22 @@ Component({
    * 组件的方法列表
    */
   methods: {
-    selectRoom(event: WechatMiniprogram.CustomEvent) {
-      const spaceInfo = roomStore.roomList[event.currentTarget.dataset.index]
+    onSpaceSelect(e: { detail: Space.allSpace[] }) {
+      const selectList = e.detail
+
+      const spaceInfo = selectList[selectList.length - 1]
 
       this.setData({
         'deviceInfo.spaceId': spaceInfo.spaceId,
-        'deviceInfo.spaceName': spaceInfo.spaceName,
+        'deviceInfo.spaceName': selectList.map((item) => item.spaceName).join(','),
       })
 
       this.triggerEvent('change', Object.assign({}, this.data.deviceInfo))
     },
 
     addRoom() {
-      if (roomBinding.store.roomList.length >= 50) {
-        Toast('一个家庭中最多创建50个房间')
+      if (spaceBinding.store.spaceList.length >= 50) {
+        Toast('一个项目中最多创建50个空间')
         return
       }
 
@@ -157,6 +159,12 @@ Component({
     closeAddRoom() {
       this.setData({
         isAddRoom: false,
+      })
+    },
+
+    handleSpaceSelect() {
+      this.setData({
+        showSpaceSelectPopup: true,
       })
     },
   },

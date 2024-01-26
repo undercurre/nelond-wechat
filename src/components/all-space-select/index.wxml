@@ -1,0 +1,194 @@
+<wxs
+  module="utils"
+  src="./index.wxs"
+></wxs>
+<view style="{{cellStyle}}">
+  <van-cell
+    wx:if="{{showCell}}"
+    title="空间选择"
+    value="{{checkedSpaceName}}"
+    value-class="cell-value"
+    custom-style="background-color:transparent;"
+    is-link
+    border="{{false}}"
+    bind:click="showPopup"
+  ></van-cell>
+  <view
+    class="flex h-80rpx w-686rpx"
+    wx:if="{{isShowTab}}"
+  >
+    <scroll-view
+      enhanced
+      show-scrollbar="{{false}}"
+      scroll-x
+      class="flex flex-1"
+      enable-flex
+    >
+      <view class="flex flex-1 justify-start">
+        <view
+          wx:for="{{spaceData[_firstSpaceId].child[_secondSpaceId].child[_thirdSpaceId].child}}"
+          wx:key="spaceId"
+          class="flex-col-center px-32rpx"
+          data-id="{{item.spaceId}}"
+          bind:tap="tabCheck"
+        >
+          <text class="text-28rpx {{_fourthSpaceId === item.spaceId ? 'text-black-2a' : 'text-hex-555659'}} whitespace-nowrap">{{item.spaceName}}</text>
+          <view class="w-42rpx h-8rpx mt-8rpx bg-hex-7cd06a rounded-999 {{_fourthSpaceId === item.spaceId ? 'opacity-100' : 'opacity-0'}}"></view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+<van-popup
+  show="{{ show }}"
+  z-index="10000"
+  round
+  position="bottom"
+  bind:close="closePopup"
+  closeable
+  lock-scroll
+  catch:touchmove
+  root-portal
+>
+  <view class="h-72vh text-black-2a">
+    <view class="flex-center">
+      <text class="h-3vh text-36rpx text-black-2a mt-2_dl_5vh font-medium">空间选择</text>
+    </view>
+    <!-- 多层级选择 -->
+    <view
+      class="h-54vh mt-2_dl_5vh mb-2vh flex"
+      style="box-shadow: inset 0px 2px 12px 0px rgba(97, 109, 136, 0.15)"
+    >
+      <!-- 第一列 -->
+      <view
+        class="transition-all flex"
+        style="width:{{firstSpaceId&&secondSpaceId&&utils.isNotEmptyObject(spaceData[firstSpaceId].child[secondSpaceId].child) ?'187.5rpx' :'375rpx'}}"
+      >
+        <scroll-view
+          class="flex-1"
+          scroll-y
+        >
+          <van-cell
+            wx:for="{{spaceData}}"
+            wx:key="index"
+            title-style="font-size:28rpx;"
+            title="{{item.spaceName}}"
+            custom-class="cell {{firstSpaceId === item.spaceId ? 'checked-1' : 'unchecked-1'}}"
+            border="{{false}}"
+            data-id="{{item.spaceId}}"
+            bind:click="firstCheck"
+          >
+            <van-icon
+              wx:if="{{utils.isNotEmptyObject(item.child) || firstSpaceId === item.spaceId}}"
+              color="{{!utils.isNotEmptyObject(item.child) && firstSpaceId === item.spaceId ?'#7cd06a':'#969799'}}"
+              size="28rpx !important"
+              name="{{!utils.isNotEmptyObject(item.child) && firstSpaceId === item.spaceId ? 'location' : 'arrow'}}"
+              slot="right-icon"
+            />
+          </van-cell>
+        </scroll-view>
+      </view>
+
+      <!-- 第二列 -->
+      <view
+        class="bg-hex-f9f9f9 transition-all flex"
+        style="width:{{firstSpaceId&&secondSpaceId&&utils.isNotEmptyObject(spaceData[firstSpaceId].child[secondSpaceId].child) ?'187.5rpx' :'375rpx'}}"
+      >
+        <scroll-view
+          class="flex-1"
+          scroll-y
+        >
+          <van-cell
+            wx:for="{{spaceData[firstSpaceId].child}}"
+            wx:key="index"
+            title-style="font-size:28rpx;"
+            title="{{item.spaceName}}"
+            custom-class="cell {{secondSpaceId === item.spaceId ? 'checked-2' : 'unchecked-2'}}"
+            border="{{false}}"
+            data-id="{{item.spaceId}}"
+            bind:click="secondCheck"
+          >
+            <van-icon
+              wx:if="{{utils.isNotEmptyObject(item.child) || secondSpaceId === item.spaceId}}"
+              color="{{!utils.isNotEmptyObject(item.child) && secondSpaceId === item.spaceId ?'#7cd06a':'#969799'}}"
+              size="28rpx !important"
+              name="{{!utils.isNotEmptyObject(item.child) && secondSpaceId === item.spaceId ? 'location' : 'arrow'}}"
+              slot="right-icon"
+            />
+          </van-cell>
+        </scroll-view>
+      </view>
+
+      <!-- 第三列 -->
+      <view
+        wx:if="{{firstSpaceId&&secondSpaceId&&utils.isNotEmptyObject(spaceData[firstSpaceId].child[secondSpaceId].child)}}"
+        class="flex bg-hex-f5f5f5 transition-all"
+        style="flex: 2"
+      >
+        <scroll-view
+          class="flex-1"
+          scroll-y
+        >
+          <view
+            wx:for="{{spaceData[firstSpaceId].child[secondSpaceId].child}}"
+            wx:key="index"
+          >
+            <van-cell
+              title-style="font-size:28rpx;"
+              title="{{item.spaceName}}"
+              custom-class="cell {{thirdSpaceId === item.spaceId ? 'checked-3' : 'unchecked-3'}}"
+              border="{{false}}"
+              data-id="{{item.spaceId}}"
+              bind:click="thirdCheck"
+            >
+              <van-icon
+                wx:if="{{utils.isNotEmptyObject(item.child) || thirdSpaceId === item.spaceId}}"
+                color="{{!utils.isNotEmptyObject(item.child) && thirdSpaceId === item.spaceId ?'#7cd06a':'#969799'}}"
+                size="28rpx !important"
+                name="{{thirdSpaceId === item.spaceId ? !utils.isNotEmptyObject(item.child) ? 'location' : 'arrow-down' : 'arrow'}}"
+                slot="right-icon"
+              />
+            </van-cell>
+            <!-- 第四层 -->
+            <view
+              style="{{thirdSpaceId === item.spaceId && utils.isNotEmptyObject(item.child) ? 'padding: 16rpx 32rpx;' : 'height:0;'}}"
+              class="bg-hex-f0f0f0 transition-all overflow-hidden"
+            >
+              <view
+                class="h-72rpx my-16rpx rounded-18rpx leading-72rpx text-center text-28rpx {{fourthSpaceId === item.spaceId ? 'text-hex-ffffff checked-background':'bg-hex-a2a2a2'}}"
+                wx:for="{{item.child}}"
+                wx:key="key"
+                data-id="{{item.spaceId}}"
+                catch:tap="fourthCheck"
+              >
+                {{item.spaceName}}
+              </view>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+
+    <!-- 底部按钮 -->
+    <view class="flex-center">
+      <view class="flex w-686rpx gap-x-46rpx">
+        <van-button
+          class="flex-1"
+          size="large"
+          bind:click="closePopup"
+          >取消</van-button
+        >
+
+        <van-button
+          type="primary"
+          class="flex-1"
+          size="large"
+          disabled="{{disableConfirm}}"
+          bind:click="handleConfirm"
+          >确定</van-button
+        >
+      </view>
+    </view>
+  </view>
+</van-popup>
+<van-toast id="van-toast" />

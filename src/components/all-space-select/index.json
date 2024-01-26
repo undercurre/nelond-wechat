@@ -1,0 +1,8 @@
+{
+  "component": true,
+  "styleIsolation": "apply-shared",
+  "usingComponents": {
+    "handle-onoff": "/components/handle-onoff/index",
+    "van-icon": "@vant/weapp/icon/index"
+  }
+}

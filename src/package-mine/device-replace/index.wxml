@@ -15,19 +15,19 @@
 
       <view class="pt-32rpx px-64rpx">
         <view class="text-24 leading-46rpx text-black-tips">
-          <text class="block">1.被替换设备的名称与房间</text>
+          <text class="block">1.被替换设备的名称与空间</text>
           <text class="block">2.被替换设备的参数设置</text>
           <text class="block">3.被替换设备的场景及参数</text>
         </view>
 
-        <text class="block pt-64rpx text-black-2a text-28 leading-40rpx">替换完成后，被替换的设备将自动从家庭中解绑</text>
+        <text class="block pt-64rpx text-black-2a text-28 leading-40rpx">替换完成后，被替换的设备将自动从项目中解绑</text>
       </view>
     </block>
 
     <block wx:if="{{status === 'oldDevice'}}">
       <steps active="{{0}}"></steps>
       <text class="block text-center pt-60rpx pb-16rpx leading-40rpx text-28 text-black-59">选择被替换设备</text>
-      <text class="block text-center pb-80rpx leading-34rpx text-24 text-hex-a2a2a2">替换完成后，该设备将自动从家庭中解绑。</text>
+      <text class="block text-center pb-80rpx leading-34rpx text-24 text-hex-a2a2a2">替换完成后，该设备将自动从项目中解绑。</text>
 
       <van-cell-group
         inset

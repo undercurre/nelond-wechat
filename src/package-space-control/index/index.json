@@ -1,0 +1,11 @@
+{
+  "component": true,
+  "navigationStyle": "custom",
+  "disableScroll": true,
+  "usingComponents": {
+    "van-skeleton": "@vant/weapp/skeleton/index",
+    "device-control-popup": "./components/device-control-popup/index",
+    "batch-edit": "./components/batch-edit/index",
+    "mz-slider": "/components/mz-slider/index"
+  }
+}

@@ -3,7 +3,7 @@ import pageBehavior from '../../behaviors/pageBehaviors'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { queryAutoSceneLogByHouseId } from '../../apis/scene'
 import { sceneImgDir, defaultImgDir } from '../../config/index'
-import { homeStore } from '../../store/home'
+import { projectStore } from '../../store/project'
 import dayjs from 'dayjs'
 
 ComponentWithComputed({
@@ -49,7 +49,7 @@ ComponentWithComputed({
    */
   methods: {
     async onLoad() {
-      const logRes = await queryAutoSceneLogByHouseId({ projectId: homeStore.currentProjectId })
+      const logRes = await queryAutoSceneLogByHouseId({ projectId: projectStore.currentProjectId })
       if (logRes.success) {
         this.setData({
           _tempLog: logRes.result,
@@ -75,7 +75,7 @@ ComponentWithComputed({
         isRefreshing: true,
       })
 
-      const logRes = await queryAutoSceneLogByHouseId({ projectId: homeStore.currentProjectId })
+      const logRes = await queryAutoSceneLogByHouseId({ projectId: projectStore.currentProjectId })
       if (logRes.success) {
         this.setData({
           _tempLog: logRes.result,
@@ -89,7 +89,7 @@ ComponentWithComputed({
 
     async onLoadmore() {
       const logRes = await queryAutoSceneLogByHouseId({
-        projectId: homeStore.currentProjectId,
+        projectId: projectStore.currentProjectId,
         reportTs: this.data._tempLog[this.data._tempLog.length - 1].reportTs,
       })
       if (logRes.success) {

@@ -1,3 +1,0 @@
-.van-cell__title {
-  flex: unset !important;
-}

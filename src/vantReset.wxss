@@ -1,4 +1,6 @@
-page {
+/* HACK:root-portal无法继承全局page的样式，全局view却能继承 */
+page,
+view {
   /* button start */
   --button-default-color: #a2a2a2;
   --button-default-border-color: #a2a2a2;
@@ -57,7 +59,7 @@ page {
   --switch-width: 96rpx;
   --switch-node-size: 35rpx;
   --switch-background-color: #c8c7cc;
-  --switch-on-background-color: #488fff;
+  --switch-on-background-color: #7cd06a;
   /* switch end */
 
   /* skeleton start */
@@ -92,7 +94,7 @@ page {
 }
 
 .van-button--plain.van-button--primary {
-  color: #488fff !important;
+  color: #7cd06a !important;
 }
 
 .van-button--plain.van-button--danger {
@@ -101,7 +103,7 @@ page {
 }
 
 .switch-index--btn-class-fix {
-  background-color: #488fff !important;
+  background-color: linear-gradient(-90deg, #7cd06a 0%, #20b86c 96%) !important;
   border-radius: 32rpx !important;
   height: 88rpx;
 }
@@ -128,6 +130,11 @@ page {
 .van-cell__title {
   font-weight: 400;
   font-size: 32rpx;
+}
+
+.van-cell__value {
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* cell end */

@@ -1,0 +1,36 @@
+<!--pages/index/components/space-card/index.wxml-->
+<view
+  class="card rounded-32rpx w-702rpx"
+  bindtap="handleCardTap"
+>
+  <view class="flex items-center w-full h-160">
+    <view
+      class="flex items-center justify-center bg-blue rounded-full w-96 h-96 ml-30rpx"
+      style="background: {{icon.color}}"
+    >
+      <text class="text-white text-36rpx font-medium">{{icon.text}}</text>
+    </view>
+    <view class="flex flex-1 flex-col ml-24rpx">
+      <text class="text-36rpx font-medium">{{title}}</text>
+      <view class="flex flex-1 flex-row mt-4rpx">
+        <text
+          wx:for="{{desc}}"
+          wx:key="index"
+          class="text-22rpx mr-10rpx px-10rpx rounded-12rpx desc-{{item.type}}"
+          >{{ item.text }}</text
+        >
+      </view>
+    </view>
+    <image
+      wx:if="{{showEditIcon}}"
+      src="/assets/img/base/edit.png"
+      class="w-48rpx h-48rpx mr-32rpx"
+    ></image>
+    <image
+      wx:elif="{{hasArrow}}"
+      src="/assets/img/base/arrow-right.png"
+      class="w-32rpx h-32rpx mr-32rpx"
+    ></image>
+  </view>
+</view>
+<view class="h-24rpx"></view>

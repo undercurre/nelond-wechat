@@ -1,6 +1,6 @@
 declare namespace AutoScene {
   /**
-   * 查询房间的场景列表项
+   * 查询空间的场景列表项
    */
   interface AutoSceneItem extends SceneBase {
     /**
@@ -18,7 +18,7 @@ declare namespace AutoScene {
     desc: string
   }
   /**
-   * 房间列表里的场景列表项
+   * 空间列表里的场景列表项
    */
   interface SceneBase {
     /**
@@ -52,6 +52,7 @@ declare namespace AutoScene {
   }
   /** 拍扁的结果集合 */
   interface AutoSceneFlattenAction {
+    productId?: string //场景和延时没有productId
     orderNum: number
     /** 设备或场景id */
     uniId: string

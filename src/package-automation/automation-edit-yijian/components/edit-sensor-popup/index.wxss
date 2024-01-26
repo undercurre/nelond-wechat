@@ -1,6 +1,0 @@
-.cell {
-  background-color: #f9fbfe !important;
-}
-.cell:active {
-  background-color: #f2f3f5 !important;
-}

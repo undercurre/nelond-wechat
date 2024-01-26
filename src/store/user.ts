@@ -1,5 +1,6 @@
 import { observable, runInAction } from 'mobx-miniprogram'
 import { queryUserInfo } from '../apis/index'
+import { UserRole } from '../config/index'
 
 export const userStore = observable({
   userInfo: {
@@ -7,11 +8,25 @@ export const userStore = observable({
     nickName: '',
     mobilePhone: '',
     headImageUrl: '',
-    name: '',
+    userName: '',
     wxId: '',
     sex: 0,
+    roleId: '',
+    roleName: '',
   } as User.UserInfo,
   isLogin: false,
+
+  // 是否创建者
+  get isCreator() {
+    const { roleId } = this.userInfo
+    return roleId === UserRole.SuperAdmin || roleId === UserRole.Creator
+  },
+
+  // 是否管理员权限+
+  get isManager() {
+    const { roleId } = this.userInfo
+    return roleId === UserRole.SuperAdmin || roleId === UserRole.Creator || roleId === UserRole.Admin
+  },
 
   logout() {
     runInAction(() => {
@@ -20,9 +35,11 @@ export const userStore = observable({
         nickName: '',
         mobilePhone: '',
         headImageUrl: '',
-        name: '',
+        userName: '',
         wxId: '',
         sex: 0,
+        roleId: UserRole.UnDef,
+        roleName: '',
       }
       this.isLogin = false
     })
@@ -50,6 +67,6 @@ export const userStore = observable({
 
 export const userBinding = {
   store: userStore,
-  fields: ['userInfo', 'isLogin'],
+  fields: ['userInfo', 'isLogin', 'isManager'],
   actions: ['updateUserInfo'],
 }

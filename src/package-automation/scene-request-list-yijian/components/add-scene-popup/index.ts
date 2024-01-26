@@ -9,7 +9,7 @@ import {
   delSwitchAndSwitchAssociated,
 } from '../../../../apis/index'
 import { sceneList, SCREEN_PID } from '../../../../config/index'
-import { deviceStore, homeStore, roomStore, sceneStore } from '../../../../store/index'
+import { deviceStore, projectStore, spaceStore, sceneStore } from '../../../../store/index'
 import { storage, emitter } from '../../../../utils/index'
 
 ComponentWithComputed({
@@ -102,8 +102,8 @@ ComponentWithComputed({
         conditionType: '0',
         deviceActions: [],
         deviceConditions: [],
-        projectId: homeStore.currentProjectDetail.projectId,
-        spaceId: roomStore.roomList[roomStore.currentSpaceIndex].spaceId,
+        projectId: projectStore.currentProjectDetail.projectId,
+        spaceId: spaceStore.currentSpace.spaceId,
         sceneIcon: this.data.sceneIcon,
         sceneName: this.data.sceneName,
         sceneType: this.data.linkSwitch ? '1' : '0',

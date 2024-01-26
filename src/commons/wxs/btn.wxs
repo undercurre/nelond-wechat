@@ -39,7 +39,7 @@ module.exports = {
 
     var bgColor = '#f7f8f9'
     var bgImage = 'none'
-    var bgColorActive = '#488fff'
+    var bgColorActive = '#7cd06a'
     var bgImageActive = 'linear-gradient(155deg, #468CFB 6%, #6BA3FC 96%)'
 
     _inst.setStyle({

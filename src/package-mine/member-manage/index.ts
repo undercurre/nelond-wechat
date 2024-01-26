@@ -2,14 +2,14 @@
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import pageBehaviors from '../../behaviors/pageBehaviors'
-import { homeBinding, userBinding } from '../../store/index'
+import { projectBinding, userBinding } from '../../store/index'
 import { storage } from '../../utils/storage'
 import { emitter } from '../../utils/eventBus'
 import { ShareImgUrl } from '../../config/index'
 
 ComponentWithComputed({
   options: {},
-  behaviors: [BehaviorWithStore({ storeBindings: [homeBinding, userBinding] }), pageBehaviors],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, userBinding] }), pageBehaviors],
 
   /**
    * 页面的初始数据
@@ -54,7 +54,7 @@ ComponentWithComputed({
     ],
     curClickUserItem: null as any,
     curOptionItem: null as any,
-    curUser: { userHouseAuth: 3 } as Project.HouseUserItem,
+    curUser: { userHouseAuth: 3 } as Project.UserItem,
     isNeedShare: false,
     isAdmin: false,
     isVisitor: false,
@@ -66,7 +66,6 @@ ComponentWithComputed({
   lifetimes: {
     // 生命周期函数，可以为函数，或一个在 methods 段中定义的方法名
     attached: function () {
-      this.updateShareSetting()
       this.initData()
 
       emitter.on('invite_user_house', () => {
@@ -80,28 +79,27 @@ ComponentWithComputed({
   },
 
   methods: {
-    initData() {
-      homeBinding.store.updateHomeMemberList().then(() => {
-        this.updateView()
-      })
-      homeBinding.store.getInviteShareId()
+    async initData() {
+      await projectBinding.store.updateHomeMemberList()
+      this.updateView()
     },
     updateView() {
-      if (homeBinding.store.homeMemberInfo.houseUserList.length === 0) return
+      if (projectBinding.store.userList.length === 0) return
       const curUserId = userBinding.store.userInfo.userId
       const result: object[] = []
-      const list = homeBinding.store.homeMemberInfo.houseUserList.sort((a, b) => {
+      const list = projectBinding.store.userList.sort((a, b) => {
         return a.userHouseAuth - b.userHouseAuth
       })
       if (list) {
-        const curUser = list.find((item: Project.HouseUserItem) => {
+        const curUser = list.find((item: Project.UserItem) => {
           return item.userId === curUserId
         })
         if (curUser) {
           result.push({
             icon: curUser.headImageUrl,
+            iconText: curUser.userName.slice(0, 1),
             name: curUser.userName,
-            role: curUser.userHouseAuthName,
+            role: curUser.roleName,
             id: curUser.userId,
             roleCode: curUser.userHouseAuth,
             isCanEdit: false,
@@ -112,13 +110,14 @@ ComponentWithComputed({
             isVisitor: curUser.userHouseAuth === 3,
           })
         }
-        list.forEach((item: Project.HouseUserItem) => {
+        list.forEach((item: Project.UserItem) => {
           if (curUser?.userId !== item.userId) {
             const isCanEdit = this.canIEditOther(curUser?.userHouseAuth, item.userHouseAuth)
             result.push({
               icon: item.headImageUrl,
+              iconText: item.userName.slice(0, 1),
               name: item.userName,
-              role: item.userHouseAuthName,
+              role: item.roleName,
               id: item.userId,
               roleCode: item.userHouseAuth,
               isCanEdit: isCanEdit,
@@ -222,93 +221,10 @@ ComponentWithComputed({
         this.clearOptionList()
       }, 300)
     },
-    onInviteMemberClick() {
-      this.configPopupInviteOption()
-
-      const item = this.data.actionList.find((item) => {
-        return item.key === 'BE_VIS'
-      })
-      this.setData({ curOptionItem: item })
-      this.setPopupOptionPick('BE_VIS')
-
-      if (this.data.isAdmin) {
-        this.setData({
-          isEditRole: false,
-          curClickUserItem: null,
-          isNeedShare: true,
-        })
-        this.onComfirmClick()
-      } else {
-        this.setData({
-          isEditRole: true,
-          curClickUserItem: null,
-          isNeedShare: true,
-        })
-      }
-    },
     onPopupClick(data: any) {
       const item = data.currentTarget.dataset.item
       this.setData({ curOptionItem: item })
       this.setPopupOptionPick(item.key)
-    },
-    onComfirmClick() {
-      console.log(
-        'lmn>>>选择用户:' +
-          JSON.stringify(this.data.curClickUserItem) +
-          '/选择操作:' +
-          JSON.stringify(this.data.curOptionItem),
-      )
-      if (this.data.curClickUserItem && this.data.curOptionItem) {
-        const key = this.data.curOptionItem.key
-        if (key === 'SET_ADMIN') {
-          this.changeUserRole(this.data.curClickUserItem.id, 2)
-        } else if (key === 'CEL_ADMIN') {
-          this.changeUserRole(this.data.curClickUserItem.id, 3)
-        } else if (key === 'DEL_MEM') {
-          this.deleteUser(this.data.curClickUserItem.id)
-        }
-      } else if (this.data.curOptionItem) {
-        const key = this.data.curOptionItem.key
-        if (key === 'BE_MEM') {
-          storage.set('invite_type', '2')
-        } else if (key === 'BE_VIS') {
-          storage.set('invite_type', '3')
-        }
-      }
-      this.setData({
-        curClickUserItem: null,
-        curOptionItem: null,
-      })
-      setTimeout(() => {
-        this.setData({ isEditRole: false })
-        this.clearOptionList()
-        emitter.emit('homeInfoEdit')
-      }, 300)
-    },
-    changeUserRole(userId: string, auth: Project.UserRole) {
-      homeBinding.store.updateMemberAuth(userId, auth).then(() => {
-        this.updateView()
-        emitter.emit('homeInfoEdit')
-      })
-    },
-    deleteUser(userId: string) {
-      homeBinding.store.deleteMember(userId).then(() => {
-        this.updateView()
-        emitter.emit('homeInfoEdit')
-      })
-    },
-    updateShareSetting() {
-      wx.updateShareMenu({
-        withShareTicket: true,
-        isPrivateMessage: true,
-        //activityId: 'xxx',
-        success() {
-          wx.showShareMenu({
-            withShareTicket: true,
-            menus: ['shareAppMessage'],
-          })
-        },
-      })
     },
     onShareAppMessage() {
       const promise = new Promise((resolve) => {
@@ -316,22 +232,22 @@ ComponentWithComputed({
           const type = storage.get('invite_type', '3')
           const time = new Date()
           resolve({
-            title: '邀请你加入我的家庭',
+            title: '邀请你加入我的项目',
             path:
               '/pages/index/index?type=' +
               type +
               '&projectId=' +
-              homeBinding.store.currentProjectId +
+              projectBinding.store.currentProjectId +
               '&time=' +
               time.valueOf() +
               '&shareId=' +
-              homeBinding.store.shareId,
+              projectBinding.store.shareId,
             imageUrl: ShareImgUrl,
           })
         }, 500)
       })
       return {
-        title: '邀请你加入我的家庭',
+        title: '邀请你加入我的项目',
         path: '/pages/index/index?type=visitor',
         imageUrl: ShareImgUrl,
         promise,

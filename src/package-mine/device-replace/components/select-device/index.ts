@@ -1,10 +1,10 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import { roomBinding, deviceBinding } from '../../../../store/index'
+import { spaceBinding, deviceBinding, spaceStore } from '../../../../store/index'
 import { SCREEN_PID } from '../../../../config/index'
 
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [roomBinding, deviceBinding] })],
+  behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding, deviceBinding] })],
 
   /**
    * 组件的属性列表
@@ -27,9 +27,11 @@ ComponentWithComputed({
    * 组件的初始数据
    */
   data: {
-    allRoomDeviceList: Array<Device.DeviceItem>(),
+    allDeviceList: Array<Device.DeviceItem>(),
     checkedDevice: {},
-    roomSelect: '0',
+    spaceId: '0',
+    spaceName: spaceStore.currentSpace?.spaceName ?? '全部',
+    showSpaceSelectPopup: false,
   },
 
   computed: {
@@ -41,35 +43,35 @@ ComponentWithComputed({
     /**
      * @description 所有待选设备列表
      * 如正在选择新设备，则传入 deviceList，即使用指定列表；否则显示所有设备
-     * ! 不按房间筛选
+     * ! 不按空间筛选
      */
     allDeviceList(data) {
-      const list = data.choosingNew ? data.list : data.allRoomDeviceList
+      const list = data.choosingNew ? data.list : data.allDeviceList
       return list.filter((d) => d.deviceType === 2)
     },
 
     /**
      * @description 显示待选设备列表
      * 如正在选择新设备，则传入 deviceList，即使用指定列表；否则显示所有设备
-     * isCurrentRoom 按房间筛选
+     * isCurrentSpace 按空间筛选
      */
     showDeviceList(data) {
-      const list = data.choosingNew ? data.list : data.allRoomDeviceList
+      const list = data.choosingNew ? data.list : data.allDeviceList
 
       return list.filter((device) => {
         const isScreen = SCREEN_PID.includes(device.productId)
         const isSubdevice = device.deviceType === 2
-        const isCurrentRoom = data.roomSelect === '0' ? true : device.spaceId === data.roomSelect
-        return isSubdevice && isCurrentRoom && !isScreen
+        const isCurrentSpace = data.spaceId === '0' ? true : device.spaceId === data.spaceId
+        return isSubdevice && isCurrentSpace && !isScreen
       })
     },
   },
 
   lifetimes: {
     async ready() {
-      await roomBinding.store.updateSpaceList()
+      await spaceBinding.store.updateSpaceList()
 
-      deviceBinding.store.updateAllRoomDeviceList()
+      deviceBinding.store.updateallDeviceList()
     },
   },
 
@@ -82,8 +84,15 @@ ComponentWithComputed({
       this.setData({ checkedDevice: event.detail })
     },
 
-    handleRoomSelect(event: { detail: string }) {
-      this.setData({ roomSelect: event.detail })
+    handleSpaceSelectConfirm(e: { detail: Space.allSpace[] }) {
+      if (!e.detail?.length) {
+        return
+      }
+      const spaceInfo = e.detail[e.detail.length - 1]
+      this.setData({
+        spaceId: spaceInfo.spaceId,
+        spaceName: spaceInfo.spaceName,
+      })
     },
 
     handleClose() {
@@ -92,6 +101,10 @@ ComponentWithComputed({
 
     handleConfirm() {
       this.triggerEvent('confirm', this.data.checkedDevice)
+    },
+
+    handleSpaceSelect() {
+      this.setData({ showSpaceSelectPopup: true })
     },
   },
 })

@@ -1,11 +1,29 @@
 <view class="flex flex-col items-center">
-  <van-progress wx:if="{{showProgress}}" class="w-400 mt-44rpx border-1rpx border-solid border-hex-d3d3d3 rounded-12rpx" percentage="{{ percentage }}" color="linear-gradient(165deg, #468CFB 0%, #6BA3FC 100%)" show-pivot="{{false}}" stroke-width="6" track-color="transparent" />
+  <van-progress
+    wx:if="{{showProgress}}"
+    class="w-400 mt-44rpx border-1rpx border-solid border-hex-d3d3d3 rounded-12rpx"
+    percentage="{{ percentage }}"
+    color="linear-gradient(-90deg, #7cd06a 0%, #20b86c 96%)"
+    show-pivot="{{false}}"
+    stroke-width="6"
+    track-color="transparent"
+  />
 
-  <view wx:if="{{stepList.length}}" class="flex flex-col items-stretch pt-70rpx">
-    <view wx:for="{{stepList}}" wx:key="text" class="flex flex-row items-center justify-between text-28 text-black-tips leading-40rpx pb-40rpx relative">
+  <view
+    wx:if="{{stepList.length}}"
+    class="flex flex-col items-stretch pt-70rpx"
+  >
+    <view
+      wx:for="{{stepList}}"
+      wx:key="text"
+      class="flex flex-row items-center justify-between text-28 text-black-tips leading-40rpx pb-40rpx relative"
+    >
       <text class="{{ index <= activeIndex && 'text-black-59'}}">{{item.text}}</text>
 
-      <image class="absolute -right-64rpx w-32 h-32 {{index > activeIndex && 'opacity-0' }}" src="/assets/img/base/{{ index === activeIndex ? 'loading' : 'check'}}.png"></image>
+      <image
+        class="absolute -right-64rpx w-32 h-32 {{index > activeIndex && 'opacity-0' }}"
+        src="/assets/img/base/{{ index === activeIndex ? 'loading' : 'check'}}.png"
+      ></image>
     </view>
   </view>
 </view>

@@ -1,6 +1,0 @@
-{
-  "component": true,
-  "usingComponents": {
-    "mz-checkbox": "/components/mz-checkbox/index"
-  }
-}

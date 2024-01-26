@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "space-card": "/components/space-card/index",
+    "edit-name-dialog": "../components/edit-name-dialog/index"
+  }
+}

@@ -37,7 +37,7 @@ ComponentWithComputed({
       }
     },
     deviceListCompited(data) {
-      const list = data.allRoomDeviceList ? [...data.allRoomDeviceList].sort((a, b) => a.orderNum - b.orderNum) : []
+      const list = data.allDeviceList ? [...data.allDeviceList].sort((a, b) => a.orderNum - b.orderNum) : []
       if (data.pageParam === 'gateway') {
         return list.filter((d: Device.DeviceItem) => d.proType === PRO_TYPE.gateway)
       } else if (data.pageParam === 'sensor') {
@@ -72,7 +72,7 @@ ComponentWithComputed({
   methods: {
     onLoad() {
       emitter.on('deviceEdit', async () => {
-        await deviceBinding.store.updateAllRoomDeviceList()
+        await deviceBinding.store.updateallDeviceList()
       })
     },
     onUnload() {

@@ -1,8 +1,8 @@
 import { observable, runInAction } from 'mobx-miniprogram'
-import { querySceneListByHouseId } from '../apis/scene'
+import { querySceneListByProjectId } from '../apis/scene'
 import { PRO_TYPE } from '../config/device'
-import { homeStore } from './home'
-import { roomStore } from './room'
+import { projectStore } from './project'
+import { spaceStore } from './space'
 import { IApiRequestOption } from '../utils'
 
 export const sceneStore = observable({
@@ -21,13 +21,13 @@ export const sceneStore = observable({
   },
 
   /**
-   * 当前房间场景
+   * 当前空间场景
    */
   get sceneList(): Scene.SceneItem[] {
-    const { spaceId } = roomStore.currentRoom
-    const roomDeviceList = roomStore.roomDeviceList[spaceId]
-    const hasSwitch = roomDeviceList?.some((device) => device.proType === PRO_TYPE.switch) ?? false
-    const hasLight = roomDeviceList?.some((device) => device.proType === PRO_TYPE.light) ?? false
+    const { spaceId } = spaceStore.currentSpace
+    const spaceDeviceList = spaceStore.spaceDeviceList[spaceId]
+    const hasSwitch = spaceDeviceList?.some((device) => device.proType === PRO_TYPE.switch) ?? false
+    const hasLight = spaceDeviceList?.some((device) => device.proType === PRO_TYPE.light) ?? false
 
     let list = this.allRoomSceneList.filter((scene) => scene.spaceId === spaceId && scene.deviceActions?.length > 0)
 
@@ -41,7 +41,7 @@ export const sceneStore = observable({
     return list.sort((a, b) => a.orderNum - b.orderNum)
   },
 
-  // 房间场景映射，未被使用，可删除
+  // 空间场景映射，未被使用，可删除
   get roomSceneList(): Record<string, Scene.SceneItem[]> {
     const data = {} as Record<string, Scene.SceneItem[]>
     this.allRoomSceneList.forEach((scene) => {
@@ -68,8 +68,8 @@ export const sceneStore = observable({
     return map
   },
 
-  async updateAllRoomSceneList(projectId: string = homeStore.currentProjectId, options?: IApiRequestOption) {
-    const res = await querySceneListByHouseId(projectId, options)
+  async updateAllRoomSceneList(projectId: string = projectStore.currentProjectId, options?: IApiRequestOption) {
+    const res = await querySceneListByProjectId(projectId, options)
     if (res.success) {
       const list = res.result
         .filter((scene) => scene.deviceActions && scene.deviceActions.length)

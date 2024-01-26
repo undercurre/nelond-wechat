@@ -20,10 +20,10 @@
     {
       "root": "package-mine",
       "pages": [
-        "home-manage/index",
-        "home-transfer/index",
-        "room-manage/index",
-        "room-detail/index",
+        "project-manage/index",
+        "space-manage/index",
+        "space-detail/index",
+        "space-new/index",
         "member-manage/index",
         "device-replace/index",
         "ota/index",
@@ -31,7 +31,6 @@
         "device-manage/index",
         "device-manage/device-detail/index",
         "device-manage/group-detail/index",
-        "voice-control/index",
         "guideline/index",
         "device-category/index",
         "help/list/index",
@@ -40,47 +39,35 @@
       ]
     },
     {
-      "root": "package-room-control",
-      "pages": [
-        "index/index",
-        "room-list/index",
-        "scene-edit/index",
-        "scene-request-list/index",
-        "scene-list/index",
-        "group/index"
-      ]
+      "root": "package-space-control",
+      "pages": ["index/index", "space-list/index", "scene-list/index", "group/index"]
     },
     {
       "root": "package-protocol",
-      "pages": ["protocol-show/index", "protocol-list/index", "add-virtual-device/index"]
+      "pages": ["protocol-show/index", "protocol-list/index"]
     },
     {
       "root": "package-auth",
-      "pages": [
-        "pages/auth-screen/index",
-        "pages/index/index",
-        "pages/meiju/index",
-        "pages/home-list/index",
-        "pages/confirm-auth/index",
-        "pages/device-list/index"
-      ]
+      "pages": ["pages/auth-screen/index"]
     },
     {
       "root": "package-automation",
       "pages": [
-        "automation/index",
         "automation-log/index",
         "automation-add/index",
-        "automation-edit-yijian/index",
         "scene-request-list-yijian/index",
         "scene-success/index"
       ]
+    },
+    {
+      "root": "package-debug",
+      "pages": ["pages/index/index", "pages/homos-debug/index", "pages/ble-test/index"]
     }
   ],
   "preloadRule": {
     "pages/index/index": {
       "network": "all",
-      "packages": ["package-room-control", "package-distribution", "package-mine", "package-automation"]
+      "packages": ["package-space-control", "package-distribution", "package-mine", "package-automation"]
     },
     "package-distribution/choose-device/index": {
       "network": "all",
@@ -115,8 +102,7 @@
     "van-dialog": "@vant/weapp/dialog/index",
     "van-toast": "@vant/weapp/toast/index",
     "nav-bar": "./components/custom-nav-bar/index",
-    "home-select-menu": "./components/home-select-menu/index",
-    "add-room": "./components/add-room/index",
+    "project-select-menu": "./components/project-select-menu/index",
     "svg-icon": "./components/svg-icon/index",
     "van-field": "@vant/weapp/field/index",
     "device-card": "./components/device-card/index"
@@ -124,7 +110,7 @@
   "window": {
     "navigationStyle": "custom",
     "backgroundTextStyle": "light",
-    "backgroundColor": "#eef2f7",
+    "backgroundColor": "#eef7f4",
     "navigationBarTextStyle": "black"
   },
   "sitemapLocation": "sitemap.json",

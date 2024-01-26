@@ -11,7 +11,7 @@ export async function queryDeviceOtaUpdateList(projectId: string) {
   }>({
     log: false,
     loading: false,
-    url: '/v1/device/queryDeviceOtaUpdateList',
+    url: '/v1/cl/device/queryDeviceOtaUpdateList',
     data: {
       projectId,
     },
@@ -25,7 +25,7 @@ export async function execOtaUpdate(
   return await mzaioRequest.post<{ otaProductList: Ota.OtaProduct[]; otaUpdateList: Ota.OtaUpdate[] }>({
     log: false,
     loading: options?.loading ?? false,
-    url: '/v1/device/deviceOtaUpdate',
+    url: '/v1/cl/device/deviceOtaUpdate',
     data,
   })
 }
@@ -38,7 +38,7 @@ export async function setOtaSchedule(data: { projectId: string; jobStatus: numbe
   return await mzaioRequest.post<IAnyObject>({
     log: false,
     loading: options?.loading ?? false,
-    url: '/v1/device/saveOrUpdateOtaUpdateSchedule',
+    url: '/v1/cl/device/saveOrUpdateOtaUpdateSchedule',
     data,
   })
 }

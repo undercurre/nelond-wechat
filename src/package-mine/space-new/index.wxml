@@ -1,0 +1,57 @@
+<view class="page-container flex flex-col h-screen">
+  <nav-bar
+    background="transparent"
+    leftArrow="{{true}}"
+    bind:leftTap="goBack"
+    title="空间管理"
+  ></nav-bar>
+
+  <view class="flex flex-1 flex-col mx-48rpx">
+    <view class="pt-64rpx pb-30rpx">
+      <text class="text-black-2a text-28 leading-40rpx">请选择要新增的空间类型</text>
+    </view>
+
+    <view class="flex items-center justify-evenly">
+      <view
+        wx:for="{{spaceLevelList}}"
+        wx:key="item"
+        class="flex-center p-10rpx border-8rpx border-solid rounded-full"
+        bind:tap="selectLevel"
+        data-type="{{item.spaceLevel}}"
+        style="box-shadow: 0 0 20rpx rgba(0, 0, 0, 0.1);border-color: {{item.checked ? item.color: '#e0e0e0'}}"
+      >
+        <text
+          class="flex-center bg-blue rounded-full w-96 h-96 text-white text-36rpx font-medium"
+          style="background: {{item.color}}"
+          >{{item.text}}</text
+        >
+      </view>
+    </view>
+
+    <view class="pt-64rpx pb-30rpx">
+      <text class="text-black-2a text-28 leading-40rpx">{{spaceLevelName}}名称</text>
+    </view>
+
+    <van-field
+      custom-style="padding: 32rpx 32rpx;background-color: #F6FAFD;border-radius: 24rpx;"
+      value="{{ spaceInfo.spaceName }}"
+      placeholder="请输入{{spaceLevelName}}名称"
+      clearable="{{true}}"
+      bind:clear="changeName"
+      bind:change="changeName"
+      border="{{false}}"
+    ></van-field>
+  </view>
+
+  <van-button
+    disabled="{{!spaceInfo.spaceName}}"
+    class="mx-32rpx"
+    size="large"
+    type="primary"
+    block
+    bind:click="toAddSpace"
+    >保存</van-button
+  >
+</view>
+
+<van-toast id="van-toast" />

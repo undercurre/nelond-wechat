@@ -1,4 +1,4 @@
-.room-checked {
+.space-checked {
   background-image: linear-gradient(155deg, #468cfb 6%, #6ba3fc 96%);
 }
 
@@ -11,5 +11,11 @@
 }
 
 .form-box::-webkit-scrollbar {
-  display: none; /* Chrome Safari */
+  display: none;
+  /* Chrome Safari */
+}
+
+.space-cell {
+  border-radius: 32rpx;
+  background-color: #f6fafd !important;
 }

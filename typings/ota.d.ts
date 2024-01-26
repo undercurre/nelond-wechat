@@ -31,7 +31,7 @@ declare namespace Ota {
     otaUpdateStatus: number
     /** 设备图片 */
     pic: string
-    /** 房间名称 */
+    /** 空间名称 */
     spaceName: string
     /** 更新版本号 */
     updateVersion: string

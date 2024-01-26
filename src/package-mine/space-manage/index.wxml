@@ -1,0 +1,106 @@
+<view class="page-container flex flex-col h-screen">
+  <nav-bar
+    background="transparent"
+    leftArrow="{{true}}"
+    bind:leftTap="goBack"
+    title="空间管理"
+  ></nav-bar>
+
+  <view class="w-750rpx flex justify-between pt-28rpx z-112">
+    <!-- 副标题信息 -->
+    <view class="ml-24rpx">
+      <view class="bg-hex-ffffff_42 h-80rpx rounded-40rpx px-10rpx flex items-center flex-center">
+        <text class="text-28rpx font-semibold">{{subTitle}}</text>
+      </view>
+    </view>
+    <view
+      wx:if="{{showEditBtn}}"
+      class="mr-36rpx mt-16rpx"
+      data-mark="addIcon"
+      id="addIcon"
+      catch:tap="toEditMode"
+    >
+      <image
+        src="/assets/img/home-manage/setting.png"
+        class="w-48rpx h-48rpx"
+      ></image>
+    </view>
+  </view>
+
+  <view
+    wx:if="{{sList.length}}"
+    class="flex flex-1 mt-40rpx"
+    id="content"
+  >
+    <scroll-view
+      class="flex flex-1 flex-col mx-24rpx"
+      scroll-y
+      enhanced
+      enable-flex
+      show-scrollbar="{{false}}"
+      style="height: {{scrollHeight}};"
+    >
+      <space-card
+        wx:for="{{sList}}"
+        wx:key="spaceId"
+        space-info="{{item}}"
+        data-space="{{item.spaceId}}"
+        bind:cardtap="handleCardTap"
+        isEditMode="{{isEditMode}}"
+        isManagePage
+      ></space-card>
+    </scroll-view>
+  </view>
+
+  <!-- 无空间时显示 -->
+  <view
+    wx:else
+    class="w-full mt-68rpx flex flex-1 flex-col items-center"
+  >
+    <image
+      src="{{defaultImgDir}}/no-device.png"
+      class="w-300rpx h-300rpx"
+    ></image>
+    <text class="text-32rpx text-black-59 mt-44rpx mb-32rpx">{{emptyDesc}}</text>
+  </view>
+
+  <block wx:if="{{isManager}}">
+    <van-button
+      wx:if="{{showSpaceAdding}}"
+      class="mx-32rpx"
+      size="large"
+      type="primary"
+      block
+      bind:click="addSpacePage"
+      >新增空间</van-button
+    >
+    <van-button
+      wx:if="{{showParentAdding}}"
+      class="mx-32rpx mt-32rpx"
+      size="large"
+      type="primary"
+      block
+      bind:click="addParentDialog"
+      >新增{{spaceParentName}}</van-button
+    >
+    <van-button
+      wx:if="{{showChildAdding}}"
+      class="mx-32rpx mt-32rpx"
+      size="large"
+      type="primary"
+      block
+      bind:click="addChildDialog"
+      >新增{{spaceChildName}}</van-button
+    >
+  </block>
+</view>
+
+<van-toast id="van-toast" />
+
+<edit-name-dialog
+  value="{{ spaceInfo.spaceName }}"
+  placeholder="请输入{{spaceLevelName}}名称"
+  title="新增{{spaceLevelName}}"
+  show="{{showAddDialog}}"
+  bind:confirm="toAddSpace"
+></edit-name-dialog>

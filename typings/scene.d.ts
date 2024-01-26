@@ -1,6 +1,6 @@
 declare namespace Scene {
   /**
-   * 查询房间的场景列表项
+   * 查询空间的场景列表项
    */
   interface SceneItem extends SceneBase {
     /**
@@ -14,9 +14,10 @@ declare namespace Scene {
     orderNum: number
     spaceId: string
     spaceName: string
+    sceneCategory: string //场景类型 0-手动场景 1-自动化场景
   }
   /**
-   * 房间列表里的场景列表项
+   * 空间列表里的场景列表项
    */
   interface SceneBase {
     /**

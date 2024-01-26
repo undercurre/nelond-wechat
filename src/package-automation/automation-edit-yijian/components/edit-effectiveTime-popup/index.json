@@ -1,9 +1,0 @@
-{
-  "component": true,
-  "styleIsolation": "apply-shared",
-  "usingComponents": {
-    "time-picker-view": "../../../../components/time-picker-view/index",
-    "period-select": "../../../../components/period-select/index",
-    "edit-time-popup": "../edit-time-popup/index"
-  }
-}

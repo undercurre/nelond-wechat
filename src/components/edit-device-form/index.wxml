@@ -35,35 +35,17 @@
     </view>
   </block>
 
-  <text class="label">选择房间</text>
+  <text class="label">空间选择</text>
 
-  <view class="flex flex-row flex-wrap gap-32rpx">
-    <text
-      wx:for="{{roomList}}"
-      wx:key="spaceId"
-      class="px-32rpx rounded-28rpx text-28 leading-56rpx {{ item.spaceId === deviceInfo.spaceId ? 'room-checked text-white' : 'bg-hex-DFE1E5 text-black-59'}}"
-      bind:tap="selectRoom"
-      data-index="{{index}}"
-      >{{ item.spaceName }}</text
-    >
-
-    <view
-      class="px-46rpx bg-hex-DFE1E5 rounded-28rpx text-28 leading-56rpx text-black-59"
-      bind:tap="addRoom"
-    >
-      <svg-icon
-        name="icon-park-outline:plus"
-        color="#555659"
-        height="56rpx"
-      ></svg-icon>
-    </view>
-  </view>
+  <van-cell
+    is-link
+    bind:click="handleSpaceSelect"
+    title="所在空间"
+    border="{{false}}"
+    custom-class="space-cell"
+    value="{{deviceInfo.spaceName}}"
+  ></van-cell>
 </view>
-
-<add-room
-  show="{{ isAddRoom }}"
-  bind:close="closeAddRoom"
-></add-room>
 
 <import src="/commons/templates/popup.wxml" />
 <van-popup
@@ -103,5 +85,14 @@
     />
   </view>
 </van-popup>
+
+<all-space-select
+  show="{{showSpaceSelectPopup}}"
+  showCell="{{false}}"
+  showTab="{{false}}"
+  initConfirm="{{false}}"
+  targetSpaceId="{{deviceInfo.spaceId}}"
+  bind:confirm="onSpaceSelect"
+></all-space-select>
 
 <van-toast id="van-toast" />

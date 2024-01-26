@@ -1,6 +1,6 @@
 // service模块存放项目的相关业务代码
-import { connectHouseSocket } from '../apis/websocket'
-import { homeStore, userStore } from '../store/index'
+import { connectSocket } from '../apis/websocket'
+import { projectStore, userStore } from '../store/index'
 import { isLogined, Logger, storage, isConnect, verifyNetwork } from './index'
 import { emitter } from './eventBus'
 import homos from 'js-homos'
@@ -8,7 +8,7 @@ import homos from 'js-homos'
 export function logout() {
   storage.remove('mobilePhone')
   storage.remove('token')
-  storage.remove('localKey') // 清除局域网的家庭key
+  storage.remove('localKey') // 清除局域网的项目key
   userStore.logout()
   homos.logout()
   closeWebSocket()
@@ -42,7 +42,7 @@ export async function startWebsocketService() {
     Logger.log('已存在ws连接，正在关闭已有连接')
     await socketTask?.close({ code: 1000 })
   }
-  socketTask = connectHouseSocket(homeStore.currentProjectDetail.projectId)
+  socketTask = connectSocket(projectStore.currentProjectDetail.projectId)
   socketTask.onClose(onSocketClose)
   socketTask.onOpen((res) => {
     isConnecting = false
@@ -83,7 +83,7 @@ export async function startWebsocketService() {
     try {
       const res = JSON.parse(e.data as string)
 
-      // Logger.console('Ⓦ 收到ws信息：', res)
+      Logger.console('Ⓦ 收到ws信息：', res)
 
       const { topic, message, eventData } = res.result
 
@@ -112,7 +112,7 @@ export async function startWebsocketService() {
     if (socketIsConnect) {
       socketTask?.close({ code: -1 }) // code=-1代码ws报错重连
     } else {
-      // delayConnectWS(15000)
+      delayConnectWS(15000)
     }
   })
 }
@@ -125,7 +125,7 @@ function delayConnectWS(delay = 5000) {
   clearTimeout(connectTimeId)
   connectTimeId = setTimeout(() => {
     Logger.log('socket开始重连')
-    // startWebsocketService()
+    startWebsocketService()
   }, delay)
 }
 
@@ -170,9 +170,9 @@ export function closeWebSocket() {
   }
 }
 
-// emitter.on('networkStatusChange', (res) => {
-//   // 已登录状态下，可以访问外网且当前没有ws连接的情况，发起ws连接
-//   if (res.isConnectStatus && isLogined() && !socketIsConnect) {
-//     startWebsocketService()
-//   }
-// })
+emitter.on('networkStatusChange', (res) => {
+  // 已登录状态下，可以访问外网且当前没有ws连接的情况，发起ws连接
+  if (res.isConnectStatus && isLogined() && !socketIsConnect) {
+    startWebsocketService()
+  }
+})

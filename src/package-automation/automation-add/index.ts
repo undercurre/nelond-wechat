@@ -3,9 +3,16 @@ import Toast from '@vant/weapp/toast/toast'
 import { deleteScene, findDevice, addScene, updateScene } from '../../apis/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { deviceStore, sceneStore, homeStore, autosceneStore, roomStore } from '../../store/index'
+import { deviceStore, sceneStore, projectStore, autosceneStore, spaceStore } from '../../store/index'
 import { PRO_TYPE, SENSOR_TYPE, getModelName, sceneImgDir } from '../../config/index'
-import { toPropertyDesc, storage, getCurrentPageParams, strUtil, checkInputNameIllegal } from '../../utils/index'
+import {
+  toPropertyDesc,
+  storage,
+  getCurrentPageParams,
+  strUtil,
+  checkInputNameIllegal,
+  emitter,
+} from '../../utils/index'
 import { adviceSceneNameList } from '../../config/scene'
 
 ComponentWithComputed({
@@ -21,7 +28,9 @@ ComponentWithComputed({
     dialogConfirmBtnColor: '#27282A',
     sceneImgDir,
     opearationType: 'yijian', // yijian是一键场景，auto是自动化场景
-    spaceId: '',
+    spaceId: '', //选中的最后一级空间Id
+    // 选中的四级空间信息
+    selectedSpaceInfo: [] as Space.allSpace[],
     showEditRoomPopup: false,
     adviceSceneNameList: adviceSceneNameList,
     navigationBarAndStatusBarHeight:
@@ -30,6 +39,8 @@ ComponentWithComputed({
       'px',
     _autosceneInfo: {} as AutoScene.AutoSceneItem, //待编辑的自动化
     autoSceneId: '',
+    yijianSceneId: '',
+    isDefaultYijianScene: false,
     sceneIcon: 'icon-1',
     sceneName: '',
     //场景的生效时间段
@@ -105,9 +116,9 @@ ComponentWithComputed({
         )
       }
     },
-    cardType(data) {
-      return data.selectCardType === 'device' || data.selectCardType === 'sensor' ? 'device' : 'scene'
-    },
+    // cardType(data) {
+    //   return data.selectCardType === 'device' || data.selectCardType === 'sensor' ? 'device' : 'scene'
+    // },
 
     isAllday(data) {
       const start = data.effectiveTime.startTime.split(':')
@@ -155,7 +166,7 @@ ComponentWithComputed({
       return data.sceneDeviceActionsFlatten.filter((item) => item.uniId.indexOf('DLY') === -1).length
     },
     okBtnText(data) {
-      return data.autoSceneId ? '确定' : '设置好了'
+      return data.autoSceneId || data.yijianSceneId ? '确定' : '设置好了'
     },
   },
   lifetimes: {
@@ -180,14 +191,20 @@ ComponentWithComputed({
    */
   methods: {
     async onLoad() {
-      const { autosceneid, roomid } = getCurrentPageParams()
-      console.log('接收到roomid', roomid)
-      this.setData({ autoSceneId: autosceneid, opearationType: 'auto' })
+      const { autosceneid, spaceid, yijianSceneId, selectedSpaceInfo } = getCurrentPageParams()
+      console.log(
+        '_selectedSpaceInfo_selectedSpaceInfo',
+        selectedSpaceInfo,
+        Boolean(selectedSpaceInfo),
+        typeof selectedSpaceInfo,
+      )
 
-      //处理三个传感器、场景和设备列表
+      const _selectedSpaceInfo = selectedSpaceInfo ? JSON.parse(selectedSpaceInfo) : []
+
+      // #region 处理三个传感器、场景和设备列表
       await Promise.all([
         sceneStore.updateAllRoomSceneList(),
-        deviceStore.updateAllRoomDeviceList(), //deviceStore.updateSubDeviceList(), //
+        deviceStore.updateallDeviceList(), //deviceStore.updateSubDeviceList(), //
       ])
       const sensorList = deviceStore.allRoomDeviceFlattenList.filter((item) => item.proType === PRO_TYPE.sensor)
       sensorList.forEach((item) => {
@@ -206,8 +223,11 @@ ComponentWithComputed({
         ),
         sensorList,
       })
+      // #endregion 处理三个传感器、场景和设备列表
 
       if (autosceneid) {
+        this.setData({ autoSceneId: autosceneid, opearationType: 'auto' })
+
         const sensorlinkSelectList = [] as string[]
 
         const autoSceneInfo = autosceneStore.allRoomAutoSceneList.find(
@@ -299,7 +319,7 @@ ComponentWithComputed({
               if (device.proType === PRO_TYPE.switch) {
                 //是开关面板
                 const power = action.controlAction[0].power
-                const desc = toPropertyDesc(device.proType, action.controlAction[0])
+                const desc = toPropertyDesc(device.proType, device.productId, action.controlAction[0])
                 tempSceneDeviceActionsFlatten.push({
                   uniId: device.uniId,
                   name: `${device.switchInfoDTOList[0].switchName} | ${device.deviceName}`,
@@ -311,17 +331,18 @@ ComponentWithComputed({
                     modelName: action.controlAction[0].modelName,
                     power,
                   },
+                  productId: device.productId,
                   orderNum: 0,
                   dragId: device.uniId + Math.floor(Math.random() * 1001),
                 })
                 console.log('添加开关面板', tempSceneDeviceActionsFlatten)
               } else {
-                // const modelName = getModelName(device.proType, device.productId)
+                const modelName = getModelName(device.proType, device.productId)
                 const property = {
-                  // ...device.mzgdPropertyDTOList[modelName],
+                  ...device.mzgdPropertyDTOList[modelName],
                   ...action.controlAction[0],
                 }
-                const desc = toPropertyDesc(device.proType, property)
+                const desc = toPropertyDesc(device.proType, device.productId, property)
                 tempSceneDeviceActionsFlatten.push({
                   uniId: device.uniId,
                   name: device.deviceName,
@@ -333,6 +354,7 @@ ComponentWithComputed({
                     ...property,
                     modelName: getModelName(device.proType, device.productId),
                   },
+                  productId: device.productId,
                   orderNum: 0,
                   dragId: device.uniId + Math.floor(Math.random() * 1001),
                 })
@@ -353,16 +375,124 @@ ComponentWithComputed({
             this.updateSceneDeviceConditionsFlatten()
           },
         )
+        return
       }
 
-      if (roomid) {
+      if (yijianSceneId && spaceid) {
+        this.setData({ yijianSceneId: yijianSceneId, opearationType: 'yijian' })
+
+        // 获取当前scene
+        const sceneInfo = sceneStore.allRoomSceneList.find((item) => item.sceneId === yijianSceneId) as Scene.SceneItem
+        console.log('当前场景', sceneInfo)
+        this.data._sceneInfo = sceneInfo
+        this.setData({
+          sceneIcon: sceneInfo.sceneIcon,
+          sceneName: sceneInfo.sceneName,
+          spaceId: sceneInfo.spaceId,
+          selectedSpaceInfo: _selectedSpaceInfo,
+          isDefaultYijianScene: sceneInfo.isDefault === '1',
+        })
+
+        this.updateSceneDeviceConditionsFlatten()
+
+        //处理执行结果
+        const tempSceneDeviceActionsFlatten = [] as AutoScene.AutoSceneFlattenAction[]
+        const tempSceneDevicelinkSelectList: string[] = []
+
+        sceneInfo.deviceActions.forEach((action) => {
+          //设备
+          let deviceUniId = action.deviceId
+          if (action.proType === PRO_TYPE.switch) {
+            deviceUniId = `${action.deviceId}:${action.controlAction[0].modelName}`
+          }
+          let device = this.data.deviceList.find((item) => item.uniId === deviceUniId)
+          console.log('找到选项', device)
+          if (device) {
+            //是设备
+            if (device.proType === PRO_TYPE.switch) {
+              //是开关面板
+              action.controlAction.forEach((switchInPanel, switchIndex) => {
+                deviceUniId = `${action.deviceId}:${action.controlAction[switchIndex].modelName}`
+                device = this.data.deviceList.find((item) => item.uniId === deviceUniId)
+                if (device) {
+                  console.log('找到选项', device)
+                  const power = action.controlAction[switchIndex].power
+                  const desc = toPropertyDesc(device.proType, device.productId, action.controlAction[switchIndex])
+                  tempSceneDevicelinkSelectList.push(device.uniId)
+                  tempSceneDeviceActionsFlatten.push({
+                    uniId: device.uniId,
+                    name: `${device.switchInfoDTOList[0].switchName} | ${device.deviceName}`,
+                    type: device.deviceType as 1 | 2 | 3 | 4 | 5 | 6,
+                    desc,
+                    pic: device.switchInfoDTOList[0].pic,
+                    proType: PRO_TYPE.switch,
+                    value: {
+                      modelName: action.controlAction[switchIndex].modelName,
+                      power,
+                    },
+                    productId: device.productId,
+                    orderNum: 0,
+                    dragId: device.uniId + Math.floor(Math.random() * 1001),
+                  })
+                  console.log(
+                    '初始化',
+                    switchInPanel,
+                    `${device.switchInfoDTOList[0].switchName} | ${device.deviceName}`,
+                  )
+                }
+              })
+            } else {
+              const modelName = getModelName(device.proType, device.productId)
+              const property = {
+                ...device.mzgdPropertyDTOList[modelName],
+                ...action.controlAction[0],
+              }
+              console.log('propertyproperty', property)
+
+              const desc = toPropertyDesc(device.proType, device.productId, property)
+              tempSceneDevicelinkSelectList.push(device.uniId)
+              tempSceneDeviceActionsFlatten.push({
+                uniId: device.uniId,
+                name: device.deviceName,
+                type: device.deviceType as 1 | 2 | 3 | 4 | 5 | 6,
+                desc,
+                pic: device.pic as string,
+                proType: device.proType,
+                value: {
+                  ...property,
+                  modelName: getModelName(device.proType, device.productId),
+                },
+                productId: device.productId,
+                orderNum: 0,
+                dragId: device.uniId + Math.floor(Math.random() * 1001),
+              })
+            }
+          } else {
+            console.log('设备不存在', action)
+          }
+        })
+        this.setData(
+          {
+            sceneDevicelinkSelectList: tempSceneDevicelinkSelectList,
+            sceneDeviceActionsFlatten: tempSceneDeviceActionsFlatten,
+          },
+          () => {
+            console.log('初始化已选择列表', this.data.sceneDevicelinkSelectList, this.data.sceneDeviceActionsFlatten)
+            this.updateSceneDeviceActionsFlatten()
+            this.updateSceneDeviceConditionsFlatten()
+          },
+        )
+        return
+      }
+      if (spaceid) {
         const deviceListInRoom: Device.DeviceItem[] = deviceStore.allRoomDeviceFlattenList.filter(
-          (item) => item.spaceId === roomid,
+          (item) => item.spaceId === spaceid,
         )
         console.log('默认选中', deviceListInRoom)
         this.setData(
           {
-            spaceId: roomid,
+            spaceId: spaceid,
+            selectedSpaceInfo: spaceStore.currentSpaceSelect as Space.allSpace[],
             _isEditCondition: true,
             sceneDevicelinkSelectList: deviceListInRoom.map((item) => item.uniId),
             opearationType: 'yijian',
@@ -372,6 +502,7 @@ ComponentWithComputed({
             this.updateSceneDeviceConditionsFlatten()
           },
         )
+        return
       }
     },
 
@@ -390,7 +521,7 @@ ComponentWithComputed({
         showEditIconPopup: true,
       })
     },
-    /* 选择建议的房间名称 start */
+    /* 选择建议的空间名称 start */
     selectAdviceName(e: { currentTarget: { dataset: { text: string } } }) {
       const name = e.currentTarget.dataset.text
       this.setData({
@@ -456,27 +587,32 @@ ComponentWithComputed({
           showTimeConditionPopup: true,
         })
       } else if (e.detail === 'touch') {
-        this.setData({
-          opearationType: 'yijian',
-          showEditRoomPopup: true,
-        })
+        if (spaceStore.allSpaceList.length) {
+          this.setData({
+            opearationType: 'yijian',
+            showEditRoomPopup: true,
+          })
+        } else {
+          Toast({ message: '尚未添加空间', zIndex: 9999 })
+          return
+        }
       } else {
-        this.setData({
-          opearationType: 'auto',
-        })
         if (this.data.sensorList.length) {
           this.addSensorPopup()
         } else {
           Toast({ message: '尚未添加传感器', zIndex: 9999 })
           return
         }
+        this.setData({
+          opearationType: 'auto',
+        })
       }
       this.setData({
         showEditConditionPopup: false,
       })
     },
     /* 设置场景条件弹窗 end */
-    /* 设置手动场景——房间 */
+    /* 设置手动场景——空间 */
     handleSceneRoomEditCancel() {
       this.setData({
         showEditRoomPopup: false,
@@ -488,14 +624,18 @@ ComponentWithComputed({
       })
       this.handleConditionShow()
     },
-    async handleSceneRoomEditConfirm(e: { detail: string }) {
+    async handleSceneRoomEditConfirm(e: { detail: Space.allSpace[] }) {
+      console.log(e)
+      const currentSpaceId = e.detail[e.detail.length - 1].spaceId
+      console.log(currentSpaceId)
       const deviceListInRoom: Device.DeviceItem[] = deviceStore.allRoomDeviceFlattenList.filter(
-        (item) => item.spaceId === e.detail,
+        (item) => item.spaceId === currentSpaceId,
       )
       console.log('默认选中', deviceListInRoom)
       this.setData(
         {
-          spaceId: e.detail,
+          selectedSpaceInfo: e.detail,
+          spaceId: currentSpaceId,
           showEditRoomPopup: false,
           _isEditCondition: true,
           sceneDevicelinkSelectList: deviceListInRoom.map((item) => item.uniId),
@@ -506,7 +646,7 @@ ComponentWithComputed({
       )
       this.updateSceneDeviceConditionsFlatten()
     },
-    /* 设置手动场景——房间 */
+    /* 设置手动场景——空间 */
     /**
      * 增加传感器做场景条件
      */
@@ -647,6 +787,10 @@ ComponentWithComputed({
      */
     handleSelectCardShow() {
       // const switchUniId = this.data.checkedList[0]
+      // 默认场景不可编辑场景设备数据
+      if (this.data.isDefaultYijianScene) {
+        return
+      }
       if (
         this.data.opearationType === 'yijian' &&
         this.data.deviceList.filter((item) => !this.data.sceneDevicelinkSelectList.includes(item.uniId)).length === 0
@@ -791,7 +935,7 @@ ComponentWithComputed({
           const name = isSwitch ? `${device.switchInfoDTOList[0].switchName} | ${device.deviceName}` : device.deviceName
           const modelName = isSwitch ? device.uniId.split(':')[1] : getModelName(device.proType, device.productId)
           const pic = isSwitch ? device.switchInfoDTOList[0].pic : device.pic
-          const desc = toPropertyDesc(device.proType, device.property!)
+          const desc = toPropertyDesc(device.proType, device.productId, device.property!)
 
           tempSceneDeviceActionsFlatten.push({
             uniId: device.uniId,
@@ -800,6 +944,7 @@ ComponentWithComputed({
             desc,
             pic,
             proType: device.proType,
+            productId: device.productId,
             value: {
               modelName,
               ...device.property,
@@ -849,13 +994,11 @@ ComponentWithComputed({
       const sceneDeviceConditionsFlatten = [] as AutoScene.AutoSceneFlattenCondition[]
 
       if (this.data.spaceId !== '' && this.data.opearationType === 'yijian') {
+        const desc = this.cmptFullSpaceName()
         sceneDeviceConditionsFlatten.push({
           uniId: 'room',
           name: '手动点击场景',
-          desc: [
-            roomStore.roomList.find((item) => item.spaceId === this.data.spaceId)?.spaceName ??
-              roomStore.roomList[0].spaceName,
-          ],
+          desc: [desc],
           pic: '/package-automation/assets/imgs/automation/touch-materialized.png',
           productId: 'touch',
           property: {},
@@ -886,7 +1029,7 @@ ComponentWithComputed({
         sceneDeviceConditionsFlatten.push({
           uniId: item.uniId,
           name: item.deviceName,
-          desc: toPropertyDesc(item.proType, item.property!),
+          desc: toPropertyDesc(item.proType, item.productId, item.property!),
           pic: item.pic,
           productId: item.productId,
           property: item.property!,
@@ -946,7 +1089,7 @@ ComponentWithComputed({
       conditionItem.property = {
         ...e.detail,
       }
-      conditionItem.desc = toPropertyDesc(conditionItem.proType!, conditionItem.property)
+      conditionItem.desc = toPropertyDesc(conditionItem.proType!, conditionItem.productId, conditionItem.property)
       listItem.property = {
         ...e.detail,
       }
@@ -970,6 +1113,10 @@ ComponentWithComputed({
           showTimeConditionPopup: true,
         })
       } else if (action.productId === 'touch') {
+        if (this.data.isDefaultYijianScene) {
+          // 默认情景不能换空间
+          return
+        }
         this.setData({
           showEditRoomPopup: true,
         })
@@ -990,6 +1137,10 @@ ComponentWithComputed({
      * @returns
      */
     handleAutoSceneActionEdit(e: { detail: number }) {
+      // 默认场景不可编辑场景设备数据
+      if (this.data.isDefaultYijianScene) {
+        return
+      }
       const index = e.detail
       const action = this.data.sceneDeviceActionsFlatten[index]
       console.log('handleAutoSceneActionEdit', action)
@@ -1072,11 +1223,11 @@ ComponentWithComputed({
       }
 
       actionItem.value = {
-        // ...actionItem.value,
+        ...actionItem.value,
         ...e.detail,
       }
 
-      actionItem.desc = toPropertyDesc(actionItem.proType as string, actionItem.value)
+      actionItem.desc = toPropertyDesc(actionItem.proType as string, actionItem.productId as string, actionItem.value)
 
       this.setData(
         {
@@ -1089,8 +1240,73 @@ ComponentWithComputed({
         },
       )
     },
+    async updateYijianScene() {
+      if (this.data.sceneDeviceActionsFlatten.length === 0) {
+        // 删完actions按照删除场景处理
+        Dialog.confirm({
+          title: '清空操作将会删除场景，确定删除该场景？',
+        }).then(async () => {
+          const res = await deleteScene(this.data._sceneInfo.sceneId)
+          if (res.success) {
+            emitter.emit('sceneEdit')
+            projectStore.updateSpaceCardList()
+            wx.navigateBack()
+          } else {
+            Toast({ message: '删除失败', zIndex: 9999 })
+          }
+        })
+        return
+      }
 
+      // 准备好数据内存
+      const data = {
+        sceneId: this.data._sceneInfo.sceneId,
+        updateType: '0',
+        conditionType: '0',
+        spaceId: this.data.spaceId,
+      } as Scene.UpdateSceneDto
+      // 检查场景名字是否变更
+      if (this.data.sceneName !== this.data._sceneInfo.sceneName) {
+        data.sceneName = this.data.sceneName
+      }
+      // 检查场景icon是否变更
+      if (this.data.sceneIcon !== this.data._sceneInfo.sceneIcon) {
+        data.sceneIcon = this.data.sceneIcon
+      }
+
+      if (this.data._isEditAction) {
+        data.deviceActions = []
+        data.updateType = data.updateType === '0' ? '1' : data.updateType === '2' ? '4' : '5'
+
+        // 场景动作数据统一在scene-request-list页面处理
+        storage.set('scene_data', data)
+        storage.set('sceneDeviceActionsFlatten', this.data.sceneDeviceActionsFlatten)
+
+        // 需要更新结果的情况，需要跳转页面等待上报结果
+        wx.redirectTo({
+          url: strUtil.getUrlWithParams('/package-automation/scene-request-list-yijian/index', {
+            sceneId: data.sceneId,
+          }),
+        })
+
+        return
+      }
+
+      const res = await updateScene(data)
+      if (res.success) {
+        emitter.emit('sceneEdit')
+        projectStore.updateSpaceCardList()
+        Toast({ message: '修改成功', zIndex: 9999 })
+        wx.navigateBack()
+      } else {
+        Toast({ message: '修改失败', zIndex: 9999 })
+      }
+    },
     async handleSave() {
+      if (this.data.opearationType === 'yijian' && this.data.yijianSceneId) {
+        this.updateYijianScene()
+        return
+      }
       if (this.data.opearationType === 'yijian') {
         this.go2dispatch()
         return
@@ -1128,7 +1344,7 @@ ComponentWithComputed({
       if (isToast) {
         this.setData(
           {
-            dialogConfirmBtnColor: '#488FFF',
+            dialogConfirmBtnColor: '#7cd06a',
           },
           () => {
             Dialog.confirm({
@@ -1206,7 +1422,7 @@ ComponentWithComputed({
           timeType: this.data.effectiveTime.timeType === '4' ? '1' : this.data.effectiveTime.timeType, //前端用4表示自定义 1表示每天，云端全用1
           timePeriod: this.data.effectiveTime.timePeriod,
         },
-        projectId: homeStore.currentProjectDetail.projectId,
+        projectId: projectStore.currentProjectDetail.projectId,
         sceneIcon: this.data.sceneIcon,
         sceneName: this.data.sceneName,
         sceneCategory: '1',
@@ -1395,8 +1611,8 @@ ComponentWithComputed({
         conditionType: '0',
         deviceActions: [],
         deviceConditions: [],
-        projectId: homeStore.currentProjectDetail.projectId,
-        spaceId: this.data.spaceId === '' ? roomStore.roomList[roomStore.currentSpaceIndex].spaceId : this.data.spaceId,
+        projectId: projectStore.currentProjectDetail.projectId,
+        spaceId: this.data.spaceId === '' ? spaceStore.currentSpace.spaceId : this.data.spaceId,
         sceneIcon: this.data.sceneIcon,
         sceneName: this.data.sceneName,
         sceneType: '0',
@@ -1418,21 +1634,42 @@ ComponentWithComputed({
       })
     },
     async handleAutoSceneDelete() {
-      const res = await Dialog.confirm({
-        title: '确定删除该自动化？',
-        zIndex: 9999,
-      }).catch(() => 'cancel')
+      if (this.data.autoSceneId) {
+        const res = await Dialog.confirm({
+          title: '确定删除该自动化？',
+          zIndex: 9999,
+        }).catch(() => 'cancel')
 
-      console.log('delAutoScene', res)
+        console.log('delAutoScene', res)
 
-      if (res === 'cancel') return
+        if (res === 'cancel') return
 
-      const delRes = await deleteScene(this.data.autoSceneId)
-      if (delRes.success) {
-        await autosceneStore.updateAllRoomAutoSceneList()
-        wx.navigateBack()
-      } else {
-        Toast({ message: '删除失败', zIndex: 9999 })
+        const delRes = await deleteScene(this.data.autoSceneId)
+        if (delRes.success) {
+          await autosceneStore.updateAllRoomAutoSceneList()
+          wx.navigateBack()
+        } else {
+          Toast({ message: '删除失败', zIndex: 9999 })
+        }
+      }
+      if (this.data.yijianSceneId) {
+        const res = await Dialog.confirm({
+          title: this.data.isDefaultYijianScene ? '默认场景删除后不可恢复，确定删除该默认场景？' : '确定删除该场景？',
+          zIndex: 9999,
+        }).catch(() => 'cancel')
+
+        console.log('delAutoScene', res)
+
+        if (res === 'cancel') return
+
+        const delRes = await deleteScene(this.data._sceneInfo.sceneId)
+        if (delRes.success) {
+          emitter.emit('sceneEdit')
+          projectStore.updateSpaceCardList()
+          wx.navigateBack()
+        } else {
+          Toast({ message: '删除失败', zIndex: 9999 })
+        }
       }
     },
     /* 执行结果拖拽相关方法 start */
@@ -1465,5 +1702,23 @@ ComponentWithComputed({
       }
     },
     /* 执行结果拖拽相关方法 end */
+    cmptFullSpaceName() {
+      const [firstSpace, secondSpace, thirdSpace, fourthSpace] = this.data.selectedSpaceInfo
+
+      let desc = ''
+      if (firstSpace) {
+        desc += firstSpace.spaceName
+        if (secondSpace) {
+          desc += `，${secondSpace.spaceName}`
+          if (thirdSpace) {
+            desc += `，${thirdSpace.spaceName}`
+            if (fourthSpace) {
+              desc += `，${fourthSpace.spaceName}`
+            }
+          }
+        }
+      }
+      return desc
+    },
   },
 })

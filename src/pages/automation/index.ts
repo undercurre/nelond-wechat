@@ -4,12 +4,14 @@ import pageBehaviors from '../../behaviors/pageBehaviors'
 import {
   autosceneBinding,
   deviceStore,
-  homeBinding,
-  homeStore,
-  roomStore,
+  projectBinding,
+  projectStore,
   sceneBinding,
   sceneStore,
   userBinding,
+  userStore,
+  // spaceStore,
+  // autosceneStore,
 } from '../../store/index'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
@@ -17,13 +19,14 @@ import { strUtil } from '../../utils/strUtil'
 import { execScene, updateSceneSort } from '../../apis/index'
 import { emitter } from '../../utils/index'
 import { sceneImgDir, defaultImgDir } from '../../config/index'
+// import { runInAction } from 'mobx-miniprogram'
 // import { reaction } from 'mobx-miniprogram'
 // import { emitter } from '../../utils/index'
 
 // pages/login/index.ts
 ComponentWithComputed({
   behaviors: [
-    BehaviorWithStore({ storeBindings: [autosceneBinding, userBinding, sceneBinding, homeBinding] }),
+    BehaviorWithStore({ storeBindings: [autosceneBinding, userBinding, sceneBinding, projectBinding] }),
     pageBehaviors,
   ],
   /**
@@ -32,13 +35,17 @@ ComponentWithComputed({
   data: {
     // 用于存储一键场景列表
     listData: [] as IAnyObject[],
+    // 用于存储以时间点为条件触发的自动场景
+    // scheduleList:[] as AutoScene.AutoSceneItem[],
+    // 用于存储以传感器为条件触发的自动场景
+    // autoSceneList:[] as AutoScene.AutoSceneItem[],
     sceneImgDir,
     defaultImgDir,
     hasAutoScene: true,
     // autoSceneList: [] as AutoScene.AutoSceneItem[],
 
     urls: {
-      automationEditYijian: '/package-automation/automation-edit-yijian/index',
+      automationEditYijian: '/package-automation/automation-add/index',
       automationLog: '/package-automation/automation-log/index',
       automationAdd: '/package-automation/automation-add/index',
     },
@@ -54,20 +61,26 @@ ComponentWithComputed({
       32 +
       'px',
 
+    // 可滚动区域高度
+    scrollViewHeight:
+      (storage.get<number>('windowHeight') as number) -
+      (storage.get<number>('statusBarHeight') as number) -
+      (storage.get<number>('bottomBarHeight') as number) - // IPX
+      (storage.get<number>('navigationBarHeight') as number) -
+      128 * (storage.get<number>('divideRpxByPx') as number),
+
     tabIndex: 0, // 当前为一键场景/日程/自动场景
-    active: '',
     scrollTop: 0,
-    selectedspaceId: '',
+    currentSpaceQueue: [] as Space.allSpace[],
+    currentSpaceId: '',
   },
   computed: {
-    roomTab() {
-      const tempRoomList = roomStore.roomList.map((item) => {
-        return {
-          spaceId: item.spaceId,
-          roomName: item.spaceName,
-        }
-      })
-      return tempRoomList
+    tabBarHeight(data) {
+      if (data.currentSpaceQueue.length === 4) {
+        return 208
+      } else {
+        return 128
+      }
     },
   },
   methods: {
@@ -77,12 +90,12 @@ ComponentWithComputed({
         scrollTop: e.scrollTop,
       })
     },
-    onYijianRoomChange(event: { detail: { name: string } }) {
-      this.data.selectedspaceId = event.detail.name
-      this.setData({
-        selectedspaceId: event.detail.name,
+    onShow() {
+      sceneBinding.store.updateAllRoomSceneList().then(() => {
+        this.updateList()
       })
-      this.updateList()
+      autosceneBinding.store.updateAllRoomAutoSceneList()
+      // spaceStore.updateAllSpaceList()
     },
     onLoad() {
       //更新tabbar状态
@@ -91,9 +104,9 @@ ComponentWithComputed({
           selected: 1,
         })
       }
-      // 监听houseId变化，重新请求对应家庭的自动化列表
+      // 监听houseId变化，重新请求对应项目的自动化列表
       // reaction(
-      //   () => homeStore.currentHomeDetail.houseId,
+      //   () => projectStore.currentHomeDetail.houseId,
       //   () => {
       //     autosceneBinding.store.updateAllRoomAutoSceneList()
       //   },
@@ -110,17 +123,16 @@ ComponentWithComputed({
       // emitter.on('scene_enabled', () => {
       //   autosceneBinding.store.updateAllRoomAutoSceneList()
       // })
-      console.log(roomStore.currentRoom, roomStore.currentSpaceIndex)
+      // console.log(spaceStore.currentSpace, spaceStore.currentSpaceIndex)
 
       // 加载一键场景列表
-      sceneBinding.store.updateAllRoomSceneList()
+      // sceneBinding.store.updateAllRoomSceneList()
       // 加载自动化列表
-      autosceneBinding.store.updateAllRoomAutoSceneList()
+      // autosceneBinding.store.updateAllRoomAutoSceneList()
     },
     // onShow() {
     //   this.setData({
-    //     selectedspaceId: roomStore.currentRoom.spaceId,
-    //     active: roomStore.currentSpaceIndex,
+    //     currentSpaceId: spaceStore.currentSpace.spaceId,
     //   })
     // },
     // onUnload() {
@@ -130,20 +142,33 @@ ComponentWithComputed({
     //   emitter.off('scene_enabled')
     // },
     toPage(e: { currentTarget: { dataset: { url: string } } }) {
+      if (e.currentTarget.dataset.url.includes('automation-add/index') && !userStore.isManager) {
+        Toast('您当前身份为项目使用者，无法创建场景')
+        return
+      }
       wx.navigateTo({
         url: e.currentTarget.dataset.url,
       })
     },
-
+    // updateScheduleList(){
+    //   this.setData({
+    //     scheduleList:autosceneStore.allRoomAutoSceneListComputed.filter((scene) => scene.timeConditions[0].time !== '')
+    //   })
+    // },
+    // updateAutoSceneList(){
+    //   this.setData({
+    //     autoSceneList:autosceneStore.allRoomAutoSceneListComputed.filter((scene) => scene.timeConditions[0].time === '')
+    //   })
+    // },
     updateList() {
-      if (this.data.selectedspaceId === '') {
-        this.data.selectedspaceId = roomStore.roomList[0].spaceId
+      if (this.data.currentSpaceId === '') {
+        return
       }
       const listData = [] as IAnyObject[]
       const deviceMap = deviceStore.allRoomDeviceMap
 
       sceneStore.allRoomSceneList
-        .filter((item) => item.spaceId === this.data.selectedspaceId)
+        .filter((item) => item.spaceId === this.data.currentSpaceId && item.sceneCategory === '0')
         .forEach((scene: Scene.SceneItem) => {
           let linkName = ''
           if (scene.deviceConditions?.length > 0) {
@@ -182,13 +207,17 @@ ComponentWithComputed({
       }
     },
 
-    toSetting(e: { detail: Scene.SceneItem }) {
-      if (this.data.isCreator || this.data.isAdmin) {
+    toEditYijianScene(e: { detail: Scene.SceneItem }) {
+      if (userStore.isManager) {
         wx.navigateTo({
-          url: strUtil.getUrlWithParams(this.data.urls.automationEditYijian, { yijianSceneId: e.detail.sceneId }),
+          url: strUtil.getUrlWithParams(this.data.urls.automationEditYijian, {
+            yijianSceneId: e.detail.sceneId,
+            selectedSpaceInfo: JSON.stringify(this.data.currentSpaceQueue),
+            spaceid: this.data.currentSpaceId,
+          }),
         })
       } else {
-        Toast('您当前身份为访客，无法编辑场景')
+        Toast('您当前身份为项目使用者，无法编辑场景')
       }
     },
 
@@ -208,28 +237,28 @@ ComponentWithComputed({
       }
       await updateSceneSort({ sceneSortList })
       await sceneStore.updateAllRoomSceneList()
-      homeStore.updateRoomCardList()
+      projectStore.updateSpaceCardList()
       this.updateList()
     },
 
     changeAutoSceneEnabled(e: { currentTarget: { dataset: { isenabled: '0' | '1'; sceneid: string } } }) {
+      if (!userStore.isManager) {
+        Toast('您当前身份为项目使用者，无法编辑场景')
+        return
+      }
       const { isenabled, sceneid } = e.currentTarget.dataset
       const isEnabled = isenabled === '0' ? '1' : '0'
       autosceneBinding.store.changeAutoSceneEnabled({ sceneId: sceneid, isEnabled })
     },
     toEditAutoScene(e: { currentTarget: { dataset: { autosceneid: string } } }) {
-      const { autosceneid } = e.currentTarget.dataset
-
-      wx.navigateTo({
-        url: strUtil.getUrlWithParams(this.data.urls.automationAdd, { autosceneid }),
-      })
-    },
-    toEditYijianScene(e: { currentTarget: { dataset: { sceneid: string } } }) {
-      const { sceneid } = e.currentTarget.dataset
-
-      wx.navigateTo({
-        url: strUtil.getUrlWithParams(this.data.urls.automationEditYijian, { yijianSceneId: sceneid }),
-      })
+      if (userStore.isManager) {
+        const { autosceneid } = e.currentTarget.dataset
+        wx.navigateTo({
+          url: strUtil.getUrlWithParams(this.data.urls.automationAdd, { autosceneid }),
+        })
+      } else {
+        Toast('您当前身份为项目使用者，无法编辑场景')
+      }
     },
     //阻止事件冒泡
     stopPropagation() {},
@@ -248,17 +277,30 @@ ComponentWithComputed({
     onUnload() {
       emitter.off('sceneEdit')
     },
+    onSpaceSelect(e: { detail: Space.allSpace[] }) {
+      console.log('onSpaceSelect', e.detail)
+      this.setData({
+        currentSpaceQueue: e.detail,
+        currentSpaceId: e.detail[e.detail.length - 1]?.spaceId,
+      })
+      this.updateList()
+    },
   },
   lifetimes: {
     ready() {
-      this.setData({
-        selectedspaceId: roomStore.currentRoom.spaceId,
-        active: roomStore.currentRoom.spaceId,
-      })
-      this.updateList()
-      sceneBinding.store.updateAllRoomSceneList().then(() => {
-        this.updateList()
-      })
+      // this.setData({
+      //   currentSpaceId: spaceStore.currentSpace.spaceId,
+      // })
+      // this.updateList()
+      // 加载自动化列表
+      // autosceneBinding.store.updateAllRoomAutoSceneList().then(() => {
+      //   // this.updateScheduleList()
+      //   // this.updateAutoSceneList()
+      // })
+      // 加载一键场景列表
+      // sceneBinding.store.updateAllRoomSceneList().then(() => {
+      //   this.updateList()
+      // })
       emitter.off('sceneEdit')
       emitter.on('sceneEdit', () => {
         sceneStore.updateAllRoomSceneList().then(() => {

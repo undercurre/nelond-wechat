@@ -56,7 +56,7 @@
   round
   closeable
 >
-  <view class="flex flex-col items-stretch">
+  <view class="max-h-70vh flex flex-col items-stretch">
     <text class="block pt-40rpx pb-16rpx leading-46rpx text-center text-36 opacity-90 text-black-2a font-medium">选择智能网关</text>
 
     <text class="block text-center leading-36rpx text-26 text-black-tips">选择子设备要关联的智能网关</text>
@@ -89,7 +89,7 @@
       </view>
     </view>
 
-    <view class="h-96"></view>
+    <view class="shrink-0 h-96"></view>
 
     <view class="flex flex-row gap-46rpx px-24rpx">
       <van-button
@@ -109,25 +109,19 @@
       >
     </view>
 
-    <view class="h-96"></view>
+    <view class="shrink-0 h-96"></view>
   </view>
 </van-popup>
 
 <van-dialog
   id="van-dialog"
   use-slot="{{isShowNoGatewayTips}}"
-  confirm-button-color="#488FFF"
+  confirm-button-color="#7cd06a"
 >
-  <view class="flex flex-col items-center px-40rpx pb-48rpx leading-48rpx">
-    <image
-      class="w-160 h-160 mb-48rpx mt-28rpx"
-      src="{{deviceInfo.icon}}"
-    ></image>
+  <view class="flex flex-col items-center px-40rpx py-48rpx leading-48rpx">
+    <text class="w-full block text-28 text-hex-666 pb-24rpx">添加此类网关子设备前，请先在项目中添加智能网关或智慧屏，支持的型号有：</text>
 
-    <text class="w-full block text-28 text-hex-666">添加此设备前，需要先在家庭中添加网关设备。</text>
-    <text class="w-full block pb-24rpx text-28 text-hex-666">支持的智能网关型号有：</text>
-
-    <text class="block w-full text-32 text-black-2a">1、MGW-D3</text>
-    <text class="block w-full text-32 text-black-2a">2、D3ZZKP-Z</text>
+    <text class="block w-full text-32 text-black-2a">1、智能网关MSGW-15</text>
+    <!--    <text class="block w-full text-32 text-black-2a">2、智慧屏D3ZZKP-Z</text>-->
   </view>
 </van-dialog>

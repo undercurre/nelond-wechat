@@ -1,7 +1,6 @@
 /**app.wxss**/
 @import './unocss.wxss';
 @import './vantReset.wxss';
-@import 'meiju.wxss';
 
 .container {
   height: 100%;
@@ -16,7 +15,7 @@
 /* 页面容器公共样式 */
 .page-container {
   min-height: 100vh;
-  background-color: #eef2f7;
+  background-color: #eef7f4;
   box-sizing: border-box;
   padding-bottom: 96rpx;
 }

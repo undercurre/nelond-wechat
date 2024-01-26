@@ -1,11 +1,10 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { homeBinding } from '../../../../store/index'
-import pageBehavior from '../../../../behaviors/pageBehaviors'
+import { projectBinding, spaceStore, userBinding } from '../../../../store/index'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
 
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [homeBinding] }), pageBehavior],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, userBinding] })],
   options: {},
   /**
    * 组件的属性列表
@@ -22,7 +21,7 @@ ComponentWithComputed({
     isShow: {
       type: Boolean,
       value: false,
-      observer: function (newVal: boolean) {
+      observer(newVal: boolean) {
         if (newVal) {
           this.setData({
             isRender: true,
@@ -45,7 +44,7 @@ ComponentWithComputed({
   computed: {
     menuList(data) {
       const list = []
-      if (data.isCreator || data.isAdmin) {
+      if (data.isManager) {
         list.push(
           {
             title: '添加设备',
@@ -61,14 +60,6 @@ ComponentWithComputed({
           },
         )
       }
-      if (data.isCreator) {
-        list.push({
-          title: '连接其它平台',
-          key: 'platform',
-          icon: 'auth',
-          url: '/package-auth/pages/index/index',
-        })
-      }
 
       return list
     },
@@ -82,6 +73,12 @@ ComponentWithComputed({
       const res = await wx.getNetworkType()
       if (res.networkType === 'none') {
         Toast('当前无法连接网络\n请检查网络设置')
+        this.hideAnimate()
+        return
+      }
+      if (!spaceStore.spaceList.length) {
+        Toast('请先添加空间')
+        this.hideAnimate()
         return
       }
       const url = e.currentTarget.dataset.url

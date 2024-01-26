@@ -1,0 +1,6 @@
+function isNotEmptyObject(obj) {
+  return JSON.stringify(obj) !== '{}'
+}
+module.exports = {
+  isNotEmptyObject: isNotEmptyObject,
+}

@@ -1,11 +1,12 @@
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { logout, storage, strUtil } from '../../utils/index'
-import { userBinding, homeBinding, userStore } from '../../store/index'
+import { userBinding, projectBinding, userStore, projectStore } from '../../store/index'
 import { defaultImgDir } from '../../config/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
+import Toast from '@vant/weapp/toast/toast'
 
 Component({
-  behaviors: [BehaviorWithStore({ storeBindings: [userBinding, homeBinding] }), pageBehavior],
+  behaviors: [BehaviorWithStore({ storeBindings: [userBinding, projectBinding] }), pageBehavior],
   /**
    * 页面的初始数据
    */
@@ -14,8 +15,8 @@ Component({
     managerList: [
       {
         icon: '/assets/img/mine/home.png',
-        text: '家庭管理',
-        url: '/package-mine/home-manage/index',
+        text: '项目管理',
+        url: '/package-mine/project-manage/index',
       },
       {
         icon: '/assets/img/mine/device.png',
@@ -29,10 +30,7 @@ Component({
       },
     ],
     urls: {
-      homeControl: '/package-mine/home-manage/index',
-      automation: '/package-automation/automation/index',
-      voiceControl: '/package-mine/voice-control/index',
-      auth: '/package-auth/pages/index/index',
+      homeControl: '/package-mine/project-manage/index',
       deviceReplace: '/package-mine/device-replace/index',
       feedback: '/package-mine/feedback/index',
       help: '/package-mine/help/list/index',
@@ -50,15 +48,15 @@ Component({
   pageLifetimes: {
     show() {
       if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-        if (!this.data.isLogin || this.data.isVisitor) {
-          this.getTabBar().setData({
-            selected: 1,
-          })
-        } else {
-          this.getTabBar().setData({
-            selected: 2,
-          })
-        }
+        // if (!this.data.isLogin || !this.data.isManager) {
+        //   this.getTabBar().setData({
+        //     selected: 1,
+        //   })
+        // } else {
+        this.getTabBar().setData({
+          selected: 2,
+        })
+        // }
       }
     },
   },
@@ -66,14 +64,19 @@ Component({
     toPage(e: { currentTarget: { dataset: { url: string; auth: string; param: string } } }) {
       console.log('e.currentTarget.dataset', e.currentTarget)
       const { url, auth, param } = e.currentTarget.dataset
-      // 如果用户已经登录，开始请求数据
       if (auth !== 'no' && !storage.get<string>('token')) {
         wx.navigateTo({
           url: '/pages/login/index',
         })
         return
       }
+      // 拦截未有项目的情况
+      if (auth !== 'no' && !projectStore.projectList?.length) {
+        Toast('请先在管理端添加或关联项目')
+        return
+      }
 
+      // 如果用户已经登录
       wx.navigateTo({
         url: strUtil.getUrlWithParams(url, param === undefined ? {} : { param }),
       })

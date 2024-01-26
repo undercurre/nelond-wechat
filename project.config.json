@@ -52,8 +52,8 @@
     "tabIndent": "insertSpaces",
     "tabSize": 2
   },
-  "appid": "wxdb95761d4a60d268",
   "condition": {},
+  "libVersion": "3.2.4",
   "packOptions": {
     "ignore": [
       {
@@ -63,6 +63,7 @@
     ],
     "include": []
   },
+  "appid": "wxdb95761d4a60d268",
   "scripts": {
     "beforeCompile": "node ./build/releaseTime.js",
     "beforePreview": "node ./build/releaseTime.js"

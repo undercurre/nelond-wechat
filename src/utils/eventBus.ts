@@ -2,7 +2,7 @@ import mitt, { Emitter } from 'mitt'
 import { Logger } from './log'
 import { goHome } from './system'
 import { StringQueue } from './strUtil'
-import { homeStore, userStore } from '../store/index'
+import { projectStore, userStore } from '../store/index'
 
 type Events = {
   // 网络状态变更通知
@@ -43,7 +43,7 @@ type Events = {
   // 从websocket接受到信息 end
   deviceEdit: void
   sceneEdit: void
-  homeInfoEdit: void
+  projectInfoEdit: void
   invite_user_house: void
   scene_device_result_status: {
     devId: string
@@ -79,21 +79,21 @@ export const WSEventType = {
   device_replace: 'device_replace', // 设备替换
   connect_success_status: 'connect_success_status', // webSocket连接已建立成功?
   bind_device: 'bind_device',
-  invite_user_house: 'invite_user_house', // 用户加入家庭
+  invite_user_house: 'invite_user_house', // 用户加入项目
   control_fail: 'control_fail', // 控制失败 TODO 未发现使用逻辑，预留？
   scene_device_result_status: 'scene_device_result_status ', // 创建、编辑场景结果
-  group_device_result_status: 'group_device_result_status', // 移动房间结果
+  group_device_result_status: 'group_device_result_status', // 移动空间结果
   group_upt: 'group_upt', // 分组变更
   screen_online_status_sub_device: 'screen_online_status_sub_device', // 子设备在线状态更新
   screen_online_status_wifi_device: 'screen_online_status_wifi_device', // wifi 设备在线状态更新
   screen_move_sub_device: 'screen_move_sub_device', // 智慧屏设备变更
   project_change_house: 'project_change_house', // 工程移交
-  change_house: 'change_house', // 家庭转让
+  change_house: 'change_house', // 项目转让
   scene_add: 'scene_add', // 场景更新
   scene_upt: 'scene_upt', // 创建场景
   scene_del: 'scene_del', // 场景删除
   scene_enabled: 'scene_enabled', //场景使能切换
-  del_house_user: 'del_house_user', // 家庭用户被删除
+  del_house_user: 'del_house_user', // 项目用户被删除
   change_house_user_auth: 'change_house_user_auth', // 用户角色变更
   updateHomeDataLanInfo: 'updateHomeDataLanInfo', // mqtt通知，局域网的设备、灯组列表数据更新
 }
@@ -124,25 +124,25 @@ emitter.on('msgPush', (res) => {
   emitter.emit(eventType as any, eventData)
   emitter.emit('wsReceive', res)
 
-  // 全局加上进入家庭的消息提示（暂时方案）
+  // 全局加上进入项目的消息提示（暂时方案）
   if (eventType === 'invite_user_house' && eventData) {
     wx.showToast({
       title: eventData as unknown as string, // 强制ts类型转换
       icon: 'none',
     })
   } else if (eventType === 'del_house_user' && userStore.userInfo.userId === eventData.userId) {
-    // 仅家庭创建者触发监听，监听家庭移交是否成功
+    // 仅项目创建者触发监听，监听项目移交是否成功
     wx.showModal({
-      content: `你已被退出“${homeStore.currentProjectDetail.projectName}”家庭`,
+      content: `你已被退出“${projectStore.currentProjectDetail.projectName}”项目`,
       showCancel: false,
       confirmText: '我知道了',
-      confirmColor: '#488FFF',
+      confirmColor: '#7cd06a',
       complete() {
-        homeStore.updateHomeInfo()
+        projectStore.updateProjectInfo()
         goHome()
       },
     })
   } else if (eventType === 'change_house_user_auth' && userStore.userInfo.userId === eventData.userId) {
-    homeStore.updateHomeInfo()
+    projectStore.updateProjectInfo()
   }
 })

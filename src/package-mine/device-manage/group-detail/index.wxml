@@ -8,7 +8,6 @@
   <nav-bar
     title="{{deviceInfo.deviceName}}"
     left-arrow
-    show-go-home
     bind:leftTap="goBack"
   ></nav-bar>
 
@@ -22,7 +21,7 @@
         value="{{deviceName}}"
       ></van-cell>
       <van-cell
-        title="所在房间"
+        title="所在空间"
         value="{{spaceName}}"
         border="{{false}}"
       ></van-cell>

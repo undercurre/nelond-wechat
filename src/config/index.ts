@@ -1,15 +1,16 @@
-export * from './home'
+export * from './project'
 export * from './scene'
 export * from './code'
 export * from './device'
 export * from './light'
 export * from './img'
+export * from './user'
 
 let env: ENV_TYPE = 'dev'
 
 export const mzaioDomain: ConfigWithEnv<string> = {
   dev: 'https://test.meizgd.com',
-  sit: 'https://sit.meizgd.com',
+  sit: 'https://test.meizgd.com',
   prod: 'https://mzaio.meizgd.com',
 }
 
@@ -25,9 +26,9 @@ export const storageExpire = 60 * 60 * 24 * 30
  * 美智云后端websocket地址
  */
 export const mzaioWSURL: ConfigWithEnv<string> = {
-  dev: 'wss://test.meizgd.com/mzaio/v1/wss/',
-  sit: 'wss://sit.meizgd.com/mzaio/v1/wss/',
-  prod: 'wss://mzaio.meizgd.com/mzaio/v1/wss/',
+  dev: 'wss://test.meizgd.com/mzaio/v1/mzgd/cl/wss',
+  sit: 'wss://test.meizgd.com/mzaio/v1/mzgd/cl/wss',
+  prod: 'wss://mzaio.meizgd.com/mzaio/v1/mzgd/cl/wss',
 }
 
 // export const QQMapConfig = {
@@ -53,6 +54,6 @@ export function getH5BaseUrl() {
 // wx的环境名称 --> 云端环境名称
 export const envMap = {
   develop: 'dev',
-  trial: 'sit',
+  trial: 'dev',
   release: 'prod',
 } as const

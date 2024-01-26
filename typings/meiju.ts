@@ -1,15 +1,15 @@
 // 授权相关类型
 declare namespace Meiju {
   /**
-   * 美居家庭列表，列表项
+   * 美居项目列表，列表项
    */
   interface MeijuHome {
     /**
-     * 家庭唯一id
+     * 项目唯一id
      */
     mideaHouseId: string
     /**
-     * 家庭名称
+     * 项目名称
      */
     mideaHouseName: string
   }

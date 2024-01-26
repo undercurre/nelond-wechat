@@ -2,8 +2,8 @@ import dayjs from 'dayjs'
 import Dialog from '@vant/weapp/dialog/dialog'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import pageBehaviors from '../../behaviors/pageBehaviors'
-import { queryDeviceOnlineStatus, bindDevice } from '../../apis/index'
-import { homeBinding, roomBinding, deviceBinding } from '../../store/index'
+import { queryDeviceOnlineStatus, bindDevice, verifySn } from '../../apis/index'
+import { projectBinding, spaceBinding, deviceBinding } from '../../store/index'
 import { WifiSocket, getCurrentPageParams, strUtil, isAndroid, isAndroid10Plus, Logger } from '../../utils/index'
 import { stepListForBind, stepListForChangeWiFi } from './conifg'
 import { defaultImgDir } from '../../config/index'
@@ -39,6 +39,7 @@ ComponentWithComputed({
    * 组件的初始数据
    */
   data: {
+    _hasVerifySn: false, // 是否已验证sn所属系统
     hasInit: false,
     defaultImgDir,
     isShowForceBindTips: false,
@@ -364,6 +365,16 @@ ComponentWithComputed({
       this.data._socket.close()
     },
 
+    /**
+     * 验证sn所属系统
+     * @param sn
+     */
+    async reportSnToCloud(sn: string) {
+      await verifySn(sn)
+
+      this.data._hasVerifySn = true
+    },
+
     async changeWifi() {
       const params = getCurrentPageParams()
 
@@ -391,17 +402,17 @@ ComponentWithComputed({
     async requestBindDevice(sn: string, deviceId: string) {
       const params = getCurrentPageParams()
 
-      const existDevice = deviceBinding.store.allRoomDeviceList.find((item) => item.sn === sn)
+      const existDevice = deviceBinding.store.allDeviceList.find((item) => item.sn === sn)
 
-      let gatewayNum = deviceBinding.store.allRoomDeviceList.filter((item) => item.proType === '0x16').length // 网关数量
+      let gatewayNum = deviceBinding.store.allDeviceList.filter((item) => item.proType === '0x16').length // 网关数量
 
       // 强绑情况下，取旧命名
       const deviceName = existDevice ? existDevice.deviceName : params.deviceName + (gatewayNum > 0 ? ++gatewayNum : '')
 
       const res = await bindDevice({
         deviceId: deviceId,
-        projectId: homeBinding.store.currentProjectId,
-        spaceId: roomBinding.store.currentRoom.spaceId,
+        projectId: projectBinding.store.currentProjectId,
+        spaceId: spaceBinding.store.currentSpace.spaceId,
         sn,
         deviceName: deviceName,
       })
@@ -430,6 +441,12 @@ ComponentWithComputed({
       const res = await queryDeviceOnlineStatus({ sn, deviceType: '1' })
 
       Logger.log('queryDeviceOnlineStatus', res.result)
+
+      // 上报当前网关sn，告知网关将要配到对应业务系统，仅上报一次
+      // 校验res,检查当前网络是否正常，防止当前网络无法访问云端导致上报失败，部分安卓断开网关热点连上新WiFi较慢
+      if (res && !this.data._hasVerifySn) {
+        this.reportSnToCloud(sn)
+      }
 
       if (res.success && res.result.onlineStatus === 1 && res.result.deviceId) {
         this.setData({

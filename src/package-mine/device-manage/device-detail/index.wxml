@@ -10,7 +10,6 @@
   <nav-bar
     title="{{deviceInfo.deviceName}}"
     left-arrow
-    show-go-home
     bind:leftTap="goBack"
   ></nav-bar>
 
@@ -36,7 +35,7 @@
           <van-cell
             is-link="{{canEditDevice}}"
             bind:click="handleDeviceRoomEditPopup"
-            title="所在房间"
+            title="所在空间"
             value="{{spaceName}}"
           ></van-cell>
           <van-cell
@@ -72,6 +71,8 @@
             value="{{mac}}"
             border="{{false}}"
             bind:click="clickMac"
+            value-class="longValue"
+            title-class="shortTitle"
           ></van-cell>
 
           <van-cell
@@ -131,12 +132,13 @@
   bind:close="handleDeviceNameEditCancel"
   bind:confirm="handleDeviceNameEditConfirm"
 />
-<edit-room-popup
-  value="{{spaceId}}"
+<all-space-select
   show="{{showEditRoomPopup}}"
-  bind:close="handleDeviceRoomEditCancel"
+  showCell="{{false}}"
+  showTab="{{false}}"
+  initConfirm="{{false}}"
   bind:confirm="handleDeviceRoomEditConfirm"
-/>
+></all-space-select>
 <edit-laundry-popup
   value="{{laundryHeight}}"
   show="{{showEditLaundryPopup}}"

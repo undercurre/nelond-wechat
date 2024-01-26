@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "van-toast": "@vant/weapp/toast/index",
+    "van-dialog": "@vant/weapp/dialog/index",
+    "project-select-menu": "../../components/project-select-menu/index",
+    "van-action-sheet": "@vant/weapp/action-sheet/index"
+  }
+}

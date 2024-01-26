@@ -82,7 +82,7 @@
       >
       <text
         wx:elif="{{isRunning}}"
-        class="text-24rpx text-hex-488fff"
+        class="text-24rpx text-hex-7cd06a"
         >工作中</text
       >
       <text

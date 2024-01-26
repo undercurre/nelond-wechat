@@ -28,7 +28,7 @@
       class="flex flex-col pl-40rpx grow"
       bindtap="handleUserInfoTap"
     >
-      <text class="text-40 text-hex-000 font-medium">{{isLogin?userInfo.nickName:'未登录'}}</text>
+      <text class="text-40 text-hex-000 font-medium">{{isLogin?userInfo.userName:'未登录'}}</text>
     </view>
   </view>
 
@@ -36,7 +36,7 @@
     <van-cell-group inset>
       <van-cell
         icon="/assets/img/mine/home.png"
-        title="家庭管理"
+        title="项目管理"
         is-link
         center
         data-url="{{urls.homeControl}}"
@@ -47,32 +47,7 @@
 
     <van-cell-group inset>
       <van-cell
-        wx:if="{{!isVisitor}}"
-        icon="/assets/img/mine/automation.png"
-        title="全屋场景"
-        is-link
-        center
-        data-url="{{urls.automation}}"
-        bind:click="toPage"
-      />
-      <van-cell
-        icon="/assets/img/mine/voiceControl.png"
-        title="语音控制"
-        is-link
-        center
-        data-url="{{urls.voiceControl}}"
-        bind:click="toPage"
-      />
-      <van-cell
-        icon="/assets/img/mine/link.png"
-        title="连接其他平台"
-        is-link
-        center
-        data-url="{{urls.auth}}"
-        bind:click="toPage"
-      />
-      <van-cell
-        wx:if="{{!isVisitor}}"
+        wx:if="{{isManager}}"
         icon="/assets/img/mine/deviceReplace.png"
         title="设备替换"
         is-link
@@ -81,6 +56,7 @@
         bind:click="toPage"
       />
       <van-cell
+        wx:if="{{isManager}}"
         icon="/assets/img/mine/setting.png"
         title="设置"
         is-link
@@ -91,7 +67,7 @@
     </van-cell-group>
 
     <van-cell-group inset>
-      <van-cell
+      <!-- <van-cell
         icon="/assets/img/mine/help.png"
         title="帮助中心"
         is-link
@@ -99,7 +75,7 @@
         data-url="{{urls.help}}"
         data-auth="no"
         bind:click="toPage"
-      />
+      /> -->
 
       <van-cell is-link>
         <button
@@ -146,3 +122,5 @@
     </view>
   </view>
 </scroll-view>
+
+<van-toast id="van-toast" />

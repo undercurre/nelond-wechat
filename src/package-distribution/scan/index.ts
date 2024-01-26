@@ -3,7 +3,7 @@ import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
 import Dialog from '@vant/weapp/dialog/dialog'
 import dayjs from 'dayjs'
-import { deviceBinding } from '../../store/index'
+import { deviceBinding, spaceStore } from '../../store/index'
 import { bleDevicesBinding, bleDevicesStore } from '../store/bleDeviceStore'
 import pageBehaviors from '../../behaviors/pageBehaviors'
 import {
@@ -47,7 +47,7 @@ ComponentWithComputed({
     isShowPage: false,
     isShowGatewayList: false, // 是否展示选择网关列表弹窗
     isShowNoGatewayTips: false, // 是否展示添加网关提示弹窗
-    isScan: false, // 是否正在扫码
+    isScan: false, // 是否正在解析扫码结果
     isFlash: false,
     selectGateway: {
       deviceId: '',
@@ -60,9 +60,9 @@ ComponentWithComputed({
 
   computed: {
     gatewayList(data) {
-      const allRoomDeviceList: Device.DeviceItem[] = (data as IAnyObject).allRoomDeviceList || []
+      const allDeviceList: Device.DeviceItem[] = (data as IAnyObject).allDeviceList || []
 
-      return allRoomDeviceList.filter((item) => item.deviceType === 1)
+      return allDeviceList.filter((item) => item.deviceType === 1)
     },
     isShowTips(data) {
       return (data.scanType === 'subdevice' && data._isBlePermit) || data.scanType === 'gateway'
@@ -82,6 +82,8 @@ ComponentWithComputed({
 
   lifetimes: {
     async ready() {
+      Logger.debug('currentSpace', spaceStore.currentSpace, spaceStore.currentSpaceNameFull)
+
       bleDevicesBinding.store.reset()
 
       const params = wx.getEnterOptionsSync()
@@ -179,11 +181,6 @@ ComponentWithComputed({
         return
       }
     },
-    showGateListPopup() {
-      this.setData({
-        isShowGatewayList: true,
-      })
-    },
 
     async selectGateway(event: WechatMiniprogram.CustomEvent) {
       const { index } = event.currentTarget.dataset
@@ -215,24 +212,55 @@ ComponentWithComputed({
     },
 
     /**
-     * 检查系统蓝牙开关
+     * 点击提示
      */
-    async checkSystemBleSwitch() {
+    clickTips() {
       // 没有打开系统蓝牙开关异常处理
-      if (this.data.scanType === 'subdevice' && !bleDevicesStore.available) {
+      if (this.data.scanType === 'subdevice') {
+        this.checkBlePermission()
+      }
+    },
+
+    /**
+     * 检查蓝牙使用权限
+     */
+    async checkBlePermission() {
+      Logger.log('checkBlePermission', bleDevicesStore.available)
+      // 没有打开系统蓝牙开关异常处理
+      if (!bleDevicesStore.available) {
         Dialog.alert({
           message: '请打开手机蓝牙，用于发现附近的子设备',
           showCancelButton: false,
           confirmButtonText: '我知道了',
         })
+
+        return false
       }
 
-      return bleDevicesStore.available
+      const setting = await wx.getSetting()
+
+      Logger.log('appAuthorizeSetting', setting)
+
+      const isAuth = setting.authSetting['scope.bluetooth']
+
+      if (!isAuth) {
+        Dialog.alert({
+          message: '请授权使用蓝牙，否则无法正常扫码配网',
+          showCancelButton: true,
+          cancelButtonText: '返回',
+          confirmButtonText: '去设置',
+          confirmButtonOpenType: 'openSetting',
+        }).catch(() => {
+          this.goBack() // 拒绝授权摄像头，则退出当前页面
+        })
+      }
+
+      return isAuth
     },
 
     async initBle() {
-      // 若已经进入搜索蓝牙状态，无需重复初始化
-      if (bleDevicesStore.discovering) {
+      // 若已经进入搜索蓝牙状态或者非添加子设备模式，无需重复初始化
+      if (this.data.scanType !== 'subdevice' || bleDevicesStore.discovering) {
         return
       }
 
@@ -273,16 +301,14 @@ ComponentWithComputed({
 
         const listen = (res: WechatMiniprogram.OnBluetoothAdapterStateChangeCallbackResult) => {
           if (res.available) {
-            this.data.scanType === 'subdevice' && bleDevicesStore.startBleDiscovery()
-            this.checkWxScanEnter()
+            bleDevicesStore.startBleDiscovery()
 
             bleDevicesStore.offBluetoothAdapterStateChange()
           }
         }
         bleDevicesStore.onBluetoothAdapterStateChange(listen)
       } else {
-        this.data.scanType === 'subdevice' && bleDevicesStore.startBleDiscovery()
-        this.checkWxScanEnter()
+        bleDevicesStore.startBleDiscovery()
       }
 
       this.setData({
@@ -407,7 +433,7 @@ ComponentWithComputed({
             content: '请打开手机系统的位置信息开关',
             showCancel: false,
             confirmText: '我知道了',
-            confirmColor: '#488FFF',
+            confirmColor: '#7cd06a',
           })
 
           this.data._listenLocationTimeId = setInterval(() => {
@@ -659,6 +685,12 @@ ComponentWithComputed({
     },
 
     async bindSubDevice(params: IAnyObject) {
+      const isValid = await this.checkBlePermission()
+
+      if (!isValid) {
+        return
+      }
+
       const checkData = {} as IAnyObject
       const { sn, mac } = params
 

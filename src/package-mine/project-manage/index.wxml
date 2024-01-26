@@ -1,0 +1,77 @@
+<view
+  class="page-container flex flex-col"
+  bindtap="hideMenu"
+>
+  <nav-bar
+    background="transparent"
+    leftArrow="{{true}}"
+    bind:leftTap="goBack"
+    title="项目管理"
+  ></nav-bar>
+
+  <view class="px-48rpx pt-32rpx pb-20rpx">
+    <view class="flex flex-row justify-between items-center">
+      <view
+        class="relative flex flex-row items-center shrink"
+        bind:tap="handleShowHomeSelectMenu"
+        id="homeName"
+      >
+        <text class="text-40 text-hex-1E2C46 font-semibold leading-56rpx">{{ currentProjectName }}</text>
+
+        <svg-icon
+          id="homeSelectArrow"
+          class="absolute project-select-arrow"
+          color="#1E2C46"
+          name="material-symbols:arrow-drop-down-rounded"
+          width="48rpx"
+          height="48rpx"
+        />
+      </view>
+    </view>
+
+    <view class="pt-16rpx leading-40rpx text-black-59 text-28 opacity-75">
+      <text>设备{{ currentProjectDetail.deviceCount }}｜成员{{ currentProjectDetail.userCount }}</text>
+    </view>
+  </view>
+
+  <view class="grow flex flex-col justify-between">
+    <view>
+      <van-cell-group inset>
+        <van-cell
+          title="空间管理"
+          is-link
+          center
+          link-type="navigateTo"
+          url="/package-mine/space-manage/index"
+        />
+
+        <van-cell
+          title="设备管理"
+          is-link
+          center
+          bind:click="toPage"
+          data-url="/package-mine/device-manage/index"
+        />
+
+        <van-cell
+          wx:if="{{isManager}}"
+          title="项目成员"
+          is-link
+          center
+          link-type="navigateTo"
+          url="/package-mine/member-manage/index"
+          border="{{false}}"
+        />
+      </van-cell-group>
+    </view>
+  </view>
+</view>
+
+<project-select-menu
+  x="{{selectHomeMenu.x}}"
+  y="{{selectHomeMenu.y}}"
+  isShow="{{selectHomeMenu.isShow}}"
+  bind:select="hideMenu"
+></project-select-menu>
+
+<van-toast id="van-toast" />

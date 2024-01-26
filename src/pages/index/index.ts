@@ -3,14 +3,15 @@ import { runInAction } from 'mobx-miniprogram'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import {
   othersBinding,
-  roomBinding,
+  spaceBinding,
   userBinding,
-  homeBinding,
+  projectStore,
+  projectBinding,
   othersStore,
-  roomStore,
+  spaceStore,
   deviceStore,
 } from '../../store/index'
-import { storage, throttle } from '../../utils/index'
+import { storage, strUtil, throttle } from '../../utils/index'
 import { ROOM_CARD_H, defaultImgDir } from '../../config/index'
 import { updateRoomSort } from '../../apis/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
@@ -31,7 +32,7 @@ function getPos(index: number): number {
  * @returns index
  */
 function getIndex(y: number) {
-  const maxIndex = roomStore.roomList.length - 1 // 防止越界
+  const maxIndex = spaceStore.spaceList.length - 1 // 防止越界
   return Math.max(0, Math.min(maxIndex, Math.floor((y + ROOM_CARD_H / 2) / ROOM_CARD_H)))
 }
 
@@ -40,7 +41,7 @@ ComponentWithComputed({
     pureDataPattern: /^_/, // 指定所有 _ 开头的数据字段为纯数据字段
   },
   behaviors: [
-    BehaviorWithStore({ storeBindings: [othersBinding, roomBinding, userBinding, homeBinding] }),
+    BehaviorWithStore({ storeBindings: [othersBinding, spaceBinding, userBinding, projectBinding] }),
     pageBehavior,
   ],
   data: {
@@ -81,6 +82,7 @@ ComponentWithComputed({
       y: 0,
       index: -1,
     } as PosType,
+    movableHeight: 0, // 移动区域高度
     scrollTop: 0,
     _scrolledWhenMoving: false, // 拖拽时，被动发生了滚动
     _lastClientY: 0, // 上次触控采样时 的Y坐标
@@ -88,16 +90,12 @@ ComponentWithComputed({
     _from: '', // 页面进入来源
   },
   computed: {
-    // 家庭是否有设备
+    // 项目是否有设备
     hasDevice() {
-      return true
-      if (deviceStore.allRoomDeviceList) {
-        return deviceStore.allRoomDeviceList.length
+      if (deviceStore.allDeviceList) {
+        return deviceStore.allDeviceList.length
       }
       return false
-    },
-    movableHeight() {
-      return roomStore.roomList?.length ? roomStore.roomList.length * ROOM_CARD_H : 0
     },
   },
   watch: {
@@ -107,7 +105,10 @@ ComponentWithComputed({
         this.setData({ loading: !data })
       }
     },
-    roomList() {
+    spaceList(list) {
+      this.setData({
+        movableHeight: list?.length ? list.length * ROOM_CARD_H : 0,
+      })
       this.renewRoomPos()
     },
   },
@@ -133,9 +134,9 @@ ComponentWithComputed({
       this.hideMenu()
     },
     async onShow() {
-      // if (!this.data._isFirstShow || this.data._from === 'addDevice') {
-      //   homeStore.updateRoomCardList()
-      // }
+      if (!this.data._isFirstShow) {
+        projectStore.updateSpaceCardList()
+      }
       this.data._isFirstShow = false
 
       if (!othersStore.isInit) {
@@ -146,16 +147,16 @@ ComponentWithComputed({
     },
 
     /**
-     * @description 生成房间位置
+     * @description 生成空间位置
      * @param isMoving 是否正在拖动
      */
     renewRoomPos() {
       // const currentIndex = this.data.placeholder.index
       const roomPos = {} as Record<string, PosType>
-      roomStore.roomList
+      spaceStore.spaceList
         ?.sort((a, b) => this.data.roomPos[a.spaceId]?.index - this.data.roomPos[b.spaceId]?.index)
-        .forEach((room, index) => {
-          roomPos[room.spaceId] = {
+        .forEach((space, index) => {
+          roomPos[space.spaceId] = {
             index,
             // 正在拖的卡片，不改变位置
             y: index * ROOM_CARD_H,
@@ -174,17 +175,9 @@ ComponentWithComputed({
         'addMenu.isShow': false,
       })
     },
-    /**
-     * 跳转到登录页
-     */
-    toLogin() {
-      wx.navigateTo({
-        url: '/pages/login/index',
-      })
-    },
 
     /**
-     * 用户切换家庭
+     * 用户切换项目
      */
     handleHomeSelect() {
       this.setData({
@@ -193,7 +186,7 @@ ComponentWithComputed({
       })
     },
     /**
-     * 用户点击展示/隐藏家庭选择
+     * 用户点击展示/隐藏项目选择
      */
     handleShowHomeSelectMenu() {
       const diffData = {} as IAnyObject
@@ -215,7 +208,7 @@ ComponentWithComputed({
       this.setData(diffData)
     },
     /**
-     * 隐藏添加房间popup
+     * 隐藏添加空间popup
      */
     handleHideAddNewRoom() {
       this.setData({
@@ -286,16 +279,16 @@ ComponentWithComputed({
 
       // 更新联动卡片的位置
       let moveCount = 0
-      for (const room of roomStore.roomList) {
-        const _orderNum = this.data.roomPos[room.spaceId].index
+      for (const space of spaceStore.spaceList) {
+        const _orderNum = this.data.roomPos[space.spaceId].index
         if (
           (isForward && _orderNum > oldOrder && _orderNum <= targetOrder) ||
           (!isForward && _orderNum >= targetOrder && _orderNum < oldOrder)
         ) {
           ++moveCount
           const dOrderNum = isForward ? _orderNum - 1 : _orderNum + 1
-          diffData[`roomPos.${room.spaceId}.y`] = getPos(dOrderNum)
-          diffData[`roomPos.${room.spaceId}.index`] = dOrderNum
+          diffData[`roomPos.${space.spaceId}.y`] = getPos(dOrderNum)
+          diffData[`roomPos.${space.spaceId}.index`] = dOrderNum
 
           // 减少遍历消耗
           if (moveCount >= Math.abs(targetOrder - oldOrder)) {
@@ -368,12 +361,47 @@ ComponentWithComputed({
 
       // 更新store排序
       const list = [] as Space.SpaceInfo[]
-      roomStore.roomList.forEach((room) => {
-        const { index } = this.data.roomPos[room.spaceId]
-        list[index] = room
+      spaceStore.spaceList.forEach((space) => {
+        const { index } = this.data.roomPos[space.spaceId]
+        list[index] = space
       })
       runInAction(() => {
-        roomStore.roomList = list
+        spaceStore.spaceList = list
+      })
+    },
+
+    // 点击卡片
+    handleCardTap(e: { detail: Space.SpaceInfo }) {
+      const { spaceId, nodeCount, spaceName, spaceLevel, publicSpaceFlag } = e.detail
+
+      // 有多于一个子空间，则进入下级空间列表页
+      const link = nodeCount < 2 ? '/package-space-control/index/index' : '/package-space-control/space-list/index'
+      const childPublicSpace = spaceStore.allSpaceList.find((s) => s.pid === spaceId && s.publicSpaceFlag === 1)
+
+      // 更新当前选中空间
+      const hasOnlyChildren = nodeCount === 1 // 有且仅有1个下级空间，即为公共空间
+      runInAction(() => {
+        spaceStore.currentSpaceSelect.push({
+          ...e.detail,
+          pid: '0',
+        })
+        spaceStore.setCurrentSpaceTemp({
+          ...e.detail,
+          pid: this.data.pid,
+        } as Space.SpaceInfo)
+        // 如果只有一个子空间，则同时push公共空间
+        if (hasOnlyChildren) {
+          spaceStore.currentSpaceSelect.push(childPublicSpace!)
+          spaceStore.setCurrentSpaceTemp(childPublicSpace as unknown as Space.SpaceInfo)
+        }
+      })
+
+      wx.navigateTo({
+        url: strUtil.getUrlWithParams(link, {
+          pid: spaceId,
+          pname: publicSpaceFlag === 1 ? this.data.pname : spaceName,
+          plevel: spaceLevel,
+        }),
       })
     },
   },

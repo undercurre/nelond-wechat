@@ -6,19 +6,19 @@ export async function querySceneList(spaceId: string, options?: { loading?: bool
   return await mzaioRequest.post<Scene.SceneItem[]>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/querySceneListByRoomId',
+    url: '/v1/mzgd/cl/scene/querySceneListByRoomId',
     data: {
       spaceId,
     },
   })
 }
 
-export async function querySceneListByHouseId(projectId: string, options?: IApiRequestOption) {
+export async function querySceneListByProjectId(projectId: string, options?: IApiRequestOption) {
   return await mzaioRequest.post<Scene.SceneItem[]>({
     log: true,
     loading: options?.loading ?? false,
     isDefaultErrorTips: options?.isDefaultErrorTips ?? true,
-    url: '/v1/mzgd/scene/querySceneListByHouseId',
+    url: '/v1/mzgd/cl/scene/querySceneListByProjectId',
     data: {
       projectId,
     },
@@ -29,7 +29,7 @@ export async function addScene(data: Scene.AddSceneDto | AutoScene.AddAutoSceneD
   return await mzaioRequest.post<{ sceneId: string }>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/addScene',
+    url: '/v1/mzgd/cl/scene/addScene',
     data,
   })
 }
@@ -44,7 +44,7 @@ export async function retryScene(
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/sceneRetry',
+    url: '/v1/mzgd/cl/scene/sceneRetry',
     data,
   })
 }
@@ -67,7 +67,7 @@ export async function execScene(sceneId: string, options?: { loading?: boolean }
   return await mzaioRequest.post<IAnyObject>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/sceneControl',
+    url: '/v1/mzgd/cl/scene/sceneControl',
     data: {
       sceneId,
     },
@@ -78,7 +78,7 @@ export async function deleteScene(sceneId: string, options?: { loading?: boolean
   return await mzaioRequest.post<IAnyObject>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/deleteScene',
+    url: '/v1/mzgd/cl/scene/deleteScene',
     data: {
       sceneId,
     },
@@ -92,7 +92,7 @@ export async function updateScene(
   return await mzaioRequest.post<IAnyObject>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/updateScene',
+    url: '/v1/mzgd/cl/scene/updateScene',
     data,
   })
 }
@@ -104,16 +104,16 @@ export async function updateSceneSort(
   return await mzaioRequest.post<IAnyObject>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/updateSceneSort',
+    url: '/v1/mzgd/cl/scene/updateSceneSort',
     data,
   })
 }
 
-export async function queryAutoSceneListByHouseId(projectId: string, options?: { loading?: boolean }) {
+export async function queryAutoSceneListByProjectId(projectId: string, options?: { loading?: boolean }) {
   return await mzaioRequest.post<AutoScene.AutoSceneItem[]>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/queryAutoSceneListByHouseId',
+    url: '/v1/mzgd/cl/scene/queryAutoSceneListByProjectId',
     data: {
       projectId,
     },
@@ -127,7 +127,7 @@ export async function queryAutoSceneLogByHouseId(
   return await mzaioRequest.post<AutoScene.AutoSceneLog[]>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/querySceneLog',
+    url: '/v1/mzgd/cl/scene/querySceneLog',
     data,
   })
 }
@@ -139,7 +139,7 @@ export async function setAutoSceneEnabled(
   return await mzaioRequest.post<IAnyObject>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/setSceneEnabled',
+    url: '/v1/mzgd/cl/scene/setSceneEnabled',
     data,
   })
 }

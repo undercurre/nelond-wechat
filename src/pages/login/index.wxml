@@ -69,7 +69,7 @@
           class="link"
           data-value="privacyPolicy"
           catchtap="toPage"
-          >《美的照明隐私协议》</text
+          >《美的商照隐私协议》</text
         ><text
           class="link"
           data-value="userService"
@@ -84,7 +84,7 @@
           class="link"
           data-value="authList"
           catchtap="toPage"
-          >《美的照明权限列表》</text
+          >《美的商照权限列表》</text
         >
       </text>
       <image

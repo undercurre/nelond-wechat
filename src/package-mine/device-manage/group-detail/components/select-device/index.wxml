@@ -16,7 +16,7 @@
       />
     </view>
     <view class="py-10rpx pl-10rpx">
-      <text class="text-32rpx text-black-59 font-semibold">{{currentRoom.spaceName}}</text>
+      <text class="text-32rpx text-black-59 font-semibold">{{currentSpace.spaceName}}</text>
     </view>
     <scroll-view
       enhanced
@@ -43,7 +43,7 @@
         wx:else
         class="list-empty flex-1"
       >
-        <text class="block text-center text-24 text-black-tips">该房间暂无未分组的智能灯</text>
+        <text class="block text-center text-24 text-black-tips">该空间暂无未分组的智能灯</text>
       </view>
     </scroll-view>
 

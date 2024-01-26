@@ -1,7 +1,0 @@
-{
-  "component": true,
-  "styleIsolation": "apply-shared",
-  "usingComponents": {
-    "select-card-popup": "../../../../components/select-card-popup/index"
-  }
-}

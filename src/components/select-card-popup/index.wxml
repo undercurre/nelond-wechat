@@ -23,8 +23,13 @@
       >
       <text class="h-50rpx text-36rpx text-black-2a mt-44rpx font-medium">{{title}}</text>
     </view>
-
-    <scroll-view
+    <view class="w-750rpx">
+      <all-space-select
+        dataTypeList="{{[cardType]}}"
+        bind:confirm="handleRoomSelect"
+      ></all-space-select>
+    </view>
+    <!-- <scroll-view
       enhanced
       show-scrollbar="{{false}}"
       scroll-x
@@ -42,12 +47,12 @@
             bindtap="handleRoomSelect"
           >
             <text class="{{roomSelect === item.spaceId ? 'text-32rpx text-black-2a' : 'text-28rpx text-hex-555659'}} whitespace-nowrap">{{item.spaceName}}</text>
-            <view class="w-42rpx h-8rpx mt-8rpx bg-hex-488fff rounded-999 {{roomSelect === item.spaceId ? 'opacity-100' : 'opacity-0'}}"></view>
+            <view class="w-42rpx h-8rpx mt-8rpx bg-hex-7cd06a rounded-999 {{roomSelect === item.spaceId ? 'opacity-100' : 'opacity-0'}}"></view>
           </view>
         </view>
         <view class="w-50rpx"></view>
       </view>
-    </scroll-view>
+    </scroll-view> -->
 
     <view class="h-44rpx"></view>
 

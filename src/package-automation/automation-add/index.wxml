@@ -2,7 +2,7 @@
 <view class="w-100vw h-100vh fixed left-0 top-0 bg-hex-f4f8ff bg-z-index-1"></view>
 <view
   class="fixed left-0 top-0 w-100vw h-50vh bg-z-index"
-  style="background: linear-gradient(180deg, rgba(87, 105, 255, 0.1) 0%, rgba(87, 105, 255, 0) 100%)"
+  style="background: linear-gradient(180deg, rgba(87, 255, 105, 0.1) 0%, rgba(87, 255, 105, 0) 100%)"
 ></view>
 <!-- 遮住顶部 -->
 <view
@@ -12,7 +12,7 @@
   <view class="w-100vw h-100vh absolute left-0 top-0 bg-hex-f4f8ff z-111"></view>
   <view
     class="absolute left-0 top-0 w-100vw h-50vh z-112"
-    style="background: linear-gradient(180deg, rgba(87, 105, 255, 0.1) 0%, rgba(87, 105, 255, 0) 100%)"
+    style="background: linear-gradient(180deg, rgba(87, 255, 105, 0.1) 0%, rgba(87, 255, 105, 0) 100%)"
   ></view>
 </view>
 <nav-bar
@@ -38,8 +38,8 @@
           class="absolute top-15 left-16 h-80rpx w-80rpx bg-hex-F5F5F5 rounded-full"
           src="{{sceneImgDir}}/{{sceneIcon}}.png"
         />
-        <view class="absolute bottom-0 left-15 h-32rpx w-80rpx border-1rpx border-solid border-hex-488FFF bg-white leading-28rpx text-center rounded-18rpx">
-          <text class="text-22rpx text-hex-488FFF">编辑</text>
+        <view class="absolute bottom-0 left-15 h-32rpx w-80rpx border-1rpx border-solid border-hex-7cd06a bg-white leading-28rpx text-center rounded-18rpx">
+          <text class="text-22rpx text-hex-7cd06a">编辑</text>
         </view>
       </view>
       <van-field
@@ -157,6 +157,7 @@
           </view>
 
           <view
+            wx:if="{{!isDefaultYijianScene}}"
             class="px-24rpx py-16rpx absolute right-0 top-0"
             catchtap="handleConditionDelete"
             data-index="{{index}}"
@@ -173,7 +174,7 @@
     <view class="h-48rpx mt-64rpx mb-36rpx mx-48rpx flex justify-between align-center">
       <text class="text-40rpx font-medium text-hex-1a1a1c leading-48rpx">就执行</text>
       <image
-        wx:if="{{sceneDeviceActionsFlatten.length}}"
+        wx:if="{{sceneDeviceActionsFlatten.length && !isDefaultYijianScene}}"
         class="w-48 h-48"
         src="/package-automation/assets/imgs/automation/add.png"
         bindtap="handleActionShow"
@@ -202,11 +203,23 @@
 
     <view wx:else>
       <drag
+        wx:if="{{!isDefaultYijianScene}}"
         id="drag"
         list-data="{{sceneDeviceActionsFlatten}}"
         scroll-top="{{scrollTop}}"
         item-height="{{208}}"
         generic:item="cell"
+        bind:actionEdit="handleAutoSceneActionEdit"
+        bind:actionDelete="handleActionDelete"
+        bind:sortend="handleSortEnd"
+      ></drag>
+      <drag
+        wx:if="{{isDefaultYijianScene}}"
+        id="drag"
+        list-data="{{sceneDeviceActionsFlatten}}"
+        scroll-top="{{scrollTop}}"
+        item-height="{{208}}"
+        generic:item="cell-default"
         bind:actionEdit="handleAutoSceneActionEdit"
         bind:actionDelete="handleActionDelete"
         bind:sortend="handleSortEnd"
@@ -219,7 +232,7 @@
     style="height: calc(146rpx + env(safe-area-inset-bottom))"
   >
     <van-button
-      wx:if="{{autoSceneId}}"
+      wx:if="{{autoSceneId || yijianSceneId}}"
       custom-class="double-btn"
       custom-style="border: 2rpx solid #A2A2A2;"
       color="transparent"
@@ -229,8 +242,8 @@
     </van-button>
     <van-button
       type="primary"
-      custom-class="{{autoSceneId ? 'double-btn' : 'single-btn'}}"
-      disabled="{{!autoSceneId &&(sceneDeviceActionsLength === 0 || sceneDeviceConditionsFlatten.length === 0)}}"
+      custom-class="{{autoSceneId || yijianSceneId ? 'double-btn' : 'single-btn'}}"
+      disabled="{{!(autoSceneId || yijianSceneId) &&(sceneDeviceActionsLength === 0 || sceneDeviceConditionsFlatten.length === 0)}}"
       bind:click="handleSave"
     >
       <text class="text-36rpx">{{ okBtnText }}</text>
@@ -253,13 +266,13 @@
   bind:close="handleConditionClose"
   bind:conditionClicked="onConditionClicked"
 />
-<edit-room-popup
+<!-- <edit-space-popup
   value="{{spaceId}}"
   show="{{showEditRoomPopup}}"
   bind:close="handleSceneRoomEditCancel"
   bind:cancel="handleRoomReturn"
   bind:confirm="handleSceneRoomEditConfirm"
-/>
+/> -->
 <add-action-popup
   show="{{showEditActionPopup}}"
   bind:close="handleActionClose"
@@ -290,7 +303,7 @@
 <select-card-popup
   show="{{showSelectCardPopup}}"
   title="{{selectCardType === 'device'? '选择设备': selectCardType === 'scene' ?'选择场景':'选择传感器'}}"
-  cardType="{{cardType}}"
+  cardType="{{selectCardType}}"
   list="{{list}}"
   selectList="{{linkSelectList}}"
   showCancel="{{selectCardType !== 'sensor'||!sceneDeviceConditionsFlatten.length}}"
@@ -320,24 +333,6 @@
   bind:confirm="handleSceneEditConfirm"
   bind:close="handleEditPopupClose"
 ></curtain-control-popup>
-<bath-control-popup
-  show="{{showEditPopup === '0x26'}}"
-  title="{{sceneEditTitle}}"
-  isShowConfirm="{{true}}"
-  isSceneSetting="{{true}}"
-  deviceInfo="{{sceneEditInfo}}"
-  bind:confirm="handleSceneEditConfirm"
-  bind:close="handleEditPopupClose"
-></bath-control-popup>
-<dryer-control-popup
-  show="{{showEditPopup === '0x17'}}"
-  title="{{sceneEditTitle}}"
-  isShowConfirm="{{true}}"
-  isSceneSetting="{{true}}"
-  deviceInfo="{{sceneEditInfo}}"
-  bind:confirm="handleSceneEditConfirm"
-  bind:close="handleEditPopupClose"
-></dryer-control-popup>
 <edit-sensor-popup
   show="{{showEditSensorPopup}}"
   productId="{{editingSensorType}}"
@@ -346,6 +341,14 @@
   bind:confirm="handleEditSensorConfirm"
   bind:close="handleEditSensorClose"
 ></edit-sensor-popup>
+<all-space-select
+  show="{{showEditRoomPopup}}"
+  showCell="{{false}}"
+  showTab="{{false}}"
+  initConfirm="{{false}}"
+  targetSpaceId="{{spaceId}}"
+  bind:confirm="handleSceneRoomEditConfirm"
+></all-space-select>
 <van-toast id="van-toast" />
 <van-dialog
   id="van-dialog"

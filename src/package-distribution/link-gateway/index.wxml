@@ -40,7 +40,7 @@
           block
           type="primary"
           size="small"
-          custom-style="height: 52rpx;background: rgba(72,143,255,0.10);font-size: 24rpx;"
+          custom-style="height: 52rpx;background: rgba(139,195,74,0.1);font-size: 24rpx;"
           bind:click="copy"
           >复制</van-button
         >
@@ -102,7 +102,7 @@
   show="{{ isShowForceBindTips }}"
   show-cancel-button="{{false}}"
   confirm-button-text="退出"
-  confirm-button-color="#488FFF"
+  confirm-button-color="#7cd06a"
   bind:confirm="reScan"
 >
   <view class="text-center pt-20rpx">
@@ -111,7 +111,7 @@
       src="/package-distribution/assets/link-gateway/force-bind.png"
     ></image>
   </view>
-  <text class="block pb-60rpx text-center leading-48rpx text-28 text-hex-666">如需绑定至新的家庭，请单击网关最右侧按键</text>
+  <text class="block pb-60rpx text-center leading-48rpx text-28 text-hex-666">如需绑定至新的项目，请单击网关最右侧按键</text>
 </van-dialog>
 
 <van-dialog
@@ -120,7 +120,7 @@
   show="{{ status === 'error' }}"
   show-cancel-button="{{false}}"
   confirm-button-text="我知道了"
-  confirm-button-color="#488FFF"
+  confirm-button-color="#7cd06a"
   bind:confirm="goBack"
 >
   <view class="flex flex-col items-center py-46rpx text-28 text-hex-666 leading-48rpx">

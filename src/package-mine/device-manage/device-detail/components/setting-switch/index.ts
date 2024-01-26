@@ -1,7 +1,7 @@
 import Toast from '@vant/weapp/toast/toast'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { editDeviceInfo } from '../../../../../apis/device'
-import { homeStore } from '../../../../../store/index'
+import { projectStore } from '../../../../../store/index'
 import { checkInputNameIllegal } from '../../../../../utils/validate'
 
 ComponentWithComputed({
@@ -68,7 +68,7 @@ ComponentWithComputed({
           type: '3',
           deviceType: this.data.deviceInfo.deviceType,
           deviceId: this.data.deviceInfo.deviceId,
-          projectId: homeStore.currentProjectDetail.projectId,
+          projectId: projectStore.currentProjectDetail.projectId,
           switchId: this.data.deviceInfo.switchInfoDTOList[this.data.switchClickIndex].switchId,
           switchName: this.data.switchName,
         })

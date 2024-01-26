@@ -1,4 +1,4 @@
-import { delay, mzaioRequest, showLoading, hideLoading, Logger, IApiRequestOption } from '../utils/index'
+import { delay, hideLoading, IApiRequestOption, Logger, mzaioRequest, showLoading } from '../utils/index'
 import { PRO_TYPE } from '../config/index'
 import homOs from 'js-homos'
 import { deviceStore } from '../store/index'
@@ -20,39 +20,39 @@ export async function queryAllDevice(projectId: string, spaceId: string, options
 }
 
 /**
- * 全屋设备开或者关
+ * 全屋设备开或者关 TODO 暂不需要此功能
  * 1：开 0：关
  */
 export async function allDevicePowerControl(
   data: { projectId: string; onOff: number },
   options?: { loading?: boolean },
 ) {
-  // TODO 判断是否局域网控制
-  if (homOs.isHostConnected()) {
-    const localRes = await homOs.houseControl({
-      projectId: data.projectId,
-      power: data.onOff,
-    })
+  // // TODO 判断是否局域网控制
+  // if (homOs.isHostConnected()) {
+  //   const localRes = await homOs.houseControl({
+  //     projectId: data.projectId,
+  //     power: data.onOff,
+  //   })
 
-    Logger.log('localRes', localRes)
+  //   Logger.log('localRes', localRes)
 
-    if (localRes.success) {
-      return localRes
-    } else {
-      Logger.error('局域网调用失败，改走云端链路')
-    }
-  }
+  //   if (localRes.success) {
+  //     return localRes
+  //   } else {
+  //     Logger.error('局域网调用失败，改走云端链路')
+  //   }
+  // }
 
   return await mzaioRequest.post<IAnyObject>({
     log: false,
     loading: options?.loading ?? false,
-    url: '/v1/device/deviceControlByHouseId',
+    url: '/v1/cl/device/deviceControlByHouseId',
     data: data,
   })
 }
 
 /**
- * 设备控制-根据家庭id房间id查询房间的子设备
+ * 设备控制-根据项目id空间id查询空间的子设备
  */
 export async function querySubDeviceList(
   data: { projectId: string; spaceId: string },
@@ -61,7 +61,7 @@ export async function querySubDeviceList(
   return await mzaioRequest.post<Device.DeviceItem[]>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/querySubDeviceInfoByRoomId',
+    url: '/v1/cl/device/querySubDeviceInfoByRoomId',
     data,
   })
 }
@@ -77,7 +77,7 @@ export async function queryDeviceInfoByDeviceId(
   return await mzaioRequest.post<Device.DeviceItem>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/queryDeviceInfoByDeviceId',
+    url: '/v1/cl/device/queryDeviceInfoByDeviceId',
     data,
   })
 }
@@ -96,7 +96,7 @@ export async function queryDeviceOnlineStatus(
     log: false,
     loading: options?.loading ?? false,
     isDefaultErrorTips: false,
-    url: '/v1/device/queryDeviceOnlineStatus',
+    url: '/v1/cl/device/queryDeviceOnlineStatus',
     data,
   })
 }
@@ -110,7 +110,7 @@ export async function queryBindDevIdIsSuccess(data: { devIds: string[] }, option
   return await mzaioRequest.post<string[]>({
     log: false,
     loading: options?.loading ?? false,
-    url: '/v1/device/queryBindDevIdIsSuccess',
+    url: '/v1/cl/device/queryBindDevIdIsSuccess',
     data,
   })
 }
@@ -142,7 +142,7 @@ export async function bindDevice(
   const res = await mzaioRequest.post<{ deviceId: string; isBind: boolean; msg: string }>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/bindDevice',
+    url: '/v1/cl/device/bindDevice',
     data,
   })
 
@@ -196,7 +196,7 @@ export async function controlDevice(
     log: true,
     isDefaultErrorTips: false,
     loading: option?.loading || false,
-    url: '/v1/device/down',
+    url: '/v1/cl/device/down',
     data: data,
   })
 }
@@ -357,14 +357,14 @@ export async function findDevice(
 }
 
 /**
- * 云端获取网关下的传感器列表（未绑定到家庭的）
+ * 云端获取网关下的传感器列表（未绑定到项目的）
  * @param gatewayId
  */
 export async function getUnbindSensor(data: { gatewayId: string }, option?: { loading?: boolean }) {
   return await mzaioRequest.post<Device.ISubDevice[]>({
     log: true,
     loading: option?.loading || false,
-    url: '/v1/device/getUnbindSensor',
+    url: '/v1/cl/device/getUnbindSensor',
     data,
   })
 }
@@ -376,7 +376,7 @@ export async function checkOtaVersion(deviceId: string, options?: { loading?: bo
   return await mzaioRequest.post<IAnyObject>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/checkOtaVersion',
+    url: '/v1/cl/device/checkOtaVersion',
     data: {
       deviceId,
     },
@@ -384,10 +384,10 @@ export async function checkOtaVersion(deviceId: string, options?: { loading?: bo
 }
 
 /**
- * 设备管理-修改设备的名称、按键名称、所在房间
+ * 设备管理-修改设备的名称、按键名称、所在空间
  * type:0 修改设备名字，传入设备名称
- * 1：修改房间
- * 2：同时修改设备名字、房间
+ * 1：修改空间
+ * 2：同时修改设备名字、空间
  * 3：修改开关名字
  */
 export async function editDeviceInfo(
@@ -406,7 +406,7 @@ export async function editDeviceInfo(
   return await mzaioRequest.post<IAnyObject>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/update',
+    url: '/v1/cl/device/update',
     data,
   })
 }
@@ -425,7 +425,7 @@ export async function batchUpdate(
   return await mzaioRequest.post<{ isSuccess: boolean }>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/batchUpdate',
+    url: '/v1/cl/device/batchUpdate',
     data,
   })
 }
@@ -441,7 +441,7 @@ export async function deleteDevice(
   return await mzaioRequest.post<IAnyObject>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/delDevice',
+    url: '/v1/cl/device/delDevice',
     data,
   })
 }
@@ -453,7 +453,7 @@ export async function queryDelDevIdIsSuccess(data: { devIds: string[] }, options
   return await mzaioRequest.post<string[]>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/queryDelDevIdIsSuccess',
+    url: '/v1/cl/device/queryDelDevIdIsSuccess',
     data,
   })
 }
@@ -508,7 +508,7 @@ export async function batchDeleteDevice(
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/batchDelDevice',
+    url: '/v1/cl/device/batchDelDevice',
     data,
   })
 }
@@ -560,7 +560,7 @@ export async function saveDeviceOrder(data: Device.OrderSaveData, options?: { lo
   return await mzaioRequest.post<IAnyObject>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/saveDeviceNum',
+    url: '/v1/cl/device/saveDeviceNum',
     data,
   })
 }
@@ -579,7 +579,7 @@ export async function deviceReplace(
   return await mzaioRequest.post<IAnyObject>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/deviceReplace',
+    url: '/v1/cl/device/deviceReplace',
     data,
   })
 }
@@ -597,7 +597,7 @@ export async function getSensorLogs(
   return await mzaioRequest.post<Device.Log[]>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/querySensorLog',
+    url: '/v1/cl/device/querySensorLog',
     data,
   })
 }
@@ -614,7 +614,7 @@ export async function uploadDeviceLog(
   return await mzaioRequest.post<Device.Log[]>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/uploadDeviceLog',
+    url: '/v1/cl/device/uploadDeviceLog',
     data,
   })
 }
@@ -634,7 +634,7 @@ export async function checkDevice(
     log: true,
     loading: options?.loading ?? false,
     isDefaultErrorTips: false,
-    url: '/v1/device/checkDevice',
+    url: '/v1/cl/device/checkDevice',
     data,
   })
 }
@@ -651,7 +651,7 @@ export async function batchCheckDevice(
   return await mzaioRequest.post<Device.MzgdProTypeDTO[]>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/batchCheckDevice',
+    url: '/v1/cl/device/batchCheckDevice',
     data,
   })
 }
@@ -677,7 +677,7 @@ export async function batchGetProductInfoByBPid(
   >({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/batchGetProductInfoByBPid',
+    url: '/v1/cl/device/batchGetProductInfoByBPid',
     data,
   })
 }
@@ -692,7 +692,7 @@ export async function getRelLampInfo(
   return await mzaioRequest.post<{ lampRelList: Device.IMzgdLampRelGetDTO[] }>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/getRelLampInfo',
+    url: '/v1/cl/device/getRelLampInfo',
     data,
   })
 }
@@ -710,7 +710,7 @@ export async function getRelDeviceInfo(
   }>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/getRelDeviceInfo',
+    url: '/v1/cl/device/getRelDeviceInfo',
     data,
   })
 }
@@ -728,7 +728,7 @@ export async function editLampAndSwitchAssociated(
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/editLampAndSwitchAssociated',
+    url: '/v1/cl/device/editLampAndSwitchAssociated',
     data,
   })
 }
@@ -743,7 +743,7 @@ export async function delLampAndSwitchAssociated(
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/delLampAndSwitchAssociated',
+    url: '/v1/cl/device/delLampAndSwitchAssociated',
     data,
   })
 }
@@ -759,7 +759,7 @@ export async function editSwitchAndSwitchAssociated(
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/editSwitchAndSwitchAssociated',
+    url: '/v1/cl/device/editSwitchAndSwitchAssociated',
     data,
   })
 }
@@ -772,19 +772,19 @@ export async function delSwitchAndSwitchAssociated(data: { relIds: string }, opt
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/delSwitchAndSwitchAssociated',
+    url: '/v1/cl/device/delSwitchAndSwitchAssociated',
     data,
   })
 }
 
 /**
- * 根据家庭id获取面板是否已经关联过灯
+ * 根据项目id获取面板是否已经关联过灯
  */
-export async function getLampDeviceByHouseId(data: { projectId: string }, options?: { loading?: boolean }) {
+export async function getLampDeviceByProjectId(data: { projectId: string }, options?: { loading?: boolean }) {
   return await mzaioRequest.post<Array<Device.IMzgdLampDeviceInfoDTO>>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/getLampDeviceByHouseId',
+    url: '/v1/cl/device/getLampDeviceByProjectId',
     data,
   })
 }
@@ -805,7 +805,7 @@ export async function addGroup(
   return await mzaioRequest.post<{ groupId: string }>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/addGroup',
+    url: '/v1/mzgd/cl/scene/addGroup',
     data,
   })
 }
@@ -823,13 +823,13 @@ export async function updateGroup(
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/uptGroup',
+    url: '/v1/mzgd/cl/scene/uptGroup',
     data,
   })
 }
 
 /**
- * 查询分组详情
+ * 根据分组id查询分组详情
  */
 export async function queryGroup(
   data: {
@@ -840,7 +840,24 @@ export async function queryGroup(
   return await mzaioRequest.post<Device.DeviceItem>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/queryGroupByGroupId',
+    url: '/v1/mzgd/cl/scene/queryGroupByGroupId',
+    data,
+  })
+}
+
+/**
+ * 根据空间id查询分组详情
+ */
+export async function queryGroupBySpaceId(
+  data: {
+    spaceId: string
+  },
+  options?: { loading?: boolean },
+) {
+  return await mzaioRequest.post<Device.DeviceItem>({
+    log: true,
+    loading: options?.loading ?? false,
+    url: '/v1/mzgd/cl/scene/queryGroupDetailBySpaceId',
     data,
   })
 }
@@ -857,7 +874,7 @@ export async function delGroup(
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/delGroup',
+    url: '/v1/mzgd/cl/scene/delGroup',
     data,
   })
 }
@@ -875,7 +892,7 @@ export async function renameGroup(
   return await mzaioRequest.post({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/groupRename',
+    url: '/v1/mzgd/cl/scene/groupRename',
     data,
   })
 }
@@ -896,7 +913,7 @@ export async function groupControl(
 ) {
   const { groupId, controlAction } = data
 
-  const groupInfo = deviceStore.allRoomDeviceList.find((item) => item.deviceId === groupId)
+  const groupInfo = deviceStore.allDeviceList.find((item) => item.deviceId === groupId)
 
   // 仅子设备需要判断是否局域网控制
   if (homOs.isSupportLan({ groupId, updateStamp: groupInfo?.updateStamp })) {
@@ -918,7 +935,7 @@ export async function groupControl(
     isDefaultErrorTips: false,
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/mzgd/scene/groupControl',
+    url: '/v1/mzgd/cl/scene/groupControl',
     data,
   })
 }
@@ -971,7 +988,22 @@ export async function queryLocalKey(
   return await mzaioRequest.post<string>({
     log: true,
     loading: options?.loading ?? false,
-    url: '/v1/device/queryLocalKey',
+    url: '/v1/cl/device/queryLocalKey',
     data,
+  })
+}
+
+/**
+ * 标记该网关sn是哪个平台
+ */
+export async function verifySn(sn: string, options?: { loading?: boolean }) {
+  return await mzaioRequest.post({
+    log: true,
+    loading: options?.loading ?? false,
+    url: '/v1/cl/device/verifySn',
+    data: {
+      sn,
+      systemType: '2',
+    },
   })
 }

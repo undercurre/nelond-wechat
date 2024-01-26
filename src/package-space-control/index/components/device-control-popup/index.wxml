@@ -1,0 +1,253 @@
+<van-popup
+  show="{{ show }}"
+  position="bottom"
+  round
+  closeable
+  bind:close="handleClose"
+>
+  <view class="w-750rpx bg-white flex-col flex items-center py-20rpx">
+    <!-- tab -->
+    <view class="flex justify-evenly w-686rpx mt-10rpx relative">
+      <view class="flex-col-center">
+        <text class="mx-24rpx mt-16rpx tab-title">{{deviceInfo.deviceName}}</text>
+      </view>
+      <!-- 设置、关闭按钮 -->
+      <view
+        class="absolute left-20rpx top-16rpx"
+        bind:tap="toDetail"
+      >
+        <image
+          class="w-48 h-48"
+          src="/assets/img/home-manage/setting.png"
+        ></image>
+      </view>
+    </view>
+
+    <view
+      class="offline-tips"
+      wx:if="{{isLanCtl}}"
+    >
+      <image
+        class="w-36 h-36 ml-48rpx"
+        src="/package-space-control/assets/img/info.png"
+      ></image>
+      <text class="text-hex-555659 text-24 ml-32rpx">当前设备仅支持局域网控制，请检查您的网络！</text>
+    </view>
+    <!-- tab内容 -->
+    <view class="flex flex-col items-center flex-1 pt-10rpx">
+      <!-- 灯光控制 -->
+      <view
+        wx:if="{{deviceInfo.proType==='0x13'}}"
+        class="flex flex-col w-750rpx mb-22rpx"
+      >
+        <text class="text-32rpx mt-70rpx ml-48rpx {{deviceProp.power ? 'text-black-59' : 'text-hex-a2a2a2'}}">亮度 | {{lightInfoInner.brightness}}%</text>
+        <view class="px-48rpx pt-28rpx">
+          <mz-slider
+            catch:tap="sliderTap"
+            catch:slideEnd="handleLevelChange"
+            catch:slideChange="handleLevelDrag"
+            disabled="{{!deviceProp.power}}"
+            value="{{lightInfoInner.brightness}}"
+            data-min="{{1}}"
+            active-color="linear-gradient(90deg, rgba(80,127,255,0.8) 5%, rgba(116,153,255,0.18) 100%)"
+            data-key="brightness"
+          >
+          </mz-slider>
+        </view>
+
+        <block wx:if="{{hasColorTemp}}">
+          <text class="text-32rpx mt-66rpx ml-48rpx {{deviceProp.power ? 'text-black-59' : 'text-hex-a2a2a2'}}">色温 | {{colorTempK}}K</text>
+          <view class="px-48rpx pt-28rpx">
+            <mz-slider
+              catch:tap="sliderTap"
+              catch:slideEnd="handleColorTempChange"
+              catch:slideChange="handleColorTempDrag"
+              disabled="{{!deviceProp.power}}"
+              value="{{lightInfoInner.colorTemperature}}"
+              use-button-slot
+              custom-class="slider-color-temp-bar"
+              active-color="rgba(0,0,0,0)"
+              data-key="colorTemp"
+            >
+              <view
+                slot="button"
+                class="slider-button"
+              />
+            </mz-slider>
+          </view>
+        </block>
+      </view>
+      <!-- 开关控制 -->
+      <view
+        wx:if="{{deviceInfo.proType==='0x21'}}"
+        class="flex flex-col w-750rpx flex-center"
+      >
+        <view
+          class="link-switch h-146rpx w-686rpx flex-center mt-32rpx"
+          data-type="switch"
+          bindtap="handleSelectLinkPopupConfirm"
+        >
+          <view class="w-160rpx flex-center">
+            <image
+              src="/package-space-control/assets/img/link-switch.png"
+              class="w-146rpx h-146rpx"
+            />
+          </view>
+          <view class="flex-1 flex flex-col item-center">
+            <text class="text-hex-373cdf text-32rpx font-medium">关联智能开关</text>
+            <text class="text-hex-373cdf text-22rpx opacity-80 mt-12rpx">实现双控或多控功能</text>
+          </view>
+          <view class="mr-42rpx flex-center">
+            <text class="text-black-tips text-28rpx leading-none">{{isLinkSwitch ? '已关联' : ''}}</text>
+            <image
+              src="/assets/img/base/arrow-right.png"
+              class="w-32rpx h-32rpx"
+            />
+          </view>
+        </view>
+        <view
+          class="link-light h-146rpx w-686rpx flex-center mt-24rpx"
+          data-type="light"
+          bindtap="handleSelectLinkPopupConfirm"
+        >
+          <view class="w-160rpx flex-center">
+            <image
+              src="/package-space-control/assets/img/link-light.png"
+              class="w-146rpx h-146rpx"
+            />
+          </view>
+          <view class="flex-1 flex flex-col item-center">
+            <text class="text-hex-de7e28 text-32rpx font-medium">关联智能灯</text>
+            <text class="text-hex-de7e28 text-22rpx opacity-80 mt-12rpx">实现单灯或灯组的开关功能</text>
+          </view>
+          <view class="mr-42rpx flex-center">
+            <text class="text-black-tips text-28rpx leading-none">{{isLinkLight ? '已关联' : ''}}</text>
+            <image
+              src="/assets/img/base/arrow-right.png"
+              class="w-32rpx h-32rpx"
+            />
+          </view>
+        </view>
+        <view
+          wx:if="{{!isScreen && !isKnob}}"
+          class="link-scene h-146rpx w-686rpx flex-center mt-24rpx"
+          data-type="scene"
+          bindtap="handleSelectLinkPopupConfirm"
+        >
+          <view class="w-160rpx flex-center">
+            <image
+              src="/package-space-control/assets/img/link-scene.png"
+              class="w-146rpx h-146rpx"
+            />
+          </view>
+          <view class="flex-1 flex flex-col item-center">
+            <text class="text-hex-1454ae text-32rpx font-medium">关联场景</text>
+            <text class="text-hex-1454ae text-22rpx opacity-80 mt-12rpx">实现智能场景的控制功能</text>
+          </view>
+          <view class="mr-42rpx flex-center">
+            <text class="text-black-tips text-28rpx leading-none">{{isLinkScene ? '已关联' : ''}}</text>
+            <image
+              src="/assets/img/base/arrow-right.png"
+              class="w-32rpx h-32rpx"
+            />
+          </view>
+        </view>
+      </view>
+      <!-- 窗帘控制 -->
+      <view
+        wx:if="{{deviceInfo.proType==='0x14'}}"
+        class="w-full h-full flex-col-center"
+      >
+        <curtain-slider
+          class="mt-56rpx"
+          value="{{curtainInfo.position}}"
+          catch:change="changeCurtain"
+          catch:slideEnd="changeCurtain"
+        ></curtain-slider>
+        <view class="flex flex-row justify-evenly rounded-24rpx bg-hex-eef2f7 w-686rpx h-80rpx items-center mt-56rpx">
+          <text
+            catch:tap="openCurtain"
+            class="text-32 text-hex-1e2c46 px-50rpx h-80rpx leading-80rpx rounded-24rpx btn-effect"
+            >全开</text
+          >
+          <view class="w-2rpx h-40rpx bg-hex-ddd"></view>
+          <text
+            catch:tap="pauseCurtain"
+            class="text-32 text-hex-1e2c46 px-50rpx h-80rpx leading-80rpx rounded-24rpx btn-effect"
+            >暂停</text
+          >
+          <view class="w-2rpx h-40rpx bg-hex-ddd"></view>
+          <text
+            catch:tap="closeCurtain"
+            class="text-32 text-hex-1e2c46 px-50rpx h-80rpx leading-80rpx rounded-24rpx btn-effect"
+            >全关</text
+          >
+        </view>
+      </view>
+      <!-- 传感器日志 -->
+      <view
+        wx:if="{{deviceInfo.proType==='0xBC'}}"
+        class="w-full h-full flex-col-center relative"
+      >
+        <view>
+          <text class="text-26 text-hex-666666">设备日志</text>
+        </view>
+        <block wx:if="{{logListView.length}}">
+          <view class="log-step"></view>
+          <scroll-view
+            scroll-y
+            enhanced
+            show-scrollbar="{{false}}"
+            style="height: 500rpx"
+          >
+            <view
+              class="log-item"
+              wx:for="{{logListView}}"
+              wx:key="index"
+            >
+              <view class="flex flex-col">
+                <text class="text-32 text-hex-666666">{{item.time}}</text>
+                <text class="text-24 text-hex-8a8a8f">{{item.date}}</text>
+              </view>
+              <text class="text-32 text-hex-000 ml-114rpx">{{item.content}}</text>
+              <view class="circle"></view>
+            </view>
+          </scroll-view>
+        </block>
+
+        <view
+          wx:else
+          class="flex flex-center"
+          style="height: 500rpx"
+        >
+          <tips-box
+            text="暂无记录"
+            icon="{{defaultImgDir}}/no-log.png"
+            size="240"
+          ></tips-box>
+        </view>
+      </view>
+    </view>
+  </view>
+</van-popup>
+
+<!-- 关联列表（场景列表 or 设备列表）弹窗 -->
+<select-card-popup
+  show="{{showLinkPopup}}"
+  title="{{selectCardPopupTitle}}"
+  list="{{list}}"
+  selectList="{{linkSelectList}}"
+  cardType="{{selectLinkType}}"
+  catch:close="handleLinkPopupClose"
+  catch:select="handleLinkSelect"
+  catch:confirm="handleLinkPopupConfirm"
+  catch:cancel="handleLinkPopupReturn"
+  catch:handleOfflineTap="handleOfflineTap"
+/>
+
+<van-toast id="van-toast" />
+<van-dialog
+  id="van-dialog"
+  confirm-button-color="#27282A"
+  cancel-button-color="#27282A"
+/>

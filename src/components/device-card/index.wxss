@@ -14,7 +14,7 @@
 }
 
 .select-border {
-  border: 4rpx solid #488fff;
+  border: 4rpx solid #7cd06a;
 }
 
 .white-border {

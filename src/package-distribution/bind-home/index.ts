@@ -4,13 +4,13 @@ import Toast from '@vant/weapp/toast/toast'
 import pageBehaviors from '../../behaviors/pageBehaviors'
 import { getCurrentPageParams, checkInputNameIllegal, Logger } from '../../utils/index'
 import { queryDeviceInfoByDeviceId, editDeviceInfo, batchUpdate } from '../../apis/index'
-import { homeBinding, homeStore, roomBinding, deviceStore } from '../../store/index'
+import { projectBinding, projectStore, spaceBinding, deviceStore, spaceStore } from '../../store/index'
 import { PRO_TYPE, defaultImgDir } from '../../config/index'
 import cacheData from '../common/cacheData'
 
 ComponentWithComputed({
   options: {},
-  behaviors: [BehaviorWithStore({ storeBindings: [homeBinding, roomBinding] }), pageBehaviors],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, spaceBinding] }), pageBehaviors],
   /**
    * 组件的属性列表
    */
@@ -21,7 +21,15 @@ ComponentWithComputed({
    */
   data: {
     defaultImgDir,
-    deviceInfo: { deviceId: '', deviceName: '', spaceId: '', proType: '', sn: '', switchList: [] as IAnyObject[] },
+    deviceInfo: {
+      deviceId: '',
+      deviceName: '',
+      spaceId: '',
+      spaceName: '',
+      proType: '',
+      sn: '',
+      switchList: [] as IAnyObject[],
+    },
   },
 
   computed: {
@@ -53,13 +61,16 @@ ComponentWithComputed({
 
       const res = await queryDeviceInfoByDeviceId({ deviceId: pageParams.deviceId }, { loading: true })
 
+      const spaceInfo = spaceStore.allSpaceList.find((item) => item.spaceId === res.result.spaceId) as Space.allSpace
+
       if (res.success) {
         this.setData({
           deviceInfo: {
             deviceId: pageParams.deviceId,
             deviceName: res.result.deviceName,
             sn: res.result.sn,
-            spaceId: res.result.spaceId,
+            spaceId: spaceInfo.spaceId,
+            spaceName: spaceStore.getSpaceFullName(spaceInfo),
             proType: res.result.proType,
             switchList:
               res.result.proType === PRO_TYPE.switch && res.result.switchInfoDTOList
@@ -78,6 +89,7 @@ ComponentWithComputed({
 
       this.setData({
         'deviceInfo.spaceId': event.detail.spaceId,
+        'deviceInfo.spaceName': event.detail.spaceName,
         'deviceInfo.deviceName': event.detail.deviceName,
         'deviceInfo.switchList': event.detail.switchList,
       })
@@ -106,7 +118,7 @@ ComponentWithComputed({
         deviceId,
         deviceName,
         spaceId,
-        projectId: homeBinding.store.currentProjectId,
+        projectId: projectBinding.store.currentProjectId,
         type: '2',
       })
 
@@ -114,7 +126,7 @@ ComponentWithComputed({
         const deviceInfoUpdateVoList = this.data.deviceInfo.switchList.map((item) => {
           return {
             deviceId: deviceId,
-            projectId: homeStore.currentProjectId,
+            projectId: projectStore.currentProjectId,
             switchId: item.switchId,
             switchName: item.switchName,
             type: '3',
@@ -125,9 +137,9 @@ ComponentWithComputed({
       }
 
       if (res.success) {
-        homeBinding.store.updateCurrentHomeDetail()
+        projectBinding.store.updateCurrentProjectDetail()
 
-        await deviceStore.updateAllRoomDeviceList()
+        await deviceStore.updateallDeviceList()
 
         // 关闭扫描页面可能开启的蓝牙资源
         wx.closeBluetoothAdapter()
