@@ -1,10 +1,73 @@
-import { aesUtil, delay, strUtil, Logger, isAndroid } from './index'
+import { aesUtil, delay, isAndroid, Logger, strUtil } from './index'
 
 // 定义了与BLE通路相关的所有事件/动作/命令的集合；其值域及表示意义为：对HOMLUX设备主控与app之间可能的各种操作的概括分类
 const CmdTypeMap = {
   DEVICE_CONTROL: 0x00, // 控制
   DEVICE_INFO_QUREY: 0x01, // 查询
+  REPORT_NO_ACK: 0x02, // 消息上报类,不需app端回复
+  REPORT_WITH_ACK: 0x03, // 消息上报类,须应答的上报
+  SECURITY_OPERATE: 0x04, // 安全操作
 } as const
+
+// 记录正在连接过的蓝牙子设备实例
+const deviceUuidMap: Record<string, BleClient> = {}
+
+// 蓝牙回复结果
+interface IBleResult {
+  code: string // 命令
+  data: string // 设备回复的Parameter内容
+  success: boolean // 是否执行成功
+  msg: string
+}
+// 声明一个函数类型
+type BleCmdCallbackType = (data: IBleResult) => void
+
+export const connectList: string[] = [] // 测试用，监控蓝牙连接和断开是否成对调用
+export const closeList: string[] = [] // 测试用，监控蓝牙连接和断开是否承兑调用
+
+wx.onBLECharacteristicValueChange((res: WechatMiniprogram.OnBLECharacteristicValueChangeCallbackResult) => {
+  Logger.log('onBLECharacteristicValueChange', res)
+
+  const bleDevice = deviceUuidMap[res.deviceId]
+  if (!bleDevice) {
+    Logger.debug('非zigbee子设备蓝牙消息')
+    return
+  }
+
+  const hex = strUtil.ab2hex(res.value)
+  const msg = aesUtil.decrypt(hex, bleDevice.key, 'Hex')
+
+  const resMsgId = parseInt(msg.slice(2, 4), 16) // 收到回复的指令msgId
+  const packLen = parseInt(msg.slice(4, 6), 16) // 回复消息的Byte Msg Id到Byte Checksum的总长度，单位byte
+
+  // Cmd Type	   Msg Id	   Package Len	   Parameter(s) 	Checksum
+  // 1 byte	     1 byte	   1 byte	          N  bytes	    1 byte
+
+  // Parameter(s)： 消息参数
+  const resMsg = msg.slice(6, 6 + (packLen - 3) * 2)
+
+  /* Parameter(s)段统一格式如下：
+  字节	  含义
+  0	    Contrl Type: 控制指令子类型	对可能的各种控制类型消息的区分
+  1 ~ 	Param_data: 控制参数内容*/
+
+  const callback = bleDevice.cmdCallbackMap[resMsgId]
+
+  const result = {
+    code: resMsg.slice(2, 4), //
+    data: resMsg.slice(2),
+    success: true,
+    msg: '成功收到回复',
+  }
+
+  if (callback) {
+    callback(result)
+
+    delete bleDevice.cmdCallbackMap[resMsgId] // 删除已经执行的callback
+  } else if (bleDevice.onMessage) {
+    bleDevice.onMessage(result)
+  }
+})
 
 export class BleClient {
   mac: string
@@ -18,8 +81,20 @@ export class BleClient {
   characteristicId = '' // 灯具和面板的uid不一致，同类设备的uid是一样的
   msgId = 0
 
-  constructor(params: { mac: string; deviceUuid: string; proType: string; modelId: string; protocolVersion: string }) {
-    const { mac, deviceUuid, modelId, proType, protocolVersion } = params
+  cmdCallbackMap: Record<string, BleCmdCallbackType> = {}
+
+  // 监听蓝牙消息
+  onMessage?: (data: IBleResult) => void
+
+  constructor(params: {
+    mac: string
+    deviceUuid: string
+    proType: string
+    modelId: string
+    protocolVersion: string
+    onMessage?: (data: IBleResult) => void
+  }) {
+    const { mac, deviceUuid, modelId, proType, protocolVersion, onMessage } = params
 
     this.mac = mac
     this.deviceUuid = deviceUuid
@@ -27,7 +102,10 @@ export class BleClient {
     this.proType = proType
     this.protocolVersion = protocolVersion
 
-    deviceUuidMap[deviceUuid] = mac
+    if (onMessage) {
+      this.onMessage = onMessage
+    }
+
     // 密钥为：midea@homlux0167   (0167为该设备MAC地址后四位
     this.key = `midea@homlux${mac.substr(-4, 4)}`
   }
@@ -39,6 +117,10 @@ export class BleClient {
 
     // 会出现createBLEConnection一直没返回的情况（低概率）
     // 微信bug，安卓端timeout参数无效
+    connectList.push(this.mac)
+
+    deviceUuidMap[this.deviceUuid] = this
+
     const connectRes = await wx
       .createBLEConnection({
         deviceId: this.deviceUuid, // 搜索到设备的 deviceId
@@ -86,6 +168,7 @@ export class BleClient {
 
   async initBleService() {
     try {
+      this.cmdCallbackMap = {}
       // 连接后蓝牙突然断开，下面的接口会无返回也不会报错，需要超时处理
       // 连接成功，获取服务,IOS无法跳过该接口，否则后续接口会报100004，找不到服务
 
@@ -125,7 +208,7 @@ export class BleClient {
           throw err
         })
 
-      // 收到延迟，安卓平台上，在调用 wx.notifyBLECharacteristicValueChange 成功后立即调用本接口，在部分机型上会发生 10008 系统错误
+      // 强行延迟，安卓平台上，在调用 wx.notifyBLECharacteristicValueChange 成功后立即调用 wx.writeBLECharacteristicValue ，在部分机型上会发生 10008 系统错误
       if (isAndroid()) {
         await delay(500)
       }
@@ -143,6 +226,13 @@ export class BleClient {
 
   async close() {
     Logger.log(`【${this.mac}】${this.deviceUuid}开始关闭蓝牙连接`)
+    if (connectList.includes(this.mac)) {
+      const index = connectList.findIndex((item) => item === this.mac)
+
+      connectList.splice(index, 1)
+    } else {
+      closeList.push(this.mac)
+    }
     // 偶现调用closeBLEConnection后没有任何返回，需要手动增加超时处理
     const res = await Promise.race([
       wx.closeBLEConnection({ deviceId: this.deviceUuid }).catch((err) => err),
@@ -159,6 +249,8 @@ export class BleClient {
     if (res.errCode === 0) {
       bleDeviceMap[this.deviceUuid] = false
     }
+
+    delete deviceUuidMap[this.deviceUuid]
   }
 
   async sendCmd(params: { cmdType: keyof typeof CmdTypeMap; data: Array<number> }) {
@@ -200,46 +292,15 @@ export class BleClient {
 
       let timeId = 0
 
-      let listener = (res: WechatMiniprogram.OnBLECharacteristicValueChangeCallbackResult) => {
-        Logger.log(`listener-res-default`, res)
-      }
-
-      return new Promise<{ code: string; success: boolean; cmdType?: string; resMsg: string }>((resolve, reject) => {
+      return new Promise<IBleResult>((resolve, reject) => {
         // 超时处理
         timeId = setTimeout(() => {
           reject('蓝牙指令回复超时')
         }, 8000)
 
-        listener = (res: WechatMiniprogram.OnBLECharacteristicValueChangeCallbackResult) => {
-          if (res.deviceId !== this.deviceUuid) {
-            return
-          }
-
-          const hex = strUtil.ab2hex(res.value)
-          const msg = aesUtil.decrypt(hex, this.key, 'Hex')
-
-          const resMsgId = parseInt(msg.substr(2, 2), 16) // 收到回复的指令msgId
-          const packLen = parseInt(msg.substr(4, 2), 16) // 回复消息的Byte Msg Id到Byte Checksum的总长度，单位byte
-
-          Logger.debug(`【${this.mac}】resMsgId`, resMsgId, 'msgId', msgId)
-          // Cmd Type	   Msg Id	   Package Len	   Parameter(s) 	Checksum
-          // 1 byte	     1 byte	   1 byte	          N  bytes	    1 byte
-          if (resMsgId !== msgId) {
-            return
-          }
-
-          // 仅截取消息参数部分数据，
-          const resMsg = msg.substr(6, (packLen - 3) * 2)
-
-          resolve({
-            code: resMsg.slice(2, 4),
-            resMsg: resMsg.slice(2),
-            success: true,
-            cmdType: cmdType,
-          })
+        this.cmdCallbackMap[msgId] = (data) => {
+          resolve(data)
         }
-
-        wx.onBLECharacteristicValueChange(listener)
 
         wx.writeBLECharacteristicValue({
           deviceId: this.deviceUuid,
@@ -268,13 +329,12 @@ export class BleClient {
           return {
             code: '-1',
             success: false,
-            error: err,
-            resMsg: '',
+            msg: err,
+            data: '',
           }
         })
         .finally(() => {
-          wx.offBLECharacteristicValueChange(listener)
-
+          Logger.log(`【${this.mac}】}promise-sendCmd-finally`)
           clearTimeout(timeId)
         })
     } catch (err) {
@@ -284,7 +344,7 @@ export class BleClient {
         code: '-1',
         success: false,
         error: err,
-        resMsg: '',
+        data: '',
       }
     }
   }
@@ -307,7 +367,7 @@ export class BleClient {
     let zigbeeMac = ''
 
     if (res.success) {
-      const macStr = res.resMsg.substr(2)
+      const macStr = res.data.substr(2)
       let arr = []
 
       for (let i = 0; i < macStr.length; i = i + 2) {
@@ -339,7 +399,7 @@ export class BleClient {
     let isConfig = ''
 
     if (res.success) {
-      isConfig = res.resMsg
+      isConfig = res.data
     }
 
     const result = {
@@ -441,14 +501,14 @@ export const bleUtil = {
   },
 }
 
-export const bleDeviceMap = {} as IAnyObject
-
-const deviceUuidMap = {} as IAnyObject
+// 蓝牙连接状态集合
+const bleDeviceMap = {} as IAnyObject
 
 wx.onBLEConnectionStateChange(function (res) {
   bleDeviceMap[res.deviceId] = res.connected
 
   const deviceId = res.deviceId
+  const mac = deviceUuidMap[deviceId]?.mac
 
-  Logger.log(`【${deviceUuidMap[deviceId] || deviceId}】蓝牙已${res.connected ? '连接' : '断开'}`)
+  Logger.log(`【${mac || deviceId}】蓝牙已${res.connected ? '连接' : '断开'}`)
 })

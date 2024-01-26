@@ -196,7 +196,7 @@ ComponentWithComputed({
       })
 
       this.setData({
-        result: JSON.stringify(res) + `收到回复： ${res?.resMsg}`,
+        result: JSON.stringify(res) + `收到回复： ${res?.data}`,
       })
     },
   },

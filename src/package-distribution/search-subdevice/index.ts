@@ -4,7 +4,7 @@ import { runInAction } from 'mobx-miniprogram'
 import Toast from '@vant/weapp/toast/toast'
 import { deviceStore, projectBinding, projectStore, spaceBinding } from '../../store/index'
 import { bleDevicesBinding, bleDevicesStore } from '../store/bleDeviceStore'
-import { delay, emitter, getCurrentPageParams, Logger, strUtil } from '../../utils/index'
+import { delay, emitter, getCurrentPageParams, Logger, strUtil, connectList, closeList } from '../../utils/index'
 import pageBehaviors from '../../behaviors/pageBehaviors'
 import { batchUpdate, bindDevice, getUnbindSensor, isDeviceOnline, sendCmdAddSubdevice } from '../../apis/index'
 import lottie from 'lottie-miniprogram'
@@ -322,7 +322,7 @@ ComponentWithComputed({
         if (!hasWaitItem) {
           this.stopGwAddMode()
 
-          Logger.log('失败原因列表', this.data._errorList)
+          Logger.log('失败原因列表', this.data._errorList, 'closeList', closeList, 'connectList', connectList)
         }
       }
 
@@ -654,7 +654,7 @@ ComponentWithComputed({
           })
         }
       } catch (err) {
-        Logger.error(`【${bleDevice.mac}】startZigbeeNet-catch`, err)
+        Logger.error(`【${bleDevice.mac}】startZigbeeNet-catch`, err, 'closeList', closeList)
       }
     },
 
