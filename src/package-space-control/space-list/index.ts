@@ -76,7 +76,7 @@ ComponentWithComputed({
         this.data.pname = query.pname
       }
       // 加载本空间列表。只要有兄弟节点就显示公共空间
-      const res = await querySpaceList(projectStore.currentProjectId, query.pid)
+      const res = await querySpaceList(projectStore.currentProjectId, query.pid, { loading: true })
       if (res.success) {
         const hasSibling = res.result?.length > 1
         this.setData({
