@@ -46,7 +46,10 @@
   </view>
 
   <!-- 项目导航栏 -->
-  <nav-bar z-index="{{113}}">
+  <nav-bar
+    z-index="{{113}}"
+    wx:if="{{projectList.length}}"
+  >
     <view
       catch:tap="handleShowHomeSelectMenu"
       wx:if="{{currentProjectName}}"
@@ -76,7 +79,7 @@
     >
       <!-- 无空间时显示 -->
       <view
-        wx:if="{{!hasSpace}}"
+        wx:if="{{!projectList.length || !hasSpace}}"
         class="w-full mt-68rpx flex flex-col items-center"
       >
         <image

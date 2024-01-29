@@ -3,7 +3,7 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import Toast from '@vant/weapp/toast/toast'
 import pageBehaviors from '../../behaviors/pageBehaviors'
 import { projectBinding, projectStore, spaceBinding, spaceStore, userBinding } from '../../store/index'
-import { strUtil } from '../../utils/index'
+import { delay, storage, strUtil } from '../../utils/index'
 import { SpaceConfig, SpaceLevel, defaultImgDir } from '../../config/index'
 import { addSpace, querySpaceList } from '../../apis/index'
 
@@ -27,7 +27,13 @@ ComponentWithComputed({
       spaceLevel: SpaceLevel.park,
       spaceName: '',
     } as Space.SpaceInfo,
-    scrollHeight: 0,
+    scrollHeight:
+      (storage.get('windowHeight') as number) -
+      (storage.get('statusBarHeight') as number) -
+      (storage.get('navigationBarHeight') as number) -
+      (storage.get('bottomBarHeight') as number) -
+      150 +
+      'px',
   },
 
   computed: {
@@ -98,20 +104,23 @@ ComponentWithComputed({
         })
         this.data.pid = query.pid
       }
-
-      wx.createSelectorQuery()
-        .select('#content')
-        .boundingClientRect()
-        .exec((res) => {
-          if (res[0]?.height) {
-            this.setData({
-              scrollHeight: res[0].height,
-            })
-          }
-        })
     },
-    onShow() {
+    async onShow() {
       this.init()
+
+      await delay(100)
+
+      // wx.createSelectorQuery()
+      //   .select('#content')
+      //   .boundingClientRect()
+      //   .exec((res) => {
+      //     console.log('res', res)
+      //     if (res[0]?.height) {
+      //       this.setData({
+      //         scrollHeight: res[0].height,
+      //       })
+      //     }
+      //   })
     },
 
     // 加载本空间列表

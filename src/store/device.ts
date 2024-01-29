@@ -17,7 +17,7 @@ export const deviceStore = observable({
    * 当前空间设备列表
    */
   get deviceList(): Device.DeviceItem[] {
-    let { spaceId = 0 } = spaceStore.currentSpace ?? {}
+    let { spaceId = 0 } = spaceStore.currentSpaceTemp ?? {}
     const children = spaceStore.allSpaceList.filter((s) => s.pid === spaceId)
     // 如果只有唯一的子空间，即公共空间，则平铺子公共空间设备列表
     if (children.length === 1) {
@@ -46,13 +46,13 @@ export const deviceStore = observable({
    * 将有多个按键的开关拍扁，保证每个设备和每个按键都是独立一个item，并且uniId唯一
    */
   get deviceFlattenList(): Device.DeviceItem[] {
-    const { spaceId = 0 } = spaceStore.currentSpace ?? {}
+    const { spaceId = 0 } = spaceStore.currentSpaceTemp ?? {}
     return this.allRoomDeviceFlattenList.filter((device) => device.spaceId === spaceId)
   },
 
   // 当前空间灯组数量
   get groupCount(): number {
-    const { spaceId = 0 } = spaceStore.currentSpace ?? {}
+    const { spaceId = 0 } = spaceStore.currentSpaceTemp ?? {}
     const groups = this.allDeviceList.filter((device) => device.spaceId === spaceId && device.deviceType === 4)
     return groups.length
   },

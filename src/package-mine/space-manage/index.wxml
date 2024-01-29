@@ -38,7 +38,7 @@
       enhanced
       enable-flex
       show-scrollbar="{{false}}"
-      style="height: {{scrollHeight}}px;"
+      style="height: {{scrollHeight}};"
     >
       <space-card
         wx:for="{{sList}}"

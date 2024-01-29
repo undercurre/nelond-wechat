@@ -18,5 +18,6 @@
     is-link
     data-value="{{item}}"
     bind:click="handleTap"
+    border="{{index < list.length - 1 }}"
   ></van-cell>
 </van-cell-group>

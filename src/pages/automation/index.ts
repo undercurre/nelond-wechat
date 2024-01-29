@@ -142,6 +142,10 @@ ComponentWithComputed({
     //   emitter.off('scene_enabled')
     // },
     toPage(e: { currentTarget: { dataset: { url: string } } }) {
+      if (e.currentTarget.dataset.url.includes('automation-add/index') && !userStore.isManager) {
+        Toast('您当前身份为项目使用者，无法创建场景')
+        return
+      }
       wx.navigateTo({
         url: e.currentTarget.dataset.url,
       })
@@ -213,7 +217,7 @@ ComponentWithComputed({
           }),
         })
       } else {
-        Toast('您当前身份为访客，无法编辑场景')
+        Toast('您当前身份为项目使用者，无法编辑场景')
       }
     },
 
@@ -238,16 +242,23 @@ ComponentWithComputed({
     },
 
     changeAutoSceneEnabled(e: { currentTarget: { dataset: { isenabled: '0' | '1'; sceneid: string } } }) {
+      if (!userStore.isManager) {
+        Toast('您当前身份为项目使用者，无法编辑场景')
+        return
+      }
       const { isenabled, sceneid } = e.currentTarget.dataset
       const isEnabled = isenabled === '0' ? '1' : '0'
       autosceneBinding.store.changeAutoSceneEnabled({ sceneId: sceneid, isEnabled })
     },
     toEditAutoScene(e: { currentTarget: { dataset: { autosceneid: string } } }) {
-      const { autosceneid } = e.currentTarget.dataset
-
-      wx.navigateTo({
-        url: strUtil.getUrlWithParams(this.data.urls.automationAdd, { autosceneid }),
-      })
+      if (userStore.isManager) {
+        const { autosceneid } = e.currentTarget.dataset
+        wx.navigateTo({
+          url: strUtil.getUrlWithParams(this.data.urls.automationAdd, { autosceneid }),
+        })
+      } else {
+        Toast('您当前身份为项目使用者，无法编辑场景')
+      }
     },
     //阻止事件冒泡
     stopPropagation() {},

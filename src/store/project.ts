@@ -60,7 +60,6 @@ export const projectStore = observable({
     if (res.success) {
       // 如果项目列表为空
       if (!res.result?.content?.length) {
-        this.setProjectId('0')
         othersStore.setIsInit(true)
         console.log('[KS]项目列表为空')
         return
@@ -281,7 +280,7 @@ export const projectStore = observable({
 
 export const projectBinding = {
   store: projectStore,
-  fields: ['projectList', 'currentProjectId', 'currentProjectDetail', 'isManager', 'currentProjectName'],
+  fields: ['projectList', 'currentProjectId', 'currentProjectDetail', 'currentProjectName'],
   actions: [
     'updateProjectInfo',
     'updateProjectList',

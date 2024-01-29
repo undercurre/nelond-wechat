@@ -76,7 +76,7 @@ ComponentWithComputed({
         this.data.pname = query.pname
       }
       // 加载本空间列表。只要有兄弟节点就显示公共空间
-      const res = await querySpaceList(projectStore.currentProjectId, query.pid)
+      const res = await querySpaceList(projectStore.currentProjectId, query.pid, { loading: true })
       if (res.success) {
         const hasSibling = res.result?.length > 1
         this.setData({
@@ -294,9 +294,15 @@ ComponentWithComputed({
           ...e.detail,
           pid: this.data.pid,
         })
+        spaceStore.setCurrentSpaceTemp({
+          ...e.detail,
+          pid: this.data.pid,
+        } as Space.SpaceInfo)
+
         // 如果只有一个子空间，则同时push公共空间
         if (hasOnlyChildren) {
           spaceStore.currentSpaceSelect.push(childPublicSpace!)
+          spaceStore.setCurrentSpaceTemp(childPublicSpace as unknown as Space.SpaceInfo)
         }
       })
 

@@ -35,7 +35,6 @@ Component({
       feedback: '/package-mine/feedback/index',
       help: '/package-mine/help/list/index',
       about: '/package-protocol/protocol-list/index',
-      debug: '/package-debug/pages/index/index',
       deviceCategory: '/package-mine/device-category/index',
       setting: '/package-mine/setting/index',
     },
@@ -49,15 +48,15 @@ Component({
   pageLifetimes: {
     show() {
       if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-        if (!this.data.isLogin || this.data.isVisitor) {
-          this.getTabBar().setData({
-            selected: 1,
-          })
-        } else {
-          this.getTabBar().setData({
-            selected: 2,
-          })
-        }
+        // if (!this.data.isLogin || !this.data.isManager) {
+        //   this.getTabBar().setData({
+        //     selected: 1,
+        //   })
+        // } else {
+        this.getTabBar().setData({
+          selected: 2,
+        })
+        // }
       }
     },
   },
@@ -72,7 +71,7 @@ Component({
         return
       }
       // 拦截未有项目的情况
-      if (!projectStore.projectList?.length) {
+      if (auth !== 'no' && !projectStore.projectList?.length) {
         Toast('请先在管理端添加或关联项目')
         return
       }

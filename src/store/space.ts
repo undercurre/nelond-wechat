@@ -20,10 +20,17 @@ export const spaceStore = observable({
   // 当前选中的空间栈
   currentSpaceSelect: [] as (Space.allSpace | Space.SpaceInfo)[],
 
+  // 临时使用的当前选中空间
+  currentSpaceTemp: {} as Space.SpaceInfo,
+
+  currentSpaceId: '', // 当前选择的叶子节点空间
+
   // 当前选中空间栈的末端，即真正存放内容的空间
   get currentSpace(): Space.allSpace | Space.SpaceInfo {
-    if (this.currentSpaceSelect.length) {
-      return this.currentSpaceSelect[this.currentSpaceSelect.length - 1]
+    if (this.currentSpaceId) {
+      const currentSpace = this.allSpaceList.find((item) => item.spaceId === this.currentSpaceId) as Space.allSpace
+
+      return currentSpace
     } else {
       const defaultSpace = this.allSpaceList.find((item) => item.publicSpaceFlag === 1 || item.spaceLevel === 4) || {
         pid: '',
@@ -49,6 +56,13 @@ export const spaceStore = observable({
   get hasSpace() {
     const { spaceList } = this
     return spaceList?.length
+  },
+
+  setCurrentSpaceTemp(space: Space.SpaceInfo) {
+    runInAction(() => {
+      this.currentSpaceTemp = space
+      this.currentSpaceId = space.spaceId // 保存当前选择的空间ID
+    })
   },
 
   /**
@@ -112,6 +126,14 @@ export const spaceStore = observable({
 
 export const spaceBinding = {
   store: spaceStore,
-  fields: ['hasSpace', 'allSpaceList', 'spaceList', 'spaceDeviceList', 'currentSpace', 'currentSpaceName'],
+  fields: [
+    'hasSpace',
+    'allSpaceList',
+    'spaceList',
+    'spaceDeviceList',
+    'currentSpace',
+    'currentSpaceTemp',
+    'currentSpaceName',
+  ],
   actions: [],
 }

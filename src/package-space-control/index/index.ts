@@ -136,6 +136,7 @@ ComponentWithComputed({
       power: 0,
       groupId: '',
     },
+    _isPopSpace: true, // 离开页面时是否弹出空间栈
   },
 
   computed: {
@@ -151,7 +152,7 @@ ComponentWithComputed({
       if (data.allDeviceList) {
         return (
           (data.allDeviceList as DeviceCard[]).filter(
-            (device) => device.spaceId === spaceStore.currentSpace.spaceId && device.proType === PRO_TYPE.light,
+            (device) => device.spaceId === spaceStore.currentSpaceTemp.spaceId && device.proType === PRO_TYPE.light,
           ).length > 0
         )
       }
@@ -162,22 +163,22 @@ ComponentWithComputed({
       if (data.allDeviceList?.length) {
         return (
           (data.allDeviceList as DeviceCard[]).filter(
-            (device) => device.spaceId === spaceStore.currentSpace.spaceId && device.proType !== PRO_TYPE.gateway,
+            (device) => device.spaceId === spaceStore.currentSpaceTemp.spaceId && device.proType !== PRO_TYPE.gateway,
           ).length > 0
         )
       }
       return false
     },
-    parentSpace() {
-      const { currentSpaceSelect } = spaceStore
-      return currentSpaceSelect[currentSpaceSelect.length - 2]
+    parentSpace(data) {
+      const { allSpaceList } = data
+      return allSpaceList?.find((s: Space.SpaceInfo) => s.spaceId === data.currentSpaceTemp?.pid) ?? {}
     },
     /**
      * 空间显示名称
      * @returns 如果为公共空间，则显示{父空间名称}-公共空间；如果非公共空间，则直接显示当前空间名称
      */
     title(data) {
-      const currentSpace = data.currentSpace as Space.allSpace
+      const currentSpace = (data.currentSpaceTemp as Space.allSpace) ?? data.currentSpace
       if (currentSpace?.publicSpaceFlag === 0) {
         return currentSpace?.spaceName ?? ''
       }
@@ -191,6 +192,7 @@ ComponentWithComputed({
       }
 
       const _title = `${parentSpace?.spaceName}-${currentSpace?.spaceName}`
+      console.log('_title', _title)
       return _title.length > 10 ? _title.slice(0, 4) + '...' + _title.slice(-6) : _title
     },
     sceneListInBar(data) {
@@ -280,12 +282,13 @@ ComponentWithComputed({
      * 生命周期函数--监听页面加载
      */
     async onLoad(query: { from?: string }) {
-      Logger.log('space-onLoad', query)
+      Logger.log('space-onLoad', query, 'isManager', this.data.isManager)
       this.data._from = query.from ?? ''
+      this.data._isPopSpace = true
     },
 
     async onShow() {
-      Logger.log('space-onShow, _firstShow', this.data._firstShow)
+      Logger.log('space-onShow, _firstShow', this.data._firstShow, spaceStore.currentSpace)
       // 首次进入
       if (this.data._firstShow && this.data._from !== 'addDevice') {
         this.updateQueue({ isRefresh: true })
@@ -372,7 +375,7 @@ ComponentWithComputed({
           this.reloadDataThrottle(e)
         } else if (
           e.result.eventType === WSEventType.room_del &&
-          e.result.eventData.spaceId === spaceStore.currentSpace.spaceId
+          e.result.eventData.spaceId === spaceStore.currentSpaceTemp.spaceId
         ) {
           // 空间被删除，退出到首页
           await projectStore.updateSpaceCardList()
@@ -400,7 +403,7 @@ ComponentWithComputed({
 
     // 查询空间分组详情
     async queryGroupInfo() {
-      const res = await queryGroupBySpaceId({ spaceId: spaceStore.currentSpace.spaceId })
+      const res = await queryGroupBySpaceId({ spaceId: spaceStore.currentSpaceTemp.spaceId })
       if (res.success) {
         const spaceStatus = res.result.controlAction[0]
         const { colorTempRangeMap, groupId } = res.result
@@ -466,17 +469,21 @@ ComponentWithComputed({
     },
 
     onUnload() {
+      console.log('onUnload spaceStore.currentSpaceTemp', spaceStore.currentSpaceTemp)
+      if (!this.data._isPopSpace) {
+        return
+      }
       const parentSpace = this.data.parentSpace as Space.SpaceInfo
       runInAction(() => {
         // 如果当前是公共空间，要多退出一层
-        if (spaceStore.currentSpace.publicSpaceFlag === 1 && parentSpace.nodeCount <= 1) {
+        if (spaceStore.currentSpaceTemp.publicSpaceFlag === 1 && parentSpace.nodeCount <= 1) {
           spaceStore.currentSpaceSelect.pop()
         }
         spaceStore.currentSpaceSelect.pop()
       })
     },
     onHide() {
-      console.log('onHide')
+      console.log('【onHide】')
 
       // 解除监听
       emitter.off('wsReceive')
@@ -946,16 +953,18 @@ ComponentWithComputed({
       // wx.switchTab({
       //   url: '/pages/automation/index',
       // })
+      this.data._isPopSpace = false
       wx.navigateTo({
         url: '/package-space-control/scene-list/index',
       })
     },
     /** 点击创建场景按钮回调 */
     handleCollect() {
-      if (this.data.isVisitor) {
-        Toast('仅创建者与管理员可创建场景')
+      if (!this.data.isManager) {
+        Toast('您当前身份为项目使用者，无法创建场景')
         return
       }
+      this.data._isPopSpace = false
 
       wx.navigateTo({
         url: strUtil.getUrlWithParams('/package-automation/automation-add/index', {
@@ -1205,10 +1214,13 @@ ComponentWithComputed({
         Toast('当前无法连接网络\n请检查网络设置')
         return
       }
+      this.data._isPopSpace = false
+
       wx.navigateTo({ url: '/package-distribution/choose-device/index' })
     },
     handleRebindGateway() {
       const gateway = deviceStore.allRoomDeviceMap[this.data.offlineDevice.gatewayId]
+      this.data._isPopSpace = false
       wx.navigateTo({
         url: `/package-distribution/wifi-connect/index?type=changeWifi&sn=${gateway.sn}`,
       })
