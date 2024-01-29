@@ -280,7 +280,7 @@ export const projectStore = observable({
 
 export const projectBinding = {
   store: projectStore,
-  fields: ['projectList', 'currentProjectId', 'currentProjectDetail', 'isManager', 'currentProjectName'],
+  fields: ['projectList', 'currentProjectId', 'currentProjectDetail', 'currentProjectName'],
   actions: [
     'updateProjectInfo',
     'updateProjectList',
