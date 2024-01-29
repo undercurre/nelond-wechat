@@ -134,6 +134,9 @@ ComponentWithComputed({
       this.hideMenu()
     },
     async onShow() {
+      runInAction(() => {
+        spaceStore.currentSpaceId = '' // 回到首页，清空之前选择过的空间记录
+      })
       if (!this.data._isFirstShow) {
         projectStore.updateSpaceCardList()
       }

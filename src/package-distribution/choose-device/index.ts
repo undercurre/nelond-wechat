@@ -44,7 +44,7 @@ ComponentWithComputed({
       const routes = getCurrentPages()
 
       // 保存进入配网流程的页面入口
-      cacheData.pageEntry = '/' + (routes.length > 2 ? routes[routes.length - 2].route : 'pages/index/index')
+      cacheData.pageEntry = '/' + (routes.length > 1 ? routes[routes.length - 2].route : 'pages/index/index')
     },
     detached() {},
   },

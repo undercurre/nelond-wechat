@@ -282,7 +282,7 @@ ComponentWithComputed({
      * 生命周期函数--监听页面加载
      */
     async onLoad(query: { from?: string }) {
-      Logger.log('space-onLoad', query)
+      Logger.log('space-onLoad', query, 'isManager', this.data.isManager)
       this.data._from = query.from ?? ''
       this.data._isPopSpace = true
     },
