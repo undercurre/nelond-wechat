@@ -7,19 +7,27 @@
 <van-button
   type="primary"
   bind:click="toggleDiscoverBle"
-  >{{ !isDiscovering ? '开始扫描蓝牙' : '停止扫描蓝牙'}}</van-button
->
+  >{{ !isDiscovering ? '开始扫描蓝牙' : '停止扫描蓝牙'}}
+</van-button>
 
 <van-button
   class="ml-32rpx"
   type="primary"
   bind:click="toggleConnect"
-  >{{ bleClient ? '断开蓝牙' : '连接蓝牙'}}</van-button
->
+  >{{ bleClient ? '断开蓝牙' : '连接蓝牙'}}
+</van-button>
+
+<van-button
+  class="ml-32rpx"
+  type="primary"
+  bind:click="toggleShowAction"
+  >控制
+</van-button>
 
 <van-divider />
 
 <van-picker
+  wx:if="{{deviceList.length}}"
   columns="{{ deviceList }}"
   value-key="mac"
   item-height="30"
@@ -56,21 +64,14 @@
       type="primary"
       bind:click="sendCmd"
     >
-      发送指令
+      发送自定义指令
     </van-button>
   </van-field>
 </van-cell-group>
 
-<scroll-view
-  class="h-1000"
-  scroll-y
->
-  <text class="text-40 leading-60rpx">返回结果</text>
-  <text class="text-24 leading-30rpx bg-hex-ddd">{{result}}</text>
-</scroll-view>
-
-<rich-text
-  nodes="{{logText}}"
-  user-select="{{true}}"
-  type="text"
-></rich-text>
+<van-action-sheet
+  show="{{ isShowActionSheet }}"
+  actions="{{ actions }}"
+  bind:close="toggleShowAction"
+  bind:select="handelControl"
+/>

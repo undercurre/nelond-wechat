@@ -14,13 +14,27 @@ ComponentWithComputed({
    * 组件的初始数据
    */
   data: {
+    isShowActionSheet: false,
+    actions: [
+      {
+        name: '试一试',
+      },
+      {
+        name: '作为router进入配网',
+      },
+      {
+        name: '作为coord进入配网',
+      },
+      {
+        name: '作为已入网设备开启入网权限',
+      },
+    ],
     isDiscovering: false,
     _bleDevice: {} as IDeviceinfo,
     bleClient: null as null | BleClient,
     deviceList: [] as IDeviceinfo[],
     cmdType: 'DEVICE_CONTROL' as 'DEVICE_INFO_QUREY' | 'DEVICE_CONTROL',
     cmd: '05',
-    result: '',
     cmdTypeList: [
       {
         text: '查询',
@@ -91,6 +105,7 @@ ComponentWithComputed({
       }
 
       const bleDevice = {
+        label: `${msgObj.mac}${msgObj.isConfig === '02' ? '-已配网' : ''}`,
         deviceId: device.deviceId,
         mac: msgObj.mac,
         zigbeeMac: msgObj.zigbeeMac,
@@ -128,13 +143,13 @@ ComponentWithComputed({
       })
     },
     changeBle(e: { detail: { value: IDeviceinfo } }) {
-      Logger.log('changeBle', e)
+      Logger.debug('changeBle', e)
 
       this.data._bleDevice = e.detail.value
     },
 
     changeCmdType(value: { detail: 'DEVICE_INFO_QUREY' | 'DEVICE_CONTROL' }) {
-      Logger.log('changeCmdType', value)
+      Logger.debug('changeCmdType', value)
       this.setData({
         cmdType: value.detail,
       })
@@ -143,9 +158,6 @@ ComponentWithComputed({
     async toggleConnect() {
       this.stopScanBle()
       const { mac, deviceId } = this.data._bleDevice
-      this.setData({
-        result: '',
-      })
 
       if (!this.data.bleClient) {
         const bleClient = new BleClient({
@@ -154,6 +166,9 @@ ComponentWithComputed({
           modelId: '',
           proType: '',
           protocolVersion: '',
+          onMessage: (data) => {
+            Logger.debug('BleClient-onMessage', data)
+          },
         })
 
         await bleClient.connect()
@@ -185,18 +200,42 @@ ComponentWithComputed({
         cmdData = this.data.cmd.match(regex)?.map((item) => parseInt(item, 16)) as number[]
       }
 
-      Logger.log('cmdData', cmdData)
+      Logger.debug('cmdData', cmdData)
 
       const res = await this.data.bleClient?.sendCmd({ cmdType: this.data.cmdType, data: cmdData })
 
-      Logger.log('sendCmd', res)
+      Logger.debug('sendCmd', res)
+      wx.showToast({
+        title: res?.success ? '发送成功' : '发送失败',
+        icon: res?.success ? 'success' : 'error',
+      })
+    },
+
+    toggleShowAction() {
+      this.setData({
+        isShowActionSheet: !this.data.isShowActionSheet,
+      })
+    },
+
+    async handelControl(event: WechatMiniprogram.CustomEvent) {
+      console.log('handelControl', event.detail)
+
+      let res
+
+      switch (event.detail.name) {
+        case '试一试':
+          res = await this.data.bleClient?.flash()
+
+          break
+      }
+
       wx.showToast({
         title: res?.success ? '发送成功' : '发送失败',
         icon: res?.success ? 'success' : 'error',
       })
 
       this.setData({
-        result: JSON.stringify(res) + `收到回复： ${res?.data}`,
+        isShowActionSheet: false,
       })
     },
   },

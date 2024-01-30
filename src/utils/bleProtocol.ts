@@ -457,7 +457,7 @@ export const bleUtil = {
 
     return {
       brand: msgStr.substr(0, 4),
-      isConfig: msgStr.substr(4, 2),
+      isConfig: msgStr.substr(4, 2), // 设备网络状态 0x00：未入网   0x01：正在入网   0x02:  已经入网
       mac: zigbeeMac.substr(0, 6) + zigbeeMac.substr(-6, 6),
       zigbeeMac,
       proType: `0x${msgStr.slice(22, 24)}`,
