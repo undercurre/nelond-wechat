@@ -11,6 +11,7 @@ let timeoutId: number | null
 ComponentWithComputed({
   behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, spaceBinding] }), pageBehaviors],
   data: {
+    isEdit: false, // 是否编辑
     deviceList: [] as Device.DeviceItem[],
     status: 'processing' as StatusType,
     groupName: '',
@@ -19,6 +20,9 @@ ComponentWithComputed({
     showGroupFailTips: false,
   },
   computed: {
+    pageTitle(data) {
+      return data.isEdit ? '编辑分组' : '创建分组'
+    },
     successList(data) {
       return data.deviceList.filter((device) => device.status === 'success')
     },
@@ -43,6 +47,7 @@ ComponentWithComputed({
         this.setData({
           deviceList,
           groupId: data.groupId,
+          isEdit: !!data.groupId,
           groupName: data.groupName ?? '灯组',
         })
 
@@ -186,6 +191,30 @@ ComponentWithComputed({
       this.setData({
         groupName: e.detail,
       })
+    },
+
+    /**
+     * 跳过失败的设备
+     */
+    jumpFail() {
+      // 编辑灯组的情况
+      if (this.data.isEdit) {
+        this.endGroup()
+      } else {
+        this.nextStep()
+      }
+    },
+
+    /**
+     * 分组指令下发成功后，进入下一步
+     */
+    nextStep() {
+      // 编辑灯组的情况
+      if (this.data.isEdit) {
+        this.endGroup()
+      } else {
+        this.toRename()
+      }
     },
 
     endGroup() {

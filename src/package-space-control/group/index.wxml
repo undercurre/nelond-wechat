@@ -10,7 +10,7 @@
   bindtap="handleFullPageTap"
 >
   <!-- 标题 -->
-  <nav-bar title="创建分组"></nav-bar>
+  <nav-bar title="{{pageTitle}}"></nav-bar>
 
   <!-- 设备列表 -->
   <view
@@ -110,7 +110,7 @@
       class="flex-1 mx-24rpx"
       size="large"
       block
-      bind:click="endGroup"
+      bind:click="jumpFail"
       >跳过</van-button
     >
     <van-button
@@ -127,9 +127,9 @@
       class="flex-1 mx-24rpx"
       size="large"
       block
-      bind:click="toRename"
+      bind:click="nextStep"
       type="primary"
-      >下一步</van-button
+      >{{ isEdit ? '完成' : '下一步'}}</van-button
     >
     <van-button
       wx:if="{{status === 'naming'}}"
