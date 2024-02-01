@@ -69,6 +69,13 @@ wx.onBLECharacteristicValueChange((res: WechatMiniprogram.OnBLECharacteristicVal
   }
 })
 
+// 设备在zigbee入网时的角色
+export const ZIGBEE_ROLE = {
+  router: 0x00, // 作为准备加入网络的新节点
+  coord: 0x01, // 作为自组网的起始路由节点
+  entry: 0x00, // 作为已存在的自组网络的入网节点，供新节点加入
+}
+
 export class BleClient {
   mac: string
   key = ''
@@ -349,19 +356,37 @@ export class BleClient {
     }
   }
 
-  async startZigbeeNet({ channel = 0, panId = 0, extPanId = '' }) {
+  /**
+   *
+   * @param channel 设备配网所要入的信道  0x00：默认不设定
+   * @param panId 设备配网所要入网的网络所在的网络标识符  0x0000：默认不设定
+   * @param extPanId 要入网的extended panid
+   * @param role 设备在zigbee入网时的角色 0x00:：作为router进入配网  0x01：作为coord进入配网（本地组网）  0x02：作为已入网设备开启入网权限（限本地组网）
+   */
+  async startZigbeeNet({ channel = 0, panId = 0, extPanId = '', role = ZIGBEE_ROLE.router }) {
     // 若panId为65535（0xFFFF），无效,导致无法成功配网，强制改为0
     if (panId === 65535) {
       panId = 0
     }
-    const panIdHexArr = strUtil.hexStringToArrayUnit8(panId.toString(16).toUpperCase().padStart(4, '0'), 2).reverse()
-    const exPanIdHexArr = strUtil.hexStringToArrayUnit8(extPanId || '0000000000000000', 2).reverse()
 
-    const arr = this.protocolVersion === '02' ? [...panIdHexArr, ...exPanIdHexArr] : []
+    let parameter = [0x00, channel]
+    const protocolVersion = parseInt(this.protocolVersion, 10) // 蓝牙协议版本
+
+    if (protocolVersion >= 2) {
+      const panIdHexArr = strUtil.hexStringToArrayUnit8(panId.toString(16).toUpperCase().padStart(4, '0'), 2).reverse()
+      const exPanIdHexArr = strUtil.hexStringToArrayUnit8(extPanId || '0000000000000000', 2).reverse()
+
+      parameter = parameter.concat([...panIdHexArr, ...exPanIdHexArr])
+    }
+
+    // 仅协议版本3+的才支持入网角色的配置
+    if (protocolVersion >= 3) {
+      parameter.push(role)
+    }
 
     const res = await this.sendCmd({
       cmdType: 'DEVICE_CONTROL',
-      data: [0x00, channel, ...arr],
+      data: parameter,
     })
 
     let zigbeeMac = ''

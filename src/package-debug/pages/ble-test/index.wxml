@@ -36,38 +36,55 @@
   loading="{{deviceList.length <= 0}}"
 />
 
-<van-divider />
-<van-dropdown-menu>
-  <van-dropdown-item
-    value="{{ cmdType }}"
-    options="{{ cmdTypeList }}"
-    bind:change="changeCmdType"
-  />
-</van-dropdown-menu>
-
-<van-divider />
-<van-cell-group>
-  <van-field
-    model:value="{{ cmd }}"
-    center
-    clearable
-    label="控制指令"
-    placeholder="请输入指令"
-    border="{{ false }}"
-    use-button-slot
-    show-word-limit
-    maxlength="100"
+<van-collapse
+  value="{{ activeNames }}"
+  bind:change="onChange"
+>
+  <van-collapse-item
+    title="标题1"
+    name="1"
   >
-    <van-button
-      slot="button"
-      size="small"
-      type="primary"
-      bind:click="sendCmd"
-    >
-      发送自定义指令
-    </van-button>
-  </van-field>
-</van-cell-group>
+    <van-divider />
+    <van-dropdown-menu>
+      <van-dropdown-item
+        value="{{ cmdType }}"
+        options="{{ cmdTypeList }}"
+        bind:change="changeCmdType"
+      />
+    </van-dropdown-menu>
+
+    <van-divider />
+    <van-cell-group>
+      <van-field
+        model:value="{{ cmd }}"
+        center
+        clearable
+        label="控制指令"
+        placeholder="请输入指令"
+        border="{{ false }}"
+        use-button-slot
+        show-word-limit
+        maxlength="100"
+      >
+        <van-button
+          slot="button"
+          size="small"
+          type="primary"
+          bind:click="sendCmd"
+        >
+          发送指令
+        </van-button>
+      </van-field>
+    </van-cell-group>
+  </van-collapse-item>
+  <van-collapse-item
+    title="标题2"
+    name="2"
+  >
+    代码是写出来给人看的，附带能在机器上运行
+  </van-collapse-item>
+</van-collapse>
+<van-divider />
 
 <van-action-sheet
   show="{{ isShowActionSheet }}"

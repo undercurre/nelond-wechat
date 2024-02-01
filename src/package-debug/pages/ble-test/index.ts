@@ -1,6 +1,6 @@
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { BleClient, bleUtil, Logger } from '../../../utils/index'
+import { BleClient, bleUtil, Logger, ZIGBEE_ROLE } from '../../../utils/index'
 
 type IDeviceinfo = Record<string, string>
 ComponentWithComputed({
@@ -45,6 +45,7 @@ ComponentWithComputed({
         value: 'DEVICE_CONTROL',
       },
     ],
+    netInfo: {},
   },
 
   computed: {},
@@ -109,6 +110,7 @@ ComponentWithComputed({
         deviceId: device.deviceId,
         mac: msgObj.mac,
         zigbeeMac: msgObj.zigbeeMac,
+        protocolVersion: msgObj.protocolVersion,
       }
 
       this.data.deviceList.push(bleDevice)
@@ -157,7 +159,7 @@ ComponentWithComputed({
 
     async toggleConnect() {
       this.stopScanBle()
-      const { mac, deviceId } = this.data._bleDevice
+      const { mac, deviceId, protocolVersion } = this.data._bleDevice
 
       if (!this.data.bleClient) {
         const bleClient = new BleClient({
@@ -165,7 +167,7 @@ ComponentWithComputed({
           deviceUuid: deviceId,
           modelId: '',
           proType: '',
-          protocolVersion: '',
+          protocolVersion,
           onMessage: (data) => {
             Logger.debug('BleClient-onMessage', data)
           },
@@ -220,11 +222,45 @@ ComponentWithComputed({
     async handelControl(event: WechatMiniprogram.CustomEvent) {
       console.log('handelControl', event.detail)
 
+      const channel = '01'
+      const extPanId = '11'
+      const panId = '1'
+
       let res
 
       switch (event.detail.name) {
         case '试一试':
           res = await this.data.bleClient?.flash()
+
+          break
+
+        case '作为router进入配网':
+          res = await this.data.bleClient?.startZigbeeNet({
+            channel: parseInt(channel),
+            extPanId: extPanId,
+            panId: parseInt(panId),
+            role: ZIGBEE_ROLE.router,
+          })
+
+          break
+
+        case '作为coord进入配网':
+          res = await this.data.bleClient?.startZigbeeNet({
+            channel: parseInt(channel),
+            extPanId: extPanId,
+            panId: parseInt(panId),
+            role: ZIGBEE_ROLE.coord,
+          })
+
+          break
+
+        case '作为已入网设备开启入网权限':
+          res = await this.data.bleClient?.startZigbeeNet({
+            channel: parseInt(channel),
+            extPanId: extPanId,
+            panId: parseInt(panId),
+            role: ZIGBEE_ROLE.entry,
+          })
 
           break
       }
