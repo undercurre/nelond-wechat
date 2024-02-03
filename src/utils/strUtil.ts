@@ -32,15 +32,14 @@ export const strUtil = {
   },
 
   /**
-   * 分割16进制字符串，转化成对应num个字节数组，
+   * 字符串格式的16进制数转换成指定字节数的16进制数数组，高位在后
    * 此正则只针对十六进制
-   * 输入多于六个字符，超过的字符如果不属于十六进制会变成NaN
-   * @param str 16进制字符串
-   * @param num 要拆分的字节数的个体单位
+   * @param hexString 16进制字符串
+   * @param numBytes 要拆分的个体单位包含的字节
    */
-  hexStringToArrayUnit8(str: string, num: number) {
-    const reg = new RegExp(`([0-9a-fA-F]{${num}})`)
-    let arr = str.split(reg)
+  hexStringToBytes(hexString: string, numBytes = 1) {
+    const reg = new RegExp(`([0-9a-fA-F]{${numBytes * 2}})`)
+    let arr = hexString.split(reg)
 
     arr = arr.filter((item) => item != '')
 

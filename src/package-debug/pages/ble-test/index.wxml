@@ -1,90 +1,110 @@
-<nav-bar
-  title="蓝牙调试"
-  left-arrow
-  bind:leftTap="goBack"
-></nav-bar>
+<view class="h-100vh flex flex-col">
+  <nav-bar
+    title="蓝牙调试"
+    left-arrow
+    bind:leftTap="goBack"
+  ></nav-bar>
 
-<van-button
-  type="primary"
-  bind:click="toggleDiscoverBle"
-  >{{ !isDiscovering ? '开始扫描蓝牙' : '停止扫描蓝牙'}}
-</van-button>
+  <view class="flex flex-row">
+    <van-button
+      type="primary"
+      bind:click="toggleDiscoverBle"
+      >{{ !isDiscovering ? '开始扫描蓝牙' : '停止扫描蓝牙'}}
+    </van-button>
 
-<van-button
-  class="ml-32rpx"
-  type="primary"
-  bind:click="toggleConnect"
-  >{{ bleClient ? '断开蓝牙' : '连接蓝牙'}}
-</van-button>
+    <van-button
+      class="ml-32rpx"
+      type="primary"
+      bind:click="toggleConnect"
+      >{{ selectDevice.isConnected ? '断开蓝牙' : '连接蓝牙'}}
+    </van-button>
+  </view>
 
-<van-button
-  class="ml-32rpx"
-  type="primary"
-  bind:click="toggleShowAction"
-  >控制
-</van-button>
+  <van-divider />
 
-<van-divider />
-
-<van-picker
-  wx:if="{{deviceList.length}}"
-  columns="{{ deviceList }}"
-  value-key="mac"
-  item-height="30"
-  visible-item-count="4"
-  bind:change="changeBle"
-  loading="{{deviceList.length <= 0}}"
-/>
-
-<van-collapse
-  value="{{ activeNames }}"
-  bind:change="onChange"
->
-  <van-collapse-item
-    title="标题1"
-    name="1"
+  <scroll-view
+    class="h-800 grow shrink"
+    enhanced
+    scroll-y
   >
-    <van-divider />
-    <van-dropdown-menu>
-      <van-dropdown-item
-        value="{{ cmdType }}"
-        options="{{ cmdTypeList }}"
-        bind:change="changeCmdType"
-      />
-    </van-dropdown-menu>
+    <van-picker
+      wx:if="{{deviceList.length}}"
+      columns="{{ deviceList }}"
+      value-key="mac"
+      item-height="30"
+      visible-item-count="4"
+      bind:change="changeBle"
+      loading="{{deviceList.length <= 0}}"
+    />
 
-    <van-divider />
-    <van-cell-group>
-      <van-field
-        model:value="{{ cmd }}"
-        center
-        clearable
-        label="控制指令"
-        placeholder="请输入指令"
-        border="{{ false }}"
-        use-button-slot
-        show-word-limit
-        maxlength="100"
+    <van-collapse
+      value="{{ activeNames }}"
+      bind:change="onChangeCollapse"
+    >
+      <van-collapse-item
+        title="自组网"
+        name="noGateway"
       >
         <van-button
-          slot="button"
-          size="small"
+          class="ml-32rpx"
           type="primary"
-          bind:click="sendCmd"
-        >
-          发送指令
+          bind:click="toggleShowAction"
+          >控制
         </van-button>
-      </van-field>
-    </van-cell-group>
-  </van-collapse-item>
-  <van-collapse-item
-    title="标题2"
-    name="2"
-  >
-    代码是写出来给人看的，附带能在机器上运行
-  </van-collapse-item>
-</van-collapse>
-<van-divider />
+
+        <text>【channelId】: {{ netInfo.channel }}</text>
+        <text>【panId】: {{ netInfo.panId }}</text>
+
+        <van-grid column-num="3">
+          <van-grid-item
+            wx:for="{{netInfo.deviceList}}"
+            wx:key="mac"
+            icon="desktop-o"
+            text="{{item.mac}}"
+            clickable
+          />
+        </van-grid>
+      </van-collapse-item>
+
+      <van-collapse-item
+        title="自定义指令"
+        name="custom"
+      >
+        <van-dropdown-menu>
+          <van-dropdown-item
+            value="{{ cmdType }}"
+            options="{{ cmdTypeList }}"
+            bind:change="changeCmdType"
+          />
+        </van-dropdown-menu>
+
+        <van-divider />
+        <van-cell-group>
+          <van-field
+            model:value="{{ cmd }}"
+            center
+            clearable
+            label="控制指令"
+            placeholder="请输入指令"
+            border="{{ false }}"
+            use-button-slot
+            show-word-limit
+            maxlength="100"
+          >
+            <van-button
+              slot="button"
+              size="small"
+              type="primary"
+              bind:click="sendCmd"
+            >
+              发送指令
+            </van-button>
+          </van-field>
+        </van-cell-group>
+      </van-collapse-item>
+    </van-collapse>
+  </scroll-view>
+</view>
 
 <van-action-sheet
   show="{{ isShowActionSheet }}"
