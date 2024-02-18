@@ -130,6 +130,13 @@ ComponentWithComputed({
           entry: '',
         },
       })
+
+      wx.closeBluetoothAdapter({
+        success: (res) => {
+          console.log('closeBluetoothAdapter', res)
+          this.initBle()
+        },
+      })
     },
     onChangeCollapse(event: { detail: string[] }) {
       Logger.debug(event)
@@ -190,7 +197,7 @@ ComponentWithComputed({
           proType: '',
           protocolVersion,
           onMessage: (message) => {
-            Logger.debug('BleClient-onMessage', message)
+            Logger.debug(`【${mac}】BleClient-onMessage`, message)
 
             // 上报ZigBee配网结果
             if (REPORT_TYPE.REPORT_CONFIG_ZIGBEE_NET_RESULT === message.type) {
@@ -210,12 +217,10 @@ ComponentWithComputed({
                 nodeId: hexStr.slice(10, 14), // 短地址
               }
 
-              Logger.debug('info', info)
-
               const zigbeeDeviceList = this.data.netInfo.deviceList
 
-              if (this.data.netInfo.deviceList.findIndex((item) => item === deviceId) < 0) {
-                zigbeeDeviceList.push(deviceId)
+              if (this.data.netInfo.deviceList.findIndex((item) => item === mac) < 0) {
+                zigbeeDeviceList.push(mac)
               }
 
               const targetDevice = this.data.deviceList.find((item) => item.deviceId === deviceId) as IDeviceInfo
@@ -228,7 +233,7 @@ ComponentWithComputed({
 
               if (!this.data.netInfo.entry) {
                 this.setData({
-                  'netInfo.entry': targetDevice.deviceId,
+                  'netInfo.entry': targetDevice.mac,
                 })
               }
 
@@ -276,10 +281,10 @@ ComponentWithComputed({
     clickGrid(event: WechatMiniprogram.CustomEvent) {
       Logger.log('clickGrid', event)
 
-      const deviceId = event.target.dataset.deviceId
+      const mac = event.target.dataset.mac
 
       this.setData({
-        'netInfo.entry': deviceId,
+        'netInfo.entry': mac,
       })
     },
     changeBle(e: { detail: { value: { deviceId: string } } }) {
@@ -352,7 +357,7 @@ ComponentWithComputed({
 
       const channel = parseInt(this.data.netInfo.channel, 16)
       const panId = parseInt(this.data.netInfo.panId, 16)
-      const entryDevice = this.data.deviceList.find((item) => item.deviceId === this.data.netInfo.entry) as IDeviceInfo
+      const entryDevice = this.data.deviceList.find((item) => item.mac === this.data.netInfo.entry) as IDeviceInfo
 
       let res
 
@@ -368,7 +373,7 @@ ComponentWithComputed({
             await entryDevice.bleClient.startZigbeeNet({
               channel,
               panId,
-              role: ZIGBEE_ROLE.coord,
+              role: ZIGBEE_ROLE.entry,
             })
           }
 

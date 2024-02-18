@@ -66,11 +66,11 @@
         <van-grid column-num="3">
           <van-grid-item
             wx:for="{{netInfo.deviceList}}"
-            wx:key="mac"
+            wx:key="index"
             icon="desktop-o"
             text="{{item}}"
             dot="{{item === netInfo.entry }}"
-            data-device-id="{{item}}"
+            data-mac="{{item}}"
             clickable="{{true}}"
             bind:click="clickGrid"
           />
