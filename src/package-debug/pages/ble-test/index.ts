@@ -1,6 +1,15 @@
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { BleClient, bleUtil, Logger, ZIGBEE_ROLE, CmdTypeMap, REPORT_TYPE } from '../../../utils/index'
+import {
+  BleClient,
+  bleUtil,
+  Logger,
+  ZIGBEE_ROLE,
+  CmdTypeMap,
+  REPORT_TYPE,
+  bleDeviceMap,
+  storage,
+} from '../../../utils/index'
 
 type IDeviceInfo = {
   brand: string
@@ -13,7 +22,6 @@ type IDeviceInfo = {
   protocolVersion: string
   label: string
   deviceId: string
-  isConnected: boolean
   bleClient: BleClient
 }
 
@@ -41,15 +49,13 @@ ComponentWithComputed({
         name: '作为coord进入配网',
       },
       {
-        name: '作为已入网设备开启入网权限',
-      },
-      {
         name: '反转开关状态',
       },
       {
         name: '查询开关状态',
       },
     ],
+    isConnected: false,
     isDiscovering: false,
     selectDeiceId: '',
     deviceList: [] as IDeviceInfo[],
@@ -66,10 +72,10 @@ ComponentWithComputed({
       },
     ],
     netInfo: {
-      channel: 0,
-      panId: 0,
-      deviceList: [] as IDeviceInfo[],
-      coord: '',
+      channel: '0x00',
+      panId: '0x00',
+      deviceList: [] as string[],
+      entry: '',
     },
   },
 
@@ -82,6 +88,24 @@ ComponentWithComputed({
   lifetimes: {
     ready() {
       this.initBle()
+
+      const netInfo = storage.get('netInfo')
+
+      Logger.log('netInfo', netInfo)
+      if (netInfo) {
+        this.setData({
+          netInfo: JSON.parse(
+            typeof netInfo === 'string'
+              ? netInfo
+              : '{\n' +
+                  "      channel: '0x00',\n" +
+                  "      panId: '0x00',\n" +
+                  '      deviceList: [],\n' +
+                  "      entry: '',\n" +
+                  '    }',
+          ),
+        })
+      }
     },
     detached() {
       wx.closeBluetoothAdapter({
@@ -95,6 +119,18 @@ ComponentWithComputed({
    * 组件的方法列表
    */
   methods: {
+    reset() {
+      storage.remove('netInfo')
+
+      this.setData({
+        netInfo: {
+          channel: '0x00',
+          panId: '0x00',
+          deviceList: [] as string[],
+          entry: '',
+        },
+      })
+    },
     onChangeCollapse(event: { detail: string[] }) {
       Logger.debug(event)
       this.setData({
@@ -141,14 +177,15 @@ ComponentWithComputed({
         return
       }
 
+      const deviceId = device.deviceId
+
       const bleDevice = {
         ...msgObj,
         label: `${mac}${isConfig === '02' ? '-已配网' : ''}`,
-        deviceId: device.deviceId,
-        isConnected: false,
+        deviceId,
         bleClient: new BleClient({
           mac,
-          deviceUuid: device.deviceId,
+          deviceUuid: deviceId,
           modelId: '',
           proType: '',
           protocolVersion,
@@ -163,6 +200,7 @@ ComponentWithComputed({
 
               // 配网失败
               if (result !== '00') {
+                Logger.error(`【${mac}】配网失败`)
                 return
               }
 
@@ -174,13 +212,29 @@ ComponentWithComputed({
 
               Logger.debug('info', info)
 
-              const device = this.data.deviceList.find((item) => item.deviceId === mac)
+              const zigbeeDeviceList = this.data.netInfo.deviceList
+
+              if (this.data.netInfo.deviceList.findIndex((item) => item === deviceId) < 0) {
+                zigbeeDeviceList.push(deviceId)
+              }
+
+              const targetDevice = this.data.deviceList.find((item) => item.deviceId === deviceId) as IDeviceInfo
 
               this.setData({
-                'netInfo.channel': parseInt(info.channel, 16),
-                'netInfo.panId': parseInt(info.panId, 16),
-                'netInfo.deviceList': this.data.netInfo.deviceList.concat([device as IDeviceInfo]),
+                'netInfo.channel': `0x${info.channel}`,
+                'netInfo.panId': `0x${info.panId}`,
+                'netInfo.deviceList': zigbeeDeviceList,
               })
+
+              if (!this.data.netInfo.entry) {
+                this.setData({
+                  'netInfo.entry': targetDevice.deviceId,
+                })
+              }
+
+              Logger.debug('netInfo.deviceList', this.data.netInfo.deviceList)
+
+              this.changeNetInfo()
             }
           },
         }),
@@ -219,11 +273,23 @@ ComponentWithComputed({
         },
       })
     },
-    changeBle(e: { detail: { value: IDeviceInfo } }) {
-      Logger.debug('changeBle', e)
+    clickGrid(event: WechatMiniprogram.CustomEvent) {
+      Logger.log('clickGrid', event)
+
+      const deviceId = event.target.dataset.deviceId
 
       this.setData({
-        selectDeiceId: e.detail.value.deviceId,
+        'netInfo.entry': deviceId,
+      })
+    },
+    changeBle(e: { detail: { value: { deviceId: string } } }) {
+      Logger.log('changeBle', e)
+
+      const { deviceId } = e.detail.value
+
+      this.setData({
+        isConnected: bleDeviceMap[deviceId] === true,
+        selectDeiceId: deviceId,
       })
     },
 
@@ -238,22 +304,18 @@ ComponentWithComputed({
       this.stopScanBle()
       const selectDevice = this.data.selectDevice
 
-      if (!selectDevice.isConnected) {
+      if (!this.data.isConnected) {
         await selectDevice.bleClient.connect()
-
-        selectDevice.isConnected = true
 
         wx.showToast({
           title: '连接成功',
         })
       } else {
         await selectDevice.bleClient.close()
-
-        selectDevice.isConnected = false
       }
 
       this.setData({
-        deviceList: this.data.deviceList.concat([]),
+        isConnected: bleDeviceMap[selectDevice.deviceId] === true,
       })
     },
 
@@ -288,8 +350,10 @@ ComponentWithComputed({
       console.log('handelControl', event.detail)
       const selectDevice = this.data.selectDevice
 
-      const channel = this.data.netInfo.channel
-      const panId = this.data.netInfo.panId
+      const channel = parseInt(this.data.netInfo.channel, 16)
+      const panId = parseInt(this.data.netInfo.panId, 16)
+      const entryDevice = this.data.deviceList.find((item) => item.deviceId === this.data.netInfo.entry) as IDeviceInfo
+
       let res
 
       switch (event.detail.name) {
@@ -299,6 +363,15 @@ ComponentWithComputed({
           break
 
         case '作为router进入配网':
+          // 开启当前zigbee网络节点入网权限
+          if (entryDevice) {
+            await entryDevice.bleClient.startZigbeeNet({
+              channel,
+              panId,
+              role: ZIGBEE_ROLE.coord,
+            })
+          }
+
           res = await selectDevice.bleClient.startZigbeeNet({
             channel,
             panId,
@@ -308,9 +381,6 @@ ComponentWithComputed({
           break
 
         case '作为coord进入配网':
-          this.setData({
-            'netInfo.coord': selectDevice.deviceId,
-          })
           res = await selectDevice.bleClient.startZigbeeNet({
             channel,
             panId,
@@ -347,6 +417,10 @@ ComponentWithComputed({
       this.setData({
         isShowActionSheet: false,
       })
+    },
+
+    changeNetInfo() {
+      storage.set('netInfo', JSON.stringify(this.data.netInfo))
     },
   },
 })

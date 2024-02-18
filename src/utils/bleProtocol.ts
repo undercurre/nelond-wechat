@@ -602,7 +602,7 @@ export const bleUtil = {
 }
 
 // 蓝牙连接状态集合
-const bleDeviceMap = {} as IAnyObject
+export const bleDeviceMap = {} as IAnyObject
 
 wx.onBLEConnectionStateChange(function (res) {
   bleDeviceMap[res.deviceId] = res.connected

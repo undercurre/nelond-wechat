@@ -16,8 +16,15 @@
       class="ml-32rpx"
       type="primary"
       bind:click="toggleConnect"
-      >{{ selectDevice.isConnected ? '断开蓝牙' : '连接蓝牙'}}
+      >{{ isConnected ? '断开蓝牙' : '连接蓝牙'}}
     </van-button>
+
+    <van-button
+      class="ml-32rpx"
+      type="primary"
+      bind:click="reset"
+      >清除缓存数据</van-button
+    >
   </view>
 
   <van-divider />
@@ -54,14 +61,18 @@
 
         <text>【channelId】: {{ netInfo.channel }}</text>
         <text>【panId】: {{ netInfo.panId }}</text>
+        <text>【入网节点】: {{ netInfo.entry }}</text>
 
         <van-grid column-num="3">
           <van-grid-item
             wx:for="{{netInfo.deviceList}}"
             wx:key="mac"
             icon="desktop-o"
-            text="{{item.mac}}"
-            clickable
+            text="{{item}}"
+            dot="{{item === netInfo.entry }}"
+            data-device-id="{{item}}"
+            clickable="{{true}}"
+            bind:click="clickGrid"
           />
         </van-grid>
       </van-collapse-item>
