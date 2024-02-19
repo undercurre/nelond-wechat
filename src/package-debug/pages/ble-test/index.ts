@@ -9,6 +9,7 @@ import {
   REPORT_TYPE,
   bleDeviceMap,
   storage,
+  strUtil,
 } from '../../../utils/index'
 
 type IDeviceInfo = {
@@ -23,6 +24,12 @@ type IDeviceInfo = {
   label: string
   deviceId: string
   bleClient: BleClient
+}
+
+// zigbee网络节点数据
+interface INetItem {
+  mac: string
+  nodeId: string
 }
 
 ComponentWithComputed({
@@ -74,7 +81,7 @@ ComponentWithComputed({
     netInfo: {
       channel: '0x00',
       panId: '0x00',
-      deviceList: [] as string[],
+      deviceList: [{ mac: '121313123', nodeId: '00000' }] as INetItem[],
       entry: '',
     },
   },
@@ -126,7 +133,7 @@ ComponentWithComputed({
         netInfo: {
           channel: '0x00',
           panId: '0x00',
-          deviceList: [] as string[],
+          deviceList: [] as INetItem[],
           entry: '',
         },
       })
@@ -213,14 +220,17 @@ ComponentWithComputed({
 
               const info = {
                 channel: hexStr.slice(4, 6), // 上报所在信道
-                panId: hexStr.slice(6, 10), // 所在网络
-                nodeId: hexStr.slice(10, 14), // 短地址
+                panId: strUtil.reverseHexStr(hexStr.slice(6, 10)), // 所在网络
+                nodeId: strUtil.reverseHexStr(hexStr.slice(10, 14)), // 短地址
               }
 
               const zigbeeDeviceList = this.data.netInfo.deviceList
 
-              if (this.data.netInfo.deviceList.findIndex((item) => item === mac) < 0) {
-                zigbeeDeviceList.push(mac)
+              if (this.data.netInfo.deviceList.findIndex((item) => item.mac === mac) < 0) {
+                zigbeeDeviceList.push({
+                  mac,
+                  nodeId: info.nodeId,
+                })
               }
 
               const targetDevice = this.data.deviceList.find((item) => item.deviceId === deviceId) as IDeviceInfo

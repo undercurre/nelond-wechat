@@ -414,14 +414,7 @@ export class BleClient {
 
     if (res.success) {
       const macStr = res.data.substr(4)
-      let arr = []
-
-      for (let i = 0; i < macStr.length; i = i + 2) {
-        arr.push(macStr.substr(i, 2).toUpperCase())
-      }
-
-      arr = arr.reverse()
-      zigbeeMac = arr.join('')
+      zigbeeMac = strUtil.reverseHexStr(macStr)
     }
 
     const code = res.data.slice(2, 4)

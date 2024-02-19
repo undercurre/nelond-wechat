@@ -47,6 +47,19 @@ export const strUtil = {
   },
 
   /**
+   * 将16进制字符串高低位顺序进行反转，（高位在后 -> 高位在前   或者  高位在前 -> 高位在后）
+   * @param hex
+   */
+  reverseHexStr(hex: string) {
+    let result = ''
+    for (let i = hex.length - 2; i >= 0; i -= 2) {
+      result += hex.slice(i, i + 2)
+    }
+
+    return result
+  },
+
+  /**
    * 16进制字符串转ArrayBuffer
    * @param str
    */

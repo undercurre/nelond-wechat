@@ -63,17 +63,26 @@
         <text>【panId】: {{ netInfo.panId }}</text>
         <text>【入网节点】: {{ netInfo.entry }}</text>
 
-        <van-grid column-num="3">
+        <van-grid
+          column-num="3"
+          clickable
+        >
           <van-grid-item
             wx:for="{{netInfo.deviceList}}"
-            wx:key="index"
+            wx:key="mac"
             icon="desktop-o"
-            text="{{item}}"
-            dot="{{item === netInfo.entry }}"
-            data-mac="{{item}}"
-            clickable="{{true}}"
+            dot="{{item.mac === netInfo.entry }}"
+            data-mac="{{item.mac}}"
             bind:click="clickGrid"
-          />
+          >
+            <view
+              class="flex-col items-center"
+              slot="text"
+            >
+              <view>{{ item.mac }}</view>
+              <view>{{item.nodeId}}</view>
+            </view>
+          </van-grid-item>
         </van-grid>
       </van-collapse-item>
 
