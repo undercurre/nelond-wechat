@@ -2,7 +2,7 @@ import Toast from '@vant/weapp/toast/toast'
 import { login, getCaptcha } from '../../apis/index'
 import { projectStore, othersStore, userStore } from '../../store/index'
 import { storage, showLoading, hideLoading, Logger } from '../../utils/index'
-import { defaultImgDir, UNACTIVATED } from '../../config/index'
+import { defaultImgDir, UNACTIVATED, CAPTCHA_VALID_TIME } from '../../config/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 
 // pages/login/index.ts
@@ -19,6 +19,8 @@ Component({
     defaultImgDir,
     needCaptcha: false, // 是否需要验证码登录
     captchaInput: '',
+    validTime: CAPTCHA_VALID_TIME, // 验证码60秒过期
+    _mobilePhone: '',
     _jsCode: '', // 暂存微信登录码
     _code: '', // 暂存微信获取手机的动态令牌
   },
@@ -94,6 +96,17 @@ Component({
       })
     },
 
+    reduceValidTime() {
+      setTimeout(() => {
+        this.setData({
+          validTime: this.data.validTime - 1,
+        })
+        if (this.data.validTime > 0) {
+          this.reduceValidTime()
+        }
+      }, 1000)
+    },
+
     /**
      * 登录逻辑
      */
@@ -101,10 +114,11 @@ Component({
       const res = await login(data)
       // 如果返回未激活状态，则自动调用获取验证码的接口
       if (res.success && res.code === UNACTIVATED) {
-        getCaptcha({ mobilePhone: res.result?.mobilePhone })
         this.setData({
           needCaptcha: true,
         })
+        this.data._mobilePhone = res.result?.mobilePhone
+        this.queryCaptcha()
       }
       // 登录成功
       else if (res.success && res.result) {
@@ -121,6 +135,14 @@ Component({
       } else {
         Toast('登录失败！')
       }
+    },
+
+    queryCaptcha() {
+      getCaptcha({ mobilePhone: this.data._mobilePhone })
+      this.setData({
+        validTime: CAPTCHA_VALID_TIME,
+      })
+      this.reduceValidTime()
     },
 
     onAgreeClick(event: { detail: boolean }) {

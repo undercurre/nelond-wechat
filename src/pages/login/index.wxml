@@ -38,16 +38,25 @@
     custom-style="padding: 32rpx 32rpx; margin: 16rpx 0; background-color: #F6FAFD;border-radius: 24rpx;"
     type="number"
     maxlength="{{6}}"
-    placeholder="请输入短信验证码"
+    placeholder="请输入短信验证码{{validTime ? '（' + validTime + 's）' : ''}}"
     bind:change="captchaChange"
   />
   <van-button
+    wx:if="{{validTime}}"
     bind:tap="handleLoginWithCaptcha"
     block
     disabled="{{!captchaInput}}"
     type="primary"
     size="large"
     >激活账号并登录
+  </van-button>
+  <van-button
+    wx:else
+    bind:tap="queryCaptcha"
+    block
+    type="primary"
+    size="large"
+    >重新获取验证码
   </van-button>
 </view>
 

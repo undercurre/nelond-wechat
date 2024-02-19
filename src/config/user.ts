@@ -8,3 +8,8 @@ export enum UserRole {
   Admin = '2', // 项目管理员
   Visitor = '3', // 使用者
 }
+
+/**
+ * 验证码有效时长（秒）
+ */
+export const CAPTCHA_VALID_TIME = 60
