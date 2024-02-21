@@ -627,6 +627,7 @@ ComponentWithComputed({
       // 整个列表更新
       else {
         const flattenList = deviceStore.deviceFlattenList
+
         const _list = flattenList
           // 接口返回开关面板数据以设备为一个整体，需要前端拆开后排序
           // 不再排除灯组

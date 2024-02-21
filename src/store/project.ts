@@ -230,8 +230,6 @@ export const projectStore = observable({
   async initLocalKey() {
     const key = storage.get('localKey') as string
 
-    console.debug('key', key)
-
     if (key) {
       this.key = key
     } else {
