@@ -81,7 +81,7 @@ ComponentWithComputed({
     netInfo: {
       channel: '0x00',
       panId: '0x00',
-      deviceList: [{ mac: '121313123', nodeId: '00000' }] as INetItem[],
+      deviceList: [] as INetItem[],
       entry: '',
     },
   },
