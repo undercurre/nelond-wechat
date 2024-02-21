@@ -94,6 +94,7 @@ ComponentWithComputed({
 
   lifetimes: {
     ready() {
+      bleUtil.initBle()
       this.initBle()
 
       const netInfo = storage.get('netInfo')

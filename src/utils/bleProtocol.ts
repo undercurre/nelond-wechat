@@ -41,51 +41,6 @@ type BleCmdCallbackType = (data: IBleResult) => void
 export const connectList: string[] = [] // 测试用，监控蓝牙连接和断开是否成对调用
 export const closeList: string[] = [] // 测试用，监控蓝牙连接和断开是否承兑调用
 
-wx.onBLECharacteristicValueChange((res: WechatMiniprogram.OnBLECharacteristicValueChangeCallbackResult) => {
-  const bleDevice = deviceUuidMap[res.deviceId]
-  if (!bleDevice) {
-    Logger.debug('非zigbee子设备蓝牙消息')
-    return
-  }
-
-  const hex = strUtil.ab2hex(res.value)
-  const msg = aesUtil.decrypt(hex, bleDevice.key, 'Hex')
-
-  const resMsgId = parseInt(msg.slice(2, 4), 16) // 收到回复的指令msgId
-  const packLen = parseInt(msg.slice(4, 6), 16) // 回复消息的Byte Msg Id到Byte Checksum的总长度，单位byte
-
-  // Cmd Type	   Msg Id	   Package Len	   Parameter(s) 	Checksum
-  // 1 byte	     1 byte	   1 byte	          N  bytes	    1 byte
-
-  // Parameter(s)： 消息参数
-  const resMsg = msg.slice(6, 6 + (packLen - 3) * 2)
-
-  /* Parameter(s)段统一格式如下：
-  字节	  含义
-  0	    Contrl Type: 控制指令子类型	对可能的各种控制类型消息的区分
-  1 ~ 	Param_data: 控制参数内容*/
-
-  const callback = bleDevice.cmdCallbackMap[resMsgId]
-
-  if (callback) {
-    callback({
-      code: '00', //
-      data: resMsg,
-      success: true,
-      msg: '成功收到回复',
-    })
-
-    delete bleDevice.cmdCallbackMap[resMsgId] // 删除已经执行的callback
-  } else if (bleDevice.onMessage) {
-    bleDevice.onMessage({
-      type: resMsg.slice(0, 2), //  上报类型
-      data: resMsg,
-      mac: bleDevice.mac,
-      deviceId: bleDevice.deviceUuid,
-    })
-  }
-})
-
 // 设备在zigbee入网时的角色
 export const ZIGBEE_ROLE = {
   router: 0x00, // 作为准备加入网络的新节点
@@ -406,8 +361,6 @@ export class BleClient {
       parameter.push(role)
     }
 
-    Logger.debug('protocolVersion', protocolVersion, 'parameter', parameter)
-
     const res = await this.sendCmd({
       cmdType: CmdTypeMap.DEVICE_CONTROL,
       data: parameter,
@@ -595,6 +548,58 @@ export const bleUtil = {
       .padStart(numBytes * 2, '0')
 
     return strUtil.hexStringToBytes(hexStr).reverse()
+  },
+
+  /**
+   * 初始化子设备蓝牙，使用BleClient类型，必须先调用
+   * 重新建立蓝牙监听，否则有可能被其他模块调用wx.offBLECharacteristicValueChange()取消蓝牙特征值监听,导致无法获取蓝回复
+   */
+  initBle() {
+    wx.offBLECharacteristicValueChange()
+    wx.onBLECharacteristicValueChange((res: WechatMiniprogram.OnBLECharacteristicValueChangeCallbackResult) => {
+      const bleDevice = deviceUuidMap[res.deviceId]
+      if (!bleDevice) {
+        Logger.debug('非zigbee子设备蓝牙消息')
+        return
+      }
+
+      const hex = strUtil.ab2hex(res.value)
+      const msg = aesUtil.decrypt(hex, bleDevice.key, 'Hex')
+
+      const resMsgId = parseInt(msg.slice(2, 4), 16) // 收到回复的指令msgId
+      const packLen = parseInt(msg.slice(4, 6), 16) // 回复消息的Byte Msg Id到Byte Checksum的总长度，单位byte
+
+      // Cmd Type	   Msg Id	   Package Len	   Parameter(s) 	Checksum
+      // 1 byte	     1 byte	   1 byte	          N  bytes	    1 byte
+
+      // Parameter(s)： 消息参数
+      const resMsg = msg.slice(6, 6 + (packLen - 3) * 2)
+
+      /* Parameter(s)段统一格式如下：
+      字节	  含义
+      0	    Contrl Type: 控制指令子类型	对可能的各种控制类型消息的区分
+      1 ~ 	Param_data: 控制参数内容*/
+
+      const callback = bleDevice.cmdCallbackMap[resMsgId]
+
+      if (callback) {
+        callback({
+          code: '00', //
+          data: resMsg,
+          success: true,
+          msg: '成功收到回复',
+        })
+
+        delete bleDevice.cmdCallbackMap[resMsgId] // 删除已经执行的callback
+      } else if (bleDevice.onMessage) {
+        bleDevice.onMessage({
+          type: resMsg.slice(0, 2), //  上报类型
+          data: resMsg,
+          mac: bleDevice.mac,
+          deviceId: bleDevice.deviceUuid,
+        })
+      }
+    })
   },
 }
 
