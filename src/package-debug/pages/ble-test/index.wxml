@@ -1,76 +1,134 @@
-<nav-bar
-  title="蓝牙调试"
-  left-arrow
-  bind:leftTap="goBack"
-></nav-bar>
+<view class="h-100vh flex flex-col">
+  <nav-bar
+    title="蓝牙调试"
+    left-arrow
+    bind:leftTap="goBack"
+  ></nav-bar>
 
-<van-button
-  type="primary"
-  bind:click="toggleDiscoverBle"
-  >{{ !isDiscovering ? '开始扫描蓝牙' : '停止扫描蓝牙'}}</van-button
->
-
-<van-button
-  class="ml-32rpx"
-  type="primary"
-  bind:click="toggleConnect"
-  >{{ bleClient ? '断开蓝牙' : '连接蓝牙'}}</van-button
->
-
-<van-divider />
-
-<van-picker
-  columns="{{ deviceList }}"
-  value-key="mac"
-  item-height="30"
-  visible-item-count="4"
-  bind:change="changeBle"
-  loading="{{deviceList.length <= 0}}"
-/>
-
-<van-divider />
-<van-dropdown-menu>
-  <van-dropdown-item
-    value="{{ cmdType }}"
-    options="{{ cmdTypeList }}"
-    bind:change="changeCmdType"
-  />
-</van-dropdown-menu>
-
-<van-divider />
-<van-cell-group>
-  <van-field
-    model:value="{{ cmd }}"
-    center
-    clearable
-    label="控制指令"
-    placeholder="请输入指令"
-    border="{{ false }}"
-    use-button-slot
-    show-word-limit
-    maxlength="100"
-  >
+  <view class="flex flex-row">
     <van-button
-      slot="button"
-      size="small"
       type="primary"
-      bind:click="sendCmd"
-    >
-      发送指令
+      bind:click="toggleDiscoverBle"
+      >{{ !isDiscovering ? '开始扫描蓝牙' : '停止扫描蓝牙'}}
     </van-button>
-  </van-field>
-</van-cell-group>
 
-<scroll-view
-  class="h-1000"
-  scroll-y
->
-  <text class="text-40 leading-60rpx">返回结果</text>
-  <text class="text-24 leading-30rpx bg-hex-ddd">{{result}}</text>
-</scroll-view>
+    <van-button
+      class="ml-32rpx"
+      type="primary"
+      bind:click="toggleConnect"
+      >{{ isConnected ? '断开蓝牙' : '连接蓝牙'}}
+    </van-button>
 
-<rich-text
-  nodes="{{logText}}"
-  user-select="{{true}}"
-  type="text"
-></rich-text>
+    <van-button
+      class="ml-32rpx"
+      type="primary"
+      bind:click="reset"
+      >清除缓存数据</van-button
+    >
+  </view>
+
+  <van-divider />
+
+  <scroll-view
+    class="h-800 grow shrink"
+    enhanced
+    scroll-y
+  >
+    <van-picker
+      wx:if="{{deviceList.length}}"
+      columns="{{ deviceList }}"
+      value-key="mac"
+      item-height="30"
+      visible-item-count="4"
+      bind:change="changeBle"
+      loading="{{deviceList.length <= 0}}"
+    />
+
+    <van-collapse
+      value="{{ activeNames }}"
+      bind:change="onChangeCollapse"
+    >
+      <van-collapse-item
+        title="自组网"
+        name="noGateway"
+      >
+        <van-button
+          class="ml-32rpx"
+          type="primary"
+          bind:click="toggleShowAction"
+          >控制
+        </van-button>
+
+        <text>【channelId】: {{ netInfo.channel }}</text>
+        <text>【panId】: {{ netInfo.panId }}</text>
+        <text>【入网节点】: {{ netInfo.entry }}</text>
+
+        <van-grid
+          column-num="3"
+          clickable
+        >
+          <van-grid-item
+            wx:for="{{netInfo.deviceList}}"
+            wx:key="mac"
+            icon="desktop-o"
+            dot="{{item.mac === netInfo.entry }}"
+            data-mac="{{item.mac}}"
+            bind:click="clickGrid"
+          >
+            <view
+              class="flex-col items-center"
+              slot="text"
+            >
+              <view>{{ item.mac }}</view>
+              <view>{{item.nodeId}}</view>
+            </view>
+          </van-grid-item>
+        </van-grid>
+      </van-collapse-item>
+
+      <van-collapse-item
+        title="自定义指令"
+        name="custom"
+      >
+        <van-dropdown-menu>
+          <van-dropdown-item
+            value="{{ cmdType }}"
+            options="{{ cmdTypeList }}"
+            bind:change="changeCmdType"
+          />
+        </van-dropdown-menu>
+
+        <van-divider />
+        <van-cell-group>
+          <van-field
+            model:value="{{ cmd }}"
+            center
+            clearable
+            label="控制指令"
+            placeholder="请输入指令"
+            border="{{ false }}"
+            use-button-slot
+            show-word-limit
+            maxlength="100"
+          >
+            <van-button
+              slot="button"
+              size="small"
+              type="primary"
+              bind:click="sendCmd"
+            >
+              发送指令
+            </van-button>
+          </van-field>
+        </van-cell-group>
+      </van-collapse-item>
+    </van-collapse>
+  </scroll-view>
+</view>
+
+<van-action-sheet
+  show="{{ isShowActionSheet }}"
+  actions="{{ actions }}"
+  bind:close="toggleShowAction"
+  bind:select="handelControl"
+/>
