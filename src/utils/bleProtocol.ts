@@ -379,7 +379,7 @@ export class BleClient {
    *
    * @param channel 设备配网所要入的信道  0x00：默认不设定
    * @param panId 设备配网所要入网的网络所在的网络标识符  0x0000：默认不设定
-   * @param extPanId 要入网的extended panid, 16进制字符串
+   * @param extPanId 要入网的extended panid, 16位的16进制数字符串
    * @param role 设备在zigbee入网时的角色 0x00:：作为router进入配网  0x01：作为coord进入配网（本地组网）  0x02：作为已入网设备开启入网权限（限本地组网）
    */
   async startZigbeeNet({ channel = 0, panId = 0, extPanId = '', role = ZIGBEE_ROLE.router }) {
@@ -394,8 +394,9 @@ export class BleClient {
     const protocolVersion = parseInt(this.protocolVersion, 10) // 蓝牙协议版本
 
     if (protocolVersion >= 2) {
+      extPanId = extPanId || '0'.padStart(16, '0')
       const panIdHexArr = bleUtil.transferHexToBleData(panId, 2)
-      const exPanIdHexArr = bleUtil.transferHexToBleData(parseInt(extPanId || '0', 16), 8)
+      const exPanIdHexArr = strUtil.hexStringToBytes(extPanId.toUpperCase()).reverse() // 不能直接调用transferHexToBleData，extPanId数值太大，转换进制会产生精度丢失
 
       parameter = parameter.concat([...panIdHexArr, ...exPanIdHexArr])
     }
@@ -404,6 +405,8 @@ export class BleClient {
     if (protocolVersion >= 3) {
       parameter.push(role)
     }
+
+    Logger.debug('protocolVersion', protocolVersion, 'parameter', parameter)
 
     const res = await this.sendCmd({
       cmdType: CmdTypeMap.DEVICE_CONTROL,
@@ -581,6 +584,7 @@ export const bleUtil = {
 
   /**
    * 转换要传输的蓝牙数据，将参数值转换成指定长度的字节数组，高位在后，低位在前，位数不足自动补0
+   * 超过的2的53次方的数值会产生精度丢失
    * @param value
    * @param numBytes 需要输出的字节数长度
    */
