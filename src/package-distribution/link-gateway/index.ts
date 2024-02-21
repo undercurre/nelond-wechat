@@ -4,15 +4,7 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import pageBehaviors from '../../behaviors/pageBehaviors'
 import { queryDeviceOnlineStatus, bindDevice, verifySn } from '../../apis/index'
 import { projectBinding, spaceBinding, deviceBinding } from '../../store/index'
-import {
-  WifiSocket,
-  getCurrentPageParams,
-  strUtil,
-  isAndroid,
-  isAndroid10Plus,
-  Logger,
-  bleUtil,
-} from '../../utils/index'
+import { WifiSocket, getCurrentPageParams, strUtil, isAndroid, isAndroid10Plus, Logger } from '../../utils/index'
 import { stepListForBind, stepListForChangeWiFi } from './conifg'
 import { defaultImgDir } from '../../config/index'
 
@@ -92,7 +84,6 @@ ComponentWithComputed({
 
   lifetimes: {
     async ready() {
-      bleUtil.initBle()
       const pageParams = getCurrentPageParams()
       const { apSSID } = pageParams
 
