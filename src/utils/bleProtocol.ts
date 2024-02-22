@@ -1,4 +1,4 @@
-import { aesUtil, delay, isAndroid, Logger, strUtil } from './index'
+import { aesUtil, delay, isAndroid, Logger, strUtil } from '../utils/index'
 
 // 定义了与BLE通路相关的所有事件/动作/命令的集合；其值域及表示意义为：对HOMLUX设备主控与app之间可能的各种操作的概括分类
 export const CmdTypeMap = {
@@ -338,9 +338,9 @@ export class BleClient {
    * @param role 设备在zigbee入网时的角色 0x00:：作为router进入配网  0x01：作为coord进入配网（本地组网）  0x02：作为已入网设备开启入网权限（限本地组网）
    */
   async startZigbeeNet({ channel = 0, panId = 0, extPanId = '', role = ZIGBEE_ROLE.router }) {
-    // 若panId为65535（0xFFFF），无效,导致无法成功配网，强制改为0
+    Logger.debug(`【${this.mac}】startZigbeeNet, channel: ${channel}`, panId, extPanId, 'role', role)
 
-    Logger.debug('startZigbeeNet', 'channel', channel, panId, extPanId, 'role', role)
+    // 若panId为65535（0xFFFF），无效,导致无法成功配网，强制改为0
     if (panId === 65535) {
       panId = 0
     }
@@ -366,22 +366,23 @@ export class BleClient {
       data: parameter,
     })
 
-    let zigbeeMac = ''
+    const result = {
+      code: res.code,
+      success: res.success,
+      result: {
+        zigbeeMac: '',
+      },
+    }
 
     if (res.success) {
       const macStr = res.data.substr(4)
-      zigbeeMac = strUtil.reverseHexStr(macStr)
-    }
 
-    const code = res.data.slice(2, 4)
+      const code = res.data.slice(2, 4)
 
-    const result = {
-      ...res,
-      code,
-      success: code !== '01',
-      result: {
-        zigbeeMac,
-      },
+      // 根据设备回复做2次处理
+      result.code = code
+      result.success = code !== '01' // 设备有回复的情况，若返回的code是01，代表配网失败
+      result.result.zigbeeMac = strUtil.reverseHexStr(macStr)
     }
 
     Logger.log(`【${this.mac}】startZigbeeNet`, result, `蓝牙连接状态：${bleDeviceMap[this.deviceUuid]}`)
@@ -395,18 +396,18 @@ export class BleClient {
   async getZigbeeState() {
     const res = await this.sendCmd({ cmdType: CmdTypeMap.DEVICE_INFO_QUREY, data: [0x01] })
 
-    let isConfig = ''
-
-    if (res.success) {
-      isConfig = res.data.slice(2, 4)
+    const result = {
+      code: res.code,
+      success: res.success,
+      result: {
+        isConfig: '',
+      },
     }
 
-    const result = {
-      ...res,
-      code: isConfig,
-      result: {
-        isConfig,
-      },
+    if (res.success) {
+      const isConfig = res.data.slice(2, 4)
+      result.code = isConfig
+      result.result.isConfig = isConfig
     }
 
     Logger.log(`【${this.mac}】getZigbeeState`, result)
@@ -423,7 +424,8 @@ export class BleClient {
     Logger.log(`【${this.mac}】getLightState`, res)
 
     return {
-      ...res,
+      code: res.code,
+      success: res.success,
       result: {},
     }
   }
@@ -434,10 +436,11 @@ export class BleClient {
   async flash() {
     const res = await this.sendCmd({ cmdType: CmdTypeMap.DEVICE_CONTROL, data: [0x05] })
 
-    return {
-      ...res,
-      code: res.data.slice(2, 4),
+    if (res.success) {
+      res.code = res.data.slice(2, 4)
     }
+
+    return res
   }
 
   /**
@@ -452,13 +455,12 @@ export class BleClient {
 
     const res = await this.sendCmd({ cmdType: CmdTypeMap.DEVICE_CONTROL, data })
 
-    const code = res.data.slice(2, 4)
-
-    return {
-      ...res,
-      code,
-      success: code === '00',
+    if (res.success) {
+      res.code = res.data.slice(2, 4)
+      res.success = res.code === '00'
     }
+
+    return res
   }
 
   /**
