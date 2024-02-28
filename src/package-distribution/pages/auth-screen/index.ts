@@ -1,9 +1,9 @@
 import Toast from '@vant/weapp/toast/toast'
 import pageBehavior from '../../../behaviors/pageBehaviors'
-import { authQrcode } from '../../../apis/index'
-import { userStore } from '../../../store/index'
+import { bindDevice } from '../../../apis/index'
+import { projectBinding, spaceBinding, userStore } from '../../../store/index'
 import { getCurrentPageParams } from '../../../utils/index'
-import cacheData from '../../../package-distribution/common/cacheData'
+import cacheData from '../../common/cacheData'
 
 Component({
   behaviors: [pageBehavior],
@@ -33,11 +33,18 @@ Component({
   methods: {
     async auth() {
       const pageParams = getCurrentPageParams()
-      const authRes = await authQrcode(pageParams.code)
+      console.debug('pageParams', pageParams)
+      const bindRes = await bindDevice({
+        projectId: projectBinding.store.currentProjectId,
+        spaceId: spaceBinding.store.currentSpace.spaceId,
+        sn: pageParams.sn,
+        nonce: pageParams.code,
+        deviceName: 'Host设备',
+      })
 
-      if (authRes.success) {
+      if (bindRes.success) {
         Toast({
-          message: '授权成功',
+          message: '绑定成功',
           onClose: () => {
             wx.reLaunch({
               url: cacheData.pageEntry,
@@ -45,7 +52,7 @@ Component({
           },
         })
       } else {
-        Toast('授权失败')
+        Toast('绑定失败')
       }
     },
   },

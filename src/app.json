@@ -14,7 +14,8 @@
         "choose-device/index",
         "choose-sensor/index",
         "choose-light/index",
-        "connect-guide/index"
+        "connect-guide/index",
+        "pages/auth-screen/index"
       ]
     },
     {
@@ -47,10 +48,6 @@
       "pages": ["protocol-show/index", "protocol-list/index"]
     },
     {
-      "root": "package-auth",
-      "pages": ["pages/auth-screen/index"]
-    },
-    {
       "root": "package-automation",
       "pages": [
         "automation-log/index",
@@ -71,7 +68,7 @@
     },
     "package-distribution/choose-device/index": {
       "network": "all",
-      "packages": ["package-auth"]
+      "packages": []
     }
   },
   "tabBar": {

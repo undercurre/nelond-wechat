@@ -26,11 +26,11 @@ ComponentWithComputed({
         name: '开关/灯具',
         path: '/package-distribution/choose-light/index',
       },
-      // {
-      //   icon: `${productImgDir}/screen.png`,
-      //   name: '智慧屏',
-      //   path: '/package-distribution/scan/index?scanType=screen',
-      // },
+      {
+        icon: `${productImgDir}/screen.png`,
+        name: 'Host设备',
+        path: '/package-distribution/scan/index?scanType=screen',
+      },
       {
         icon: `${productImgDir}/sensor.png`,
         name: '传感器',

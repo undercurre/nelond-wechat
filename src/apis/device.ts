@@ -136,6 +136,7 @@ export async function bindDevice(
     sn?: string
     deviceId?: string
     deviceName: string
+    nonce?: string // 随机验证码
   },
   options?: { loading?: boolean },
 ) {
