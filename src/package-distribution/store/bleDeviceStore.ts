@@ -1,5 +1,5 @@
 import { observable, runInAction } from 'mobx-miniprogram'
-import { BleClient, bleUtil, Logger, throttle, unique } from '../../utils/index'
+import { BleClient, bleUtil, Logger, throttle } from '../../utils/index'
 import { spaceBinding, deviceBinding } from '../../store/index'
 import { batchCheckDevice, batchGetProductInfoByBPid } from '../../apis/index'
 
@@ -34,12 +34,10 @@ export const bleDevicesStore = observable({
     this.isStart = true
     // 监听扫描到新设备事件, 安卓 6.0 及以上版本，无定位权限或定位开关未打开时，无法进行设备搜索
     wx.onBluetoothDeviceFound((res: WechatMiniprogram.OnBluetoothDeviceFoundCallbackResult) => {
-      res.devices = unique(res.devices, 'deviceId') as WechatMiniprogram.BlueToothDevice[] // 去重
-
       const deviceList = res.devices
         .filter((item) => {
-          // 先过滤非homlux蓝牙子设备 以及【蓝牙信号值低于-80】的设备
-          return item.localName && item.localName.includes('homlux_ble') && item.RSSI > -80
+          // 先过滤非homlux蓝牙子设备 以及【蓝牙信号值低于-75】的设备
+          return item.localName && item.localName.includes('homlux_ble') && item.RSSI > -75
         })
         .map((item) => getBleDeviceBaseInfo(item))
         .filter((baseInfo) => {
@@ -56,7 +54,9 @@ export const bleDevicesStore = observable({
 
           // 1、过滤【已经显示在列表的】
           // 2、设备配网状态没变化的同一设备不再查询，防止重复查询同一设备的云端信息接口
+          // 3、过滤已经进行zigbee自组网的设备，isConfig为10
           return (
+            baseInfo.isConfig !== '10' &&
             !foundViewItem &&
             !_foundList.find(
               (foundItem) => foundItem.deviceUuid === baseInfo.deviceUuid && foundItem.isConfig === baseInfo.isConfig,
