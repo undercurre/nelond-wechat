@@ -24,10 +24,12 @@
         border="{{false}}"
         bind:click="uploadDeviceLog"
       >
-        <text
+        <van-button
           slot="right-icon"
-          class="right-btn"
-          >日志上传</text
+          type="primary"
+          round
+          size="small"
+          >日志上传</van-button
         >
       </van-cell>
     </van-cell-group>
