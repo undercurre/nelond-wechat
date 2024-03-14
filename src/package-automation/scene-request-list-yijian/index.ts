@@ -83,7 +83,7 @@ ComponentWithComputed({
         })
       }
 
-      const deviceList = deviceStore.allRoomDeviceFlattenList
+      const deviceList = deviceStore.allDeviceFlattenList
         .filter((item) => selectIdList.includes(item.uniId))
         .map((item) => {
           if (item.proType === PRO_TYPE.switch) {
@@ -217,7 +217,7 @@ ComponentWithComputed({
     detached() {
       emitter.off('scene_device_result_status')
       sceneStore.updateAllRoomSceneList()
-      deviceStore.updateallDeviceList()
+      deviceStore.updateAllDeviceList()
       projectStore.updateSpaceCardList()
     },
   },

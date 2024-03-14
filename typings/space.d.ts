@@ -42,7 +42,7 @@ declare namespace Space {
     /**
      * 空间场景列表
      */
-    sceneList?: Scene.SceneItem[]
+    sceneList: Scene.SceneItem[]
 
     spaceLevel: SpaceLevel
   }

@@ -14,9 +14,6 @@ export const spaceStore = observable({
    */
   spaceList: [] as Space.SpaceInfo[],
 
-  /** 全屋设备，对应空间id作为key，空间的设备列表作为key */
-  spaceDeviceList: {} as Record<string, Device.DeviceItem[]>,
-
   // 当前选中的空间栈
   currentSpaceSelect: [] as (Space.allSpace | Space.SpaceInfo)[],
 
@@ -62,6 +59,7 @@ export const spaceStore = observable({
     runInAction(() => {
       this.currentSpaceTemp = space
       this.currentSpaceId = space.spaceId // 保存当前选择的空间ID
+      deviceStore.deviceList = deviceStore.allDeviceList.filter((device) => device.spaceId === space.spaceId)
     })
   },
 
@@ -95,7 +93,6 @@ export const spaceStore = observable({
       })
 
     runInAction(() => {
-      spaceStore.spaceDeviceList = list
       spaceStore.spaceList = [...spaceStore.spaceList]
     })
   },
@@ -126,14 +123,6 @@ export const spaceStore = observable({
 
 export const spaceBinding = {
   store: spaceStore,
-  fields: [
-    'hasSpace',
-    'allSpaceList',
-    'spaceList',
-    'spaceDeviceList',
-    'currentSpace',
-    'currentSpaceTemp',
-    'currentSpaceName',
-  ],
+  fields: ['hasSpace', 'allSpaceList', 'spaceList', 'currentSpace', 'currentSpaceTemp', 'currentSpaceName'],
   actions: [],
 }

@@ -89,7 +89,7 @@ ComponentWithComputed({
       // 状态更新推送
       emitter.on('deviceEdit', async () => {
         // if (this.data.spaceId === '0') {
-        await deviceBinding.store.updateallDeviceList()
+        await deviceBinding.store.updateAllDeviceList()
 
         // 预防修改空间时，造成当前选中空间为空
         setTimeout(() => {
@@ -127,7 +127,7 @@ ComponentWithComputed({
             }
           } else {
             // 可能是新绑的设备，直接更新空间
-            deviceBinding.store.updateallDeviceList()
+            deviceBinding.store.updateAllDeviceList()
           }
         } else if (
           typeof e.result.eventData === 'object' &&
@@ -137,14 +137,14 @@ ComponentWithComputed({
         ) {
           // 设备被删除，查空间
           // if (this.data.spaceId === '0') {
-          deviceBinding.store.updateallDeviceList()
+          deviceBinding.store.updateAllDeviceList()
           // } else {
           // deviceBinding.store.updateDeviceList(undefined, this.data.spaceId)
           // }
         } else if (typeof e.result.eventData === 'object' && e.result.eventType === WSEventType.room_del) {
           // await spaceStore.updateSpaceList()
           // if (this.data.spaceId === '0') {
-          deviceBinding.store.updateallDeviceList()
+          deviceBinding.store.updateAllDeviceList()
           if (spaceStore.spaceList.length > 0) {
             this.setData({
               spaceId: spaceBinding.store.spaceList[0].spaceId,
@@ -183,7 +183,7 @@ ComponentWithComputed({
         //   deviceBinding.store.updateDeviceList(undefined, this.data.spaceId)
         // } else {
         // 查全屋
-        deviceBinding.store.updateallDeviceList()
+        deviceBinding.store.updateAllDeviceList()
         // }
       } finally {
         this.setData({
@@ -196,7 +196,7 @@ ComponentWithComputed({
       // 先加载ota列表信息，用于设备详情页展示
       otaStore.updateList()
 
-      await deviceBinding.store.updateallDeviceList()
+      await deviceBinding.store.updateAllDeviceList()
 
       this.setData({
         isLoaded: true,

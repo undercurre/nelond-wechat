@@ -55,7 +55,7 @@ ComponentWithComputed({
     async ready() {
       // await spaceBinding.store.updateSpaceList()
       // if (this.data.roomSelect === '0') {
-      //   deviceBinding.store.updateallDeviceList()
+      //   deviceBinding.store.updateAllDeviceList()
       // }
     },
   },
@@ -70,7 +70,7 @@ ComponentWithComputed({
         roomSelect: e.detail,
       })
       this.hideSelectRoomMenu()
-      deviceBinding.store.updateallDeviceList()
+      deviceBinding.store.updateAllDeviceList()
     },
 
     showSelectRoomMenu() {

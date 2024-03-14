@@ -302,11 +302,11 @@ ComponentWithComputed({
       const relInfo = this.data._switchRelInfo
 
       if (this.data.selectLinkType === 'light') {
-        list = deviceStore.allRoomDeviceFlattenList.filter((item) => item.proType === PRO_TYPE.light)
+        list = deviceStore.allDeviceFlattenList.filter((item) => item.proType === PRO_TYPE.light)
 
         linkSelectList = relInfo.lampRelList.map((device) => device.lampDeviceId.replace('group-', ''))
       } else if (this.data.selectLinkType === 'switch') {
-        list = deviceStore.allRoomDeviceFlattenList.filter(
+        list = deviceStore.allDeviceFlattenList.filter(
           (item) => item.proType === PRO_TYPE.switch && item.uniId !== switchUniId,
         )
 
@@ -345,7 +345,7 @@ ComponentWithComputed({
     },
 
     async handleLinkSelect(e: { detail: string }) {
-      const deviceMap = deviceStore.allRoomDeviceFlattenMap
+      const deviceMap = deviceStore.allDeviceFlattenMap
       const switchUniId = this.data.checkedList[0]
       const selectId = e.detail
 
@@ -733,7 +733,7 @@ ComponentWithComputed({
       }
 
       // sceneStore.updateAllRoomSceneList(),
-      await Promise.all([deviceStore.updateallDeviceList()])
+      await Promise.all([deviceStore.updateAllDeviceList()])
 
       this.data._switchRelInfo.switchUniId = '' // 置空标志位，否则不会更新数据
       this.updateLinkInfo()

@@ -292,7 +292,7 @@ ComponentWithComputed({
       // 首次进入
       if (this.data._firstShow && this.data._from !== 'addDevice') {
         this.updateQueue({ isRefresh: true })
-        sceneStore.updateAllRoomSceneList()
+        // sceneStore.updateAllRoomSceneList()
         this.queryGroupInfo()
         this.data._firstShow = false
       }
@@ -311,46 +311,32 @@ ComponentWithComputed({
 
       // ws消息处理
       emitter.on('wsReceive', async (e) => {
-        const { eventType } = e.result
+        const { eventType, eventData } = e.result
+
+        // 过滤非本空间的消息
+        if (eventData.spaceId !== spaceStore.currentSpace.spaceId) {
+          return
+        }
 
         if (eventType === WSEventType.updateHomeDataLanInfo) {
           this.updateQueue({ isRefresh: true })
           return
         }
 
-        if (e.result.eventType === WSEventType.device_property) {
-          // 如果有传更新的状态数据过来，直接更新store
-          const deviceInHouse = deviceStore.allRoomDeviceMap[e.result.eventData.deviceId]
+        // 出现控制失败，控制与消息的对应关系已不可靠，刷新整体数据
+        if (eventType === WSEventType.control_fail) {
+          this.reloadDataThrottle()
+          return
+        }
 
-          if (deviceInHouse) {
-            runInAction(() => {
-              deviceInHouse.mzgdPropertyDTOList[e.result.eventData.modelName] = {
-                ...deviceInHouse.mzgdPropertyDTOList[e.result.eventData.modelName],
-                ...e.result.eventData.event,
-              }
-            })
-            spaceStore.updateRoomCardLightOnNum()
-          }
-
-          // 组装要更新的设备数据
-          const deviceInRoom = deviceStore.deviceMap[e.result.eventData.deviceId]
-
-          if (deviceInRoom) {
-            runInAction(() => {
-              deviceInRoom.mzgdPropertyDTOList[e.result.eventData.modelName] = {
-                ...deviceInRoom.mzgdPropertyDTOList[e.result.eventData.modelName],
-                ...e.result.eventData.event,
-              }
-            })
-          }
-
+        if (eventType === WSEventType.device_property) {
           // 组装要更新的设备数据，更新的为flatten列表，结构稍不同
           const device = {} as DeviceCard
-          device.deviceId = e.result.eventData.deviceId
-          device.uniId = `${e.result.eventData.deviceId}:${e.result.eventData.modelName}`
+          device.deviceId = eventData.deviceId
+          device.uniId = `${eventData.deviceId}:${eventData.modelName}`
           device.mzgdPropertyDTOList = {}
-          device.mzgdPropertyDTOList[e.result.eventData.modelName] = {
-            ...e.result.eventData.event,
+          device.mzgdPropertyDTOList[eventData.modelName] = {
+            ...eventData.event,
           }
 
           this.updateQueue(device)
@@ -370,13 +356,10 @@ ComponentWithComputed({
             // WSEventType.group_device_result_status,
             // WSEventType.device_del,
             WSEventType.bind_device,
-          ].includes(e.result.eventType)
+          ].includes(eventType)
         ) {
           this.reloadDataThrottle(e)
-        } else if (
-          e.result.eventType === WSEventType.room_del &&
-          e.result.eventData.spaceId === spaceStore.currentSpaceTemp.spaceId
-        ) {
+        } else if (eventType === WSEventType.room_del && eventData.spaceId === spaceStore.currentSpaceTemp.spaceId) {
           // 空间被删除，退出到首页
           await projectStore.updateSpaceCardList()
           wx.redirectTo({
@@ -452,7 +435,7 @@ ComponentWithComputed({
         return
       }
 
-      await deviceStore.updateallDeviceList()
+      await deviceStore.updateSpaceDeviceList()
       this.updateQueue({ isRefresh: true })
 
       this.queryGroupInfo()
@@ -746,12 +729,6 @@ ComponentWithComputed({
         this.data._updating = true
         this.updateDeviceList(diff)
       }
-    },
-
-    // 基于云端更新数据
-    async updateRoomListOnCloud() {
-      await deviceStore.updateallDeviceList()
-      this.updateQueue({ isRefresh: true })
     },
 
     /**

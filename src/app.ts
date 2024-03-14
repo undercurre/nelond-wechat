@@ -93,7 +93,7 @@ App<IAppOption>({
     // 首次进入有onLaunch不必加载
     // homOS本地控制要求场景数据保持尽可能实时，需要小程序回到前台刷新场景和设备列表数据
     if (!firstOnShow) {
-      deviceStore.updateallDeviceList(projectStore.currentProjectId, { isDefaultErrorTips: false })
+      deviceStore.updateAllDeviceList(projectStore.currentProjectId, { isDefaultErrorTips: false })
       projectStore.updateProjectInfo({ isDefaultErrorTips: false })
     }
 

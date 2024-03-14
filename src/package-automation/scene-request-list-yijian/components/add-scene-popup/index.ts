@@ -213,7 +213,7 @@ ComponentWithComputed({
       })
     },
     handleLinkSwitchPopup() {
-      const list = deviceStore.allRoomDeviceFlattenList.filter((item) => {
+      const list = deviceStore.allDeviceFlattenList.filter((item) => {
         if (!item.uniId.includes(':') || SCREEN_PID.includes(item.productId)) {
           return false
         }

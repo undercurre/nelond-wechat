@@ -6,7 +6,7 @@ import { deviceStore } from '../store/index'
 /**
  * 设备管理-根据项目id/空间id查询设备
  */
-export async function queryAllDevice(projectId: string, spaceId: string, options?: IApiRequestOption) {
+export async function queryDevice(projectId: string, spaceId: string, options?: IApiRequestOption) {
   return await mzaioRequest.post<Device.DeviceItem[]>({
     log: true,
     loading: options?.loading ?? false,
