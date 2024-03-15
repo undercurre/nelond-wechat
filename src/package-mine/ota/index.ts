@@ -34,6 +34,13 @@ ComponentWithComputed({
     canOTA(data) {
       return data.isManager
     },
+    btnText(data) {
+      const { isUpdating, remainOtaDevice } = data
+      if (isUpdating) {
+        return `剩余${remainOtaDevice}个设备...`
+      }
+      return remainOtaDevice ? '批量升级' : '立即升级'
+    },
   },
 
   /**

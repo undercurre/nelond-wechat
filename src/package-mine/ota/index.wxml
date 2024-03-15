@@ -104,7 +104,7 @@
         type="primary"
         size="large"
         disabled="{{isUpdating || !hasUpdate}}"
-        >{{isUpdating?'剩余'+remainOtaDevice+'个设备...':'立即升级'}}</van-button
+        >{{btnText}}</van-button
       >
     </view>
   </view>
