@@ -145,6 +145,7 @@ export const deviceStore = observable({
 
     if (!res.success) {
       console.log('加载全项目设备失败！', res)
+      return
     }
 
     let { spaceId = 0 } = spaceStore.currentSpaceTemp ?? {}
@@ -176,6 +177,7 @@ export const deviceStore = observable({
     const res = await queryDevice(projectId, spaceId, options)
     if (!res.success) {
       console.log('加载空间设备失败！', res)
+      return
     }
     runInAction(() => {
       deviceStore.deviceList = res.result

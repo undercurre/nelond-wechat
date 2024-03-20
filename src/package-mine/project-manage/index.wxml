@@ -63,6 +63,16 @@
           border="{{false}}"
         />
       </van-cell-group>
+
+      <van-cell-group inset>
+        <van-cell
+          title="项目信息"
+          is-link
+          center
+          link-type="navigateTo"
+          url="/package-mine/project-detail/index"
+        />
+      </van-cell-group>
     </view>
   </view>
 </view>

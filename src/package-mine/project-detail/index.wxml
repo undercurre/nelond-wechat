@@ -1,0 +1,54 @@
+<view
+  class="page-container flex flex-col"
+  bindtap="hideMenu"
+>
+  <nav-bar
+    background="transparent"
+    leftArrow="{{true}}"
+    bind:leftTap="goBack"
+    title="项目信息"
+  ></nav-bar>
+
+  <view class="grow flex flex-col justify-between">
+    <view>
+      <van-cell-group inset>
+        <van-cell
+          title="项目名称"
+          value="{{currentProjectDetail.projectName}}"
+          center
+        />
+        <van-cell
+          title="项目类型"
+          value="{{currentProjectDetail.projectType}}"
+          center
+        />
+        <van-cell
+          title="项目区域"
+          value="{{currentProjectDetail.projectArea}}"
+          center
+        />
+        <van-cell
+          title="负责人"
+          value="{{currentProjectDetail.projectLeader}}"
+          center
+        />
+        <van-cell
+          title="联系方式"
+          value="{{currentProjectDetail.contract}}"
+          center
+        />
+        <van-cell
+          title="详细地址"
+          value="{{currentProjectDetail.address}}"
+          center
+        />
+        <van-cell
+          title="代理商"
+          value="--"
+          center
+          border="{{false}}"
+        />
+      </van-cell-group>
+    </view>
+  </view>
+</view>

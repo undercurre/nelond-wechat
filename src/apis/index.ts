@@ -14,7 +14,7 @@ export * from './meiju'
  * @param data.captcha 激活验证码
  */
 export async function login(data: { jsCode?: string; code?: string; captcha?: string }) {
-  return await mzaioRequest.post<User.UserLoginRes>({
+  return await mzaioRequest.post<User.UserInfo>({
     log: true,
     loading: false,
     url: '/v1/mzgd/cl/auth/wx/login',

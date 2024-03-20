@@ -1,5 +1,4 @@
 import { IApiRequestOption, mzaioRequest } from '../utils/index'
-import { userBinding } from '../store/index'
 
 /**
  * 查询项目列表
@@ -61,53 +60,6 @@ export async function saveOrUpdateUserHouseInfo(
 }
 
 /**
- * 删除或解散项目
- */
-export async function delUserHouse(projectId: string, options?: { loading?: boolean }) {
-  return await mzaioRequest.post({
-    log: true,
-    loading: options?.loading ?? false,
-    url: '/v1/mzgd/cl/user/house/delUserHouse',
-    data: {
-      projectId,
-    },
-  })
-}
-
-/**
- * 退出项目
- */
-export async function quitUserHouse(projectId: string, options?: { loading?: boolean }) {
-  return await mzaioRequest.post({
-    log: true,
-    loading: options?.loading ?? false,
-    url: '/v1/mzgd/cl/user/house/quitUserHouse',
-    data: {
-      projectId,
-      userId: userBinding.store.userInfo.userId,
-    },
-  })
-}
-
-/**
- * 转让项目
- * type 项目变更类型 1：项目转让 2：工程移交
- */
-export async function changeUserHouse(
-  params: { type: number; projectId: string; changeUserId: string; shareId?: string },
-  options?: { loading?: boolean },
-) {
-  return await mzaioRequest.post({
-    log: true,
-    loading: options?.loading ?? false,
-    url: '/v1/mzgd/cl/user/house/changeUserHouse',
-    data: {
-      ...params,
-    },
-  })
-}
-
-/**
  * 查询项目成员列表
  */
 export async function queryHouseUserList({ projectId = '' }, options?: { loading?: boolean }) {
@@ -117,54 +69,6 @@ export async function queryHouseUserList({ projectId = '' }, options?: { loading
     url: '/v1/mzgd/cl/user/project/queryProjectUserList',
     data: {
       projectId,
-    },
-  })
-}
-
-/**
- * 更新项目成员权限
- * 项目成员权限，创建者：1 管理员：2 游客：3
- */
-export async function updateHouseUserAuth({ userId = '', auth = 3, projectId = '' }, options?: { loading?: boolean }) {
-  return await mzaioRequest.post({
-    log: true,
-    loading: options?.loading ?? false,
-    url: '/v1/mzgd/cl/user/house/updateHouseUserAuth',
-    data: {
-      userId,
-      houseUserAuth: auth,
-      projectId,
-    },
-  })
-}
-
-/**
- * 删除项目成员
- */
-export async function deleteHouseUser({ projectId = '', userId = '' }, options?: { loading?: boolean }) {
-  return await mzaioRequest.post({
-    log: true,
-    loading: options?.loading ?? false,
-    url: '/v1/mzgd/cl/user/house/delHouseUser',
-    data: {
-      projectId,
-      userId,
-    },
-  })
-}
-
-/**
- * 邀请项目成员
- */
-export async function inviteHouseUser({ projectId = '', auth = 3, shareId = '' }, options?: { loading?: boolean }) {
-  return await mzaioRequest.post({
-    log: true,
-    loading: options?.loading ?? false,
-    url: '/v1/mzgd/cl/user/inviteHouseUser',
-    data: {
-      projectId,
-      houseUserAuth: auth,
-      shareId,
     },
   })
 }

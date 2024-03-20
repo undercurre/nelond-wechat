@@ -96,11 +96,8 @@ Component({
 
     /** 如果没登陆，点击头像去登录 */
     handleUserInfoTap() {
-      if (!userStore.isLogin) {
-        wx.navigateTo({
-          url: '/pages/login/index',
-        })
-      }
+      const url = userStore.isLogin ? '/package-mine/user-detail/index' : '/pages/login/index'
+      wx.navigateTo({ url })
     },
   },
 })

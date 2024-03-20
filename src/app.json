@@ -22,6 +22,8 @@
       "root": "package-mine",
       "pages": [
         "project-manage/index",
+        "project-detail/index",
+        "user-detail/index",
         "space-manage/index",
         "space-detail/index",
         "space-new/index",
