@@ -39,7 +39,7 @@ ComponentWithComputed({
       if (isUpdating) {
         return `剩余${remainOtaDevice}个设备...`
       }
-      return remainOtaDevice ? '批量升级' : '立即升级'
+      return remainOtaDevice.length > 1 ? '批量升级' : '立即升级'
     },
   },
 
@@ -98,7 +98,7 @@ ComponentWithComputed({
         isLoading: !this.data.isLoading,
       })
     },
-    handleUpdate() {
+    handleUpdate(e: { target: { dataset: { type?: number } } }) {
       if (!this.data.hasUpdate) {
         return
       }
@@ -107,9 +107,16 @@ ComponentWithComputed({
       this.setData({
         isUpdating: true,
       })
+
+      const { type } = e.target.dataset
+      let deviceOtaList = otaStore.otaUpdateList
+
+      if (typeof type === 'number') {
+        deviceOtaList = otaStore.otaUpdateList.filter((d) => d.otaType === type)
+      }
       execOtaUpdate(
         {
-          deviceOtaList: otaStore.otaUpdateList,
+          deviceOtaList,
         },
         { loading: !this.data.isUpdating },
       ).then((res) => {
