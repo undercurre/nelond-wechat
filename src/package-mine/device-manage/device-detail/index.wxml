@@ -99,7 +99,7 @@
         bind:update="updateDeviceInfo"
       />
       <setting-gateway
-        isManager="{{canEditDevice}}"
+        can-edit-device="{{canEditDevice}}"
         device-info="{{deviceInfo}}"
         wx:if="{{prodType === 'gateway'}}"
         bind:update="updateDeviceInfo"

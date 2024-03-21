@@ -12,16 +12,16 @@ export const userStore = observable({
   } as User.UserInfo,
   isLogin: false,
 
-  // 是否创建者 // TODO 如果是多角色的情况处理
-  get isCreator() {
+  // 是否总管
+  get SuperAdmin() {
     const { roleId } = this.userInfo.roleList[0] ?? {}
-    return roleId === UserRole.SuperAdmin || roleId === UserRole.Creator
+    return roleId === UserRole.SuperAdmin
   },
 
-  // 是否管理员权限+
+  // 是否管理员权限+，代理商管理员|1 项目管理员|2
   get isManager() {
     const { roleId } = this.userInfo.roleList[0] ?? {}
-    return roleId === UserRole.SuperAdmin || roleId === UserRole.Creator || roleId === UserRole.Admin
+    return roleId === UserRole.Creator || roleId === UserRole.Admin
   },
 
   logout() {
