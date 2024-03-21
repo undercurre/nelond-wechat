@@ -32,3 +32,17 @@ export async function peekNetwork() {
     timeout: 2000,
   })
 }
+
+/**
+ * 查询字典数据
+ * @params type 字典类型 1：项目类型 2：角色类型
+ */
+export async function queryDictData(type = 1) {
+  return await mzaioRequest.post<Project.DictItem[]>({
+    isDefaultErrorTips: false,
+    log: true,
+    loading: false,
+    url: '/v1/mzgd/cl/user/queryDictData',
+    data: { type },
+  })
+}

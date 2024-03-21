@@ -9,15 +9,19 @@ declare namespace User {
     Admin = '2', // 项目管理员
     Visitor = '3', // 项目使用者
   }
-  interface UserLoginRes {
+
+  interface RoleItem {
+    roleId: string
+    roleName: string
+    roleLevel: number
+    projectId: string
+    defaultRoleFlag: number
+  }
+  interface UserInfo {
     /**
-     * 头像
+     * 用户名称
      */
-    headImageUrl?: string
-    /**
-     * 昵称
-     */
-    nickName?: string
+    userName: string
     /**
      * 手机号
      */
@@ -26,43 +30,7 @@ declare namespace User {
      * 令牌
      */
     token: string
-  }
-  interface UserInfo {
-    /**
-     * 头像
-     */
-    headImageUrl: string
-    /**
-     * 昵称
-     */
-    nickName: string
-    /**
-     * 手机号
-     */
-    mobilePhone: string
-    /**
-     * 用户id
-     */
-    userId: string
-    /**
-     * 用户名称
-     */
-    userName: string
-    /**
-     * 微信id
-     */
-    wxId: string
-    /**
-     * 性别
-     */
-    sex: number
-    /**
-     * 用户角色 uuid
-     */
-    roleId: UserRole
-    /**
-     * 用户角色名称
-     */
-    roleName: string
+    /** 角色列表 */
+    roleList: RoleItem[]
   }
 }

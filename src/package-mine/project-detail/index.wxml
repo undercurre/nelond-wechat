@@ -19,7 +19,7 @@
         />
         <van-cell
           title="项目类型"
-          value="{{currentProjectDetail.projectType}}"
+          value="{{projectTypeName}}"
           center
         />
         <van-cell
@@ -44,7 +44,7 @@
         />
         <van-cell
           title="代理商"
-          value="--"
+          value="{{currentProjectDetail.merchantName}}"
           center
           border="{{false}}"
         />
