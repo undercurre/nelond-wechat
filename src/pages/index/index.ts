@@ -5,11 +5,11 @@ import {
   othersBinding,
   spaceBinding,
   userBinding,
+  userStore,
   projectStore,
   projectBinding,
   othersStore,
   spaceStore,
-  deviceStore,
 } from '../../store/index'
 import { storage, strUtil, throttle } from '../../utils/index'
 import { ROOM_CARD_H, defaultImgDir } from '../../config/index'
@@ -90,12 +90,9 @@ ComponentWithComputed({
     _from: '', // 页面进入来源
   },
   computed: {
-    // 项目是否有设备
+    // 项目是否有内容
     hasDevice() {
-      if (deviceStore.allDeviceList) {
-        return deviceStore.allDeviceList.length
-      }
-      return false
+      return userStore.userInfo.roleList?.length && projectStore.projectList?.length
     },
   },
   watch: {

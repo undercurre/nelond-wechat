@@ -32,6 +32,16 @@ export const projectStore = observable({
     }
     return this.currentProjectDetail?.projectName ?? ''
   },
+  /**
+   * 退出登录时清空数据
+   */
+  reset() {
+    runInAction(() => {
+      this.key = ''
+      this.projectList = []
+      this.currentProjectDetail = {} as Project.IProjectDetail
+    })
+  },
 
   setProjectId(id: string) {
     runInAction(() => {

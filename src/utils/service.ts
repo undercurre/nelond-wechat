@@ -10,6 +10,7 @@ export function logout() {
   storage.remove('token')
   storage.remove('localKey') // 清除局域网的项目key
   userStore.logout()
+  projectStore.reset() // 清空项目数据
   homos.logout()
   closeWebSocket()
 

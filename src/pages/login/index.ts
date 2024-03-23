@@ -130,6 +130,11 @@ Component({
         storage.set('mobilePhone', res.result.mobilePhone, null)
 
         userStore.setUserInfo(res.result)
+
+        if (!res.result.roleList?.length) {
+          console.log('用户无权限')
+          return
+        }
         othersStore.setIsInit(false)
         projectStore.spaceInit()
         wx.switchTab({
