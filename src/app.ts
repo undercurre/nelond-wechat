@@ -43,6 +43,10 @@ App<IAppOption>({
           mobilePhone: storage.get('mobilePhone') as string,
         }
         userStore.setUserInfo(userInfo)
+        if (!userInfo.roleList?.length) {
+          console.log('用户无权限')
+          return
+        }
 
         const start = Date.now()
         console.log('开始时间', start / 1000)
