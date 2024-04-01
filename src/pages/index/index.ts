@@ -5,7 +5,6 @@ import {
   othersBinding,
   spaceBinding,
   userBinding,
-  userStore,
   projectStore,
   projectBinding,
   othersStore,
@@ -91,8 +90,8 @@ ComponentWithComputed({
   },
   computed: {
     // 项目是否有内容
-    hasDevice() {
-      return userStore.userInfo.roleList?.length && projectStore.projectList?.length
+    hasDevice(data) {
+      return data.userInfo?.roleList?.length && data.projectList?.length
     },
   },
   watch: {
