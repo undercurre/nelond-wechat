@@ -45,9 +45,11 @@
       />
     </van-cell-group>
 
-    <van-cell-group inset>
+    <van-cell-group
+      inset
+      wx:if="{{isManager}}"
+    >
       <van-cell
-        wx:if="{{isManager}}"
         icon="/assets/img/mine/deviceReplace.png"
         title="设备替换"
         is-link
@@ -56,6 +58,14 @@
         bind:click="toPage"
       />
       <van-cell
+        icon="/assets/img/mine/upgrade.png"
+        title="固件升级"
+        is-link
+        center
+        data-url="{{urls.ota}}"
+        bind:click="toPage"
+      />
+      <!-- <van-cell
         wx:if="{{isManager}}"
         icon="/assets/img/mine/setting.png"
         title="设置"
@@ -63,7 +73,7 @@
         center
         data-url="{{urls.setting}}"
         bind:click="toPage"
-      />
+      /> -->
     </van-cell-group>
 
     <van-cell-group inset>

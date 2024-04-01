@@ -36,7 +36,7 @@ Component({
       help: '/package-mine/help/list/index',
       about: '/package-protocol/protocol-list/index',
       deviceCategory: '/package-mine/device-category/index',
-      setting: '/package-mine/setting/index',
+      ota: '/package-mine/ota/index',
     },
     scrollViewHeight:
       (storage.get('windowHeight') as number) -
