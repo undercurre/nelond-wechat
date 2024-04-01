@@ -4,6 +4,9 @@ import { ossDomain, productImgDir } from './img'
 // 设备列表，每次加载的条数 应该为4的倍数
 export const LIST_PAGE = 20
 
+// 最多可以移动和删除的设备数（按卡片计数）
+export const MAX_MOVE_CARDS = 20
+
 /**
  * @name 设备卡片更新时间阈值
  * @description 等待时间小于这个值的，均不即时更新，与后面的更新合并，或到到队列清空时一起更新

@@ -149,25 +149,14 @@ ComponentWithComputed({
     },
     // 空间存在可显示的灯具
     roomHasLight(data) {
-      if (data.allDeviceList) {
-        return (
-          (data.allDeviceList as DeviceCard[]).filter(
-            (device) => device.spaceId === spaceStore.currentSpaceTemp.spaceId && device.proType === PRO_TYPE.light,
-          ).length > 0
-        )
-      }
-      return false
+      const { devicePageList } = data
+      const flag = devicePageList.some((g) => g.some((d) => !!(d.proType === PRO_TYPE.light)))
+      return flag
     },
     // 空间存在可显示的设备
     roomHasDevice(data) {
-      if (data.allDeviceList?.length) {
-        return (
-          (data.allDeviceList as DeviceCard[]).filter(
-            (device) => device.spaceId === spaceStore.currentSpaceTemp.spaceId && device.proType !== PRO_TYPE.gateway,
-          ).length > 0
-        )
-      }
-      return false
+      const { devicePageList } = data
+      return devicePageList?.length > 1 || (devicePageList?.length === 1 && devicePageList[0].length > 0)
     },
     parentSpace(data) {
       const { allSpaceList } = data
