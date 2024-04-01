@@ -1619,12 +1619,22 @@ ComponentWithComputed({
         orderNum: 0,
       } as Scene.AddSceneDto
 
-      // 将新场景排到最后,orderNum可能存在跳号的情况
-      sceneStore.sceneList.forEach((scene) => {
-        if (scene.orderNum && scene.orderNum >= newSceneData.orderNum) {
-          newSceneData.orderNum = scene.orderNum + 1
+      const currentSpaceId = this.data.selectedSpaceInfo.reduce((acc, cur) => {
+        if (cur.spaceLevel > acc.spaceLevel) {
+          return cur
+        } else {
+          return acc
         }
-      })
+      }).spaceId
+
+      // 将新场景排到最后,orderNum可能存在跳号的情况
+      sceneStore.allRoomSceneList
+        .filter((item) => item.spaceId === currentSpaceId && item.sceneCategory === '0')
+        .forEach((scene) => {
+          if (scene.orderNum && scene.orderNum >= newSceneData.orderNum) {
+            newSceneData.orderNum = scene.orderNum + 1
+          }
+        })
 
       storage.set('scene_data', newSceneData)
       storage.set('sceneDeviceActionsFlatten', this.data.sceneDeviceActionsFlatten)
