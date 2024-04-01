@@ -47,6 +47,7 @@ export const projectStore = observable({
     runInAction(() => {
       this.currentProjectId = id
     })
+    userStore.setRoleLevel(id)
 
     // 保存到前端缓存
     storage.set('currentProjectId', id, null)

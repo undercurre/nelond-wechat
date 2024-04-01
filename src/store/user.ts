@@ -11,17 +11,16 @@ export const userStore = observable({
     roleList: [],
   } as User.UserInfo,
   isLogin: false,
+  currentRoldLevel: UserRole.UnDef,
 
   // 是否总管
   get SuperAdmin() {
-    const { roleId } = this.userInfo.roleList[0] ?? {}
-    return roleId === UserRole.SuperAdmin
+    return this.currentRoldLevel === UserRole.SuperAdmin
   },
 
   // 是否管理员权限+，代理商管理员|1 项目管理员|2
   get isManager() {
-    const { roleId } = this.userInfo.roleList[0] ?? {}
-    return roleId === UserRole.Creator || roleId === UserRole.Admin
+    return this.currentRoldLevel === UserRole.Creator || this.currentRoldLevel === UserRole.Admin
   },
 
   logout() {
@@ -39,6 +38,14 @@ export const userStore = observable({
   setIsLogin(value: boolean) {
     runInAction(() => {
       this.isLogin = value
+    })
+  },
+
+  setRoleLevel(pid: string) {
+    const role = this.userInfo.roleList.find((role) => role.projectId === pid)
+    const level = role ? role.roleLevel : UserRole.UnDef
+    runInAction(() => {
+      this.currentRoldLevel = level
     })
   },
 
