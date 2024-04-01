@@ -28,7 +28,7 @@ ComponentWithComputed({
       },
       {
         icon: `${productImgDir}/screen.png`,
-        name: 'Host设备',
+        name: '边缘服务器',
         path: '/package-distribution/scan/index?scanType=screen',
       },
       {
