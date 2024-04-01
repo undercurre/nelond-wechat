@@ -26,18 +26,17 @@ ComponentWithComputed({
     pname: '',
     defaultImgDir,
     navigationBarAndStatusBarHeight:
-      (storage.get<number>('statusBarHeight') as number) +
-      (storage.get<number>('navigationBarHeight') as number) +
-      'px',
+      (storage.get('statusBarHeight') as number) + (storage.get('navigationBarHeight') as number) + 'px',
     // 状态栏高度
-    statusBarHeight: storage.get<number>('statusBarHeight') + 'px',
+    statusBarHeight: storage.get('statusBarHeight') + 'px',
     // 可滚动区域高度
     scrollViewHeight:
-      (storage.get<number>('windowHeight') as number) -
-      (storage.get<number>('statusBarHeight') as number) -
-      (storage.get<number>('bottomBarHeight') as number) - // IPX
-      90 - // 开关、添加按钮
-      (storage.get<number>('navigationBarHeight') as number),
+      (storage.get('windowHeight') as number) -
+      (storage.get('statusBarHeight') as number) -
+      (storage.get('navigationBarHeight') as number) -
+      (storage.get('bottomBarHeight') as number) - // IPX
+      90 + // 开关、添加按钮
+      'px',
     _system: storage.get('system') as string,
     loading: true,
     isMoving: false,

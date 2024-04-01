@@ -27,13 +27,13 @@ ComponentWithComputed({
       spaceLevel: SpaceLevel.park,
       spaceName: '',
     } as Space.SpaceInfo,
-    scrollHeight:
-      (storage.get('windowHeight') as number) -
-      (storage.get('statusBarHeight') as number) -
-      (storage.get('navigationBarHeight') as number) -
-      (storage.get('bottomBarHeight') as number) -
-      150 +
-      'px',
+    // scrollHeight:
+    //   (storage.get('windowHeight') as number) -
+    //   (storage.get('statusBarHeight') as number) -
+    //   (storage.get('navigationBarHeight') as number) -
+    //   (storage.get('bottomBarHeight') as number) -
+    //   150 +
+    //   'px',
   },
 
   computed: {
@@ -67,6 +67,18 @@ ComponentWithComputed({
       // 找到爷爷节点
       const gNode = allSpaceList?.find((s: Space.allSpace) => s.spaceId === pid)
       return gNode?.pid === '0'
+    },
+    scrollHeight(data) {
+      const { showParentAdding, showChildAdding } = data
+      const btnHeight = showParentAdding && showChildAdding ? 220 : 170
+      return (
+        (storage.get('windowHeight') as number) -
+        (storage.get('statusBarHeight') as number) -
+        (storage.get('navigationBarHeight') as number) -
+        (storage.get('bottomBarHeight') as number) -
+        btnHeight +
+        'px'
+      )
     },
     // 父级按钮名称（实际上为爷爷级）
     spaceParentName(data) {
@@ -109,18 +121,6 @@ ComponentWithComputed({
       this.init()
 
       await delay(100)
-
-      // wx.createSelectorQuery()
-      //   .select('#content')
-      //   .boundingClientRect()
-      //   .exec((res) => {
-      //     console.log('res', res)
-      //     if (res[0]?.height) {
-      //       this.setData({
-      //         scrollHeight: res[0].height,
-      //       })
-      //     }
-      //   })
     },
 
     // 加载本空间列表
