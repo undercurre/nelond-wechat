@@ -152,55 +152,31 @@
         enhanced
         show-scrollbar="{{false}}"
         style="height: {{ scrollViewHeight }}; margin-top: {{toolboxContentHeight}}px"
-        bindscroll="onPageScroll"
-        scroll-top="{{scrollTop}}"
-        scroll-with-animation="{{true}}"
       >
-        <movable-area
-          wx:if="{{devicePageList.length}}"
-          style="height: {{movableAreaHeight}}rpx; width: 600rpx;"
+        <view
+          wx:for="{{devicePageList}}"
+          wx:for-item="group"
+          wx:key="g"
+          wx:for-index="g"
+          class="flex flex-row flex-wrap"
         >
-          <view
-            wx:for="{{devicePageList}}"
-            wx:for-item="group"
-            wx:key="g"
-            wx:for-index="g"
-            class="flex flex-row flex-wrap"
-          >
-            <movable-view
-              wx:for="{{group}}"
-              wx:key="uniId"
-              data-index="{{index}}"
-              data-group="{{g}}"
-              data-ordernum="{{item.orderNum}}"
-              x="{{item.x}}"
-              y="{{item.y}}"
-              direction="all"
-              friction="{{999}}"
-              damping="{{100}}"
-              bind:longpress="movableTouchStart"
-              bind:touchend="movableTouchEnd"
-              catch:change="movableChange"
-              class="{{ index === placeholder.index && g === placeholder.groupIndex ? 'z-100' : 'z-1' }}"
-              disabled="{{!isMoving}}"
-            >
-              <device-card
-                class="w-180rpx pb-16rpx pt-16rpx flex justify-center {{editSelectMode && (index !== placeholder.index || g !== placeholder.groupIndex) ? 'shake' : ''}}"
-                showControl="{{!editSelectMode}}"
-                showShadow
-                showGradientBg
-                edit-mode="{{editSelectMode}}"
-                device-info="{{item}}"
-                data-item="{{item}}"
-                select="{{item.select}}"
-                bind:controlTap="handleControlTap"
-                bind:cardTap="handleCardTap"
-                bind:offlineTap="handleShowDeviceOffline"
-                bind:longPress="handleLongpress"
-              />
-            </movable-view>
-          </view>
-        </movable-area>
+          <device-card
+            wx:for="{{group}}"
+            wx:key="uniId"
+            class="w-180rpx pb-16rpx pt-16rpx flex justify-center {{editSelectMode && (index !== placeholder.index || g !== placeholder.groupIndex) ? 'shake' : ''}}"
+            showControl="{{!editSelectMode}}"
+            showShadow
+            showGradientBg
+            edit-mode="{{editSelectMode}}"
+            device-info="{{item}}"
+            data-item="{{item}}"
+            select="{{item.select}}"
+            bind:controlTap="handleControlTap"
+            bind:cardTap="handleCardTap"
+            bind:offlineTap="handleShowDeviceOffline"
+            bind:longPress="handleLongpress"
+          />
+        </view>
 
         <van-skeleton
           wx:if="{{!deviceListInited}}"

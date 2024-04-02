@@ -11,10 +11,6 @@ ComponentWithComputed({
       type: Object,
       observer() {},
     },
-    isMoving: {
-      type: Boolean,
-      value: false,
-    },
     // 是否空间管理页
     isManagePage: {
       type: Boolean,

@@ -14,7 +14,7 @@ import {
 } from '../../store/index'
 import { runInAction, values } from 'mobx-miniprogram'
 import pageBehavior from '../../behaviors/pageBehaviors'
-import { sendDevice, execScene, saveDeviceOrder, queryGroupBySpaceId } from '../../apis/index'
+import { sendDevice, execScene, queryGroupBySpaceId } from '../../apis/index'
 import Toast from '@vant/weapp/toast/toast'
 import {
   storage,
@@ -34,8 +34,6 @@ import {
   proName,
   PRO_TYPE,
   LIST_PAGE,
-  CARD_W,
-  CARD_H,
   getModelName,
   CARD_REFRESH_TIME,
   sceneImgDir,
@@ -43,36 +41,11 @@ import {
 } from '../../config/index'
 
 type DeviceCard = Device.DeviceItem & {
-  x: string
-  y: string
-  orderNum: number
   type: string
   select: boolean
   linkSceneName: string
   isRefresh: boolean // 是否整个列表刷新
   timestamp: number // 加入队列时打上的时间戳
-}
-
-/**
- * 根据index计算坐标位置
- * @returns {x, y}
- */
-function getPos(index: number): Record<'x' | 'y', string> {
-  // console.log('getPos', index)
-  const x = `${(index % 4) * CARD_W}px`
-  const y = `${Math.floor(index / 4) * CARD_H}px`
-  return { x, y }
-}
-
-/**
- * 根据坐标位置计算index
- * @returns index
- */
-function getIndex(x: number, y: number) {
-  const maxIndex = deviceStore.deviceFlattenList.length - 1 // 防止越界
-  const ix = Math.floor((x + CARD_W / 2) / CARD_W)
-  const iy = Math.floor((y + CARD_H / 2) / CARD_H)
-  return Math.min(ix + 4 * iy, maxIndex)
 }
 
 ComponentWithComputed({
@@ -113,21 +86,11 @@ ComponentWithComputed({
     _cardEventType: '' as 'card' | 'control', // 触发确权前的操作类型
     // 设备卡片列表，二维数组
     devicePageList: [] as DeviceCard[][],
-    scrollTop: 0,
     checkedList: [] as string[], // 已选择设备的id列表
     editSelectList: [] as string[], // 编辑状态下，已勾选的设备id列表
     editSelectMode: false, // 是否编辑状态
     checkedDeviceInfo: {} as DeviceCard, // 选中设备的数据
     deviceListInited: false, // 设备列表是否初始化完毕
-    isMoving: false, // 是否正在拖拽中
-    hasMoved: false, // 排序变更过
-    placeholder: {
-      orderNum: -1, // 占位符当前对应的排序
-      index: -1, // 占位符当前对应元素的数据索引
-      groupIndex: -1,
-      x: '',
-      y: '',
-    },
     spaceLight: {
       brightness: 0,
       colorTemperature: 0,
@@ -212,23 +175,6 @@ ComponentWithComputed({
         (uniId: string) => uniId.indexOf(':') === -1 && deviceMap[uniId].proType === PRO_TYPE.light,
       )
     },
-    /** 是否只控制选中一个开关 */
-    // TODO 代码可删除
-    isSwitchSelectOne(data) {
-      if (data.checkedList) {
-        const deviceMap = deviceStore.deviceFlattenMap
-        let selectSwitchNum = 0
-        data.checkedList.forEach((uniId: string) => {
-          if (uniId.includes(':')) {
-            if (deviceMap[uniId].proType === PRO_TYPE.switch) {
-              selectSwitchNum++
-            }
-          }
-        })
-        return !!selectSwitchNum
-      }
-      return false
-    },
     // 判断是否是创建者或者管理员，其他角色不能添加设备
     canAddDevice(data) {
       return data.isManager
@@ -258,11 +204,6 @@ ComponentWithComputed({
     isShowCommonControl(data) {
       const { controlType } = data
       return controlType && controlType !== PRO_TYPE.bathHeat && controlType !== PRO_TYPE.clothesDryingRack
-    },
-    // 设备卡片可移动区域高度
-    movableAreaHeight(data) {
-      const { deviceFlattenList } = data
-      return Math.ceil((deviceFlattenList?.length ?? 4) / 4) * 236
     },
   },
 
@@ -435,11 +376,6 @@ ComponentWithComputed({
       this.reloadDeviceList()
     }, 3000),
 
-    // 页面滚动
-    onPageScroll(e: { detail: { scrollTop: number } }) {
-      this.data.scrollTop = e?.detail?.scrollTop || 0
-    },
-
     onUnload() {
       console.log('onUnload spaceStore.currentSpaceTemp', spaceStore.currentSpaceTemp)
       if (!this.data._isPopSpace) {
@@ -605,12 +541,8 @@ ComponentWithComputed({
           // 不再排除灯组
           // .filter((device) => !deviceStore.lightsInGroup.includes(device.deviceId))
           // 补充字段
-          .map((device, index) => ({
+          .map((device) => ({
             ...device,
-            ...getPos(index),
-            // !! 重排orderNum，从0开始
-            // TRICK 排序过程orderNum代替index使用，而不必改变数组的真实索引
-            orderNum: index,
             type: proName[device.proType],
             select: this.data.checkedList.includes(device.uniId) || this.data.editSelectList.includes(device.uniId),
             linkSceneName: this.getLinkSceneName(device),
@@ -739,183 +671,6 @@ ComponentWithComputed({
       }
     },
 
-    // 开始拖拽，初始化placeholder
-    movableTouchStart(e: WechatMiniprogram.TouchEvent) {
-      const orderNum = e.currentTarget.dataset.ordernum // ! 注意大小写
-      const groupIndex = e.currentTarget.dataset.group
-      const index = e.currentTarget.dataset.index
-
-      const diffData = {} as IAnyObject
-      diffData.isMoving = true
-      diffData.placeholder = {
-        ...getPos(orderNum),
-        orderNum,
-        groupIndex,
-        index,
-      }
-      console.log('⇅ [movableTouchStart]', diffData)
-
-      this.setData(diffData)
-    },
-
-    /**
-     * 拖拽时触发的卡片移动效果
-     */
-    movableChangeThrottle: throttle(function (this: IAnyObject, e: WechatMiniprogram.TouchEvent) {
-      const targetOrder = getIndex(e.detail.x, e.detail.y)
-      const oldOrder = this.data.placeholder.orderNum
-      // 如果拖动目标是灯组所在的位置
-      if (
-        deviceStore.groupCount && // 有灯组
-        ((targetOrder < deviceStore.groupCount && oldOrder >= deviceStore.groupCount) || // 非灯组不能移入灯组
-          (oldOrder < deviceStore.groupCount && targetOrder >= deviceStore.groupCount)) // 灯组不能移入非灯组
-      ) {
-        return
-      }
-      if (this.data.placeholder.orderNum !== targetOrder) {
-        // 节流操作，可能导致movableTouchEnd后仍有movableChange需要执行，丢弃掉
-        if (oldOrder < 0) {
-          return
-        }
-        console.log('⇅ [movableChange] %d-->%d', oldOrder, targetOrder, e)
-
-        // 更新placeholder的位置
-        const dPos = getPos(targetOrder)
-        const diffData = {} as IAnyObject
-        diffData[`placeholder.orderNum`] = targetOrder
-        diffData[`placeholder.x`] = dPos.x
-        diffData[`placeholder.y`] = dPos.y
-
-        // 更新联动卡片的位置
-        let moveCount = 0
-        for (const groupIndex in this.data.devicePageList) {
-          const group = this.data.devicePageList[groupIndex]
-          for (const index in group) {
-            const _orderNum = group[index].orderNum
-            const isForward = oldOrder < targetOrder
-            if (
-              (isForward && _orderNum > oldOrder && _orderNum <= targetOrder) ||
-              (!isForward && _orderNum >= targetOrder && _orderNum < oldOrder)
-            ) {
-              ++moveCount
-              const dOrderNum = isForward ? _orderNum - 1 : _orderNum + 1
-              const dpos = getPos(dOrderNum)
-              diffData[`devicePageList[${groupIndex}][${index}].x`] = dpos.x
-              diffData[`devicePageList[${groupIndex}][${index}].y`] = dpos.y
-              diffData[`devicePageList[${groupIndex}][${index}].orderNum`] = dOrderNum
-
-              // 减少遍历消耗
-              if (moveCount >= Math.abs(targetOrder - oldOrder)) {
-                break
-              }
-            }
-            if (moveCount >= Math.abs(targetOrder - oldOrder)) {
-              break
-            }
-          }
-        }
-
-        // 更新被拖拽卡片的排序num
-        const groupIndex = this.data.placeholder.groupIndex
-        const index = this.data.placeholder.index
-        diffData[`devicePageList[${groupIndex}][${index}].orderNum`] = targetOrder
-        console.log(diffData)
-        this.setData(diffData)
-
-        this.data.hasMoved = true
-      }
-    }, 50),
-
-    movableChange(e: WechatMiniprogram.TouchEvent) {
-      if (e.detail.source === 'touch' || e.detail.source === 'friction') {
-        this.movableChangeThrottle(e)
-      }
-    },
-
-    movableTouchEnd() {
-      if (!this.data.isMoving) {
-        return
-      }
-      const groupIndex = this.data.placeholder.groupIndex
-      const index = this.data.placeholder.index
-      const dpos = getPos(this.data.placeholder.orderNum)
-
-      const diffData = {} as IAnyObject
-      diffData.isMoving = false
-      // 修正卡片位置
-      diffData[`devicePageList[${groupIndex}][${index}].x`] = dpos.x
-      diffData[`devicePageList[${groupIndex}][${index}].y`] = dpos.y
-      diffData[`placeholder.orderNum`] = -1
-      diffData[`placeholder.index`] = -1
-      diffData[`placeholder.groupIndex`] = -1
-
-      this.setData(diffData)
-      console.log('⇅ [movableTouchEnd]', diffData)
-
-      setTimeout(() => this.resetPos(), 500)
-      this.handleSortSaving()
-    },
-    // 修正可能出现的卡片错位
-    resetPos() {
-      const diffData = {} as IAnyObject
-      for (const groupIndex in this.data.devicePageList) {
-        const group = this.data.devicePageList[groupIndex]
-        for (const index in group) {
-          const { orderNum } = group[index]
-          const dpos = getPos(orderNum)
-          diffData[`devicePageList[${groupIndex}][${index}].x`] = dpos.x
-          diffData[`devicePageList[${groupIndex}][${index}].y`] = dpos.y
-        }
-      }
-      this.setData(diffData)
-    },
-    async handleSortSaving() {
-      if (!this.data.hasMoved) {
-        return
-      }
-      this.data.hasMoved = false
-
-      const deviceOrderData = {
-        deviceInfoByDeviceVoList: [],
-      } as Device.OrderSaveData
-      const switchOrderData = {
-        deviceInfoByDeviceVoList: [],
-      } as Device.OrderSaveData
-
-      for (const groupIndex in this.data.devicePageList) {
-        const group = this.data.devicePageList[groupIndex]
-        for (const index in group) {
-          const device = group[index]
-          if (device.proType !== PRO_TYPE.switch) {
-            deviceOrderData.deviceInfoByDeviceVoList.push({
-              deviceId: device.deviceId,
-              projectId: projectStore.currentProjectId,
-              spaceId: device.spaceId,
-              orderNum: String(device.orderNum),
-              type: device.deviceType === 4 ? '2' : '0', // 灯组为2，普通设备为0
-            })
-          }
-          // 若开关按键参与排序，需要按 type: '1' 再保存
-          else {
-            switchOrderData.deviceInfoByDeviceVoList.push({
-              deviceId: device.deviceId,
-              projectId: projectStore.currentProjectId,
-              spaceId: device.spaceId,
-              orderNum: String(device.orderNum),
-              switchId: device.switchInfoDTOList[0].switchId,
-              type: '1',
-            })
-          }
-        }
-      }
-      if (deviceOrderData.deviceInfoByDeviceVoList.length) {
-        await saveDeviceOrder(deviceOrderData)
-      }
-      if (switchOrderData.deviceInfoByDeviceVoList.length) {
-        await saveDeviceOrder(switchOrderData)
-      }
-    },
-
     handleSceneTap() {
       // wx.switchTab({
       //   url: '/pages/automation/index',
@@ -1037,13 +792,6 @@ ComponentWithComputed({
 
       // 更新视图
       this.setData(diffData)
-
-      // 弹起popup后，选中卡片滚动到视图中央，以免被遮挡
-      // type: DeviceCard & { clientRect: WechatMiniprogram.ClientRect }
-      // 作用不大，减小渲染压力，暂时注释
-      // this.setData({
-      //   scrollTop: this.data.scrollTop + e.detail.clientRect.top - this.data.scrollViewHeight / 2,
-      // })
     },
 
     // 卡片点击时，按品类调用对应方法
@@ -1158,11 +906,6 @@ ComponentWithComputed({
       this.setData(diffData)
 
       this.toSelect(device.uniId, true)
-
-      // 弹起popup后，选中卡片滚动到视图中央，以免被遮挡
-      // this.setData({
-      //   scrollTop: this.data.scrollTop + e.detail.clientRect.top - this.data.scrollViewHeight / 2,
-      // })
 
       console.log('handleLongpress', e, diffData)
     },
