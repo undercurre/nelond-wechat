@@ -72,7 +72,7 @@ ComponentWithComputed({
   methods: {
     onLoad() {
       emitter.on('deviceEdit', async () => {
-        await deviceBinding.store.updateallDeviceList()
+        await deviceBinding.store.updateAllDeviceList()
       })
     },
     onUnload() {

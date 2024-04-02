@@ -46,7 +46,7 @@
       scroll-y="{{!isMoving}}"
       show-scrollbar="{{false}}"
       class="flex flex-col items-between mx-24rpx"
-      style="height: {{scrollViewHeight}}px;"
+      style="height: {{scrollViewHeight}};"
       scroll-top="{{scrollTop}}"
       scroll-with-animation="{{true}}"
       bind:scroll="onPageScroll"

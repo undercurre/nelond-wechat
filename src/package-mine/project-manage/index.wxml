@@ -38,6 +38,7 @@
     <view>
       <van-cell-group inset>
         <van-cell
+          wx:if="{{isManager}}"
           title="空间管理"
           is-link
           center
@@ -54,13 +55,22 @@
         />
 
         <van-cell
-          wx:if="{{isManager}}"
           title="项目成员"
           is-link
           center
           link-type="navigateTo"
           url="/package-mine/member-manage/index"
           border="{{false}}"
+        />
+      </van-cell-group>
+
+      <van-cell-group inset>
+        <van-cell
+          title="项目信息"
+          is-link
+          center
+          link-type="navigateTo"
+          url="/package-mine/project-detail/index"
         />
       </van-cell-group>
     </view>

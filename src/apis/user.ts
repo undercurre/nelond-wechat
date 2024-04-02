@@ -2,12 +2,28 @@ import { mzaioRequest } from '../utils/index'
 
 /**
  * 查询用户信息
+ * @param.projectId
+ * @param.userId 为空即查询本用户
+ * @param.roleLevel
  */
-export async function queryUserInfo() {
+export async function queryUserInfo(params: { projectId: string; userId?: string; roleLevel: number }) {
   return await mzaioRequest.post<User.UserInfo>({
     log: true,
     loading: false,
     url: '/v1/mzgd/cl/user/account/info',
+    data: { params },
+  })
+}
+
+/**
+ * 编辑用户基础信息
+ */
+export async function updateUserInfo(data: Partial<User.UserInfo>) {
+  return await mzaioRequest.post({
+    log: true,
+    loading: false,
+    url: '/v1/mzgd/cl/user/account/updateUserInfo',
+    data,
   })
 }
 

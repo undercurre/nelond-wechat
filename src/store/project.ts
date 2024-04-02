@@ -4,8 +4,6 @@ import {
   queryProjectInfo,
   queryHouseUserList,
   saveOrUpdateUserHouseInfo,
-  querySpaceList,
-  queryAllDevice,
   // queryLocalKey,
 } from '../apis/index'
 import { asyncStorage, storage, IApiRequestOption } from '../utils/index'
@@ -34,11 +32,22 @@ export const projectStore = observable({
     }
     return this.currentProjectDetail?.projectName ?? ''
   },
+  /**
+   * 退出登录时清空数据
+   */
+  reset() {
+    runInAction(() => {
+      this.key = ''
+      this.projectList = []
+      this.currentProjectDetail = {} as Project.IProjectDetail
+    })
+  },
 
   setProjectId(id: string) {
     runInAction(() => {
       this.currentProjectId = id
     })
+    userStore.setRoleLevel(id)
 
     // 保存到前端缓存
     storage.set('currentProjectId', id, null)
@@ -128,7 +137,7 @@ export const projectStore = observable({
       runInAction(() => {
         projectStore.currentProjectDetail = Object.assign({ projectId: this.currentProjectId }, res.result)
       })
-      // await deviceStore.updateallDeviceList(undefined, options) // 重复加载
+      // await deviceStore.updateAllDeviceList(undefined, options) // 重复加载
       await spaceStore.updateSpaceList(options)
       this.saveProjectDate()
       return
@@ -141,37 +150,9 @@ export const projectStore = observable({
   /**
    * 更新当前项目空间卡片列表
    */
-  async updateSpaceCardList(options?: { loading: boolean }) {
-    const { currentProjectId } = projectStore
-    const data = await Promise.all([
-      queryAllDevice(currentProjectId, '0', options),
-      querySpaceList(currentProjectId, '0', options),
-    ])
-    if (data[0].success) {
-      const list = {} as Record<string, Device.DeviceItem[]>
-      data[0].result
-        ?.sort((a, b) => a.deviceId.localeCompare(b.deviceId))
-        .forEach((device) => {
-          if (list[device.spaceId]) {
-            list[device.spaceId].push(device)
-          } else {
-            list[device.spaceId] = [device]
-          }
-        })
-      runInAction(() => {
-        spaceStore.spaceDeviceList = list
-        deviceStore.allDeviceList = data[0].result
-        // deviceStore.updateallDeviceListLanStatus(false)
-      })
-    }
-    if (data[1].success) {
-      runInAction(() => {
-        spaceStore.spaceList = data[1].result.map((s) => ({
-          ...s,
-          pid: '0',
-        }))
-      })
-    }
+  async updateSpaceCardList() {
+    await deviceStore.updateAllDeviceList()
+    await spaceStore.updateSpaceList()
     this.saveProjectDate()
   },
 

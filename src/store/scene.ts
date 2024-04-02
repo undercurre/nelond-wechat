@@ -1,9 +1,8 @@
 import { observable, runInAction } from 'mobx-miniprogram'
 import { querySceneListByProjectId } from '../apis/scene'
-import { PRO_TYPE } from '../config/device'
 import { projectStore } from './project'
 import { spaceStore } from './space'
-import { IApiRequestOption } from '../utils'
+import { IApiRequestOption } from '../utils/index'
 
 export const sceneStore = observable({
   /**
@@ -25,20 +24,8 @@ export const sceneStore = observable({
    */
   get sceneList(): Scene.SceneItem[] {
     const { spaceId } = spaceStore.currentSpace
-    const spaceDeviceList = spaceStore.spaceDeviceList[spaceId]
-    const hasSwitch = spaceDeviceList?.some((device) => device.proType === PRO_TYPE.switch) ?? false
-    const hasLight = spaceDeviceList?.some((device) => device.proType === PRO_TYPE.light) ?? false
-
-    let list = this.allRoomSceneList.filter((scene) => scene.spaceId === spaceId && scene.deviceActions?.length > 0)
-
-    if (!hasSwitch && !hasLight) {
-      // 四个默认场景都去掉
-      list = list.filter((scene) => scene.isDefault === '0')
-    } else if (hasSwitch && !hasLight) {
-      // 只有开关，去掉默认的明亮、柔和
-      list = list.filter((scene) => !['2', '3'].includes(scene.defaultType))
-    }
-    return list.sort((a, b) => a.orderNum - b.orderNum)
+    const spaceInfo = spaceStore.spaceList.find((space) => space.spaceId === spaceId) ?? ({} as Space.SpaceInfo)
+    return spaceInfo?.sceneList
   },
 
   // 空间场景映射，未被使用，可删除

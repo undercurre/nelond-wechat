@@ -11,6 +11,7 @@ import {
   verifyNetwork,
   isLogined,
   getCurrentPageUrl,
+  storage,
 } from './utils/index'
 import svgs from './assets/svg/index'
 import { deviceStore, projectStore, othersStore, userStore } from './store/index'
@@ -35,10 +36,21 @@ App<IAppOption>({
     // 如果用户已经登录，开始请求数据[用户][项目列表、全屋空间、全屋设备]
     if (isLogined()) {
       try {
-        userStore.setIsLogin(true)
+        const userInfo = {
+          token: storage.get('token') as string,
+          roleList: storage.get('roleList') as User.RoleItem[],
+          userName: storage.get('userName') as string,
+          mobilePhone: storage.get('mobilePhone') as string,
+        }
+        userStore.setUserInfo(userInfo)
+        if (!userInfo.roleList?.length) {
+          console.log('用户无权限')
+          return
+        }
+
         const start = Date.now()
         console.log('开始时间', start / 1000)
-        await Promise.all([userStore.updateUserInfo(), projectStore.spaceInit()])
+        await projectStore.spaceInit()
         console.log('加载完成时间', Date.now() / 1000, '用时', (Date.now() - start) / 1000 + 's')
       } catch (e) {
         Logger.error('appOnLaunch-err:', e)
@@ -93,7 +105,7 @@ App<IAppOption>({
     // 首次进入有onLaunch不必加载
     // homOS本地控制要求场景数据保持尽可能实时，需要小程序回到前台刷新场景和设备列表数据
     if (!firstOnShow) {
-      deviceStore.updateallDeviceList(projectStore.currentProjectId, { isDefaultErrorTips: false })
+      deviceStore.updateAllDeviceList(projectStore.currentProjectId, { isDefaultErrorTips: false })
       projectStore.updateProjectInfo({ isDefaultErrorTips: false })
     }
 

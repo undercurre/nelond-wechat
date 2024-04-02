@@ -12,7 +12,7 @@
 <block wx:if="{{isLogin}}">
   <!-- 导航下按钮位置，现为副标题 -->
   <view
-    wx:if="{{projectList.length}}"
+    wx:if="{{hasDevice}}"
     style="height: calc(120rpx + {{navigationBarAndStatusBarHeight}});"
     class="fixed left-0 top-0 z-110 overflow-hidden w-750rpx"
     bind:tap="hideMenu"
@@ -24,7 +24,7 @@
       <!-- 副标题信息 -->
       <view class="ml-24rpx">
         <view
-          class="bg-hex-ffffff_42 w-250rpx h-80rpx rounded-40rpx flex items-center flex-center"
+          class="w-250rpx h-80rpx rounded-40rpx flex items-center flex-center"
           id="all-off"
         >
           <text class="text-28rpx font-semibold">空间管理（{{spaceList.length || 0}}）</text>
@@ -48,7 +48,7 @@
   <!-- 项目导航栏 -->
   <nav-bar
     z-index="{{113}}"
-    wx:if="{{projectList.length}}"
+    wx:if="{{hasDevice}}"
   >
     <view
       catch:tap="handleShowHomeSelectMenu"
@@ -79,7 +79,7 @@
     >
       <!-- 无空间时显示 -->
       <view
-        wx:if="{{!projectList.length || !hasSpace}}"
+        wx:if="{{!hasDevice || !hasSpace}}"
         class="w-full mt-68rpx flex flex-col items-center"
       >
         <image
@@ -93,7 +93,7 @@
           data-url="/package-mine/space-new/index"
           type="primary"
           custom-class="add-immediately-btn"
-          wx:if="{{isInit && isManager && projectList.length}}"
+          wx:if="{{isInit && isManager && hasDevice}}"
         >
           <text class="text-white text-36rpx font-normal">添加项目空间</text>
         </van-button>

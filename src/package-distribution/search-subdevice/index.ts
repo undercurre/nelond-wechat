@@ -432,7 +432,7 @@ ComponentWithComputed({
 
         if (!res.success) {
           Toast(res.code === 9882 ? '当前网关已离线，请重新选择' : res.msg)
-          deviceStore.updateallDeviceList() // 刷新设备列表数据，防止返回后还能选择到离线的网关
+          deviceStore.updateAllDeviceList() // 刷新设备列表数据，防止返回后还能选择到离线的网关
           return
         }
 

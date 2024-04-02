@@ -31,7 +31,7 @@
     >
       <text class="text-24rpx">已完成以上操作</text>
       <image
-        class="h-48 w-48"
+        class="h-32 w-32"
         slot="icon"
         src="{{ isReady ? checkImg : uncheckImg }}"
       />

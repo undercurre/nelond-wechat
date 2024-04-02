@@ -42,15 +42,6 @@ ComponentWithComputed({
       },
     ],
   },
-  // computed: {
-  //   menuList(data: IAnyObject) {
-  //     const list = data.list
-  //     if (!data.isLogin || !data.isManager) {
-  //       return list.filter((item: IAnyObject) => item.text !== '智能场景')
-  //     }
-  //     return list
-  //   },
-  // },
 
   /**
    * 组件的方法列表

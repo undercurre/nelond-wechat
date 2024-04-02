@@ -9,8 +9,16 @@ import {
   delSwitchAndSwitchAssociated,
 } from '../../../../apis/index'
 import { sceneList, SCREEN_PID } from '../../../../config/index'
-import { deviceStore, projectStore, spaceStore, sceneStore } from '../../../../store/index'
-import { storage, emitter } from '../../../../utils/index'
+import {
+  deviceStore,
+  // projectStore,
+  // spaceStore,
+  sceneStore,
+} from '../../../../store/index'
+import {
+  // storage,
+  emitter,
+} from '../../../../utils/index'
 
 ComponentWithComputed({
   options: {
@@ -62,7 +70,7 @@ ComponentWithComputed({
       switchRelList: Array<Device.IMzgdRelGetDTO>(), // 当前面板的关联面板数据
     },
     showLinkPopup: false,
-    isAddingScene: false,
+    // isAddingScene: false,
   },
 
   computed: {
@@ -94,21 +102,23 @@ ComponentWithComputed({
       this.triggerEvent('close')
     },
     async handleConfirm() {
-      this.setData({
-        isAddingScene: true,
-      })
+      //XXX :以下代码意义不明，待删除
 
-      const newSceneData = {
-        conditionType: '0',
-        deviceActions: [],
-        deviceConditions: [],
-        projectId: projectStore.currentProjectDetail.projectId,
-        spaceId: spaceStore.currentSpace.spaceId,
-        sceneIcon: this.data.sceneIcon,
-        sceneName: this.data.sceneName,
-        sceneType: this.data.linkSwitch ? '1' : '0',
-        orderNum: 0,
-      } as Scene.AddSceneDto
+      // this.setData({
+      //   isAddingScene: true,
+      // })
+
+      // const newSceneData = {
+      //   conditionType: '0',
+      //   deviceActions: [],
+      //   deviceConditions: [],
+      //   projectId: projectStore.currentProjectDetail.projectId,
+      //   spaceId: spaceStore.currentSpace.spaceId,
+      //   sceneIcon: this.data.sceneIcon,
+      //   sceneName: this.data.sceneName,
+      //   sceneType: this.data.linkSwitch ? '1' : '0',
+      //   orderNum: 0,
+      // } as Scene.AddSceneDto
 
       // if (this.data.linkSwitch) {
       //   // 绑定了开关
@@ -180,18 +190,18 @@ ComponentWithComputed({
       // }
 
       // 将新场景排到最后,orderNum可能存在跳号的情况
-      sceneStore.sceneList.forEach((scene) => {
-        if (scene.orderNum && scene.orderNum >= newSceneData.orderNum) {
-          newSceneData.orderNum = scene.orderNum + 1
-        }
-      })
+      // sceneStore.sceneList.forEach((scene) => {
+      //   if (scene.orderNum && scene.orderNum >= newSceneData.orderNum) {
+      //     newSceneData.orderNum = scene.orderNum + 1
+      //   }
+      // })
 
-      storage.set('scene_data', newSceneData)
-      storage.set('sceneDeviceActionsFlatten', this.data.actions)
+      // storage.set('scene_data', newSceneData)
+      // storage.set('sceneDeviceActionsFlatten', this.data.actions)
 
-      this.setData({
-        isAddingScene: false,
-      })
+      // this.setData({
+      //   isAddingScene: false,
+      // })
 
       this.triggerEvent('close')
       this.triggerEvent('confirm')
@@ -213,7 +223,7 @@ ComponentWithComputed({
       })
     },
     handleLinkSwitchPopup() {
-      const list = deviceStore.allRoomDeviceFlattenList.filter((item) => {
+      const list = deviceStore.allDeviceFlattenList.filter((item) => {
         if (!item.uniId.includes(':') || SCREEN_PID.includes(item.productId)) {
           return false
         }

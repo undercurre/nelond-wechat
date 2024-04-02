@@ -41,6 +41,8 @@ declare namespace Ota {
     version: string
     /** 版本更新备注 */
     versionDesc: string
+    /** 设备类型（1网关、2非网关） */
+    otaType: number
   }
 
   interface DeviceOtaUpdateReqDTO {

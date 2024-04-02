@@ -47,7 +47,7 @@ export async function initHomeOs() {
  */
 const updateHomeDataLanInfo = debounce(() => {
   Logger.console('触发局域网项目数据更新')
-  deviceStore.updateallDeviceListLanStatus()
+  deviceStore.updateAllDeviceListLanStatus()
   emitter.emit('msgPush', {
     source: 'mqtt',
     result: {

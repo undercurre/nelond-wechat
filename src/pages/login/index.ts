@@ -123,10 +123,18 @@ Component({
       // 登录成功
       else if (res.success && res.result) {
         console.log('login res', res)
-        storage.set('token', res.result.token, null)
 
-        await userStore.updateUserInfo()
-        userStore.setIsLogin(true)
+        storage.set('token', res.result.token, null)
+        storage.set('roleList', res.result.roleList, null)
+        storage.set('userName', res.result.userName, null)
+        storage.set('mobilePhone', res.result.mobilePhone, null)
+
+        userStore.setUserInfo(res.result)
+
+        if (!res.result.roleList?.length) {
+          console.log('用户无权限')
+          return
+        }
         othersStore.setIsInit(false)
         projectStore.spaceInit()
         wx.switchTab({

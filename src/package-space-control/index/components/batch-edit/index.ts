@@ -1,6 +1,6 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import { getModelName, PRO_TYPE, SCREEN_PID } from '../../../../config/index'
+import { getModelName, PRO_TYPE, SCREEN_PID, MAX_MOVE_CARDS } from '../../../../config/index'
 import { waitingBatchDeleteDevice, batchUpdate, renameGroup } from '../../../../apis/index'
 import { deviceBinding, deviceStore, projectStore, spaceBinding, spaceStore } from '../../../../store/index'
 import Toast from '@vant/weapp/toast/toast'
@@ -85,7 +85,7 @@ ComponentWithComputed({
     /**
      * @description 当前选项是否可以移动空间
      * 设备数量不能为0
-     * 设备均为子设备或WIFI设备
+     * 设备均为子设备或WIFI设备或86网关
      * 设备均在线
      */
     canMoveRoom(data) {
@@ -97,10 +97,11 @@ ComponentWithComputed({
       return (
         noScreen &&
         data.editSelectList?.length &&
+        data.editSelectList?.length <= MAX_MOVE_CARDS &&
         data.editSelectList.every((uId: string) => {
           const deviceId = uId.split(':')[0] // 不管有没有:
           const device = deviceStore.deviceMap[deviceId]
-          return [2, 3].includes(device.deviceType) && device.onLineStatus === 1
+          return [1, 2, 3].includes(device.deviceType) && device.onLineStatus === 1
         })
       )
     },
@@ -128,13 +129,13 @@ ComponentWithComputed({
      * 非智慧屏开关
      */
     canDelete(data) {
-      const noScreen = data.editSelectList.every((uId: string) => {
+      const noScreenOrGateway = data.editSelectList.every((uId: string) => {
         const deviceId = uId.split(':')[0]
         const device = deviceStore.deviceMap[deviceId]
-        return !SCREEN_PID.includes(device.productId)
+        return !SCREEN_PID.includes(device.productId) && device.proType !== PRO_TYPE.gateway
       })
 
-      return noScreen && data.editSelectList?.length
+      return noScreenOrGateway && data.editSelectList?.length && data.editSelectList?.length <= MAX_MOVE_CARDS
     },
     editDeviceNameTitle(data) {
       return data.editProType === PRO_TYPE.switch ? '面板名称' : '设备名称'
@@ -193,6 +194,7 @@ ComponentWithComputed({
     // TODO 处理分组解散的交互提示
     handleDeleteDialog() {
       if (!this.data.canDelete) {
+        Toast(`最多同时删除${MAX_MOVE_CARDS}个设备`)
         return
       }
       const hasSwitch = this.data.editSelectList.some((uniId: string) => uniId.includes(':'))
@@ -259,6 +261,7 @@ ComponentWithComputed({
     },
     handleMoveRoomPopup() {
       if (!this.data.canMoveRoom) {
+        Toast(`最多同时移动${MAX_MOVE_CARDS}个设备`)
         return
       }
       const uniId = this.data.editSelectList[0]

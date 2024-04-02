@@ -227,6 +227,27 @@
           ></tips-box>
         </view>
       </view>
+
+      <!-- 网关 -->
+      <view
+        wx:if="{{deviceInfo.proType==='0x16'}}"
+        class="w-full h-full flex-col-center relative"
+      >
+        <view>
+          <text class="text-26 text-hex-666666">设备日志</text>
+        </view>
+
+        <view
+          class="flex flex-center"
+          style="height: 500rpx"
+        >
+          <tips-box
+            text="暂无记录"
+            icon="{{defaultImgDir}}/no-log.png"
+            size="240"
+          ></tips-box>
+        </view>
+      </view>
     </view>
   </view>
 </van-popup>

@@ -49,17 +49,28 @@
         <van-cell>
           <view class="flex flex-col items-center text-28rpx text-black-2a text-justify">
             <view class="flex w-full items-center mb-32rpx">
-              <view class="flex-center">
+              <view class="flex-center flex flex-1">
                 <view class="w-96rpx h-96rpx bg-hex-f6fafd flex-center rounded-999">
                   <image
                     src="{{item.icon}}"
                     class="w-72rpx h-72rpx"
                   />
                 </view>
-                <view class="ml-32rpx flex flex-col">
+                <view class="ml-32rpx flex flex-1 flex-col">
                   <text class="text-32rpx">{{item.productName}}</text>
                   <!-- <text class="opcaity-80 text-black-59 mt-5rpx">客厅</text> -->
                 </view>
+
+                <van-button
+                  wx:if="{{item.otaType === 1}}"
+                  type="primary"
+                  round
+                  size="small"
+                  bind:tap="handleUpdate"
+                  disabled="{{isUpdating || !hasUpdate}}"
+                  data-type="{{item.otaType}}"
+                  >{{gatewayBtnText}}</van-button
+                >
               </view>
             </view>
             <view class="w-686rpx h-1rpx bg-hex-eef2f7"></view>
@@ -104,7 +115,7 @@
         type="primary"
         size="large"
         disabled="{{isUpdating || !hasUpdate}}"
-        >{{isUpdating?'剩余'+remainOtaDevice+'个设备...':'立即升级'}}</van-button
+        >{{btnText}}</van-button
       >
     </view>
   </view>

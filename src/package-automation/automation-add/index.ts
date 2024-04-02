@@ -204,9 +204,9 @@ ComponentWithComputed({
       // #region 处理三个传感器、场景和设备列表
       await Promise.all([
         sceneStore.updateAllRoomSceneList(),
-        deviceStore.updateallDeviceList(), //deviceStore.updateSubDeviceList(), //
+        deviceStore.updateAllDeviceList(), //deviceStore.updateSubDeviceList(), //
       ])
-      const sensorList = deviceStore.allRoomDeviceFlattenList.filter((item) => item.proType === PRO_TYPE.sensor)
+      const sensorList = deviceStore.allDeviceFlattenList.filter((item) => item.proType === PRO_TYPE.sensor)
       sensorList.forEach((item) => {
         if (item.productId === SENSOR_TYPE.humanSensor) {
           item.property = { occupancy: 1, modelName: 'irDetector' }
@@ -218,7 +218,7 @@ ComponentWithComputed({
       })
       this.setData({
         sceneList: [...sceneStore.allRoomSceneList],
-        deviceList: deviceStore.allRoomDeviceFlattenList.filter(
+        deviceList: deviceStore.allDeviceFlattenList.filter(
           (item) => item.proType !== PRO_TYPE.gateway && item.proType !== PRO_TYPE.sensor,
         ),
         sensorList,
@@ -485,7 +485,7 @@ ComponentWithComputed({
         return
       }
       if (spaceid) {
-        const deviceListInRoom: Device.DeviceItem[] = deviceStore.allRoomDeviceFlattenList.filter(
+        const deviceListInRoom: Device.DeviceItem[] = deviceStore.allDeviceFlattenList.filter(
           (item) => item.spaceId === spaceid,
         )
         console.log('默认选中', deviceListInRoom)
@@ -628,7 +628,7 @@ ComponentWithComputed({
       console.log(e)
       const currentSpaceId = e.detail[e.detail.length - 1].spaceId
       console.log(currentSpaceId)
-      const deviceListInRoom: Device.DeviceItem[] = deviceStore.allRoomDeviceFlattenList.filter(
+      const deviceListInRoom: Device.DeviceItem[] = deviceStore.allDeviceFlattenList.filter(
         (item) => item.spaceId === currentSpaceId,
       )
       console.log('默认选中', deviceListInRoom)
@@ -806,7 +806,7 @@ ComponentWithComputed({
       console.log('handleSelectCardSelect', e, e.detail)
       const selectId = e.detail
       if (this.data.selectCardType === 'device') {
-        const allRoomDeviceMap = deviceStore.allRoomDeviceFlattenMap
+        const allRoomDeviceMap = deviceStore.allDeviceFlattenMap
         const device = allRoomDeviceMap[e.detail]
         const modelName = 'light'
         findDevice({ gatewayId: device.gatewayId, devId: device.deviceId, modelName })
@@ -1156,7 +1156,7 @@ ComponentWithComputed({
       } else if (action.type === 5) {
         return
       } else {
-        const allRoomDeviceMap = deviceStore.allRoomDeviceFlattenMap
+        const allRoomDeviceMap = deviceStore.allDeviceFlattenMap
         const device = allRoomDeviceMap[action.uniId]
         console.log('device', device)
         let modelName = 'light'
@@ -1194,7 +1194,7 @@ ComponentWithComputed({
       const actionItem = this.data.sceneDeviceActionsFlatten[flattenEditIndex]
       const listEditIndex = this.data.deviceList.findIndex((item) => item.uniId === actionItem.uniId)
       const listItem = this.data.deviceList[listEditIndex]
-      const device = deviceStore.allRoomDeviceFlattenMap[actionItem.uniId]
+      const device = deviceStore.allDeviceFlattenMap[actionItem.uniId]
 
       if (!_cacheDeviceMap[actionItem.uniId]) {
         let oldProperty = {
@@ -1619,12 +1619,22 @@ ComponentWithComputed({
         orderNum: 0,
       } as Scene.AddSceneDto
 
-      // 将新场景排到最后,orderNum可能存在跳号的情况
-      sceneStore.sceneList.forEach((scene) => {
-        if (scene.orderNum && scene.orderNum >= newSceneData.orderNum) {
-          newSceneData.orderNum = scene.orderNum + 1
+      const currentSpaceId = this.data.selectedSpaceInfo.reduce((acc, cur) => {
+        if (cur.spaceLevel > acc.spaceLevel) {
+          return cur
+        } else {
+          return acc
         }
-      })
+      }).spaceId
+
+      // 将新场景排到最后,orderNum可能存在跳号的情况
+      sceneStore.allRoomSceneList
+        .filter((item) => item.spaceId === currentSpaceId && item.sceneCategory === '0')
+        .forEach((scene) => {
+          if (scene.orderNum && scene.orderNum >= newSceneData.orderNum) {
+            newSceneData.orderNum = scene.orderNum + 1
+          }
+        })
 
       storage.set('scene_data', newSceneData)
       storage.set('sceneDeviceActionsFlatten', this.data.sceneDeviceActionsFlatten)
