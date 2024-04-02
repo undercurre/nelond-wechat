@@ -73,6 +73,9 @@ ComponentWithComputed({
       this.setData({
         'spaceInfo.spaceName': e.detail,
       })
+
+      // 直接保存修改结果
+      this.saveSpaceInfo()
     },
 
     async saveSpaceInfo() {
