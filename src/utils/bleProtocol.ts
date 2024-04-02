@@ -157,6 +157,15 @@ export class BleClient {
             deviceId: this.deviceUuid,
           })
           .catch((err) => {
+            console.warn(`${this.mac}`, this.deviceUuid)
+
+            wx.getConnectedBluetoothDevices({
+              services: [],
+              success: (res) => {
+                console.warn('getConnectedBluetoothDevices', res, this.deviceUuid)
+              },
+            })
+
             throw err
           })
       }
@@ -274,7 +283,8 @@ export class BleClient {
 
       let timeId = 0
 
-      return new Promise<IBleResult>((resolve, reject) => {
+      // 可能writeBLECharacteristicValue还没回调成功，设备已经收到指令并回复，所以必须先缓存cmdCallbackMap，以免收不到回复
+      const replyPromise = new Promise<IBleResult>((resolve, reject) => {
         // 超时处理
         timeId = setTimeout(() => {
           reject('蓝牙指令回复超时')
@@ -283,48 +293,44 @@ export class BleClient {
         this.cmdCallbackMap[msgId] = (data) => {
           resolve(data)
         }
-
-        wx.writeBLECharacteristicValue({
-          deviceId: this.deviceUuid,
-          serviceId: this.serviceId,
-          characteristicId: this.characteristicId,
-          value: buffer,
-        })
-          .then(() => {
-            Logger.log(`【${this.mac}】writeBLECharacteristicValue`)
-          })
-          .catch((err) => {
-            reject(err)
-          })
       })
         .then((res) => {
           Logger.log(`【${this.mac}】蓝牙指令回复时间： ${Date.now() - begin}ms`, res)
+          clearTimeout(timeId)
 
           return res
         })
-        .catch(async (err) => {
-          // todo: 暂时找不到方法和下面的catch逻辑合并处理
-          Logger.error(`【${this.mac}】promise-sendCmd-err`, err, `蓝牙连接状态：${bleDeviceMap[this.deviceUuid]}`)
+        .catch((err) => err)
 
-          await this.close() // 异常关闭需要主动配合关闭连接closeBLEConnection，否则资源会被占用无法释放，导致无法连接蓝牙设备
+      // 存在writeBLECharacteristicValue调用过程中蓝牙设备断开，导致writeBLECharacteristicValue没有回调，堵塞流程，需要增加超时机制
+      const writeRes = await Promise.race([
+        wx
+          .writeBLECharacteristicValue({
+            deviceId: this.deviceUuid,
+            serviceId: this.serviceId,
+            characteristicId: this.characteristicId,
+            value: buffer,
+          })
+          .catch((err) => err),
+        delay(3000).then(() => '调用writeBLECharacteristicValue超时'),
+      ])
 
-          return {
-            code: '-1',
-            success: false,
-            msg: err,
-            data: '',
-          }
-        })
-        .finally(() => {
-          clearTimeout(timeId)
-        })
+      Logger.log(`【${this.mac}】writeBLECharacteristicValue`, writeRes)
+
+      // 若发送蓝牙数据报错，直接返回
+      if (writeRes.errCode !== 0) {
+        clearTimeout(timeId)
+        throw writeRes
+      } else {
+        return replyPromise
+      }
     } catch (err) {
       Logger.error(`【${this.mac}】sendCmd-err`, err, `蓝牙连接状态：${bleDeviceMap[this.deviceUuid]}`)
       await this.close() // 异常关闭需要主动配合关闭连接closeBLEConnection，否则资源会被占用无法释放，导致无法连接蓝牙设备
       return {
         code: '-1',
         success: false,
-        error: err,
+        msg: err,
         data: '',
       }
     }
@@ -343,6 +349,7 @@ export class BleClient {
     // 若panId为65535（0xFFFF），无效,导致无法成功配网，强制改为0
     if (panId === 65535) {
       panId = 0
+      extPanId = ''
     }
 
     let parameter = [0x00, channel]
@@ -369,6 +376,7 @@ export class BleClient {
     const result = {
       code: res.code,
       success: res.success,
+      msg: res.msg,
       result: {
         zigbeeMac: '',
       },
@@ -600,6 +608,8 @@ export const bleUtil = {
           mac: bleDevice.mac,
           deviceId: bleDevice.deviceUuid,
         })
+      } else {
+        Logger.log('----收到无主的蓝牙信息', resMsgId, resMsg)
       }
     })
   },

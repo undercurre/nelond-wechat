@@ -54,7 +54,7 @@ export const bleDevicesStore = observable({
 
           // 1、过滤【已经显示在列表的】
           // 2、设备配网状态没变化的同一设备不再查询，防止重复查询同一设备的云端信息接口
-          // 3、过滤已经进行zigbee自组网的设备，isConfig为10
+          // 商照小程序
           return (
             baseInfo.isConfig !== '10' &&
             !foundViewItem &&
