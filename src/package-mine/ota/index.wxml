@@ -67,8 +67,9 @@
                   round
                   size="small"
                   bind:tap="handleUpdate"
+                  disabled="{{isUpdating || !hasUpdate}}"
                   data-type="{{item.otaType}}"
-                  >升级</van-button
+                  >{{gatewayBtnText}}</van-button
                 >
               </view>
             </view>

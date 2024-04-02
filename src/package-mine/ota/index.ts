@@ -34,6 +34,12 @@ ComponentWithComputed({
     canOTA(data) {
       return data.isManager
     },
+    // 网关升级按钮
+    gatewayBtnText(data) {
+      const { isUpdating } = data
+      return isUpdating ? '升级中...' : '升级'
+    },
+    // 批量升级按钮
     btnText(data) {
       const { isUpdating, remainOtaDevice } = data
       if (isUpdating) {
