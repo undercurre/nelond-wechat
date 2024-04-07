@@ -42,8 +42,17 @@ export const userStore = observable({
   },
 
   setRoleLevel(pid: string) {
-    const role = this.userInfo.roleList.find((role) => role.projectId === pid)
-    const level = role ? role.roleLevel : UserRole.UnDef
+    let level = UserRole.UnDef
+    const role = this.userInfo.roleList?.find((role) => role.projectId === pid)
+    if (role) {
+      level = role.roleLevel
+    }
+    // 若为总管或代理商角色，则不必匹配项目id，直接具备所有返回的项目的对应角色的权限
+    else if (this.userInfo.roleList?.length === 1) {
+      level = this.userInfo.roleList[0].roleLevel
+    }
+
+    console.log('[setRoleLevel]', level)
     runInAction(() => {
       this.currentRoldLevel = level
     })
