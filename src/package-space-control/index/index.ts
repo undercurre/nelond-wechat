@@ -222,7 +222,7 @@ ComponentWithComputed({
       // 首次进入
       if (this.data._firstShow && this.data._from !== 'addDevice') {
         this.updateQueue({ isRefresh: true })
-        // sceneStore.updateAllRoomSceneList()
+        sceneStore.updateAllRoomSceneList()
         this.queryGroupInfo()
         this.data._firstShow = false
       }
