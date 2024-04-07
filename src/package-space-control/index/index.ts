@@ -145,7 +145,7 @@ ComponentWithComputed({
 
       const _title = `${parentSpace?.spaceName}-${currentSpace?.spaceName}`
       console.log('_title', _title)
-      return _title.length > 10 ? _title.slice(0, 4) + '...' + _title.slice(-6) : _title
+      return _title.length > 9 ? _title.slice(0, 4) + '..' + _title.slice(-5) : _title
     },
     sceneListInBar(data) {
       if (data.sceneList) {
