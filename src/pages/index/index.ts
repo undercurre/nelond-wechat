@@ -169,7 +169,7 @@ ComponentWithComputed({
       const childPublicSpace = spaceStore.allSpaceList.find((s) => s.pid === spaceId && s.publicSpaceFlag === 1)
 
       // 更新当前选中空间
-      const hasOnlyChildren = nodeCount === 1 // 有且仅有1个下级空间，即为公共空间
+      const hasOnlyChildren = nodeCount === 1 // 有且仅有1个下级空间
       runInAction(() => {
         spaceStore.currentSpaceSelect.push({
           ...e.detail,
@@ -179,9 +179,10 @@ ComponentWithComputed({
           ...e.detail,
           pid: this.data.pid,
         } as Space.SpaceInfo)
-        // 如果只有一个子空间，则同时push公共空间
-        if (hasOnlyChildren) {
-          spaceStore.currentSpaceSelect.push(childPublicSpace!)
+
+        // 如果只有一个子空间，且该空间为公共空间，则同时push公共空间
+        if (hasOnlyChildren && childPublicSpace) {
+          spaceStore.currentSpaceSelect.push(childPublicSpace)
           spaceStore.setCurrentSpaceTemp(childPublicSpace as unknown as Space.SpaceInfo)
         }
       })
