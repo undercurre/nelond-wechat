@@ -102,6 +102,7 @@ ComponentWithComputed({
     editingUniId: '',
     editingDelayId: '',
     scrollTop: 0,
+    _isSaving: false,
   },
 
   computed: {
@@ -1255,6 +1256,7 @@ ComponentWithComputed({
             Toast({ message: '删除失败', zIndex: 9999 })
           }
         })
+        this.data._isSaving = false
         return
       }
 
@@ -1288,7 +1290,7 @@ ComponentWithComputed({
             sceneId: data.sceneId,
           }),
         })
-
+        this.data._isSaving = false
         return
       }
 
@@ -1300,9 +1302,13 @@ ComponentWithComputed({
         wx.navigateBack()
       } else {
         Toast({ message: '修改失败', zIndex: 9999 })
+        this.data._isSaving = false
       }
     },
     async handleSave() {
+      if (this.data._isSaving) return
+      this.data._isSaving = true
+
       if (this.data.opearationType === 'yijian' && this.data.yijianSceneId) {
         this.updateYijianScene()
         return
@@ -1360,6 +1366,8 @@ ComponentWithComputed({
             })
           },
         )
+        this.data._isSaving = false
+
         return
       }
 
@@ -1377,7 +1385,10 @@ ComponentWithComputed({
 
         console.log('delAutoScene', res)
 
-        if (res === 'cancel') return
+        if (res === 'cancel') {
+          this.data._isSaving = false
+          return
+        }
 
         const delRes = await deleteScene(this.data.autoSceneId)
         if (delRes.success) {
@@ -1386,7 +1397,7 @@ ComponentWithComputed({
         } else {
           Toast({ message: '删除失败', zIndex: 9999 })
         }
-
+        this.data._isSaving = false
         return
       }
       if (!this.data.sceneName) {
@@ -1394,6 +1405,8 @@ ComponentWithComputed({
           message: '场景名不能为空',
           zIndex: 99999,
         })
+        this.data._isSaving = false
+
         return
       }
       if (checkInputNameIllegal(this.data.sceneName)) {
@@ -1401,6 +1414,8 @@ ComponentWithComputed({
           message: '场景名称不能用特殊符号或表情',
           zIndex: 99999,
         })
+        this.data._isSaving = false
+
         return
       }
       if (this.data.sceneName.length > 15) {
@@ -1408,6 +1423,8 @@ ComponentWithComputed({
           message: '场景名称不能超过15个字符',
           zIndex: 99999,
         })
+        this.data._isSaving = false
+
         return
       }
 
@@ -1448,6 +1465,7 @@ ComponentWithComputed({
 
         if (!_isEditIconOrName && !this.data._isEditAction && !this.data._isEditCondition) {
           //全都没更改过则直接返回
+          this.data._isSaving = false
           wx.navigateBack()
           return
         }
@@ -1569,6 +1587,7 @@ ComponentWithComputed({
 
       const res = await promise
       if (!res.success) {
+        this.data._isSaving = false
         Toast({
           message: this.data.autoSceneId ? '更新失败' : '创建失败',
         })
@@ -1589,6 +1608,7 @@ ComponentWithComputed({
           message: '场景名不能为空',
           zIndex: 99999,
         })
+        this.data._isSaving = false
         return
       }
       if (checkInputNameIllegal(this.data.sceneName)) {
@@ -1596,6 +1616,7 @@ ComponentWithComputed({
           message: '场景名称不能用特殊符号或表情',
           zIndex: 99999,
         })
+        this.data._isSaving = false
         return
       }
       if (this.data.sceneName.length > 15) {
@@ -1603,6 +1624,7 @@ ComponentWithComputed({
           message: '场景名称不能超过15个字符',
           zIndex: 99999,
         })
+        this.data._isSaving = false
         return
       }
       // 场景动作数据统一在scene-request-list页面处理
@@ -1642,6 +1664,7 @@ ComponentWithComputed({
       wx.navigateTo({
         url: '/package-automation/scene-request-list-yijian/index',
       })
+      this.data._isSaving = false
     },
     async handleAutoSceneDelete() {
       if (this.data.autoSceneId) {
