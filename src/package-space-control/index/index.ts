@@ -381,10 +381,9 @@ ComponentWithComputed({
       if (!this.data._isPopSpace) {
         return
       }
-      const parentSpace = this.data.parentSpace as Space.SpaceInfo
       runInAction(() => {
         // 如果当前是公共空间，要多退出一层
-        if (spaceStore.currentSpaceTemp.publicSpaceFlag === 1 && parentSpace.nodeCount <= 1) {
+        if (spaceStore.currentSpaceTemp.publicSpaceFlag === 1) {
           spaceStore.currentSpaceSelect.pop()
         }
         spaceStore.currentSpaceSelect.pop()
