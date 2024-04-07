@@ -44,6 +44,7 @@ export const userStore = observable({
   setRoleLevel(pid: string) {
     const role = this.userInfo.roleList.find((role) => role.projectId === pid)
     const level = role ? role.roleLevel : UserRole.UnDef
+    console.log('[setRoleLevel]', level)
     runInAction(() => {
       this.currentRoldLevel = level
     })
