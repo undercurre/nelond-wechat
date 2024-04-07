@@ -84,12 +84,18 @@ ComponentWithComputed({
     handleCardTap(e: { detail: Space.SpaceInfo }) {
       const { spaceId, nodeCount, spaceName, spaceLevel, publicSpaceFlag } = e.detail
 
-      // 只少于等于一个子空间，则进入设备列表页；否则进入下级空间列表页
-      const link = nodeCount < 2 ? '/package-space-control/index/index' : '/package-space-control/space-list/index'
+      // 子公共空间
       const childPublicSpace = spaceStore.allSpaceList.find((s) => s.pid === spaceId && s.publicSpaceFlag === 1)
 
-      // 更新当前选中空间
-      const hasOnlyChildren = nodeCount === 1 // 有且仅有1个下级空间
+      // 有且仅有1个公共子空间
+      const hasOnlyPublicChild = nodeCount === 1 && childPublicSpace
+
+      // 只少于等于一个子空间，则进入设备列表页；否则进入下级空间列表页
+      const link =
+        hasOnlyPublicChild || !nodeCount
+          ? '/package-space-control/index/index'
+          : '/package-space-control/space-list/index'
+
       runInAction(() => {
         spaceStore.currentSpaceSelect.push({
           ...e.detail,
@@ -101,7 +107,7 @@ ComponentWithComputed({
         } as Space.SpaceInfo)
 
         // 如果只有一个子空间，且该空间为公共空间，则同时push公共空间
-        if (hasOnlyChildren && childPublicSpace) {
+        if (hasOnlyPublicChild) {
           spaceStore.currentSpaceSelect.push(childPublicSpace)
           spaceStore.setCurrentSpaceTemp(childPublicSpace as unknown as Space.SpaceInfo)
         }
