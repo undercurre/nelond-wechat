@@ -25,6 +25,7 @@
     </view>
     <view class="w-750rpx">
       <all-space-select
+        targetSpaceId="{{defaultSpaceId}}"
         dataTypeList="{{[cardType]}}"
         bind:confirm="handleRoomSelect"
       ></all-space-select>

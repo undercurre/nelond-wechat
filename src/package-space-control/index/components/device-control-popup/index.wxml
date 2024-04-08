@@ -257,6 +257,7 @@
   show="{{showLinkPopup}}"
   title="{{selectCardPopupTitle}}"
   list="{{list}}"
+  defaultSpaceId="{{currentSpaceId}}"
   selectList="{{linkSelectList}}"
   cardType="{{selectLinkType}}"
   catch:close="handleLinkPopupClose"

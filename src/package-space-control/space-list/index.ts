@@ -1,5 +1,5 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { runInAction, toJS } from 'mobx-miniprogram'
+import { runInAction } from 'mobx-miniprogram'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { othersBinding, spaceBinding, userBinding, spaceStore, projectStore, projectBinding } from '../../store/index'
 import { storage, strUtil } from '../../utils/index'
@@ -64,10 +64,7 @@ ComponentWithComputed({
       }
     },
     onShow() {
-      console.log('onShow', toJS(spaceStore.currentSpaceSelect))
-    },
-    onUnload() {
-      runInAction(() => spaceStore.currentSpaceSelect.pop())
+      console.log('onShow', spaceStore.currentSpaceSelect)
     },
 
     goToSpaceManage() {
@@ -96,22 +93,16 @@ ComponentWithComputed({
           ? '/package-space-control/index/index'
           : '/package-space-control/space-list/index'
 
-      runInAction(() => {
-        spaceStore.currentSpaceSelect.push({
-          ...e.detail,
-          pid: this.data.pid,
+      if (hasOnlyPublicChild || !nodeCount) {
+        runInAction(() => {
+          // 如果只有一个子空间，且该空间为公共空间，则同时push公共空间
+          if (hasOnlyPublicChild) {
+            spaceStore.setCurrentSpace(childPublicSpace.spaceId)
+          } else {
+            spaceStore.setCurrentSpace(spaceId)
+          }
         })
-        spaceStore.setCurrentSpaceTemp({
-          ...e.detail,
-          pid: this.data.pid,
-        } as Space.SpaceInfo)
-
-        // 如果只有一个子空间，且该空间为公共空间，则同时push公共空间
-        if (hasOnlyPublicChild) {
-          spaceStore.currentSpaceSelect.push(childPublicSpace)
-          spaceStore.setCurrentSpaceTemp(childPublicSpace as unknown as Space.SpaceInfo)
-        }
-      })
+      }
 
       wx.navigateTo({
         url: strUtil.getUrlWithParams(link, {

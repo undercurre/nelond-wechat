@@ -90,9 +90,9 @@ ComponentWithComputed({
       this.hideMenu()
     },
     async onShow() {
-      runInAction(() => {
-        spaceStore.currentSpaceId = '' // 回到首页，清空之前选择过的空间记录
-      })
+      // 回到首页，清空之前选择过的空间记录
+      spaceStore.setCurrentSpace()
+
       if (!this.data._isFirstShow) {
         projectStore.updateSpaceCardList()
       }
@@ -176,22 +176,16 @@ ComponentWithComputed({
           ? '/package-space-control/index/index'
           : '/package-space-control/space-list/index'
 
-      runInAction(() => {
-        spaceStore.currentSpaceSelect.push({
-          ...e.detail,
-          pid: '0',
+      if (hasOnlyPublicChild || !nodeCount) {
+        runInAction(() => {
+          // 如果只有一个子空间，且该空间为公共空间，则同时push公共空间
+          if (hasOnlyPublicChild) {
+            spaceStore.setCurrentSpace(childPublicSpace.spaceId)
+          } else {
+            spaceStore.setCurrentSpace(spaceId)
+          }
         })
-        spaceStore.setCurrentSpaceTemp({
-          ...e.detail,
-          pid: this.data.pid,
-        } as Space.SpaceInfo)
-
-        // 如果只有一个子空间，且该空间为公共空间，则同时push公共空间
-        if (hasOnlyPublicChild) {
-          spaceStore.currentSpaceSelect.push(childPublicSpace)
-          spaceStore.setCurrentSpaceTemp(childPublicSpace as unknown as Space.SpaceInfo)
-        }
-      })
+      }
 
       wx.navigateTo({
         url: strUtil.getUrlWithParams(link, {
