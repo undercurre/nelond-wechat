@@ -12,7 +12,6 @@ import {
   spaceStore,
   projectStore,
 } from '../../store/index'
-import { runInAction, values } from 'mobx-miniprogram'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { sendDevice, execScene, queryGroupBySpaceId } from '../../apis/index'
 import Toast from '@vant/weapp/toast/toast'
@@ -99,7 +98,6 @@ ComponentWithComputed({
       power: 0,
       groupId: '',
     },
-    _isPopSpace: true, // 离开页面时是否弹出空间栈
   },
 
   computed: {
@@ -123,27 +121,21 @@ ComponentWithComputed({
     },
     parentSpace(data) {
       const { allSpaceList } = data
-      return allSpaceList?.find((s: Space.SpaceInfo) => s.spaceId === data.currentSpaceTemp?.pid) ?? {}
+      return allSpaceList?.find((s: Space.SpaceInfo) => s.spaceId === data.currentSpace?.pid) ?? {}
     },
     /**
      * 空间显示名称
-     * @returns 如果为公共空间，则显示{父空间名称}-公共空间；如果非公共空间，则直接显示当前空间名称
      */
     title(data) {
-      const currentSpace = (data.currentSpaceTemp as Space.allSpace) ?? data.currentSpace
+      const { currentSpace, parentSpace } = data
+
+      // 如果非公共空间，则直接显示当前空间名称
       if (currentSpace?.publicSpaceFlag === 0) {
         return currentSpace?.spaceName ?? ''
       }
-      const { parentSpace } = data
 
-      console.log('title', currentSpace, parentSpace?.spaceName)
-
-      // 如果父空间不存在
-      if (!parentSpace?.spaceName) {
-        return currentSpace?.spaceName ?? ''
-      }
-
-      const _title = `${parentSpace?.spaceName}-${currentSpace?.spaceName}`
+      // 如果为公共空间，则显示{父空间名称}-公共空间
+      const _title = `${parentSpace?.spaceName ?? ''}-${currentSpace?.spaceName}`
       console.log('_title', _title)
       return _title.length > 9 ? _title.slice(0, 4) + '..' + _title.slice(-5) : _title
     },
@@ -214,7 +206,6 @@ ComponentWithComputed({
     async onLoad(query: { from?: string }) {
       Logger.log('space-onLoad', query, 'isManager', this.data.isManager)
       this.data._from = query.from ?? ''
-      this.data._isPopSpace = true
     },
 
     async onShow() {
@@ -289,7 +280,7 @@ ComponentWithComputed({
           ].includes(eventType)
         ) {
           this.reloadDataThrottle(e)
-        } else if (eventType === WSEventType.room_del && eventData.spaceId === spaceStore.currentSpaceTemp.spaceId) {
+        } else if (eventType === WSEventType.room_del && eventData.spaceId === spaceStore.currentSpaceId) {
           // 空间被删除，退出到首页
           await projectStore.updateSpaceCardList()
           wx.redirectTo({
@@ -297,8 +288,6 @@ ComponentWithComputed({
           })
         }
       })
-
-      console.log('[onShow]currentSpaceSelect', values(spaceStore.currentSpaceSelect))
     },
 
     // 响应控制弹窗中单灯/灯组的控制变化，直接按本地设备列表数值以及设置值，刷新空间灯的状态
@@ -316,7 +305,7 @@ ComponentWithComputed({
 
     // 查询空间分组详情
     async queryGroupInfo() {
-      const res = await queryGroupBySpaceId({ spaceId: spaceStore.currentSpaceTemp.spaceId })
+      const res = await queryGroupBySpaceId({ spaceId: spaceStore.currentSpaceId })
       if (res.success) {
         const spaceStatus = res.result.controlAction[0]
         const { colorTempRangeMap, groupId } = res.result
@@ -377,17 +366,7 @@ ComponentWithComputed({
     }, 3000),
 
     onUnload() {
-      console.log('onUnload spaceStore.currentSpaceTemp', spaceStore.currentSpaceTemp)
-      if (!this.data._isPopSpace) {
-        return
-      }
-      runInAction(() => {
-        // 如果当前是公共空间，要多退出一层
-        if (spaceStore.currentSpaceTemp.publicSpaceFlag === 1) {
-          spaceStore.currentSpaceSelect.pop()
-        }
-        spaceStore.currentSpaceSelect.pop()
-      })
+      console.log('onUnload spaceStore.currentSpaceId', spaceStore.currentSpaceId)
     },
     onHide() {
       console.log('【onHide】')
@@ -674,7 +653,6 @@ ComponentWithComputed({
       // wx.switchTab({
       //   url: '/pages/automation/index',
       // })
-      this.data._isPopSpace = false
       wx.navigateTo({
         url: '/package-space-control/scene-list/index',
       })
@@ -685,7 +663,6 @@ ComponentWithComputed({
         Toast('您当前身份为项目使用者，无法创建场景')
         return
       }
-      this.data._isPopSpace = false
 
       wx.navigateTo({
         url: strUtil.getUrlWithParams('/package-automation/automation-add/index', {
@@ -923,13 +900,11 @@ ComponentWithComputed({
         Toast('当前无法连接网络\n请检查网络设置')
         return
       }
-      this.data._isPopSpace = false
 
       wx.navigateTo({ url: '/package-distribution/choose-device/index' })
     },
     handleRebindGateway() {
       const gateway = deviceStore.allRoomDeviceMap[this.data.offlineDevice.gatewayId]
-      this.data._isPopSpace = false
       wx.navigateTo({
         url: `/package-distribution/wifi-connect/index?type=changeWifi&sn=${gateway.sn}`,
       })

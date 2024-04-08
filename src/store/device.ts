@@ -35,8 +35,8 @@ export const deviceStore = observable({
 
   // 当前空间灯组数量
   get groupCount(): number {
-    const { spaceId = 0 } = spaceStore.currentSpaceTemp ?? {}
-    const groups = this.allDeviceList.filter((device) => device.spaceId === spaceId && device.deviceType === 4)
+    const { currentSpaceId } = spaceStore ?? {}
+    const groups = this.allDeviceList.filter((device) => device.spaceId === currentSpaceId && device.deviceType === 4)
     return groups.length
   },
 
@@ -148,18 +148,18 @@ export const deviceStore = observable({
       return
     }
 
-    let { spaceId = 0 } = spaceStore.currentSpaceTemp ?? {}
-    const children = spaceStore.allSpaceList.filter((s) => s.pid === spaceId)
-    // 如果只有唯一的子空间，即公共空间，则平铺子公共空间设备列表
-    if (children.length === 1) {
-      spaceId = children[0].spaceId
+    let { currentSpaceId } = spaceStore ?? {}
+    const children = spaceStore.allSpaceList.filter((s) => s.pid === currentSpaceId)
+    // 如果只有唯一的子空间，且为公共空间，则平铺子公共空间设备列表
+    if (children.length === 1 && children[0].publicSpaceFlag === 1) {
+      currentSpaceId = children[0].spaceId
     }
 
     runInAction(() => {
       deviceStore.allDeviceList = res.result
 
-      if (spaceId && res.result?.length) {
-        deviceStore.deviceList = res.result.filter((device) => device.spaceId === spaceId)
+      if (currentSpaceId && res.result?.length) {
+        deviceStore.deviceList = res.result.filter((device) => device.spaceId === currentSpaceId)
       }
 
       this.updateAllDeviceListLanStatus(false)

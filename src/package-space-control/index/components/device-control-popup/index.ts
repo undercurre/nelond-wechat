@@ -1,7 +1,14 @@
 import { Logger, isArrEqual, showLoading, hideLoading, isNullOrUnDef } from '../../../../utils/index'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import { projectBinding, deviceStore, sceneStore, projectStore, userBinding } from '../../../../store/index'
+import {
+  projectBinding,
+  deviceStore,
+  sceneStore,
+  projectStore,
+  userBinding,
+  spaceBinding,
+} from '../../../../store/index'
 import {
   maxColorTemp,
   minColorTemp,
@@ -33,7 +40,7 @@ import { runInAction } from 'mobx-miniprogram'
 type ILinkType = 'light' | 'switch' | 'scene'
 
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, userBinding] }), pageBehavior],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, userBinding, spaceBinding] }), pageBehavior],
   options: {
     pureDataPattern: /^_/, // 指定所有 _ 开头的数据字段为纯数据字段
   },
