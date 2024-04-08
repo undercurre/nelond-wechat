@@ -28,5 +28,4 @@
       data="{{disabled:!name}}"
     />
   </view>
-  <van-toast id="van-toast" />
 </van-popup>

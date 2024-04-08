@@ -36,3 +36,5 @@
   bind:close="handleNameEditCancel"
   bind:confirm="handleNameEditConfirm"
 />
+
+<van-toast id="van-toast" />
