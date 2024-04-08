@@ -82,16 +82,21 @@ ComponentWithComputed({
               spaceIds.unshift(parentSpace.spaceId)
               parentSpace = spaceStore.allSpaceList.find((s) => s.spaceId === parentSpace?.pid)
             }
-            this.setData({
-              firstSpaceId: spaceIds[0] || '',
-              _firstSpaceId: spaceIds[0] || '',
-              secondSpaceId: spaceIds[1] || '',
-              _secondSpaceId: spaceIds[1] || '',
-              thirdSpaceId: spaceIds[2] || '',
-              _thirdSpaceId: spaceIds[2] || '',
-              fourthSpaceId: spaceIds[3] || '',
-              _fourthSpaceId: spaceIds[3] || '',
-            })
+            this.setData(
+              {
+                firstSpaceId: spaceIds[0] || '',
+                _firstSpaceId: spaceIds[0] || '',
+                secondSpaceId: spaceIds[1] || '',
+                _secondSpaceId: spaceIds[1] || '',
+                thirdSpaceId: spaceIds[2] || '',
+                _thirdSpaceId: spaceIds[2] || '',
+                fourthSpaceId: spaceIds[3] || '',
+                _fourthSpaceId: spaceIds[3] || '',
+              },
+              () => {
+                if (this.data.initConfirm) this.triggerEvent('confirm', this.calcConfirmRes())
+              },
+            )
           }
         }
       },
