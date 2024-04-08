@@ -416,7 +416,7 @@ ComponentWithComputed({
     },
     async handleSelectLinkPopupConfirm(e: WechatMiniprogram.TouchEvent) {
       if (this.data.disabledLinkSetting) {
-        const message = '只能创建者及管理员进行关联'
+        const message = '只能管理员进行关联'
         Toast({ message, zIndex: 9999 })
         return
       }
