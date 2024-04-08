@@ -1,5 +1,5 @@
 import Toast from '@vant/weapp/toast/toast'
-import { checkInputNameIllegal } from '../../../../utils/index'
+import { checkUserNameIllegal } from '../../../../utils/index'
 
 Component({
   options: {},
@@ -38,13 +38,13 @@ Component({
     },
     handleConfirm() {
       // 校验名字合法性
-      if (checkInputNameIllegal(this.data.name)) {
-        Toast('用户名称不能用特殊符号或表情')
+      if (checkUserNameIllegal(this.data.name)) {
+        Toast('用户名称格式错误')
         return
       }
 
-      if (this.data.name.length > 10) {
-        Toast('用户名称不能超过10个字符')
+      if (this.data.name.length > 20) {
+        Toast('用户名称不能超过20个字符')
         return
       }
 
