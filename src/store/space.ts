@@ -54,7 +54,7 @@ export const spaceStore = observable({
 
     console.log(
       '[get currentSpaceSelect]',
-      list.map((s) => s.spaceName),
+      list.map((s) => [s.spaceName, s.spaceId]),
     )
 
     return list
@@ -77,6 +77,7 @@ export const spaceStore = observable({
 
   // 设置当前进入/选择的空间id，默认为未选择即'0'
   setCurrentSpace(spaceId = '') {
+    console.log('setCurrentSpace', spaceId)
     runInAction(() => {
       this.currentSpaceId = spaceId // 保存当前选择的空间ID
       deviceStore.deviceList = spaceId ? deviceStore.allDeviceList.filter((device) => device.spaceId === spaceId) : []

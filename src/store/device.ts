@@ -1,5 +1,5 @@
 import { observable, runInAction } from 'mobx-miniprogram'
-import { queryDevice } from '../apis/device'
+import { queryDevice, queryDeviceBySpaceId } from '../apis/device'
 import { PRO_TYPE } from '../config/index'
 import { projectStore } from './project'
 import { spaceStore } from './space'
@@ -141,7 +141,7 @@ export const deviceStore = observable({
    * 更新全项目设备列表
    */
   async updateAllDeviceList(projectId: string = projectStore.currentProjectId, options?: IApiRequestOption) {
-    const res = await queryDevice(projectId, '0', options)
+    const res = await queryDevice(projectId, options)
 
     if (!res.success) {
       console.log('加载全项目设备失败！', res)
@@ -174,7 +174,7 @@ export const deviceStore = observable({
     spaceId: string = spaceStore.currentSpaceId,
     options?: IApiRequestOption,
   ) {
-    const res = await queryDevice(projectId, spaceId, options)
+    const res = await queryDeviceBySpaceId(projectId, spaceId, options)
     if (!res.success) {
       console.log('加载空间设备失败！', res)
       return
