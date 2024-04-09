@@ -44,7 +44,7 @@ ComponentWithComputed({
   computed: {},
   methods: {
     // 生命周期或者其他钩子
-    async onLoad(query: { pid: string; pname: string; plevel: Space.SpaceLevel }) {
+    onLoad(query: { pid: string; pname: string; plevel: Space.SpaceLevel }) {
       if (query.pname && query.plevel) {
         this.setData({
           title: query.pname,
@@ -54,17 +54,18 @@ ComponentWithComputed({
         this.data.plevel = query.plevel
         this.data.pname = query.pname
       }
+    },
+    async onShow() {
+      console.log('onShow', spaceStore.currentSpaceSelect)
+
       // 加载本空间列表。只要有兄弟节点就显示公共空间
-      const res = await querySpaceList(projectStore.currentProjectId, query.pid, { loading: true })
+      const res = await querySpaceList(projectStore.currentProjectId, this.data.pid, { loading: true })
       if (res.success) {
         const hasSibling = res.result?.length > 1
         this.setData({
           subSpaceList: res.result.filter((space) => space.publicSpaceFlag !== 1 || hasSibling),
         })
       }
-    },
-    onShow() {
-      console.log('onShow', spaceStore.currentSpaceSelect)
     },
 
     goToSpaceManage() {
