@@ -23,7 +23,7 @@ export async function queryDeviceBySpaceId(projectId: string, spaceId: string, o
     log: true,
     loading: options?.loading ?? false,
     isDefaultErrorTips: options?.isDefaultErrorTips ?? true,
-    url: '/v1/cl/device/wx/queryDeviceInfoBySpaceId',
+    url: '/v1/cl/device/querySubDeviceInfoBySpaceId',
     data: {
       projectId,
       spaceId,
