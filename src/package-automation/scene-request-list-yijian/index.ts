@@ -98,7 +98,7 @@ ComponentWithComputed({
         })
 
       // 处理发送请求的deviceActions字段数据
-      const deviceMap = deviceStore.allRoomDeviceMap
+      const deviceMap = deviceStore.allDeviceMap
 
       sceneDeviceActionsFlatten.forEach((action) => {
         const device = deviceMap[action.uniId] || deviceMap[action.uniId.split(':')[0]]

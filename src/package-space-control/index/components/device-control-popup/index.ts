@@ -644,7 +644,7 @@ ComponentWithComputed({
       let res
 
       if (this.data.selectLinkType === 'light') {
-        const deviceMap = deviceStore.allRoomDeviceMap
+        const deviceMap = deviceStore.allDeviceMap
         const device = deviceMap[this.data.linkSelectList[0]]
 
         if (device.deviceType === 4) {

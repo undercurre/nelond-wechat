@@ -25,7 +25,7 @@ export const deviceStore = observable({
     return Object.fromEntries(deviceStore.deviceList.map((device: Device.DeviceItem) => [device.deviceId, device]))
   },
 
-  get allRoomDeviceMap(): Record<string, Device.DeviceItem> {
+  get allDeviceMap(): Record<string, Device.DeviceItem> {
     return Object.fromEntries(deviceStore.allDeviceList.map((device: Device.DeviceItem) => [device.deviceId, device]))
   },
 

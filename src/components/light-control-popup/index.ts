@@ -85,7 +85,7 @@ ComponentWithComputed({
     },
     hasColorTemp(data) {
       const { deviceId } = data.lightInfo
-      const { productId = '0' } = deviceStore.allRoomDeviceMap[deviceId] ?? {}
+      const { productId = '0' } = deviceStore.allDeviceMap[deviceId] ?? {}
       console.log('hasColorTemp productId', productId)
       return !NO_COLOR_TEMP.includes(productId)
     },

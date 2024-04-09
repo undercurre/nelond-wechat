@@ -904,7 +904,7 @@ ComponentWithComputed({
       wx.navigateTo({ url: '/package-distribution/choose-device/index' })
     },
     handleRebindGateway() {
-      const gateway = deviceStore.allRoomDeviceMap[this.data.offlineDevice.gatewayId]
+      const gateway = deviceStore.allDeviceMap[this.data.offlineDevice.gatewayId]
       wx.navigateTo({
         url: `/package-distribution/wifi-connect/index?type=changeWifi&sn=${gateway.sn}`,
       })

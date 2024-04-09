@@ -807,8 +807,8 @@ ComponentWithComputed({
       console.log('handleSelectCardSelect', e, e.detail)
       const selectId = e.detail
       if (this.data.selectCardType === 'device') {
-        const allRoomDeviceMap = deviceStore.allDeviceFlattenMap
-        const device = allRoomDeviceMap[e.detail]
+        const allDeviceMap = deviceStore.allDeviceFlattenMap
+        const device = allDeviceMap[e.detail]
         const modelName = 'light'
         findDevice({ gatewayId: device.gatewayId, devId: device.deviceId, modelName })
       }
@@ -1157,8 +1157,8 @@ ComponentWithComputed({
       } else if (action.type === 5) {
         return
       } else {
-        const allRoomDeviceMap = deviceStore.allDeviceFlattenMap
-        const device = allRoomDeviceMap[action.uniId]
+        const allDeviceMap = deviceStore.allDeviceFlattenMap
+        const device = allDeviceMap[action.uniId]
         console.log('device', device)
         let modelName = 'light'
 
@@ -1494,7 +1494,7 @@ ComponentWithComputed({
       // })
 
       // 处理发送请求的deviceActions字段数据
-      const deviceMap = deviceStore.allRoomDeviceMap
+      const deviceMap = deviceStore.allDeviceMap
       this.data.sceneDeviceActionsFlatten.forEach((action) => {
         if (action.uniId.indexOf('DLY') !== -1) {
           newSceneData.deviceActions.push({
