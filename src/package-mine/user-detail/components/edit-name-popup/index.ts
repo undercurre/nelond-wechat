@@ -43,8 +43,8 @@ Component({
         return
       }
 
-      if (this.data.name.length > 20) {
-        Toast('用户名称不能超过20个字符')
+      if (this.data.name.length > 10) {
+        Toast('用户名称不能超过10个字符')
         return
       }
 
