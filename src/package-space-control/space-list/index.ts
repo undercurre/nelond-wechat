@@ -1,7 +1,15 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { runInAction } from 'mobx-miniprogram'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import { othersBinding, spaceBinding, userBinding, spaceStore, projectStore, projectBinding } from '../../store/index'
+import {
+  othersBinding,
+  spaceBinding,
+  userBinding,
+  spaceStore,
+  projectStore,
+  projectBinding,
+  deviceStore,
+} from '../../store/index'
 import { storage, strUtil } from '../../utils/index'
 import { SpaceConfig, SpaceLevel, defaultImgDir } from '../../config/index'
 import { querySpaceList } from '../../apis/index'
@@ -66,6 +74,8 @@ ComponentWithComputed({
           subSpaceList: res.result.filter((space) => space.publicSpaceFlag !== 1 || hasSibling),
         })
       }
+
+      await deviceStore.updateAllDeviceList()
     },
 
     goToSpaceManage() {
