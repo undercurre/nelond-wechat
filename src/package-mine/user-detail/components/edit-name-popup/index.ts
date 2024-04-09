@@ -37,14 +37,14 @@ Component({
       this.triggerEvent('close')
     },
     handleConfirm() {
-      // 校验名字合法性
-      if (checkUserNameIllegal(this.data.name)) {
-        Toast('用户名称格式错误')
+      if (this.data.name.length > 10) {
+        Toast('用户名称不能超过10个字符')
         return
       }
 
-      if (this.data.name.length > 10) {
-        Toast('用户名称不能超过10个字符')
+      // 校验名字合法性
+      if (!checkUserNameIllegal(this.data.name)) {
+        Toast('用户名称格式错误')
         return
       }
 

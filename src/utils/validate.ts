@@ -12,7 +12,7 @@ export function checkInputNameIllegal(input: string) {
  * 后续字符可以是数字、中文、英文字母、括号、圆括号、横杠或下划线中的任意一个
  */
 export function checkUserNameIllegal(input: string) {
-  return /^[\u4e00-\u9fa5a-zA-Z（）()-_]{1}[\u4e00-\u9fa5a-zA-Z（）()0-9-_]{0,9}$/g.test(input)
+  return /^[\u4e00-\u9fa5a-zA-Z（）()\-_]{1}[\u4e00-\u9fa5a-zA-Z（）()0-9\-_]{0,9}$/g.test(input)
 }
 
 /**
