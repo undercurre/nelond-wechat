@@ -70,7 +70,7 @@ ComponentWithComputed({
 
     updateList() {
       const listData = [] as IAnyObject[]
-      const deviceMap = deviceStore.allRoomDeviceMap
+      const deviceMap = deviceStore.allDeviceMap
 
       sceneStore.sceneList.forEach((scene: Scene.SceneItem) => {
         let linkName = ''

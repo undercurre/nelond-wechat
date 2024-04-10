@@ -1,7 +1,14 @@
 import { Logger, isArrEqual, showLoading, hideLoading, isNullOrUnDef } from '../../../../utils/index'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import { projectBinding, deviceStore, sceneStore, projectStore, userBinding } from '../../../../store/index'
+import {
+  projectBinding,
+  deviceStore,
+  sceneStore,
+  projectStore,
+  userBinding,
+  spaceBinding,
+} from '../../../../store/index'
 import {
   maxColorTemp,
   minColorTemp,
@@ -33,7 +40,7 @@ import { runInAction } from 'mobx-miniprogram'
 type ILinkType = 'light' | 'switch' | 'scene'
 
 ComponentWithComputed({
-  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, userBinding] }), pageBehavior],
+  behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, userBinding, spaceBinding] }), pageBehavior],
   options: {
     pureDataPattern: /^_/, // 指定所有 _ 开头的数据字段为纯数据字段
   },
@@ -302,11 +309,11 @@ ComponentWithComputed({
       const relInfo = this.data._switchRelInfo
 
       if (this.data.selectLinkType === 'light') {
-        list = deviceStore.allRoomDeviceFlattenList.filter((item) => item.proType === PRO_TYPE.light)
+        list = deviceStore.allDeviceFlattenList.filter((item) => item.proType === PRO_TYPE.light)
 
         linkSelectList = relInfo.lampRelList.map((device) => device.lampDeviceId.replace('group-', ''))
       } else if (this.data.selectLinkType === 'switch') {
-        list = deviceStore.allRoomDeviceFlattenList.filter(
+        list = deviceStore.allDeviceFlattenList.filter(
           (item) => item.proType === PRO_TYPE.switch && item.uniId !== switchUniId,
         )
 
@@ -345,7 +352,7 @@ ComponentWithComputed({
     },
 
     async handleLinkSelect(e: { detail: string }) {
-      const deviceMap = deviceStore.allRoomDeviceFlattenMap
+      const deviceMap = deviceStore.allDeviceFlattenMap
       const switchUniId = this.data.checkedList[0]
       const selectId = e.detail
 
@@ -416,7 +423,7 @@ ComponentWithComputed({
     },
     async handleSelectLinkPopupConfirm(e: WechatMiniprogram.TouchEvent) {
       if (this.data.disabledLinkSetting) {
-        const message = '只能创建者及管理员进行关联'
+        const message = '只能管理员进行关联'
         Toast({ message, zIndex: 9999 })
         return
       }
@@ -637,7 +644,7 @@ ComponentWithComputed({
       let res
 
       if (this.data.selectLinkType === 'light') {
-        const deviceMap = deviceStore.allRoomDeviceMap
+        const deviceMap = deviceStore.allDeviceMap
         const device = deviceMap[this.data.linkSelectList[0]]
 
         if (device.deviceType === 4) {
@@ -733,7 +740,7 @@ ComponentWithComputed({
       }
 
       // sceneStore.updateAllRoomSceneList(),
-      await Promise.all([deviceStore.updateallDeviceList()])
+      await Promise.all([deviceStore.updateAllDeviceList()])
 
       this.data._switchRelInfo.switchUniId = '' // 置空标志位，否则不会更新数据
       this.updateLinkInfo()

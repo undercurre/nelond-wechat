@@ -102,6 +102,7 @@ ComponentWithComputed({
     editingUniId: '',
     editingDelayId: '',
     scrollTop: 0,
+    _isSaving: false,
   },
 
   computed: {
@@ -204,9 +205,9 @@ ComponentWithComputed({
       // #region 处理三个传感器、场景和设备列表
       await Promise.all([
         sceneStore.updateAllRoomSceneList(),
-        deviceStore.updateallDeviceList(), //deviceStore.updateSubDeviceList(), //
+        deviceStore.updateAllDeviceList(), //deviceStore.updateSubDeviceList(), //
       ])
-      const sensorList = deviceStore.allRoomDeviceFlattenList.filter((item) => item.proType === PRO_TYPE.sensor)
+      const sensorList = deviceStore.allDeviceFlattenList.filter((item) => item.proType === PRO_TYPE.sensor)
       sensorList.forEach((item) => {
         if (item.productId === SENSOR_TYPE.humanSensor) {
           item.property = { occupancy: 1, modelName: 'irDetector' }
@@ -218,7 +219,7 @@ ComponentWithComputed({
       })
       this.setData({
         sceneList: [...sceneStore.allRoomSceneList],
-        deviceList: deviceStore.allRoomDeviceFlattenList.filter(
+        deviceList: deviceStore.allDeviceFlattenList.filter(
           (item) => item.proType !== PRO_TYPE.gateway && item.proType !== PRO_TYPE.sensor,
         ),
         sensorList,
@@ -485,7 +486,7 @@ ComponentWithComputed({
         return
       }
       if (spaceid) {
-        const deviceListInRoom: Device.DeviceItem[] = deviceStore.allRoomDeviceFlattenList.filter(
+        const deviceListInRoom: Device.DeviceItem[] = deviceStore.allDeviceFlattenList.filter(
           (item) => item.spaceId === spaceid,
         )
         console.log('默认选中', deviceListInRoom)
@@ -628,7 +629,7 @@ ComponentWithComputed({
       console.log(e)
       const currentSpaceId = e.detail[e.detail.length - 1].spaceId
       console.log(currentSpaceId)
-      const deviceListInRoom: Device.DeviceItem[] = deviceStore.allRoomDeviceFlattenList.filter(
+      const deviceListInRoom: Device.DeviceItem[] = deviceStore.allDeviceFlattenList.filter(
         (item) => item.spaceId === currentSpaceId,
       )
       console.log('默认选中', deviceListInRoom)
@@ -806,8 +807,8 @@ ComponentWithComputed({
       console.log('handleSelectCardSelect', e, e.detail)
       const selectId = e.detail
       if (this.data.selectCardType === 'device') {
-        const allRoomDeviceMap = deviceStore.allRoomDeviceFlattenMap
-        const device = allRoomDeviceMap[e.detail]
+        const allDeviceMap = deviceStore.allDeviceFlattenMap
+        const device = allDeviceMap[e.detail]
         const modelName = 'light'
         findDevice({ gatewayId: device.gatewayId, devId: device.deviceId, modelName })
       }
@@ -1156,8 +1157,8 @@ ComponentWithComputed({
       } else if (action.type === 5) {
         return
       } else {
-        const allRoomDeviceMap = deviceStore.allRoomDeviceFlattenMap
-        const device = allRoomDeviceMap[action.uniId]
+        const allDeviceMap = deviceStore.allDeviceFlattenMap
+        const device = allDeviceMap[action.uniId]
         console.log('device', device)
         let modelName = 'light'
 
@@ -1194,7 +1195,7 @@ ComponentWithComputed({
       const actionItem = this.data.sceneDeviceActionsFlatten[flattenEditIndex]
       const listEditIndex = this.data.deviceList.findIndex((item) => item.uniId === actionItem.uniId)
       const listItem = this.data.deviceList[listEditIndex]
-      const device = deviceStore.allRoomDeviceFlattenMap[actionItem.uniId]
+      const device = deviceStore.allDeviceFlattenMap[actionItem.uniId]
 
       if (!_cacheDeviceMap[actionItem.uniId]) {
         let oldProperty = {
@@ -1255,6 +1256,7 @@ ComponentWithComputed({
             Toast({ message: '删除失败', zIndex: 9999 })
           }
         })
+        this.data._isSaving = false
         return
       }
 
@@ -1288,7 +1290,7 @@ ComponentWithComputed({
             sceneId: data.sceneId,
           }),
         })
-
+        this.data._isSaving = false
         return
       }
 
@@ -1300,9 +1302,13 @@ ComponentWithComputed({
         wx.navigateBack()
       } else {
         Toast({ message: '修改失败', zIndex: 9999 })
+        this.data._isSaving = false
       }
     },
     async handleSave() {
+      if (this.data._isSaving) return
+      this.data._isSaving = true
+
       if (this.data.opearationType === 'yijian' && this.data.yijianSceneId) {
         this.updateYijianScene()
         return
@@ -1360,6 +1366,8 @@ ComponentWithComputed({
             })
           },
         )
+        this.data._isSaving = false
+
         return
       }
 
@@ -1377,7 +1385,10 @@ ComponentWithComputed({
 
         console.log('delAutoScene', res)
 
-        if (res === 'cancel') return
+        if (res === 'cancel') {
+          this.data._isSaving = false
+          return
+        }
 
         const delRes = await deleteScene(this.data.autoSceneId)
         if (delRes.success) {
@@ -1386,7 +1397,7 @@ ComponentWithComputed({
         } else {
           Toast({ message: '删除失败', zIndex: 9999 })
         }
-
+        this.data._isSaving = false
         return
       }
       if (!this.data.sceneName) {
@@ -1394,6 +1405,8 @@ ComponentWithComputed({
           message: '场景名不能为空',
           zIndex: 99999,
         })
+        this.data._isSaving = false
+
         return
       }
       if (checkInputNameIllegal(this.data.sceneName)) {
@@ -1401,6 +1414,8 @@ ComponentWithComputed({
           message: '场景名称不能用特殊符号或表情',
           zIndex: 99999,
         })
+        this.data._isSaving = false
+
         return
       }
       if (this.data.sceneName.length > 15) {
@@ -1408,6 +1423,8 @@ ComponentWithComputed({
           message: '场景名称不能超过15个字符',
           zIndex: 99999,
         })
+        this.data._isSaving = false
+
         return
       }
 
@@ -1448,6 +1465,7 @@ ComponentWithComputed({
 
         if (!_isEditIconOrName && !this.data._isEditAction && !this.data._isEditCondition) {
           //全都没更改过则直接返回
+          this.data._isSaving = false
           wx.navigateBack()
           return
         }
@@ -1476,7 +1494,7 @@ ComponentWithComputed({
       // })
 
       // 处理发送请求的deviceActions字段数据
-      const deviceMap = deviceStore.allRoomDeviceMap
+      const deviceMap = deviceStore.allDeviceMap
       this.data.sceneDeviceActionsFlatten.forEach((action) => {
         if (action.uniId.indexOf('DLY') !== -1) {
           newSceneData.deviceActions.push({
@@ -1569,6 +1587,7 @@ ComponentWithComputed({
 
       const res = await promise
       if (!res.success) {
+        this.data._isSaving = false
         Toast({
           message: this.data.autoSceneId ? '更新失败' : '创建失败',
         })
@@ -1589,6 +1608,7 @@ ComponentWithComputed({
           message: '场景名不能为空',
           zIndex: 99999,
         })
+        this.data._isSaving = false
         return
       }
       if (checkInputNameIllegal(this.data.sceneName)) {
@@ -1596,6 +1616,7 @@ ComponentWithComputed({
           message: '场景名称不能用特殊符号或表情',
           zIndex: 99999,
         })
+        this.data._isSaving = false
         return
       }
       if (this.data.sceneName.length > 15) {
@@ -1603,6 +1624,7 @@ ComponentWithComputed({
           message: '场景名称不能超过15个字符',
           zIndex: 99999,
         })
+        this.data._isSaving = false
         return
       }
       // 场景动作数据统一在scene-request-list页面处理
@@ -1619,12 +1641,22 @@ ComponentWithComputed({
         orderNum: 0,
       } as Scene.AddSceneDto
 
-      // 将新场景排到最后,orderNum可能存在跳号的情况
-      sceneStore.sceneList.forEach((scene) => {
-        if (scene.orderNum && scene.orderNum >= newSceneData.orderNum) {
-          newSceneData.orderNum = scene.orderNum + 1
+      const currentSpaceId = this.data.selectedSpaceInfo.reduce((acc, cur) => {
+        if (cur.spaceLevel > acc.spaceLevel) {
+          return cur
+        } else {
+          return acc
         }
-      })
+      }).spaceId
+
+      // 将新场景排到最后,orderNum可能存在跳号的情况
+      sceneStore.allRoomSceneList
+        .filter((item) => item.spaceId === currentSpaceId && item.sceneCategory === '0')
+        .forEach((scene) => {
+          if (scene.orderNum && scene.orderNum >= newSceneData.orderNum) {
+            newSceneData.orderNum = scene.orderNum + 1
+          }
+        })
 
       storage.set('scene_data', newSceneData)
       storage.set('sceneDeviceActionsFlatten', this.data.sceneDeviceActionsFlatten)
@@ -1632,6 +1664,7 @@ ComponentWithComputed({
       wx.navigateTo({
         url: '/package-automation/scene-request-list-yijian/index',
       })
+      this.data._isSaving = false
     },
     async handleAutoSceneDelete() {
       if (this.data.autoSceneId) {

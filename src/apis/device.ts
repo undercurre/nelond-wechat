@@ -4,14 +4,26 @@ import homOs from 'js-homos'
 import { deviceStore } from '../store/index'
 
 /**
- * 设备管理-根据项目id/空间id查询设备
+ * 设备管理-根据项目id查询设备
  */
-export async function queryAllDevice(projectId: string, spaceId: string, options?: IApiRequestOption) {
+export async function queryDevice(projectId: string, options?: IApiRequestOption) {
   return await mzaioRequest.post<Device.DeviceItem[]>({
     log: true,
     loading: options?.loading ?? false,
     isDefaultErrorTips: options?.isDefaultErrorTips ?? true,
     url: '/v1/cl/device/wx/queryDeviceInfoByProjectId',
+    data: {
+      projectId,
+    },
+  })
+}
+
+export async function queryDeviceBySpaceId(projectId: string, spaceId: string, options?: IApiRequestOption) {
+  return await mzaioRequest.post<Device.DeviceItem[]>({
+    log: true,
+    loading: options?.loading ?? false,
+    isDefaultErrorTips: options?.isDefaultErrorTips ?? true,
+    url: '/v1/cl/device/querySubDeviceInfoBySpaceId',
     data: {
       projectId,
       spaceId,
@@ -136,6 +148,7 @@ export async function bindDevice(
     sn?: string
     deviceId?: string
     deviceName: string
+    nonce?: string // 随机验证码
   },
   options?: { loading?: boolean },
 ) {

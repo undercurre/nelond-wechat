@@ -44,7 +44,7 @@
   </view>
 
   <van-button
-    disabled="{{!spaceInfo.spaceName}}"
+    disabled="{{!spaceInfo.spaceName || isAdding}}"
     class="mx-32rpx"
     size="large"
     type="primary"

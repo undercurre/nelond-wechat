@@ -1,0 +1,31 @@
+<import src="/commons/templates/popup.wxml" />
+<van-popup
+  show="{{ show }}"
+  round
+  position="bottom"
+  bind:close="handleClose"
+  closeable
+  safe-area-inset-bottom="{{false}}"
+>
+  <view class="w-750rpx flex flex-col items-center">
+    <template
+      is="title"
+      data="{{title: '用户名称'}}"
+    />
+    <view class="mt-98rpx w-686rpx">
+      <van-field
+        model:value="{{ name }}"
+        placeholder="请输入用户名称"
+        custom-style="padding: 32rpx 32rpx;background-color: #F6FAFD;border-radius: 24rpx;"
+        clearable="{{true}}"
+        border="{{false}}"
+      >
+      </van-field>
+    </view>
+
+    <template
+      is="bottom-btn"
+      data="{{disabled:!name}}"
+    />
+  </view>
+</van-popup>

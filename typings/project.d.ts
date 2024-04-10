@@ -65,9 +65,9 @@ declare namespace Project {
     houseArea: string
 
     /**
-     * 空间数量
+     * 项目类型编码
      */
-    roomCount: number
+    projectType: string
   }
 
   export interface ISpaceInfo {
@@ -103,5 +103,13 @@ declare namespace Project {
   export interface HomeMemberInfo {
     projectUserList: UserItem[]
     totalElements: number
+  }
+
+  /**
+   * 项目类型字典
+   */
+  export interface DictItem {
+    dictCode: string
+    dictName: string
   }
 }

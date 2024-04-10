@@ -26,7 +26,7 @@ export const autosceneStore = observable({
         if (!reg.test(item.sceneIcon)) item.sceneIcon = 'icon-1'
         item.deviceActions.forEach((action) => {
           if (action.proType === PRO_TYPE.light) {
-            const device = deviceStore.allRoomDeviceFlattenList.find((item) => item.uniId === action.deviceId)
+            const device = deviceStore.allDeviceFlattenList.find((item) => item.uniId === action.deviceId)
             if (device) {
               runInAction(() => {
                 action.controlAction[0] = {

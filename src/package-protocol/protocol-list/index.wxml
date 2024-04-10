@@ -34,7 +34,7 @@
   <van-cell
     wx:if="{{envVersion === 'release' && version}}"
     title="版本号"
-    value="{{version}}"
+    value="v{{version}}"
     center
     border="{{false}}"
   />

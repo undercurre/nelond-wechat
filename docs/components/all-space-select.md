@@ -15,7 +15,7 @@
 | dataTypeList  | array   | false | []     | 筛选只存在该设备类型的空间（device 存在任意可控设备/scene 场景/sensor 传感器/switch 开关和智慧屏/light 灯光/gateway 网关）                   |
 | filter        | boolean | false | true   | 筛选空间时是否过滤非公共空间，仅 dataTypeList 不为空数组时有效（因为目前需求为展示所有公共空间，则无需使用 filter 该属性，默认为 true 即可） |
 | init          | boolean | false | true   | 初始化时是否自动选中首个空间（当 targetSpaceId 属性不为空时无效）                                                                            |
-| initConfirm   | boolean | false | true   | 初始化自动选中首个空间时是否需要触发 confirm 方法（仅当 init 属性为 true 且 targetSpaceId 属性为空时有效）                                   |
+| initConfirm   | boolean | false | true   | 初始化自动选中首个空间时是否需要触发 confirm 方法（仅当 init 属性为 true 或 targetSpaceId 属性不为空时有效）                                 |
 | targetSpaceId | string  | false | ''     | 初始化时自动选中该空间                                                                                                                       |
 
 ## 事件

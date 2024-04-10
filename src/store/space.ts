@@ -14,19 +14,10 @@ export const spaceStore = observable({
    */
   spaceList: [] as Space.SpaceInfo[],
 
-  /** 全屋设备，对应空间id作为key，空间的设备列表作为key */
-  spaceDeviceList: {} as Record<string, Device.DeviceItem[]>,
-
-  // 当前选中的空间栈
-  currentSpaceSelect: [] as (Space.allSpace | Space.SpaceInfo)[],
-
-  // 临时使用的当前选中空间
-  currentSpaceTemp: {} as Space.SpaceInfo,
-
   currentSpaceId: '', // 当前选择的叶子节点空间
 
   // 当前选中空间栈的末端，即真正存放内容的空间
-  get currentSpace(): Space.allSpace | Space.SpaceInfo {
+  get currentSpace(): Space.allSpace {
     if (this.currentSpaceId) {
       const currentSpace = this.allSpaceList.find((item) => item.spaceId === this.currentSpaceId) as Space.allSpace
 
@@ -43,6 +34,32 @@ export const spaceStore = observable({
       return defaultSpace
     }
   },
+
+  // 当前选中的空间栈
+  get currentSpaceSelect(): Space.allSpace[] {
+    if (!this.currentSpaceId) {
+      return []
+    }
+    const list = [] as Space.allSpace[]
+    const seekParent = (space: Space.allSpace) => {
+      if (space) {
+        list.unshift(space)
+      }
+      if (space?.pid !== '0') {
+        const parentSpace = this.allSpaceList.find((item) => item.spaceId === space.pid) as Space.allSpace
+        seekParent(parentSpace)
+      }
+    }
+    seekParent(this.currentSpace)
+
+    console.log(
+      '[get currentSpaceSelect]',
+      list.map((s) => [s.spaceName, s.spaceId]),
+    )
+
+    return list
+  },
+
   // 当前选中空间名称
   get currentSpaceName(): string {
     return this.currentSpace?.spaceName ?? ''
@@ -58,10 +75,12 @@ export const spaceStore = observable({
     return spaceList?.length
   },
 
-  setCurrentSpaceTemp(space: Space.SpaceInfo) {
+  // 设置当前进入/选择的空间id，默认为未选择即'0'
+  setCurrentSpace(spaceId = '') {
+    console.log('setCurrentSpace', spaceId)
     runInAction(() => {
-      this.currentSpaceTemp = space
-      this.currentSpaceId = space.spaceId // 保存当前选择的空间ID
+      this.currentSpaceId = spaceId // 保存当前选择的空间ID
+      deviceStore.deviceList = spaceId ? deviceStore.allDeviceList.filter((device) => device.spaceId === spaceId) : []
     })
   },
 
@@ -95,7 +114,6 @@ export const spaceStore = observable({
       })
 
     runInAction(() => {
-      spaceStore.spaceDeviceList = list
       spaceStore.spaceList = [...spaceStore.spaceList]
     })
   },
@@ -126,14 +144,6 @@ export const spaceStore = observable({
 
 export const spaceBinding = {
   store: spaceStore,
-  fields: [
-    'hasSpace',
-    'allSpaceList',
-    'spaceList',
-    'spaceDeviceList',
-    'currentSpace',
-    'currentSpaceTemp',
-    'currentSpaceName',
-  ],
+  fields: ['hasSpace', 'allSpaceList', 'spaceList', 'currentSpace', 'currentSpaceId', 'currentSpaceName'],
   actions: [],
 }

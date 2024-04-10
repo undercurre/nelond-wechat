@@ -85,14 +85,14 @@ ComponentWithComputed({
     },
     updateView() {
       if (projectBinding.store.userList.length === 0) return
-      const curUserId = userBinding.store.userInfo.userId
+      const curUserName = userBinding.store.userInfo.userName
       const result: object[] = []
       const list = projectBinding.store.userList.sort((a, b) => {
         return a.userHouseAuth - b.userHouseAuth
       })
       if (list) {
         const curUser = list.find((item: Project.UserItem) => {
-          return item.userId === curUserId
+          return item.userName === curUserName
         })
         if (curUser) {
           result.push({

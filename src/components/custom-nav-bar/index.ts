@@ -1,5 +1,4 @@
 import { storage, goHome } from '../../utils/index'
-import { runInAction } from 'mobx-miniprogram'
 import { spaceStore } from '../../store/index'
 
 Component({
@@ -76,7 +75,7 @@ Component({
     handleGoHome() {
       // 清空进入过的空间队列
       if (spaceStore.currentSpaceSelect?.length) {
-        runInAction(() => (spaceStore.currentSpaceSelect = []))
+        spaceStore.setCurrentSpace()
       }
       goHome()
     },

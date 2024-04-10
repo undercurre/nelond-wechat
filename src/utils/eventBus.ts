@@ -1,8 +1,6 @@
 import mitt, { Emitter } from 'mitt'
 import { Logger } from './log'
-import { goHome } from './system'
 import { StringQueue } from './strUtil'
-import { projectStore, userStore } from '../store/index'
 
 type Events = {
   // 网络状态变更通知
@@ -123,26 +121,4 @@ emitter.on('msgPush', (res) => {
 
   emitter.emit(eventType as any, eventData)
   emitter.emit('wsReceive', res)
-
-  // 全局加上进入项目的消息提示（暂时方案）
-  if (eventType === 'invite_user_house' && eventData) {
-    wx.showToast({
-      title: eventData as unknown as string, // 强制ts类型转换
-      icon: 'none',
-    })
-  } else if (eventType === 'del_house_user' && userStore.userInfo.userId === eventData.userId) {
-    // 仅项目创建者触发监听，监听项目移交是否成功
-    wx.showModal({
-      content: `你已被退出“${projectStore.currentProjectDetail.projectName}”项目`,
-      showCancel: false,
-      confirmText: '我知道了',
-      confirmColor: '#7cd06a',
-      complete() {
-        projectStore.updateProjectInfo()
-        goHome()
-      },
-    })
-  } else if (eventType === 'change_house_user_auth' && userStore.userInfo.userId === eventData.userId) {
-    projectStore.updateProjectInfo()
-  }
 })

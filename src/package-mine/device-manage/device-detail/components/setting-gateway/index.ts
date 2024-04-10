@@ -12,7 +12,7 @@ ComponentWithComputed({
     deviceInfo: {
       type: Object,
     },
-    isManager: {
+    canEditDevice: {
       type: Boolean,
     },
   },
@@ -43,7 +43,7 @@ ComponentWithComputed({
    */
   methods: {
     toggleActionSheet() {
-      if (!this.data.isRelease && this.data.isManager) {
+      if (!this.data.isRelease && this.data.canEditDevice) {
         this.setData({ isShowChannelList: !this.data.isShowChannelList })
       }
     },

@@ -104,7 +104,7 @@ ComponentWithComputed({
       type: Object,
       value: {},
       observer(value) {
-        if (value && this.data._canSyncCloudData) {
+        if (value && this.data._canSyncCloudData && value.proType === PRO_TYPE.bathHeat) {
           this.setData({
             prop: value as Device.DeviceItem & Device.mzgdPropertyDTO,
           })

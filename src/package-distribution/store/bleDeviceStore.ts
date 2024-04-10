@@ -1,5 +1,5 @@
 import { observable, runInAction } from 'mobx-miniprogram'
-import { BleClient, bleUtil, Logger, throttle, unique } from '../../utils/index'
+import { BleClient, bleUtil, Logger, throttle } from '../../utils/index'
 import { spaceBinding, deviceBinding } from '../../store/index'
 import { batchCheckDevice, batchGetProductInfoByBPid } from '../../apis/index'
 
@@ -34,30 +34,37 @@ export const bleDevicesStore = observable({
     this.isStart = true
     // 监听扫描到新设备事件, 安卓 6.0 及以上版本，无定位权限或定位开关未打开时，无法进行设备搜索
     wx.onBluetoothDeviceFound((res: WechatMiniprogram.OnBluetoothDeviceFoundCallbackResult) => {
-      res.devices = unique(res.devices, 'deviceId') as WechatMiniprogram.BlueToothDevice[] // 去重
-
       const deviceList = res.devices
         .filter((item) => {
-          const foundItem = bleDevicesStore.bleDeviceList.find((foundItem) => foundItem.deviceUuid === item.deviceId)
-
-          if (foundItem) {
-            const baseInfo = getBleDeviceBaseInfo(item)
-            foundItem.RSSI = baseInfo.RSSI
-            foundItem.signal = baseInfo.signal
-            foundItem.isConfig = baseInfo.isConfig
-          }
-          // localName为homlux_ble且过滤【已经显示在列表的】、【蓝牙信号值低于-80】的设备
-          return item.localName && item.localName.includes('homlux_ble') && !foundItem && item.RSSI > -80
+          // 先过滤非homlux蓝牙子设备 以及【蓝牙信号值低于-75】的设备
+          return item.localName && item.localName.includes('homlux_ble') && item.RSSI > -75
         })
         .map((item) => getBleDeviceBaseInfo(item))
-        .filter((item) => {
-          // 设备配网状态没变化的同一设备不再查询，防止重复查询同一设备的云端信息接口
-          return !_foundList.find(
-            (foundItem) => foundItem.deviceUuid === item.deviceUuid && foundItem.isConfig === item.isConfig,
+        .filter((baseInfo) => {
+          // 已经展示在列表的设备的广播数据
+          const foundViewItem = bleDevicesStore.bleDeviceList.find(
+            (foundItem) => foundItem.deviceUuid === baseInfo.deviceUuid,
+          )
+
+          if (foundViewItem) {
+            foundViewItem.RSSI = baseInfo.RSSI
+            foundViewItem.signal = baseInfo.signal
+            foundViewItem.isConfig = baseInfo.isConfig
+          }
+
+          // 1、过滤【已经显示在列表的】
+          // 2、设备配网状态没变化的同一设备不再查询，防止重复查询同一设备的云端信息接口
+          // 商照小程序
+          return (
+            baseInfo.isConfig !== '10' &&
+            !foundViewItem &&
+            !_foundList.find(
+              (foundItem) => foundItem.deviceUuid === baseInfo.deviceUuid && foundItem.isConfig === baseInfo.isConfig,
+            )
           )
         })
 
-      this.updateBleDeviceListThrottle()
+      this.updateBleDeviceListThrottle() // 先更新一次列表数据，以免由于后续没有符合条件的数据，没有新设备被发现，导致没更新已存在数据的信号数据更新
       if (deviceList.length <= 0) {
         return
       }
@@ -84,6 +91,7 @@ export const bleDevicesStore = observable({
 
   reset() {
     Logger.log('重置蓝牙store')
+    bleUtil.initBle()
     wx.offBluetoothAdapterStateChange()
 
     wx.onBluetoothAdapterStateChange((res) => {
@@ -196,7 +204,7 @@ async function checkBleDeviceList(list: IBleBaseInfo[]) {
     const isBind = cloudDeviceInfo.spaceId && isConfig === '02'
 
     if (isBind) {
-      Logger.log(`【${zigbeeMac}】已绑定`)
+      Logger.console(`【${zigbeeMac}】已绑定`)
     }
 
     return cloudDeviceInfo.isValid && !isBind
@@ -254,9 +262,7 @@ async function checkBleDeviceList(list: IBleBaseInfo[]) {
     })
   })
 
-  runInAction(() => {
-    bleDevicesStore.bleDeviceList = bleDevicesStore.bleDeviceList.concat([])
-  })
+  bleDevicesStore.updateBleDeviceListThrottle()
 }
 
 function handleBleDeviceInfo(
@@ -274,8 +280,6 @@ function handleBleDeviceInfo(
   if (bleDevicesStore.bleDeviceList.find((foundItem) => foundItem.deviceUuid === deviceUuid)) {
     return
   }
-
-  Logger.log(`成功发现${deviceName}：${zigbeeMac}`)
 
   const bindNum = deviceBinding.store.allDeviceList.filter(
     (item) => item.proType === proType && item.productId === modelId,

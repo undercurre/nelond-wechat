@@ -36,7 +36,7 @@ Component({
       help: '/package-mine/help/list/index',
       about: '/package-protocol/protocol-list/index',
       deviceCategory: '/package-mine/device-category/index',
-      setting: '/package-mine/setting/index',
+      ota: '/package-mine/ota/index',
     },
     scrollViewHeight:
       (storage.get('windowHeight') as number) -
@@ -96,11 +96,8 @@ Component({
 
     /** 如果没登陆，点击头像去登录 */
     handleUserInfoTap() {
-      if (!userStore.isLogin) {
-        wx.navigateTo({
-          url: '/pages/login/index',
-        })
-      }
+      const url = userStore.isLogin ? '/package-mine/user-detail/index' : '/pages/login/index'
+      wx.navigateTo({ url })
     },
   },
 })

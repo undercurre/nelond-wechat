@@ -165,7 +165,7 @@ ComponentWithComputed({
         return
       }
       const listData = [] as IAnyObject[]
-      const deviceMap = deviceStore.allRoomDeviceMap
+      const deviceMap = deviceStore.allDeviceMap
 
       sceneStore.allRoomSceneList
         .filter((item) => item.spaceId === this.data.currentSpaceId && item.sceneCategory === '0')

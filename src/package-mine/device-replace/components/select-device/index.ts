@@ -71,7 +71,7 @@ ComponentWithComputed({
     async ready() {
       await spaceBinding.store.updateSpaceList()
 
-      deviceBinding.store.updateallDeviceList()
+      deviceBinding.store.updateAllDeviceList()
     },
   },
 

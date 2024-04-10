@@ -43,43 +43,22 @@
     <!-- 有设备时显示 -->
     <scroll-view
       enhanced="{{true}}"
-      scroll-y="{{!isMoving}}"
+      scroll-y
       show-scrollbar="{{false}}"
       class="flex flex-col items-between mx-24rpx"
-      style="height: {{scrollViewHeight}}px;"
-      scroll-top="{{scrollTop}}"
-      scroll-with-animation="{{true}}"
+      style="height: {{scrollViewHeight}};"
       bind:scroll="onPageScroll"
     >
       <!-- 顶开上面的内容高度 -->
       <view class="h-24rpx"></view>
       <!-- 空间卡片列表 -->
-      <movable-area style="height: {{movableHeight}}px; width: 702rpx;">
-        <movable-view
-          out-of-bounds
-          wx:for="{{subSpaceList}}"
-          wx:key="spaceId"
-          data-index="{{index}}"
-          data-rid="{{item.spaceId}}"
-          class="w-702rpx h-152rpx"
-          y="{{cardPos[item.spaceId].y}}"
-          direction="vertical"
-          friction="{{999}}"
-          damping="{{100}}"
-          bind:longpress="movableLongpress"
-          bind:touchend="movableTouchEnd"
-          bind:touchmove="movableTouchMove"
-          class="{{ cardPos[item.spaceId].index === placeholder.index ? 'z-100' : (isMoving ? 'opacity-50' : 'opacity-100 z-1') }}"
-          disabled="{{!isMoving}}"
-        >
-          <space-card
-            space-info="{{item}}"
-            data-space="{{item.spaceId}}"
-            isMoving="{{isMoving}}"
-            bind:cardtap="handleCardTap"
-          ></space-card>
-        </movable-view>
-      </movable-area>
+      <space-card
+        wx:for="{{subSpaceList}}"
+        wx:key="spaceId"
+        space-info="{{item}}"
+        data-space="{{item.spaceId}}"
+        bind:cardtap="handleCardTap"
+      ></space-card>
       <view class="w-full flex-center mt-12rpx">
         <van-button
           type="default"

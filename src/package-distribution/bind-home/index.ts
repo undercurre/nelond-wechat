@@ -139,7 +139,7 @@ ComponentWithComputed({
       if (res.success) {
         projectBinding.store.updateCurrentProjectDetail()
 
-        await deviceStore.updateallDeviceList()
+        await deviceStore.updateAllDeviceList()
 
         // 关闭扫描页面可能开启的蓝牙资源
         wx.closeBluetoothAdapter()

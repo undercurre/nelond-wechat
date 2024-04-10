@@ -1,0 +1,40 @@
+<view
+  class="page-container flex flex-col"
+  bindtap="hideMenu"
+>
+  <nav-bar
+    background="transparent"
+    leftArrow="{{true}}"
+    bind:leftTap="goBack"
+    title="个人信息"
+  ></nav-bar>
+
+  <view class="grow flex flex-col justify-between">
+    <view>
+      <van-cell-group inset>
+        <van-cell
+          title="用户名称"
+          value="{{userInfo.userName}}"
+          center
+          is-link
+          bind:click="handleNameEditPopup"
+        />
+        <van-cell
+          title="手机号"
+          value="{{userInfo.mobilePhone}}"
+          center
+          border="{{false}}"
+        />
+      </van-cell-group>
+    </view>
+  </view>
+</view>
+
+<edit-name-popup
+  value="{{userInfo.userName}}"
+  show="{{showEditNamePopup}}"
+  bind:close="handleNameEditCancel"
+  bind:confirm="handleNameEditConfirm"
+/>
+
+<van-toast id="van-toast" />

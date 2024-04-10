@@ -18,6 +18,7 @@ ComponentWithComputed({
       spaceLevel: SpaceLevel.park,
       spaceName: '',
     } as Space.SpaceInfo,
+    isAdding: false,
   },
 
   computed: {
@@ -65,6 +66,10 @@ ComponentWithComputed({
         })
         return
       }
+      if (this.data.isAdding) {
+        return
+      }
+      this.setData({ isAdding: true })
 
       const res = await addSpace({
         projectId: projectStore.currentProjectId,
@@ -74,6 +79,8 @@ ComponentWithComputed({
         spaceName,
       })
       if (!res.success) {
+        this.setData({ isAdding: false })
+
         Toast({ message: '新增失败', zIndex: 9999 })
         return
       }

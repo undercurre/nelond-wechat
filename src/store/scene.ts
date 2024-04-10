@@ -1,9 +1,10 @@
 import { observable, runInAction } from 'mobx-miniprogram'
 import { querySceneListByProjectId } from '../apis/scene'
-import { PRO_TYPE } from '../config/device'
 import { projectStore } from './project'
 import { spaceStore } from './space'
-import { IApiRequestOption } from '../utils'
+import { deviceStore } from './device'
+import { IApiRequestOption } from '../utils/index'
+import { PRO_TYPE } from '../config/index'
 
 export const sceneStore = observable({
   /**
@@ -25,9 +26,8 @@ export const sceneStore = observable({
    */
   get sceneList(): Scene.SceneItem[] {
     const { spaceId } = spaceStore.currentSpace
-    const spaceDeviceList = spaceStore.spaceDeviceList[spaceId]
-    const hasSwitch = spaceDeviceList?.some((device) => device.proType === PRO_TYPE.switch) ?? false
-    const hasLight = spaceDeviceList?.some((device) => device.proType === PRO_TYPE.light) ?? false
+    const hasSwitch = deviceStore.deviceList.some((device) => device.proType === PRO_TYPE.switch) ?? false
+    const hasLight = deviceStore.deviceList.some((device) => device.proType === PRO_TYPE.light) ?? false
 
     let list = this.allRoomSceneList.filter((scene) => scene.spaceId === spaceId && scene.deviceActions?.length > 0)
 

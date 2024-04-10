@@ -1,11 +1,11 @@
 import { observable, runInAction } from 'mobx-miniprogram'
-import { queryAllDevice } from '../apis/device'
-import { PRO_TYPE, getModelName } from '../config/index'
+import { queryDevice, queryDeviceBySpaceId } from '../apis/device'
+import { PRO_TYPE } from '../config/index'
 import { projectStore } from './project'
 import { spaceStore } from './space'
 import { sceneStore } from './scene'
 import homOs from 'js-homos'
-import { IApiRequestOption } from '../utils'
+import { IApiRequestOption, deviceFlatten } from '../utils/index'
 
 export const deviceStore = observable({
   /**
@@ -16,16 +16,8 @@ export const deviceStore = observable({
   /**
    * 当前空间设备列表
    */
-  get deviceList(): Device.DeviceItem[] {
-    let { spaceId = 0 } = spaceStore.currentSpaceTemp ?? {}
-    const children = spaceStore.allSpaceList.filter((s) => s.pid === spaceId)
-    // 如果只有唯一的子空间，即公共空间，则平铺子公共空间设备列表
-    if (children.length === 1) {
-      spaceId = children[0].spaceId
-    }
+  deviceList: [] as Device.DeviceItem[],
 
-    return this.allDeviceList.filter((device) => device.spaceId === spaceId)
-  },
   /**
    * deviceId -> device 映射
    */
@@ -33,7 +25,7 @@ export const deviceStore = observable({
     return Object.fromEntries(deviceStore.deviceList.map((device: Device.DeviceItem) => [device.deviceId, device]))
   },
 
-  get allRoomDeviceMap(): Record<string, Device.DeviceItem> {
+  get allDeviceMap(): Record<string, Device.DeviceItem> {
     return Object.fromEntries(deviceStore.allDeviceList.map((device: Device.DeviceItem) => [device.deviceId, device]))
   },
 
@@ -41,19 +33,10 @@ export const deviceStore = observable({
     return Object.fromEntries(deviceStore.deviceFlattenList.map((device: Device.DeviceItem) => [device.uniId, device]))
   },
 
-  /**
-   * @description 空间设备列表
-   * 将有多个按键的开关拍扁，保证每个设备和每个按键都是独立一个item，并且uniId唯一
-   */
-  get deviceFlattenList(): Device.DeviceItem[] {
-    const { spaceId = 0 } = spaceStore.currentSpaceTemp ?? {}
-    return this.allRoomDeviceFlattenList.filter((device) => device.spaceId === spaceId)
-  },
-
   // 当前空间灯组数量
   get groupCount(): number {
-    const { spaceId = 0 } = spaceStore.currentSpaceTemp ?? {}
-    const groups = this.allDeviceList.filter((device) => device.spaceId === spaceId && device.deviceType === 4)
+    const { currentSpaceId } = spaceStore ?? {}
+    const groups = this.allDeviceList.filter((device) => device.spaceId === currentSpaceId && device.deviceType === 4)
     return groups.length
   },
 
@@ -100,52 +83,20 @@ export const deviceStore = observable({
   //   return list
   // },
 
-  get allRoomDeviceFlattenMap(): Record<string, Device.DeviceItem> {
+  get allDeviceFlattenMap(): Record<string, Device.DeviceItem> {
     return Object.fromEntries(
-      deviceStore.allRoomDeviceFlattenList.map((device: Device.DeviceItem) => [device.uniId, device]),
+      deviceStore.allDeviceFlattenList.map((device: Device.DeviceItem) => [device.uniId, device]),
     )
   },
-  get allRoomDeviceFlattenList(): Device.DeviceItem[] {
-    const list = [] as Device.DeviceItem[]
-    this.allDeviceList.forEach((device) => {
-      // 过滤属性数据不完整的数据
-      // if (!device.mzgdPropertyDTOList) {
-      //   return
-      // }
-      // 开关面板需要前端拆分处理
-      if (device.proType === PRO_TYPE.switch) {
-        device.switchInfoDTOList?.forEach((switchItem) => {
-          list.push({
-            ...device,
-            property: device.mzgdPropertyDTOList[switchItem.switchId],
-            mzgdPropertyDTOList: {
-              [switchItem.switchId]: device.mzgdPropertyDTOList[switchItem.switchId],
-            },
-            switchInfoDTOList: [switchItem],
-            uniId: `${device.deviceId}:${switchItem.switchId}`,
-            orderNum: switchItem.orderNum,
-          })
-        })
-      }
-      // 包括 PRO_TYPE.light PRO_TYPE.sensor在内，所有非网关、可显示的设备都用这种方案插值
-      else if (device.proType !== PRO_TYPE.gateway) {
-        const modelName = getModelName(device.proType, device.productId)
-        list.push({
-          ...device,
-          uniId: device.deviceId,
-          property: device.mzgdPropertyDTOList[modelName],
-          mzgdPropertyDTOList: {
-            [modelName]: device.mzgdPropertyDTOList[modelName],
-          },
-          orderNum: device.deviceType === 4 ? -1 : device.orderNum, // 灯组强制排前面
-        })
-      }
-    })
-
-    // 排序算法：灯组类型靠前；再按orderNum升序；再按设备id升序
-    return list.sort(
-      (a, b) => (b.deviceType === 4 ? 1 : -1) || a.orderNum - b.orderNum || parseInt(a.deviceId) - parseInt(b.deviceId),
-    )
+  get allDeviceFlattenList(): Device.DeviceItem[] {
+    return deviceFlatten(this.allDeviceList)
+  },
+  /**
+   * @description 空间设备列表
+   * 将有多个按键的开关拍扁，保证每个设备和每个按键都是独立一个item，并且uniId唯一
+   */
+  get deviceFlattenList(): Device.DeviceItem[] {
+    return deviceFlatten(this.deviceList)
   },
 
   /**
@@ -186,34 +137,57 @@ export const deviceStore = observable({
     return map
   },
 
-  async updateallDeviceList(projectId: string = projectStore.currentProjectId, options?: IApiRequestOption) {
-    const res = await queryAllDevice(projectId, '0', options)
-    if (res.success) {
-      const list = {} as Record<string, Device.DeviceItem[]>
-      res.result
-        ?.sort((a, b) => a.deviceId.localeCompare(b.deviceId))
-        .forEach((device) => {
-          if (list[device.spaceId]) {
-            list[device.spaceId].push(device)
-          } else {
-            list[device.spaceId] = [device]
-          }
-        })
-      runInAction(() => {
-        spaceStore.spaceDeviceList = list
-        deviceStore.allDeviceList = res.result
+  /**
+   * 更新全项目设备列表
+   */
+  async updateAllDeviceList(projectId: string = projectStore.currentProjectId, options?: IApiRequestOption) {
+    const res = await queryDevice(projectId, options)
 
-        this.updateallDeviceListLanStatus(false)
-      })
-    } else {
-      console.log('加载全屋设备失败！', res)
+    if (!res.success) {
+      console.log('加载全项目设备失败！', res)
+      return
     }
+
+    let { currentSpaceId } = spaceStore ?? {}
+    const children = spaceStore.allSpaceList.filter((s) => s.pid === currentSpaceId)
+    // 如果只有唯一的子空间，且为公共空间，则平铺子公共空间设备列表
+    if (children.length === 1 && children[0].publicSpaceFlag === 1) {
+      currentSpaceId = children[0].spaceId
+    }
+
+    runInAction(() => {
+      deviceStore.allDeviceList = res.result
+
+      if (currentSpaceId && res.result?.length) {
+        deviceStore.deviceList = res.result.filter((device) => device.spaceId === currentSpaceId)
+      }
+
+      this.updateAllDeviceListLanStatus(false)
+    })
   },
 
   /**
+   * 更新当前空间设备列表
+   */
+  async updateSpaceDeviceList(
+    projectId: string = projectStore.currentProjectId,
+    spaceId: string = spaceStore.currentSpaceId,
+    options?: IApiRequestOption,
+  ) {
+    const res = await queryDeviceBySpaceId(projectId, spaceId, options)
+    if (!res.success) {
+      console.log('加载空间设备失败！', res)
+      return
+    }
+    runInAction(() => {
+      deviceStore.deviceList = res.result
+      this.updateAllDeviceListLanStatus(false)
+    })
+  },
+  /**
    * 更新全屋设备列表的局域网状态
    */
-  updateallDeviceListLanStatus(isUpdateUI = true) {
+  updateAllDeviceListLanStatus(isUpdateUI = true) {
     const allDeviceList = deviceStore.allDeviceList.map((item) => {
       const { deviceId, updateStamp } = item
 

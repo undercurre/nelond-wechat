@@ -28,16 +28,9 @@
       class="flex-1"
       size="large"
       bind:click="delSpace"
-      custom-style="background-color: transparent;"
+      type="warning"
+      custom-class="delete-btn"
       >删除</van-button
-    >
-
-    <van-button
-      type="primary"
-      class="flex-1"
-      size="large"
-      bind:click="saveSpaceInfo"
-      >确认</van-button
     >
   </view>
 </view>

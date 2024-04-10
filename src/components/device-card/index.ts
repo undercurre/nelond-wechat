@@ -83,6 +83,9 @@ ComponentWithComputed({
       return ''
     },
     controlBtnPic(data) {
+      if (data.deviceInfo.proType === PRO_TYPE.gateway) {
+        return ''
+      }
       // 窗帘，位置大于0即为开启
       if (data.deviceInfo.proType === PRO_TYPE.curtain) {
         const pos = data.deviceInfo.mzgdPropertyDTOList['curtain'].curtain_position
@@ -99,10 +102,10 @@ ComponentWithComputed({
           : '/assets/img/base/power-off.png'
       }
       // 面板
-      else if (data.deviceInfo.proType === PRO_TYPE.switch && data.deviceInfo.switchInfoDTOList[0]) {
+      else if (data.deviceInfo.proType === PRO_TYPE.switch) {
         // ! 确保带有switchInfoDTOList
-        const switchId = data.deviceInfo.switchInfoDTOList[0].switchId
-        if (!data.deviceInfo.mzgdPropertyDTOList[switchId]) {
+        const switchId = data.deviceInfo.switchInfoDTOList[0]?.switchId
+        if (!switchId || !data.deviceInfo.mzgdPropertyDTOList[switchId]) {
           // 万一设备没有开关属性，不显示
           return ''
         }
@@ -137,8 +140,9 @@ ComponentWithComputed({
     },
 
     // 设备是否可控
+    // !! 需要使用双否定将undefined null值转换为boolean，以免视图显示中判断异常
     canCtrl(data) {
-      return data.deviceInfo.onLineStatus || data.deviceInfo.canLanCtrl
+      return !!(data.deviceInfo.onLineStatus || data.deviceInfo.canLanCtrl)
     },
 
     // 设备是灯组
@@ -173,6 +177,7 @@ ComponentWithComputed({
     // 在卡片上有控制按钮的
     hasControl(data) {
       return (
+        data.deviceInfo.proType !== PRO_TYPE.gateway &&
         data.deviceInfo.proType !== PRO_TYPE.sensor &&
         data.deviceInfo.proType !== PRO_TYPE.bathHeat &&
         data.deviceInfo.proType !== PRO_TYPE.clothesDryingRack

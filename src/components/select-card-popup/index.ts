@@ -38,7 +38,7 @@ ComponentWithComputed({
     },
 
     // 默认显示的空间数据
-    defaultRoomId: {
+    defaultSpaceId: {
       type: String,
       value: '',
     },
@@ -72,8 +72,8 @@ ComponentWithComputed({
       //         roomSelect = this.data.roomListComputed[0].spaceId
       //       }
       //     }
-      //     if (this.data.defaultRoomId) {
-      //       roomSelect = this.data.defaultRoomId
+      //     if (this.data.defaultSpaceId) {
+      //       roomSelect = this.data.defaultSpaceId
       //     }
       //     this.setData({
       //       roomSelect,
