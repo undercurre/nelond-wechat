@@ -44,7 +44,7 @@ App<IAppOption>({
         }
         userStore.setUserInfo(userInfo)
         if (!userInfo.roleList?.length) {
-          console.log('用户无权限')
+          console.log('已登录，但用户无权限')
           return
         }
 

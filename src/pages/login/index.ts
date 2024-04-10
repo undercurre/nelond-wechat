@@ -132,7 +132,7 @@ Component({
         userStore.setUserInfo(res.result)
 
         if (!res.result.roleList?.length) {
-          console.log('用户无权限')
+          Toast('无项目权限，请联系管理员')
           return
         }
         othersStore.setIsInit(false)
