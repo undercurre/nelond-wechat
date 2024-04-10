@@ -33,19 +33,19 @@ ComponentWithComputed({
       const { deviceCount, offlineDeviceCount, nodeCount } = (data.spaceInfo || {}) as Space.SpaceInfo
       if (nodeCount) {
         list.push({
-          text: `${nodeCount} 个下级空间`,
+          text: `${nodeCount}个下级空间`,
           type: 'normal',
         })
       }
       if (deviceCount) {
         list.push({
-          text: `全部设备 ${deviceCount}`,
+          text: `共${deviceCount}个设备`,
           type: 'normal',
         })
       }
       if (offlineDeviceCount) {
         list.push({
-          text: `离线 ${offlineDeviceCount}`,
+          text: `离线${offlineDeviceCount}`,
           type: 'error',
         })
       }
