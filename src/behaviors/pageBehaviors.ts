@@ -1,6 +1,6 @@
 import Toast from '@vant/weapp/toast/toast'
 import { BehaviorWithComputed } from 'miniprogram-computed'
-import { ossDomain } from '../config/index'
+import { ShareImgUrl } from '../config/index'
 
 export default BehaviorWithComputed({
   methods: {
@@ -49,7 +49,7 @@ export default BehaviorWithComputed({
       return {
         title: '欢迎使用美的商照',
         path: '/pages/index/index',
-        imageUrl: `${ossDomain}/homlux/welcome.png`,
+        imageUrl: ShareImgUrl,
       }
     },
     // onShareTimeline() {
