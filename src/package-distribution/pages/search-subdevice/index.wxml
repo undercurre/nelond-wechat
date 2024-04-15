@@ -25,7 +25,7 @@
           <text class="text-26 text-black-59">发现{{bleDeviceList.length}}个附近的设备</text>
 
           <van-button
-            wx:if="{{proType !== '0xBC'}}"
+            wx:if="{{isManual === '0'}}"
             plain
             round
             type="info"
@@ -51,7 +51,7 @@
             data-rssi="{{item.RSSI}}"
           >
             <van-checkbox
-              disabled="{{proType === '0xBC'}}"
+              disabled="{{isManual === '1'}}"
               use-icon-slot
               bind:change="toggleDevice"
               data-index="{{index}}"
@@ -63,7 +63,7 @@
                 ></image>
 
                 <view
-                  wx:if="{{proType !== '0xBC'}}"
+                  wx:if="{{isManual === '0'}}"
                   class="signal-box bottom-0 leading-0 rounded-14rpx {{ item.signal === 'weak' ? 'bg-hex-FFF4F4' : 'bg-hex-F4F8FF'}}"
                 >
                   <image
@@ -74,7 +74,7 @@
               </view>
 
               <image
-                wx:if="{{proType !== '0xBC'}}"
+                wx:if="{{isManual === '0'}}"
                 slot="icon"
                 class="w-48 h-48"
                 src="{{ item.isChecked ? '/assets/img/base/check.png' : '/assets/img/base/uncheck.png' }}"
@@ -100,7 +100,7 @@
 
             <view
               class="shrink-0"
-              wx:if="{{proType !== '0xBC'}}"
+              wx:if="{{isManual === '0'}}"
             >
               <van-button
                 plain
@@ -119,7 +119,7 @@
         </scroll-view>
 
         <van-button
-          wx:if="{{proType !== '0xBC'}}"
+          wx:if="{{isManual === '0'}}"
           class="mt-24rpx"
           block
           type="primary"
@@ -143,7 +143,7 @@
       </view>
     </block>
 
-    <block wx:if="{{proType !== '0xBC' && status === 'requesting' && (successList.length + failList.length) !== selectedList.length}}">
+    <block wx:if="{{isManual === '0' && status === 'requesting' && (successList.length + failList.length) !== selectedList.length}}">
       <view class="flex flex-col items-center">
         <canvas
           id="canvas"
@@ -209,7 +209,7 @@
               ></image>
 
               <view
-                wx:if="{{proType !== '0xBC'}}"
+                wx:if="{{isManual === '0'}}"
                 class="signal-box bottom-0 leading-0 rounded-14rpx {{ item.signal === 'weak' ? 'bg-hex-FFF4F4' : 'bg-hex-F4F8FF'}}"
               >
                 <image
@@ -238,7 +238,7 @@
 
             <view
               class="shrink-0"
-              wx:if="{{proType !== '0xBC'}}"
+              wx:if="{{isManual === '0'}}"
             >
               <van-button
                 plain
