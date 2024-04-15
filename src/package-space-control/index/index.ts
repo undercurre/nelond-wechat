@@ -901,12 +901,12 @@ ComponentWithComputed({
         return
       }
 
-      wx.navigateTo({ url: '/package-distribution/choose-device/index' })
+      wx.navigateTo({ url: '/package-distribution/pages/choose-device/index' })
     },
     handleRebindGateway() {
       const gateway = deviceStore.allDeviceMap[this.data.offlineDevice.gatewayId]
       wx.navigateTo({
-        url: `/package-distribution/wifi-connect/index?type=changeWifi&sn=${gateway.sn}`,
+        url: `/package-distribution/pages/wifi-connect/index?type=changeWifi&sn=${gateway.sn}`,
       })
     },
     handleLevelChange(e: { detail: number }) {
