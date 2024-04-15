@@ -135,11 +135,7 @@ ComponentWithComputed({
 
       bleDevicesStore.updateBleDeviceList()
 
-      const { proType, productId, channel, extPanId, panId } = getCurrentPageParams()
-      this.setData({
-        proType,
-      })
-      this.data._productId = productId
+      const { channel, extPanId, panId } = getCurrentPageParams()
       this.data._gatewayInfo = {
         channel: parseInt(channel), // 获取网关信道
         extPanId: extPanId,
