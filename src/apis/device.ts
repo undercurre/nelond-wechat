@@ -1035,7 +1035,7 @@ export async function queryDeviceProInfo(
     log: true,
     loading: options?.loading ?? false,
     isDefaultErrorTips: false,
-    url: '/v1/device/queryDeviceProInfo',
+    url: '/v1/cl/device/queryDeviceProInfo',
     data,
   })
 }
