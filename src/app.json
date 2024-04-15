@@ -12,8 +12,7 @@
         "pages/bind-home/index",
         "pages/change-wifi-success/index",
         "pages/choose-device/index",
-        "pages/choose-sensor/index",
-        "pages/choose-light/index",
+        "pages/choose-model/index",
         "pages/connect-guide/index",
         "pages/auth-screen/index"
       ]

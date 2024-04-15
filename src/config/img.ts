@@ -11,6 +11,8 @@ export const productImgDir = `${ossDomain}/nelond/product-icon` // 产品图
 
 export const ShareImgUrl = `${defaultImgDir}/welcome.jpg`
 
+export const guideDir = `${defaultImgDir}/nelond/connect-guide`
+
 export const imgList = {
   success: `${defaultImgDir}/success.png`,
   error: `${defaultImgDir}/error.png`,

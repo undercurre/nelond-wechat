@@ -6,19 +6,19 @@
   ></nav-bar>
 
   <view class="w-664 ml-48rpx mt-24rpx">
-    <text class="text-40rpx text-hex-27282A font-medium">设置{{currentGuide.name}}</text>
+    <text class="text-40rpx text-hex-27282A font-medium">设置{{modelInfo.name}}</text>
   </view>
   <view class="image-box w-664 mt-64rpx">
     <image
       class="image-guide w-664"
-      src="{{currentGuide.img}}"
+      src="{{modelInfo.guideImg}}"
     ></image>
   </view>
   <view class="w-664 mt-64rpx">
     <text class="text-32rpx text-hex-27282A">请按照以下步骤操作：</text>
   </view>
   <view class="w-664 flex-1 mt-32rpx">
-    <text class="text-28rpx text-hex-555659 mt-32rpx leading-56rpx">{{currentGuide.desc}}</text>
+    <text class="text-28rpx text-hex-555659 mt-32rpx leading-56rpx">{{modelInfo.guideDesc}}</text>
   </view>
 
   <view class="w-664 flex-col-center">

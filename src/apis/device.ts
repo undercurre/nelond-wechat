@@ -1020,3 +1020,22 @@ export async function verifySn(sn: string, options?: { loading?: boolean }) {
     },
   })
 }
+
+/**
+ * 查询产品信息
+ */
+export async function queryDeviceProInfo(
+  data: {
+    proType: string
+    productId: string
+  },
+  options?: { loading?: boolean },
+) {
+  return await mzaioRequest.post<Device.MzgdDeviceProTypeInfoEntity>({
+    log: true,
+    loading: options?.loading ?? false,
+    isDefaultErrorTips: false,
+    url: '/v1/device/queryDeviceProInfo',
+    data,
+  })
+}

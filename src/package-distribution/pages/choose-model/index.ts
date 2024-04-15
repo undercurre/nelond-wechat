@@ -1,6 +1,6 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import pageBehaviors from '../../../behaviors/pageBehaviors'
-import { sensorList } from '../../../config/index'
+import deviceCategory, { IModel } from '../../common/deviceCategory'
 
 ComponentWithComputed({
   options: {},
@@ -8,20 +8,30 @@ ComponentWithComputed({
   /**
    * 组件的属性列表
    */
-  properties: {},
+  properties: {
+    proType: {
+      type: String,
+      value: '',
+    },
+  },
 
   /**
    * 组件的初始数据
    */
   data: {
-    deviceList: sensorList.map((sensor) => ({
-      ...sensor,
-      path: `/package-distribution/pages/connect-guide/index?modelId=${sensor.productId}`,
-    })),
+    name: '',
+    modelList: [] as IModel[],
   },
 
   lifetimes: {
-    ready() {},
+    ready() {
+      const config = deviceCategory[this.data.proType]
+
+      this.setData({
+        name: config.name,
+        modelList: config.modelList,
+      })
+    },
     detached() {},
   },
 

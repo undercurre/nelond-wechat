@@ -156,6 +156,17 @@ declare namespace Device {
     spaceId: string
   }
 
+  // 产品基本信息
+  interface MzgdDeviceProTypeInfoEntity {
+    bluetoothPid: string
+    deviceType: number
+    icon: string
+    modelId: string
+    proType: string
+    productId: number
+    productName: string
+  }
+
   interface ActionItem {
     uniId: string
     name: string
@@ -231,15 +242,9 @@ declare namespace Device {
     icon: string
     productId: string
     switchList: Device.ISwitch[]
-    client: import('../src/utils/index').BleClient
+    client?: import('../src/utils/index').BleClient
     status: 'waiting' | 'zigbeeBind' | 'fail' | 'success' // 配网状态  zigbeeBind
     isChecked: boolean // 是否被选中
-    requesting: boolean // 是否正在发送试一试命令
-
-    deviceId: string
-    deviceName: string
-    gatewayId: string
-    productName: string
   }
 
   type Log = {

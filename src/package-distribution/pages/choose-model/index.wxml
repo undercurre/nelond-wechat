@@ -2,15 +2,14 @@
   <nav-bar
     leftArrow
     bind:leftTap="goBack"
-    background="transparent"
   ></nav-bar>
 
   <view class="ml-48rpx mt-24rpx">
-    <text class="text-40rpx text-hex-27282A font-medium">请选择开关/灯具类别</text>
+    <text class="text-40rpx text-hex-27282A font-medium">请选择{{ name }}类别</text>
   </view>
   <view class="flex flex-row flex-wrap">
     <device-showcase
-      wx:for="{{deviceList}}"
+      wx:for="{{modelList}}"
       wx:key="index"
       deviceInfo="{{item}}"
       class="ml-48rpx mt-48rpx"

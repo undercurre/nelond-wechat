@@ -304,10 +304,6 @@ function handleBleDeviceInfo(
     icon: productIcon,
     productId: modelId,
     name: deviceName,
-    deviceName,
-    deviceId: '',
-    gatewayId: '',
-    productName: '',
     isChecked: false,
     client: new BleClient({
       mac,
@@ -320,7 +316,6 @@ function handleBleDeviceInfo(
     spaceName: spaceBinding.store.currentSpaceNameFull,
     switchList: [],
     status: 'waiting',
-    requesting: false,
   }
 
   // 面板需要显示按键信息编辑
