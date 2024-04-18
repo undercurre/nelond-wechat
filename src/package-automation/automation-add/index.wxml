@@ -78,7 +78,7 @@
     </scroll-view>
     <van-cell-group
       inset
-      wx:if="{{opearationType === 'auto' && sensorlinkSelectList.length}}"
+      wx:if="{{opearationType === 'auto' && (timeConditions.length > 1 || sensorlinkSelectList.length)}}"
     >
       <van-cell
         border="{{false}}"
