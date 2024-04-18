@@ -84,6 +84,17 @@ export function toWifiProperty(proType: string, properties: IAnyObject) {
   return result
 }
 
+function getValuesMap(key: string) {
+  const map :Record<string, string> = {
+    'greaterThan': '大于',
+    'lessThan': '小于',
+    'greaterThanOrEqualTo': '大于等于',
+    'lessThanOrEqualTo': '小于等于',
+    'equalTo': '等于'
+  }
+  return map[key]
+}
+
 /**
  * 转换成属性描述
  * @param proType
@@ -126,6 +137,8 @@ export function toPropertyDesc(proType: string, productId: string, property: IAn
       descList.push(
         property.doorStatus ? (!isNullOrUnDef(property.PIRToUnoccupiedDelay) ? '超时未关闭' : '打开') : '关闭',
       )
+    !isNullOrUnDef(property.illuminance) &&
+      descList.push(`照度${getValuesMap(property.illuminance_symbol)}${property.illuminance}K`)
     !isNullOrUnDef(property.buttonClicked) &&
       descList.push(property.buttonClicked === 1 ? '单击' : property.buttonClicked === 2 ? '双击' : '长按')
   }

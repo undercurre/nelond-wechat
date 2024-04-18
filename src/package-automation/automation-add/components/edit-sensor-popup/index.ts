@@ -37,6 +37,8 @@ ComponentWithComputed({
    */
   data: {
     _controlAction: {},
+    lux_columns: ['大于', '大于等于', '等于', '小于等于', '小于'],
+    lux_sensor_list: ['midea.hlight.006.001', 'midea.hlightsensor.001.001']
   },
   computed: {
     title(data) {
@@ -44,10 +46,17 @@ ComponentWithComputed({
         return '门磁传感器'
       } else if (data.productId === SENSOR_TYPE.freepad) {
         return '无线开关'
+      } else if (data.productId === SENSOR_TYPE.lux) {
+        return '照度传感器'
       } else {
         return '人体传感器'
       }
     },
+
+    isLuxSensor(data) {
+      return data.productId === SENSOR_TYPE.lux
+    },
+
     popupHeight(data) {
       if (data.productId === SENSOR_TYPE.doorsensor) {
         return 602
@@ -66,8 +75,17 @@ ComponentWithComputed({
       this.triggerEvent('close')
     },
     handleChange(e: { detail: { ability: IAnyObject } }) {
+      console.log(e.detail.ability)
       this.setData({
         _controlAction: { ...e.detail.ability },
+      })
+    },
+    onLuxChange(event: { detail: { symbol: string; value: number } }) {
+      this.setData({
+        _controlAction: {
+          illuminance: event.detail.value,
+          illuminance_symbol: event.detail.symbol
+        }
       })
     },
     handleConfirm() {

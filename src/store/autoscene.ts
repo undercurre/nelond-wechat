@@ -17,7 +17,7 @@ export const autosceneStore = observable({
     try {
       return templist.map((item: AutoScene.AutoSceneItem) => {
         if (item.timeConditions !== null) {
-          const desc = strUtil.transDesc(item.effectiveTime, item.timeConditions[0])
+          const desc = strUtil.transDesc(item.effectiveTime, item.timeConditions, item.deviceConditions)
           item.desc = desc.length > 18 ? desc.substring(0, 18) + '...' : desc
         } else {
           item.desc = ''
@@ -52,11 +52,11 @@ export const autosceneStore = observable({
   },
   // 日程:用于存储以时间点为条件触发的自动场景
   get scheduleList(): AutoScene.AutoSceneItem[] {
-    return this.allRoomAutoSceneListComputed.filter((scene) => scene.timeConditions.length)
+    return this.allRoomAutoSceneListComputed.filter((scene) => !scene.deviceConditions.length)
   },
   // 自动场景：用于存储以传感器为条件触发的自动场景
   get autoSceneList(): AutoScene.AutoSceneItem[] {
-    return this.allRoomAutoSceneListComputed.filter((scene) => !scene.timeConditions.length)
+    return this.allRoomAutoSceneListComputed.filter((scene) => scene.deviceConditions.length)
   },
   async changeAutoSceneEnabled(data: { sceneId: string; isEnabled: '1' | '0' }) {
     const res = await setAutoSceneEnabled(data)

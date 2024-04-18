@@ -16,7 +16,7 @@
   ></view>
 </view>
 <nav-bar
-  title="{{autoSceneId ? '编辑场景' : '创建场景'}}"
+  title="{{autoSceneId || yijianSceneId ? '编辑场景' : '创建场景'}}"
   z-index="{{113}}"
   left-arrow
   bind:leftTap="goBack"
@@ -78,7 +78,7 @@
     </scroll-view>
     <van-cell-group
       inset
-      wx:if="{{opearationType === 'auto' && sceneDeviceConditionsFlatten.length && !timeCondition.time}}"
+      wx:if="{{opearationType === 'auto' && sensorlinkSelectList.length}}"
     >
       <van-cell
         border="{{false}}"
@@ -108,8 +108,11 @@
       </van-cell>
     </van-cell-group>
     <view class="h-48rpx mt-64rpx mb-36rpx mx-48rpx flex justify-between align-center">
-      <text class="text-40rpx font-medium text-hex-1a1a1c leading-48rpx">如果</text>
-      <!-- <image wx:if="{{sceneDeviceConditionsFlatten.length && !timeCondition.time}}" class="w-48 h-48" src="/package-automation/assets/imgs/automation/add.png" bindtap="addSensorPopup"></image> -->
+      <view>
+        <text class="text-40rpx font-medium text-hex-1a1a1c leading-48rpx">如果</text>
+        <text class="text-30rpx font-medium text-hex-778899 ml-10px" wx:if="{{conditionMultiple}}">满足{{ conditionMultiple === 'all' ? '所有' : '任一' }}条件</text>
+      </view>
+      <image wx:if="{{sceneDeviceConditionsFlatten.length && opearationType === 'auto'}}" class="w-48 h-48" src="/package-automation/assets/imgs/automation/add.png" bindtap="addMultipleCondition"></image>
     </view>
     <van-cell-group inset>
       <van-cell
@@ -157,7 +160,7 @@
           </view>
 
           <view
-            wx:if="{{!isDefaultYijianScene}}"
+            wx:if="{{!isDefaultYijianScene && !yijianSceneId}}"
             class="px-24rpx py-16rpx absolute right-0 top-0"
             catchtap="handleConditionDelete"
             data-index="{{index}}"
@@ -226,6 +229,8 @@
       ></drag>
       <view style="height: calc(116rpx + env(safe-area-inset-bottom))"></view>
     </view>
+
+    <view style="height: calc(146rpx + env(safe-area-inset-bottom))"></view>
   </view>
   <view
     class="fixed bottom-0 flex flex-row pt-30rpx justify-between w-750rpx px-32rpx box-border z-400 bg-hex-f4f8ff"
@@ -263,9 +268,18 @@
 <add-condition-popup
   show="{{showEditConditionPopup}}"
   isEdit="{{autoSceneId}}"
+  isMultiple="{{sceneDeviceConditionsFlatten.length}}"
   bind:close="handleConditionClose"
   bind:conditionClicked="onConditionClicked"
 />
+<add-pre-popup
+  show="{{showPreConditionPopup}}"
+  isEdit="{{autoSceneId}}"
+  isMultiple="{{sceneDeviceConditionsFlatten.length}}"
+  bind:close="handlePreConditionClose"
+  bind:conditionClicked="onPreConditionClicked"
+>
+</add-pre-popup>
 <!-- <edit-space-popup
   value="{{spaceId}}"
   show="{{showEditRoomPopup}}"
@@ -286,6 +300,7 @@
 />
 <edit-timeConditions-popup
   show="{{showTimeConditionPopup}}"
+  timeId="{{timeCondition.timeId || 'default-timeId'}}"
   time="{{timeCondition.time || '10:00'}}"
   periodType="{{timeCondition.timeType || '1'}}"
   week="{{timeCondition.timePeriod || '1,2,3,4,5,6,7'}}"
