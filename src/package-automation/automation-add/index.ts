@@ -75,7 +75,7 @@ ComponentWithComputed({
     sceneDevicelinkSelectList: [] as string[],
     tempSceneDevicelinkSelectedList: [] as string[],
     /** 已选中的传感器 */
-    sensorlinkSelectList: [] as string[],
+    sensorlinkSelectList: [] as {deviceId: string; datetime: string}[],
     tempSensorlinkSelectList: [] as string[],
     selectCardType: 'device', //设备卡片：'device'  场景卡片： 'scene'  传感器卡片：'sensor'
     showSelectCardPopup: false,
@@ -173,7 +173,7 @@ ComponentWithComputed({
       }
     },
     linkSelectSensorListMapProductId(data) {
-      return data.sensorList.filter(item => data.sensorlinkSelectList.includes(item.deviceId)).map(item => item.productId)
+      return data.sensorList.filter(item => data.sensorlinkSelectList.map(item => item.deviceId).includes(item.deviceId)).map(item => item.productId)
     },
 
     //只包含场景和设备的动作列表长度
@@ -243,7 +243,7 @@ ComponentWithComputed({
       if (autosceneid) {
         this.setData({ autoSceneId: autosceneid, opearationType: 'auto' })
 
-        const sensorlinkSelectList = [] as string[]
+        const sensorlinkSelectList = [] as {deviceId: string; datetime: string}[]
 
         const autoSceneInfo = autosceneStore.allRoomAutoSceneList.find(
           (item) => item.sceneId === autosceneid,
@@ -265,12 +265,12 @@ ComponentWithComputed({
         console.log('看看', autoSceneInfo.deviceActions, autoSceneInfo.deviceActions.length)
         // return
         //处理执行条件
-        if (autoSceneInfo.deviceConditions.length) {
+        // if (autoSceneInfo.deviceConditions.length) {
           //传感器条件
           autoSceneInfo.deviceConditions.forEach((action) => {
             const index = this.data.sensorList.findIndex((item) => item.uniId === action.deviceId)
             if (index !== -1) {
-              sensorlinkSelectList.push(action.deviceId)
+              sensorlinkSelectList.push({deviceId: action.deviceId, datetime: new Date().getTime().toString()})
 
               this.data.sensorList[index].property = {
                 ...action.controlEvent[0],
@@ -279,15 +279,22 @@ ComponentWithComputed({
               console.log('设备不存在', action)
             }
           })
-        } else {
+        // } else {
           //时间条件
           const timeConditions = autoSceneInfo.timeConditions[0]
+          console.log('初始化的timeCondition', autoSceneInfo.timeConditions)
           this.setData({
+            timeConditions: autoSceneInfo.timeConditions.map(item => {
+              return {
+                ...item,
+                timeId: `time${(new Date().getTime() + Math.floor(Math.random() * 10) + 1).toString()}`
+              }
+            }),
             'timeCondition.time': timeConditions.time,
             'timeCondition.timePeriod': timeConditions.timePeriod,
             'timeCondition.timeType': timeConditions.timeType,
           })
-        }
+        // }
         //处理执行结果
         const tempSceneDeviceActionsFlatten = [] as AutoScene.AutoSceneFlattenAction[]
 
@@ -896,7 +903,7 @@ ComponentWithComputed({
           Toast({ message: '非状态值“与”条件不能同时存在多个', zIndex: 9999 })
           return
         }
-        this.data.sensorlinkSelectList.push(selectId)
+        this.data.sensorlinkSelectList.push({deviceId: selectId, datetime: new Date().getTime().toString()})
         this.data.tempSensorlinkSelectList.push(selectId)
         //传感器只单选
         this.setData({
@@ -1101,27 +1108,32 @@ ComponentWithComputed({
       //已选中的传感器
       const sensorSelected = this.data.sensorlinkSelectList
         .map((id) => {
-          return this.data.sensorList.find((item) => item.uniId === id)
+          return {
+            device: this.data.sensorList.find((item) => item.uniId === id.deviceId),
+            uniId: `${id.deviceId}${id.datetime}`
+          }
         })
-        .filter((item) => item !== undefined) as Device.DeviceItem[]
-
+        .filter((item) => item.device !== undefined) as {device: Device.DeviceItem, uniId: string}[]
+  
       sensorSelected.forEach((item) => {
-        sceneDeviceConditionsFlatten.push({
-          uniId: `${item.uniId}${new Date().getTime().toString()}`,
-          name: item.deviceName,
-          desc: toPropertyDesc(item.proType, item.productId, item.property!),
-          pic: item.pic,
-          productId: item.productId,
-          property: item.property!,
-          proType: item.proType,
-          type: item.deviceType as 1 | 2 | 3 | 4 | 5 | 6,
-        })
-      })
+          sceneDeviceConditionsFlatten.push({
+            uniId: item.uniId,
+            name: item.device.deviceName,
+            desc: toPropertyDesc(item.device.proType, item.device.productId, item.device.property!),
+            pic: item.device.pic,
+            productId: item.device.productId,
+            property: item.device.property!,
+            proType: item.device.proType,
+            type: item.device.deviceType as 1 | 2 | 3 | 4 | 5 | 6,
+          })
+        }
+      )
 
       this.setData({
         sceneDeviceConditionsFlatten,
       })
     },
+    // 删除条件
     handleConditionDelete(e: WechatMiniprogram.TouchEvent) {
       this.setData({
         sceneDeviceActionsFlatten: [],
@@ -1164,11 +1176,12 @@ ComponentWithComputed({
       })
     },
     handleEditSensorConfirm(e: { detail: IAnyObject }) {
-      console.log('传感器条件编辑', e.detail)
-      const listEditIndex = this.data.sensorList.findIndex((item) => item.uniId === this.data.editingUniId)
+      console.log('传感器条件编辑', e.detail, this.data.editingUniId)
+      const listEditIndex = this.data.sensorList.findIndex((item) => item.uniId === this.data.editingUniId.slice(0, -13))
       const flattenEditIndex = this.data.sceneDeviceConditionsFlatten.findIndex(
         (item) => item.uniId === this.data.editingUniId,
       )
+
       const listItem = this.data.sensorList[listEditIndex]
 
       const conditionItem = this.data.sceneDeviceConditionsFlatten[flattenEditIndex]
@@ -1192,6 +1205,8 @@ ComponentWithComputed({
     handleAutoSceneConditionEdit(e: WechatMiniprogram.TouchEvent) {
       const { index } = e.currentTarget.dataset
       const action = this.data.sceneDeviceConditionsFlatten[index]
+
+      console.log('当前编辑condition', this.data.sceneDeviceConditionsFlatten, action)
 
       if (action.productId.includes('time')) {
         const curTimeCondition = this.data.timeConditions.find(item => item.timeId === action.uniId);
@@ -1534,11 +1549,13 @@ ComponentWithComputed({
         sceneCategory: '1',
         sceneType: '1',
       } as AutoScene.AddAutoSceneDto
-      if (this.data.timeCondition.time !== '') {
-        newSceneData.timeConditions.push({
-          time: this.data.timeCondition.time,
-          timeType: this.data.timeCondition.timeType === '4' ? '1' : this.data.timeCondition.timeType,
-          timePeriod: this.data.timeCondition.timePeriod,
+      if (this.data.timeConditions.length) {
+        newSceneData.timeConditions = this.data.timeConditions.map(item => {
+          return {
+            time: item.time,
+            timeType: item.timeType === '4' ? '1' : item.timeType,
+            timePeriod: item.timePeriod,
+          }
         })
       }
 
@@ -1659,11 +1676,11 @@ ComponentWithComputed({
 
       //处理发送请求的deviceConditions字段数据
       this.data.sceneDeviceConditionsFlatten.forEach((action) => {
-        const device = deviceMap[action.uniId]
+        const device = deviceMap[action.uniId.slice(0, -13)]
         if (device) {
           newSceneData?.deviceConditions?.push({
             controlEvent: [{ ...(action.property as { modelName: string }) }],
-            deviceId: action.uniId,
+            deviceId: action.uniId.slice(0, -13),
           })
         }
       })
