@@ -23,6 +23,12 @@ export default {
         path: '/package-distribution/pages/scan/index?scanType=subdevice',
       },
       {
+        icon: `${productImgDir}/light-line.png`,
+        name: '线条灯',
+        tag: 'zigbee',
+        path: '/package-distribution/pages/scan/index?scanType=subdevice',
+      },
+      {
         icon: `${productImgDir}/switch.png`,
         name: '智能开关',
         tag: 'zigbee',
@@ -58,9 +64,9 @@ export default {
         productId: 'midea.freepad.001.201',
       },
       {
-        icon: `${productImgDir}/downlight.png`,
-        name: '光感',
-        tag: 'zigbee',
+        icon: `${productImgDir}/sensor-lumen.png`,
+        name: '照度传感器',
+        // tag: 'zigbee',
         path: '/package-distribution/pages/scan/index?scanType=subdevice',
       },
     ],
