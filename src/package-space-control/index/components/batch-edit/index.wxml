@@ -106,7 +106,7 @@
         <view class="flex-1 mt-32rpx w-686rpx">
           <van-field
             model:value="{{ editSwitchName }}"
-            maxlength="{{5}}"
+            maxlength="{{50}}"
             placeholder="请输入按键名称"
             custom-style="padding: 28rpx 32rpx;background-color: #F6FAFD;border-radius: 24rpx;"
             clearable="{{true}}"
@@ -121,7 +121,7 @@
       <view class="flex-1 mt-32rpx w-686rpx mb-126rpx">
         <van-field
           model:value="{{ editDeviceName }}"
-          maxlength="{{6}}"
+          maxlength="{{50}}"
           placeholder="请输入{{editDeviceNameTitle}}"
           custom-style="padding: 28rpx 32rpx;background-color: #F6FAFD;border-radius: 24rpx;"
           clearable="{{true}}"
