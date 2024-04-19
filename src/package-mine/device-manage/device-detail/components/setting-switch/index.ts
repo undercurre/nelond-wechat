@@ -60,8 +60,8 @@ ComponentWithComputed({
         showPopup: false,
       })
       if (this.data.deviceInfo.switchInfoDTOList[this.data.switchClickIndex].switchName !== this.data.switchName) {
-        if (this.data.switchName.length > 5) {
-          Toast('按键名称不能超过5个字符字')
+        if (this.data.switchName.length > 10) {
+          Toast('按键名称不能超过10个字符字')
           return
         }
         const res = await editDeviceInfo({
