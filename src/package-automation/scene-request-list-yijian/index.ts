@@ -45,7 +45,7 @@ ComponentWithComputed({
         })
           .then(() => {
             // on confirm
-          })
+          })    
           .catch(() => {
             // on cancel
           })

@@ -1142,8 +1142,9 @@ ComponentWithComputed({
       })
       const uniId = e.currentTarget.dataset.info.uniId
       console.log('删除条件', uniId)
-      if (this.data.sensorlinkSelectList.includes(uniId)) {
-        const index = this.data.sensorlinkSelectList.findIndex((id) => id === uniId)
+      if (this.data.sensorlinkSelectList.map(item => `${item.deviceId}${item.datetime}`).includes(uniId)) {
+        const index = this.data.sensorlinkSelectList.findIndex((id) => `${id.deviceId}${id.datetime}` === uniId)
+        console.log('找到传感器列表中', index)
         this.data.sensorlinkSelectList.splice(index, 1)
         this.setData({
           sensorlinkSelectList: [...this.data.sensorlinkSelectList],
