@@ -160,18 +160,18 @@ export const strUtil = {
    * @param effectiveTime
    * @param timeConditions
    */
-  transDesc(effectiveTime: AutoScene.effectiveTime, timeConditions: AutoScene.TimeCondition) {
-    if (timeConditions && timeConditions.time) {
-      return `${timeConditions.time} ${strUtil.transPeriodDesc(timeConditions.timeType, timeConditions.timePeriod)}`
+  transDesc(effectiveTime: AutoScene.effectiveTime, timeConditions: AutoScene.TimeCondition[], deviceConditions: AutoScene.DeviceCondition[]) {
+    if (timeConditions.length === 1 && timeConditions[0].time && deviceConditions.length === 0) {
+      return `${timeConditions[0].time} ${strUtil.transPeriodDesc(timeConditions[0].timeType, timeConditions[0].timePeriod)}`
     } else {
-      if (strUtil.isAllday(effectiveTime)) {
-        return `${strUtil.transPeriodDesc(effectiveTime.timeType, effectiveTime.timePeriod)}`
-      } else {
+      // if (strUtil.isAllday(effectiveTime)) {
+      //   return `${strUtil.transPeriodDesc(effectiveTime.timeType, effectiveTime.timePeriod)}`
+      // } else {
         return `${effectiveTime.startTime.substring(0, 5)}-${strUtil.transEndTimeDesc(
           effectiveTime.startTime.substring(0, 5),
           effectiveTime.endTime.substring(0, 5),
         )} ${strUtil.transPeriodDesc(effectiveTime.timeType, effectiveTime.timePeriod)}`
-      }
+      // }
     }
   },
   isAllday(effectiveTime: AutoScene.effectiveTime) {

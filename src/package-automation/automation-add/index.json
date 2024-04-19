@@ -5,6 +5,7 @@
     "edit-timeConditions-popup": "./components/edit-timeConditions-popup/index",
     "edit-delay-popup": "./components/edit-delay-popup/index",
     "add-condition-popup": "./components/add-condition-popup/index",
+    "add-pre-popup": "./components/add-pre-popup/index",
     "add-action-popup": "./components/add-action-popup/index",
     "select-card-popup": "../../components/select-card-popup/index",
     "edit-effectiveTime-popup": "./components/edit-effectiveTime-popup/index",

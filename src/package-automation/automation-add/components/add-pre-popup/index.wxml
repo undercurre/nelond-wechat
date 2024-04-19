@@ -10,11 +10,11 @@
 >
   <view
     class="w-750rpx relative flex flex-col items-center"
-    style="height: {{ (isEdit || isMultiple) ? 620 : 800 }}rpx"
+    style="height: {{ 620 }}rpx"
   >
     <template
       is="title"
-      data="{{ title: isMultiple ? '添加条件' : '触发条件'}}"
+      data="{{title: '该场景下有多个条件时'}}"
     />
     <view class="flex-1 w-718rpx">
       <view class="h-32rpx"></view>

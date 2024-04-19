@@ -1,0 +1,11 @@
+.cell {
+  background-color: #f9fbfe !important;
+}
+.cell:active {
+  background-color: #f2f3f5 !important;
+}
+
+.desc_text {
+  font-weight: 400;
+  font-size: 26rpx !important;
+}

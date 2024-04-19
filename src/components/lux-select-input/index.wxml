@@ -1,0 +1,17 @@
+<wxs src="./index.wxs" module="computed" />
+
+<view class="lux_picker custom-class relative">
+  <view class="lux_columns mr-10px" style="{{ computed.columnsStyle({ itemHeight, visibleItemCount }) }}" catch:touchmove="noop">
+    <view class="absolute top-44px h-2px w-full bg-hex-5efb32 opacity-40"></view>
+    <picker-column class="lux_column" wx:for="{{ computed.columns(columns) }}" wx:key="index" data-index="{{ index }}" custom-class="column-class" value-key="{{ valueKey }}" initial-options="{{ item.values }}" default-index="{{ item.defaultIndex || defaultIndex }}" item-height="{{ itemHeight }}" visible-item-count="{{ visibleItemCount }}" active-class="active-class" bind:change="onChange"></picker-column>
+    <view class="lux_mask" style="{{ computed.maskStyle({ itemHeight, visibleItemCount }) }}" />
+    <view class="absolute bottom-44px h-2px w-full bg-hex-5efb32 opacity-40"></view>
+  </view>
+
+  <view class="lux_input">
+    <van-field value="{{ luxValue }}" placeholder="请输入照度" custom-style="padding: 32rpx 32rpx;border-radius: 24rpx;background-color: #F6FAFD;" bind:change="onChangeLux" clearable="{{true}}" border="{{false}}">
+    </van-field>
+  </view>
+
+  <text class="ml-10px">Lux</text>
+</view>
