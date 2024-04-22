@@ -253,6 +253,7 @@ ComponentWithComputed({
 
         this.data._autosceneInfo = autoSceneInfo
         this.setData({
+          conditionMultiple: autoSceneInfo.conditionType === '1' ? 'all' : 'some',
           sceneIcon: autoSceneInfo.sceneIcon,
           sceneName: autoSceneInfo.sceneName,
           'effectiveTime.startTime': autoSceneInfo.effectiveTime.startTime.substring(0, 5),
@@ -1156,7 +1157,7 @@ ComponentWithComputed({
           'timeCondition.timePeriod': '',
           'timeCondition.timeType': '',
         })
-        this.data.timeConditions = this.data.timeConditions.filter(item => item.time !== this.data.sceneDeviceConditionsFlatten[e.currentTarget.dataset.index].name)
+        this.data.timeConditions = this.data.timeConditions.filter(item => item.timeId !== this.data.sceneDeviceConditionsFlatten[e.currentTarget.dataset.index].uniId)
       }
       this.data.sceneDeviceConditionsFlatten.splice(e.currentTarget.dataset.index, 1)
       this.setData({
@@ -1698,7 +1699,12 @@ ComponentWithComputed({
 
       console.log('条件去重', newSceneData.timeConditions, canCompareList)
       const timeConditionsStrList = newSceneData.timeConditions.map((item) => JSON.stringify(item));
-      const deviceConditionsStrList = canCompareList.map((item) => JSON.stringify(item));
+      const deviceConditionsStrList = canCompareList.map((item) => {
+        return JSON.stringify({
+          controlEvent: item.controlEvent,
+          deviceId: item.deviceId.slice(0, -13)
+        })
+      });
       // 用于存储已经遇到的元素
       const timeConditionsSeen = new Set();
       // 用于存储重复的元素
@@ -1735,7 +1741,7 @@ ComponentWithComputed({
         }).catch(() => 'cancel')
         if (res === 'cancel') {
           this.data._isSaving = false
-          return 
+          return
         }
         iqueTimeStrings.forEach(item => {
           // 转回对象
@@ -1747,7 +1753,7 @@ ComponentWithComputed({
         iqueDeviceStrings.forEach(item => {
           // 转回对象
           const obj = JSON.parse(item)
-          const index = this.data.sensorlinkSelectList.findIndex((item) => `${item.deviceId}${item.datetime}` === obj.deviceId)
+          const index = this.data.sensorlinkSelectList.findIndex((item) => `${item.deviceId}` === obj.deviceId)
           if (index !== -1) this.data.sensorlinkSelectList.splice(index, 1)
         })
 
