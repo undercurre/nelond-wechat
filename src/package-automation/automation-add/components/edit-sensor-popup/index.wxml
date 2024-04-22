@@ -5,7 +5,7 @@
     <view class="w-686rpx mt-48rpx">
       <!-- TODO: midea.hlightsensor.001.001 -->
       <sensor-ability-select wx:if="{{ !isLuxSensor }}" productId="{{productId}}" checkList="{{checkList}}" bind:change="handleChange"></sensor-ability-select>
-      <lux-select-input wx:if="{{ isLuxSensor }}" columns="{{ lux_columns }}" bind:change="onLuxChange"></lux-select-input>
+      <lux-select-input wx:if="{{ isLuxSensor }}" columns="{{ lux_columns }}" default-index="{{ luxDefaultIndex }}" default-input="{{ luxDefaultInput }}" bind:change="onLuxChange"></lux-select-input>
     </view>
     <view class="h-62rpx"></view>
     <view class="flex w-686rpx gap-x-46rpx">

@@ -227,6 +227,8 @@ ComponentWithComputed({
           item.property = { occupancy: 1, modelName: 'irDetector' }
         } else if (item.productId === SENSOR_TYPE.doorsensor) {
           item.property = { doorStatus: 1, modelName: 'magnet' }
+        } else if (item.productId === SENSOR_TYPE.lux) {
+          item.property = { illuminance: 0, illuminance_symbol: 'equalTo', modelName: 'light' }
         } else {
           item.property = { buttonClicked: 1, modelName: 'freepad' }
         }
@@ -1118,6 +1120,7 @@ ComponentWithComputed({
         .filter((item) => item.device !== undefined) as { device: Device.DeviceItem, uniId: string }[]
 
       sensorSelected.forEach((item) => {
+        console.log('updateSceneDeviceDesc', item.device)
         sceneDeviceConditionsFlatten.push({
           uniId: item.uniId,
           name: item.device.deviceName,

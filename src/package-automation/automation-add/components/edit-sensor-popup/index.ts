@@ -25,6 +25,14 @@ ComponentWithComputed({
     controlAction: {
       type: Object,
       observer(value) {
+        if (value.illuminance_symbol) {
+          const curIndex = this.data.lux_en_colums.findIndex((item) => item === value.illuminance_symbol)
+          if (curIndex !== -1) {
+            this.setData({
+              luxDefaultIndex: curIndex
+            })
+          }
+        }
         this.setData({
           _controlAction: value,
         })
@@ -36,8 +44,10 @@ ComponentWithComputed({
    * 组件的初始数据
    */
   data: {
-    _controlAction: {},
+    _controlAction: {} as any,
+    luxDefaultIndex: 2,
     lux_columns: ['大于', '大于等于', '等于', '小于等于', '小于'],
+    lux_en_colums: ['greaterThan', 'greaterThanOrEqualTo', 'equalTo', 'lessThanOrEqualTo', 'lessThan'],
     lux_sensor_list: ['midea.hlight.006.001', 'midea.hlightsensor.001.001']
   },
   computed: {
@@ -57,6 +67,10 @@ ComponentWithComputed({
       return data.productId === SENSOR_TYPE.lux
     },
 
+    luxDefaultInput(data) {
+      return data._controlAction.illuminance || ''
+    },
+
     popupHeight(data) {
       if (data.productId === SENSOR_TYPE.doorsensor) {
         return 602
@@ -72,6 +86,18 @@ ComponentWithComputed({
    */
   methods: {
     handleClose() {
+      console.log('关闭弹窗', this.data.controlAction)
+      if (this.data.controlAction.illuminance_symbol) {
+        const curIndex = this.data.lux_en_colums.findIndex((item) => item === this.data.controlAction.illuminance_symbol)
+        if (curIndex !== -1) {
+          this.setData({
+            luxDefaultIndex: curIndex
+          })
+        }
+      }
+      this.setData({
+        _controlAction: this.data.controlAction,
+      })
       this.triggerEvent('close')
     },
     handleChange(e: { detail: { ability: IAnyObject } }) {
@@ -82,6 +108,7 @@ ComponentWithComputed({
     },
     onLuxChange(event: { detail: { symbol: string; value: number } }) {
       this.setData({
+        luxDefaultIndex: this.data.lux_en_colums.findIndex((item) => item === event.detail.symbol),
         _controlAction: {
           illuminance: event.detail.value,
           illuminance_symbol: event.detail.symbol
@@ -91,6 +118,6 @@ ComponentWithComputed({
     handleConfirm() {
       this.triggerEvent('confirm', this.data._controlAction)
     },
-    blank() {},
+    blank() { },
   },
 })

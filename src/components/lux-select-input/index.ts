@@ -40,6 +40,15 @@ VantComponent({
       type: Number,
       value: 2,
     },
+    defaultInput: {
+      type: String,
+      value: '',
+      observer(value = '') {
+        this.setData({
+          luxValue: value
+        })
+      },
+    },
     columns: {
       type: Array,
       value: [],
@@ -91,7 +100,6 @@ VantComponent({
     },
 
     onChange() {
-      console.log(this.data.luxValue)
       if (this.simple) {
         this.$emit('change', {
           value: this.data.luxValue,

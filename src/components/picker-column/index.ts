@@ -18,6 +18,7 @@ VantComponent({
       type: Number,
       value: 0,
       observer(value: number) {
+        console.log('defaultIndex修改识别', value)
         this.setIndex(value);
       },
     },
@@ -33,6 +34,17 @@ VantComponent({
   },
 
   created() {
+    const { defaultIndex, initialOptions } = this.data;
+
+    this.set({
+      currentIndex: defaultIndex,
+      options: initialOptions,
+    }).then(() => {
+      this.setIndex(defaultIndex);
+    });
+  },
+
+  mounted() {
     const { defaultIndex, initialOptions } = this.data;
 
     this.set({
