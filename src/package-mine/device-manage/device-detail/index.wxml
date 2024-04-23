@@ -86,10 +86,10 @@
       </view>
 
       <!-- 下半部分 -->
-      <setting-light
+      <setting-light-sensor
         can-edit-device="{{canEditDevice}}"
         device-info="{{deviceInfo}}"
-        wx:if="{{prodType === 'light'}}"
+        wx:if="{{hasLightSensor}}"
         bind:update="updateDeviceInfo"
       />
       <setting-switch

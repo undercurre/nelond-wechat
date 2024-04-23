@@ -33,7 +33,7 @@ export const SENSOR_MODEL_NAME = {
   'midea.ir.201': 'irDetector',
   'midea.magnet.001.201': 'magnet',
   'midea.freepad.001.201': 'freepad',
-  'midea.hlightsensor.001.001': 'light'
+  'midea.hlightsensor.001.001': 'light',
 } as Record<string, string>
 
 /**
@@ -56,8 +56,11 @@ export const SCREEN_PID: readonly string[] = ['zk527b6c944a454e9fb15d3cc1f4d55b'
 // 旋钮开关pid
 export const KNOB_PID: readonly string[] = ['midea.knob.001.003']
 
-// 无色温调节pid (工矿灯)
-export const NO_COLOR_TEMP: readonly string[] = ['midea.hlight.005.001']
+// 无色温调节pid
+export const NO_COLOR_TEMP: readonly string[] = [
+  'midea.hlight.005.001', // 工矿灯
+  'midea.hlight.006.001', // 线条灯
+]
 
 // 设备品类码 -> modelName
 export const proName: Record<string, string> = {
@@ -75,5 +78,5 @@ export const SENSOR_TYPE = {
   humanSensor: 'midea.ir.201',
   doorsensor: 'midea.magnet.001.201',
   freepad: 'midea.freepad.001.201',
-  lux: 'midea.hlightsensor.001.001'
+  lux: 'midea.hlightsensor.001.001',
 } as const
