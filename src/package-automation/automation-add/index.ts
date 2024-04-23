@@ -265,16 +265,17 @@ ComponentWithComputed({
         })
         // autoSceneInfo.deviceConditions = autoSceneInfo.deviceConditions || []
         // autoSceneInfo.deviceActions = autoSceneInfo.deviceActions || []
-        console.log('看看', autoSceneInfo.deviceActions, autoSceneInfo.deviceActions.length)
+        console.log('场景数据', autoSceneInfo.deviceActions, autoSceneInfo.deviceActions.length)
         // return
         //处理执行条件
         // if (autoSceneInfo.deviceConditions.length) {
         //传感器条件
-        autoSceneInfo.deviceConditions.forEach((action) => {
+        autoSceneInfo.deviceConditions.forEach((action, dIndex) => {
           const index = this.data.sensorList.findIndex((item) => item.uniId === action.deviceId)
           if (index !== -1) {
-            sensorlinkSelectList.push({ deviceId: action.deviceId, datetime: new Date().getTime().toString() })
+            sensorlinkSelectList.push({ deviceId: action.deviceId, datetime: (new Date().getTime() + dIndex).toString() })
 
+            // TODO: 拿到正确的event回显
             this.data.sensorList[index].property = {
               ...action.controlEvent[0],
             }
@@ -1080,48 +1081,75 @@ ComponentWithComputed({
     },
     /* 条件方法 start */
     updateSceneDeviceConditionsFlatten() {
-      const sceneDeviceConditionsFlatten = [] as AutoScene.AutoSceneFlattenCondition[]
+      const diffSceneDeviceConditionsFlatten = [] as AutoScene.AutoSceneFlattenCondition[]
 
       if (this.data.spaceId !== '' && this.data.opearationType === 'yijian') {
         const desc = this.cmptFullSpaceName()
-        sceneDeviceConditionsFlatten.push({
-          uniId: 'room',
-          name: '手动点击场景',
-          desc: [desc],
-          pic: '/package-automation/assets/imgs/automation/touch-materialized.png',
-          productId: 'touch',
-          property: {},
-          type: 5,
-        })
-      }
-
-      if (this.data.timeConditions.length > 0) {
-        for (let i = 0; i < this.data.timeConditions.length; i++) {
-          sceneDeviceConditionsFlatten.push({
-            uniId: this.data.timeConditions[i].timeId,
-            name: this.data.timeConditions[i].time,
-            desc: [strUtil.transPeriodDesc(this.data.timeConditions[i].timeType, this.data.timeConditions[i].timePeriod)],
-            pic: '/package-automation/assets/imgs/automation/time-materialized.png',
-            productId: `time${i}`,
+        if (!this.data.sceneDeviceConditionsFlatten.map((item) => item.uniId).includes('room')) {
+          diffSceneDeviceConditionsFlatten.push({
+            uniId: 'room',
+            name: '手动点击场景',
+            desc: [desc],
+            pic: '/package-automation/assets/imgs/automation/touch-materialized.png',
+            productId: 'touch',
             property: {},
-            type: 6,
+            type: 5,
           })
         }
       }
 
-      //已选中的传感器
-      const sensorSelected = this.data.sensorlinkSelectList
+      if (this.data.timeConditions.length > 0) {
+        for (let i = 0; i < this.data.timeConditions.length; i++) {
+          if (!this.data.sceneDeviceConditionsFlatten.map((item) => item.uniId).includes(this.data.timeConditions[i].timeId)) {
+            diffSceneDeviceConditionsFlatten.push({
+              uniId: this.data.timeConditions[i].timeId,
+              name: this.data.timeConditions[i].time,
+              desc: [strUtil.transPeriodDesc(this.data.timeConditions[i].timeType, this.data.timeConditions[i].timePeriod)],
+              pic: '/package-automation/assets/imgs/automation/time-materialized.png',
+              productId: `time${i}`,
+              property: {},
+              type: 6,
+            })
+          }
+        }
+      }
+
+      // 已选中的传感器
+      const sensorSelected = JSON.parse(JSON.stringify(this.data.sensorlinkSelectList
         .map((id) => {
           return {
             device: this.data.sensorList.find((item) => item.uniId === id.deviceId),
             uniId: `${id.deviceId}${id.datetime}`
           }
         })
-        .filter((item) => item.device !== undefined) as { device: Device.DeviceItem, uniId: string }[]
+        .filter((item) => item.device !== undefined))) as { device: Device.DeviceItem, uniId: string }[]
 
-      sensorSelected.forEach((item) => {
-        console.log('updateSceneDeviceDesc', item.device)
-        sceneDeviceConditionsFlatten.push({
+      const deviceConditionsQuchongById = Array.from(new Set(this.data._autosceneInfo.deviceConditions.map(item => item.deviceId)))
+
+      deviceConditionsQuchongById.forEach((deviceQuchongById) => {
+        const curIntancesIndexs: number[] = []
+        sensorSelected.forEach((selected, index: number) => {
+          if (selected.device.deviceId === deviceQuchongById) {
+            curIntancesIndexs.push(index)
+          }
+        })
+
+        const curConditions = this.data._autosceneInfo.deviceConditions.filter((item) => deviceQuchongById === item.deviceId)
+        if (curIntancesIndexs.length === curConditions.length) {
+          curIntancesIndexs.forEach((instanceIndex, index) => {
+            sensorSelected[instanceIndex].device.property = {
+              ...curConditions[index].controlEvent[0]
+            }
+          })
+        }
+      })
+
+      console.log('已选中的传感器', sensorSelected)
+
+      const sensorSelectedChanged = sensorSelected.filter((item) => !this.data.sceneDeviceConditionsFlatten.map((flatten) => flatten.uniId).includes(item.uniId))
+
+      sensorSelectedChanged.forEach((item) => {
+        diffSceneDeviceConditionsFlatten.push({
           uniId: item.uniId,
           name: item.device.deviceName,
           desc: toPropertyDesc(item.device.proType, item.device.productId, item.device.property!),
@@ -1135,13 +1163,12 @@ ComponentWithComputed({
       )
 
       this.setData({
-        sceneDeviceConditionsFlatten,
+        sceneDeviceConditionsFlatten: this.data.sceneDeviceConditionsFlatten.concat(diffSceneDeviceConditionsFlatten),
       })
     },
     // 删除条件
     handleConditionDelete(e: WechatMiniprogram.TouchEvent) {
       this.setData({
-        sceneDeviceActionsFlatten: [],
         sceneDevicelinkSelectList: [],
       })
       const uniId = e.currentTarget.dataset.info.uniId
@@ -1172,6 +1199,7 @@ ComponentWithComputed({
           conditionMultiple: ''
         })
       }
+      console.log(this.data.sensorlinkSelectList, this.data.sceneDeviceConditionsFlatten)
     },
     /* 条件方法 end */
 
@@ -1415,6 +1443,15 @@ ComponentWithComputed({
         this.data._isSaving = false
       }
     },
+
+    canonical(object: { [x: string]: any }) {
+      const ordered: { [x: string]: any } = {};
+      Object.keys(object).sort().forEach(function (key) {
+        ordered[key] = object[key];
+      });
+      return ordered;
+    },
+
     async handleSave() {
       if (this.data._isSaving) return
       this.data._isSaving = true
@@ -1704,7 +1741,7 @@ ComponentWithComputed({
       const timeConditionsStrList = newSceneData.timeConditions.map((item) => JSON.stringify(item));
       const deviceConditionsStrList = canCompareList.map((item) => {
         return JSON.stringify({
-          controlEvent: item.controlEvent,
+          controlEvent: [this.canonical(item.controlEvent[0])],
           deviceId: item.deviceId.slice(0, -13)
         })
       });
@@ -1756,8 +1793,15 @@ ComponentWithComputed({
         iqueDeviceStrings.forEach(item => {
           // 转回对象
           const obj = JSON.parse(item)
-          const index = this.data.sensorlinkSelectList.findIndex((item) => `${item.deviceId}` === obj.deviceId)
-          if (index !== -1) this.data.sensorlinkSelectList.splice(index, 1)
+          const back = canCompareList.find((item) => `${item.deviceId.slice(0, -13)}` === obj.deviceId && JSON.stringify(this.canonical(item.controlEvent[0])) === JSON.stringify(this.canonical(obj.controlEvent[0])))
+          console.log('已选传感器删除', this.data.sensorlinkSelectList, back)
+          const index = this.data.sensorlinkSelectList.findIndex((item) => `${item.deviceId}${item.datetime}` === back?.deviceId)
+          if (index !== -1) { this.data.sensorlinkSelectList.splice(index, 1) }
+          const flattenIndex = this.data.sceneDeviceConditionsFlatten.findIndex((item) => `${item.uniId}` === back?.deviceId)
+          if (flattenIndex !== -1) { this.data.sceneDeviceConditionsFlatten.splice(flattenIndex, 1) }
+          this.setData({
+            sceneDeviceConditionsFlatten: this.data.sceneDeviceConditionsFlatten,
+          })
         })
 
         this.updateSceneDeviceConditionsFlatten()

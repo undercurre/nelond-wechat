@@ -119,6 +119,8 @@ VantComponent({
       for (let i = index - 1; i >= 0; i--) {
         if (!this.isDisabled(data.options[i])) return i;
       }
+
+      return index;
     },
 
     isDisabled(option: any) {
