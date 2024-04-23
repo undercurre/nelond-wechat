@@ -1,0 +1,7 @@
+{
+  "component": true,
+  "styleIsolation": "apply-shared",
+  "usingComponents": {
+    "edit-name-dialog": "../../../../components/edit-name-dialog/index"
+  }
+}

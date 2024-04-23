@@ -12,7 +12,7 @@ import {
 } from '../../../store/index'
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { waitingDeleteDevice, editDeviceInfo, queryDeviceInfoByDeviceId, sendDevice } from '../../../apis/index'
-import { proName, PRO_TYPE, SCREEN_PID } from '../../../config/index'
+import { proName, PRO_TYPE, SCREEN_PID, SENSOR_TYPE } from '../../../config/index'
 import Dialog from '@vant/weapp/dialog/dialog'
 import { emitter } from '../../../utils/index'
 
@@ -88,6 +88,9 @@ ComponentWithComputed({
      */
     hasSwitchSetting(data) {
       return data.deviceInfo.proType === PRO_TYPE.switch || SCREEN_PID.includes(data.deviceInfo.productId)
+    },
+    hasLightSensor(data) {
+      return SENSOR_TYPE['lux'] === data.deviceInfo.productId
     },
     laundryHeight(data) {
       if (data.deviceInfo.proType === PRO_TYPE.clothesDryingRack) {
