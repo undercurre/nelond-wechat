@@ -1096,6 +1096,10 @@ ComponentWithComputed({
             type: 5,
           })
         }
+        this.setData({
+          sceneDeviceConditionsFlatten: this.data.sceneDeviceConditionsFlatten.concat(diffSceneDeviceConditionsFlatten),
+        })
+        return
       }
 
       if (this.data.timeConditions.length > 0) {
@@ -1124,25 +1128,27 @@ ComponentWithComputed({
         })
         .filter((item) => item.device !== undefined))) as { device: Device.DeviceItem, uniId: string }[]
 
-      const deviceConditionsQuchongById = Array.from(new Set(this.data._autosceneInfo.deviceConditions.map(item => item.deviceId)))
+      if (this.data._autosceneInfo && this.data._autosceneInfo.deviceConditions) {
+        const deviceConditionsQuchongById = Array.from(new Set(this.data._autosceneInfo.deviceConditions.map(item => item.deviceId)))
 
-      deviceConditionsQuchongById.forEach((deviceQuchongById) => {
-        const curIntancesIndexs: number[] = []
-        sensorSelected.forEach((selected, index: number) => {
-          if (selected.device.deviceId === deviceQuchongById) {
-            curIntancesIndexs.push(index)
-          }
-        })
-
-        const curConditions = this.data._autosceneInfo.deviceConditions.filter((item) => deviceQuchongById === item.deviceId)
-        if (curIntancesIndexs.length === curConditions.length) {
-          curIntancesIndexs.forEach((instanceIndex, index) => {
-            sensorSelected[instanceIndex].device.property = {
-              ...curConditions[index].controlEvent[0]
+        deviceConditionsQuchongById.forEach((deviceQuchongById) => {
+          const curIntancesIndexs: number[] = []
+          sensorSelected.forEach((selected, index: number) => {
+            if (selected.device.deviceId === deviceQuchongById) {
+              curIntancesIndexs.push(index)
             }
           })
-        }
-      })
+
+          const curConditions = this.data._autosceneInfo.deviceConditions.filter((item) => deviceQuchongById === item.deviceId)
+          if (curIntancesIndexs.length === curConditions.length) {
+            curIntancesIndexs.forEach((instanceIndex, index) => {
+              sensorSelected[instanceIndex].device.property = {
+                ...curConditions[index].controlEvent[0]
+              }
+            })
+          }
+        })
+      }
 
       console.log('已选中的传感器', sensorSelected)
 
@@ -1786,8 +1792,14 @@ ComponentWithComputed({
         iqueTimeStrings.forEach(item => {
           // 转回对象
           const obj = JSON.parse(item)
+          const back = this.data.timeConditions.find((item) => item.time === obj.time && item.timePeriod === obj.timePeriod && item.timeType === obj.timeType)
           const index = this.data.timeConditions.findIndex((item) => item.time === obj.time && item.timePeriod === obj.timePeriod && item.timeType === obj.timeType)
           if (index !== -1) this.data.timeConditions.splice(index, 1)
+          const flattenIndex = this.data.sceneDeviceConditionsFlatten.findIndex((item) => `${item.uniId}` === back?.timeId)
+          if (flattenIndex !== -1) { this.data.sceneDeviceConditionsFlatten.splice(flattenIndex, 1) }
+          this.setData({
+            sceneDeviceConditionsFlatten: this.data.sceneDeviceConditionsFlatten,
+          })
         })
 
         iqueDeviceStrings.forEach(item => {
