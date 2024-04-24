@@ -1792,28 +1792,34 @@ ComponentWithComputed({
         iqueTimeStrings.forEach(item => {
           // 转回对象
           const obj = JSON.parse(item)
-          const back = this.data.timeConditions.find((item) => item.time === obj.time && item.timePeriod === obj.timePeriod && item.timeType === obj.timeType)
-          const index = this.data.timeConditions.findIndex((item) => item.time === obj.time && item.timePeriod === obj.timePeriod && item.timeType === obj.timeType)
-          if (index !== -1) this.data.timeConditions.splice(index, 1)
-          const flattenIndex = this.data.sceneDeviceConditionsFlatten.findIndex((item) => `${item.uniId}` === back?.timeId)
-          if (flattenIndex !== -1) { this.data.sceneDeviceConditionsFlatten.splice(flattenIndex, 1) }
-          this.setData({
-            sceneDeviceConditionsFlatten: this.data.sceneDeviceConditionsFlatten,
-          })
+          const sameCount = this.data.timeConditions.filter((item) => item.time === obj.time && item.timePeriod === obj.timePeriod && item.timeType === obj.timeType)
+          for (let k = 0; k < sameCount.length - 1; k++) {
+            const back = this.data.timeConditions.find((item) => item.time === obj.time && item.timePeriod === obj.timePeriod && item.timeType === obj.timeType)
+            const index = this.data.timeConditions.findIndex((item) => item.time === obj.time && item.timePeriod === obj.timePeriod && item.timeType === obj.timeType)
+            if (index !== -1) this.data.timeConditions.splice(index, 1)
+            const flattenIndex = this.data.sceneDeviceConditionsFlatten.findIndex((item) => `${item.uniId}` === back?.timeId)
+            if (flattenIndex !== -1) { this.data.sceneDeviceConditionsFlatten.splice(flattenIndex, 1) }
+            this.setData({
+              sceneDeviceConditionsFlatten: this.data.sceneDeviceConditionsFlatten,
+            })
+          }
         })
 
         iqueDeviceStrings.forEach(item => {
           // 转回对象
           const obj = JSON.parse(item)
-          const back = canCompareList.find((item) => `${item.deviceId.slice(0, -13)}` === obj.deviceId && JSON.stringify(this.canonical(item.controlEvent[0])) === JSON.stringify(this.canonical(obj.controlEvent[0])))
-          console.log('已选传感器删除', this.data.sensorlinkSelectList, back)
-          const index = this.data.sensorlinkSelectList.findIndex((item) => `${item.deviceId}${item.datetime}` === back?.deviceId)
-          if (index !== -1) { this.data.sensorlinkSelectList.splice(index, 1) }
-          const flattenIndex = this.data.sceneDeviceConditionsFlatten.findIndex((item) => `${item.uniId}` === back?.deviceId)
-          if (flattenIndex !== -1) { this.data.sceneDeviceConditionsFlatten.splice(flattenIndex, 1) }
-          this.setData({
-            sceneDeviceConditionsFlatten: this.data.sceneDeviceConditionsFlatten,
-          })
+          const sameCount = this.data.timeConditions.filter((item) => item.time === obj.time && item.timePeriod === obj.timePeriod && item.timeType === obj.timeType)
+          for (let k = 0; k < sameCount.length - 1; k++) {
+            const back = canCompareList.find((item) => `${item.deviceId.slice(0, -13)}` === obj.deviceId && JSON.stringify(this.canonical(item.controlEvent[0])) === JSON.stringify(this.canonical(obj.controlEvent[0])))
+            console.log('已选传感器删除', this.data.sensorlinkSelectList, back)
+            const index = this.data.sensorlinkSelectList.findIndex((item) => `${item.deviceId}${item.datetime}` === back?.deviceId)
+            if (index !== -1) { this.data.sensorlinkSelectList.splice(index, 1) }
+            const flattenIndex = this.data.sceneDeviceConditionsFlatten.findIndex((item) => `${item.uniId}` === back?.deviceId)
+            if (flattenIndex !== -1) { this.data.sceneDeviceConditionsFlatten.splice(flattenIndex, 1) }
+            this.setData({
+              sceneDeviceConditionsFlatten: this.data.sceneDeviceConditionsFlatten,
+            })
+          }
         })
 
         this.updateSceneDeviceConditionsFlatten()
