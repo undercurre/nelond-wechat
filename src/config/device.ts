@@ -33,7 +33,7 @@ export const SENSOR_MODEL_NAME = {
   'midea.ir.201': 'irDetector',
   'midea.magnet.001.201': 'magnet',
   'midea.freepad.001.201': 'freepad',
-  'midea.hlightsensor.001.001': 'light',
+  'midea.hlightsensor.001.001': 'lightsensor',
 } as Record<string, string>
 
 /**
@@ -78,5 +78,5 @@ export const SENSOR_TYPE = {
   humanSensor: 'midea.ir.201',
   doorsensor: 'midea.magnet.001.201',
   freepad: 'midea.freepad.001.201',
-  lux: 'midea.hlightsensor.001.001',
+  lightsensor: 'midea.hlightsensor.001.001',
 } as const

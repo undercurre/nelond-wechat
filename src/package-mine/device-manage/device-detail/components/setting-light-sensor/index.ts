@@ -57,9 +57,10 @@ ComponentWithComputed({
         dialogValue: this.data[key] ?? 0,
       })
     },
-    async handleConfirm(e: { detail: number }) {
+    async handleConfirm(e: { detail: string }) {
       // console.log('handleConfirm', e.detail, this.data.deviceInfo)
-      if (!e.detail) {
+      const setVal = parseInt(e.detail)
+      if (!setVal) {
         Toast({
           message: `${this.data.dialogName}不能为空`,
           zIndex: 99999,
@@ -67,7 +68,7 @@ ComponentWithComputed({
         return
       }
       if (this.data.dialogType === 'blockTime') {
-        if (e.detail > 60 || e.detail <= 0) {
+        if (setVal > 60 || setVal <= 0) {
           Toast({
             message: '上报间隔范围为1~60分钟',
             zIndex: 99999,
@@ -75,7 +76,7 @@ ComponentWithComputed({
           return
         }
       } else if (this.data.dialogType === 'brightnessThreshold') {
-        if (e.detail > 1000 || e.detail <= 0) {
+        if (setVal > 1000 || setVal <= 0) {
           Toast({
             message: '上报阈值时间为1~1000Lux',
             zIndex: 99999,
@@ -89,7 +90,7 @@ ComponentWithComputed({
         deviceType: 2,
         gatewayId: this.data.deviceInfo.gatewayId,
         deviceId: this.data.deviceInfo.deviceId,
-        property: { [this.data.dialogType]: e.detail },
+        property: { [this.data.dialogType]: setVal },
       })
       if (!res.success) {
         Toast('控制失败')

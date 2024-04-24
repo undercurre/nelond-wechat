@@ -90,7 +90,7 @@ ComponentWithComputed({
       return data.deviceInfo.proType === PRO_TYPE.switch || SCREEN_PID.includes(data.deviceInfo.productId)
     },
     isLightSensor(data) {
-      return SENSOR_TYPE['lux'] === data.deviceInfo.productId
+      return SENSOR_TYPE['lightsensor'] === data.deviceInfo.productId
     },
     laundryHeight(data) {
       if (data.deviceInfo.proType === PRO_TYPE.clothesDryingRack) {

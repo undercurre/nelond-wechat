@@ -200,7 +200,7 @@ ComponentWithComputed({
       })
     },
     isLightSensor(data) {
-      return SENSOR_TYPE['lux'] === data.deviceInfo.productId
+      return SENSOR_TYPE['lightsensor'] === data.deviceInfo.productId
     },
   },
 
