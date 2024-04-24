@@ -48,7 +48,7 @@ export const userStore = observable({
       level = role.roleLevel
     }
     // 若为总管或代理商角色，则不必匹配项目id
-    else if (this.userInfo.roleList?.length === 1) {
+    else {
       level = UserRole.Creator
     }
 
