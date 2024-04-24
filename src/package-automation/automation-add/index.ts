@@ -627,7 +627,7 @@ ComponentWithComputed({
       // “与”情况下
       if (this.data.conditionMultiple === 'all') {
         // 非状态值单位占用
-        if (this.data.linkSelectSensorListMapProductId.includes("midea.freepad.001.201") || this.data.timeCondition.time !== '') {
+        if (this.data.linkSelectSensorListMapProductId.includes("midea.freepad.001.201") || this.data.timeConditions.length > 0) {
           if (e.detail === 'time') {
             Toast({ message: '非状态值“与”条件不能同时存在多个', zIndex: 9999 })
             this.setData({
