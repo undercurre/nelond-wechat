@@ -103,7 +103,7 @@ export const strUtil = {
    * @param timePeriod
    * @returns
    */
-  transPeriodDesc(timeType: string, timePeriod: string) {
+  transPeriodDesc(timeType: string, timePeriod: string | null) {
     if (timeType === '0') {
       return '仅一次'
     } else if (timeType === '2') {
@@ -120,6 +120,7 @@ export const strUtil = {
         '6': '周五',
         '7': '周六',
       }
+      if (!timePeriod) return ''
       const weekArr = timePeriod.split(',')
       if (weekArr.length === 7) {
         return '每天'

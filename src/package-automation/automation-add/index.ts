@@ -88,7 +88,7 @@ ComponentWithComputed({
     timeConditions: [] as {
       timeId: string;
       time: string;
-      timePeriod: string;
+      timePeriod: string | null;
       timeType: string;
     }[],
     //时间条件
@@ -744,7 +744,7 @@ ComponentWithComputed({
         timeId: `time${new Date().getTime().toString()}`,
         time,
         timeType: periodType,
-        timePeriod: week
+        timePeriod: periodType === "4" ? week : null
       })
       this.setData({
         timeConditions: [...this.data.timeConditions],
