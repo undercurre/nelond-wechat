@@ -67,7 +67,6 @@
   border-radius: 24rpx;
   background-color: #f6fafd;
   margin-top: 32rpx;
-  margin-left: 100rpx;
 }
 
 .log-step {

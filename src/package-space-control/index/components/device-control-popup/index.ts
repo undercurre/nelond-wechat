@@ -18,6 +18,7 @@ import {
   KNOB_PID,
   defaultImgDir,
   NO_COLOR_TEMP,
+  SENSOR_TYPE,
 } from '../../../../config/index'
 import {
   sendDevice,
@@ -198,6 +199,9 @@ ComponentWithComputed({
         }
       })
     },
+    isLightSensor(data) {
+      return SENSOR_TYPE['lux'] === data.deviceInfo.productId
+    },
   },
 
   /**
@@ -279,7 +283,8 @@ ComponentWithComputed({
       if (proType !== PRO_TYPE.sensor) {
         return
       }
-      const res = await getSensorLogs({ deviceId, projectId: projectStore.currentProjectId })
+      const count = this.data.isLightSensor ? 1 : 999
+      const res = await getSensorLogs({ deviceId, projectId: projectStore.currentProjectId, count })
       console.log(res)
       this.setData({
         logList: res.result,

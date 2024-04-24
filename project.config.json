@@ -67,5 +67,6 @@
   "scripts": {
     "beforeCompile": "node ./build/releaseTime.js",
     "beforePreview": "node ./build/releaseTime.js"
-  }
+  },
+  "projectname": "NELOND"
 }

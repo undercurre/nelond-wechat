@@ -173,7 +173,7 @@ export const deviceFlatten = function (originList: Device.DeviceItem[]) {
       const modelName = getModelName(device.proType, device.productId)
       const property = noProps ? ({} as Device.mzgdPropertyDTO) : device.mzgdPropertyDTOList[modelName]
       // ! WIFI设备，较低机率出现设备在线但属性为空的情况
-      const onLineStatus = 1 // device.proType === PRO_TYPE.gateway || device.mzgdPropertyDTOList ? device.onLineStatus : 0
+      const onLineStatus = device.proType === PRO_TYPE.gateway || device.mzgdPropertyDTOList ? device.onLineStatus : 0
       list.push({
         ...device,
         onLineStatus,

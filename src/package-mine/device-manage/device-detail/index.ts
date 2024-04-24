@@ -89,7 +89,7 @@ ComponentWithComputed({
     hasSwitchSetting(data) {
       return data.deviceInfo.proType === PRO_TYPE.switch || SCREEN_PID.includes(data.deviceInfo.productId)
     },
-    hasLightSensor(data) {
+    isLightSensor(data) {
       return SENSOR_TYPE['lux'] === data.deviceInfo.productId
     },
     laundryHeight(data) {

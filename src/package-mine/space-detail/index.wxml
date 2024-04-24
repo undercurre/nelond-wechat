@@ -43,10 +43,10 @@
 
 <van-toast id="van-toast" />
 
-<edit-name-dialog
+<edit-dialog
   value="{{ spaceInfo.spaceName }}"
   placeholder="请输入{{spaceLevelName}}名称"
   title="修改{{spaceLevelName}}名称"
   show="{{showAddDialog}}"
   bind:confirm="toUpdateSpace"
-></edit-name-dialog>
+></edit-dialog>

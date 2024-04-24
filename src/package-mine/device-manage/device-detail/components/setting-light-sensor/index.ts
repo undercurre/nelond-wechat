@@ -24,7 +24,7 @@ ComponentWithComputed({
     showEditDialog: false,
     dialogType: '',
     dialogName: '',
-    dialogValue: '',
+    dialogValue: 0,
   },
 
   computed: {
@@ -42,10 +42,9 @@ ComponentWithComputed({
    */
   methods: {
     handleDialogShow(e: { currentTarget: { dataset: { key: 'blockTime' | 'brightnessThreshold' } } }) {
-      // if (!this.data.canEditDevice) return
-      // if (!this.data.deviceInfo.onLineStatus) {
-      //   return
-      // }
+      if (!this.data.canEditDevice) return
+      if (!this.data.deviceInfo.onLineStatus) return
+
       const { key } = e.currentTarget.dataset
       this.setData({
         dialogType: key,
@@ -55,11 +54,11 @@ ComponentWithComputed({
             brightnessThreshold: '上报阈值',
           }[key] ?? '',
         showEditDialog: true,
-        dialogValue: this.data[key] ?? '',
+        dialogValue: this.data[key] ?? 0,
       })
     },
     async handleConfirm(e: { detail: number }) {
-      console.log(e.detail, this.data.deviceInfo)
+      // console.log('handleConfirm', e.detail, this.data.deviceInfo)
       if (!e.detail) {
         Toast({
           message: `${this.data.dialogName}不能为空`,
@@ -67,21 +66,36 @@ ComponentWithComputed({
         })
         return
       }
-      // TODO 提交约束条件
-      // if (this.data.dialogType === 'blockTime') {
-      // } else if (this.data.dialogType === 'brightnessThreshold') {
-      // }
+      if (this.data.dialogType === 'blockTime') {
+        if (e.detail > 60 || e.detail <= 0) {
+          Toast({
+            message: '上报间隔范围为1~60分钟',
+            zIndex: 99999,
+          })
+          return
+        }
+      } else if (this.data.dialogType === 'brightnessThreshold') {
+        if (e.detail > 1000 || e.detail <= 0) {
+          Toast({
+            message: '上报阈值时间为1~1000Lux',
+            zIndex: 99999,
+          })
+          return
+        }
+      }
       const res = await sendDevice({
         proType: PRO_TYPE.sensor,
         modelName: 'lightsensor',
         deviceType: 2,
         gatewayId: this.data.deviceInfo.gatewayId,
         deviceId: this.data.deviceInfo.deviceId,
-        property: { [this.data.dialogType]: this.data.dialogValue },
+        property: { [this.data.dialogType]: e.detail },
       })
       if (!res.success) {
         Toast('控制失败')
       }
+
+      this.triggerEvent('update')
 
       this.setData({
         showEditDialog: false,

@@ -604,6 +604,7 @@ export async function getSensorLogs(
   data: {
     projectId?: string
     deviceId: string
+    count?: number
   },
   options?: { loading?: boolean },
 ) {

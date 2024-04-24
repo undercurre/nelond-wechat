@@ -89,7 +89,7 @@
       <setting-light-sensor
         can-edit-device="{{canEditDevice}}"
         device-info="{{deviceInfo}}"
-        wx:if="{{hasLightSensor}}"
+        wx:if="{{isLightSensor}}"
         bind:update="updateDeviceInfo"
       />
       <setting-switch
