@@ -501,10 +501,6 @@ export const bleUtil = {
 
     const zigbeeMac = arr.join('')
 
-    if (parseInt(protocolVersion) >= 4) {
-      console.log('444')
-    }
-
     return parseInt(protocolVersion) >= 4
       ? {
           brand: msgStr.slice(0, 4),
