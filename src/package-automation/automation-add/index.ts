@@ -114,6 +114,7 @@ ComponentWithComputed({
     editingDelayId: '',
     scrollTop: 0,
     _isSaving: false,
+    timeConditionPopupLock: false,
   },
 
   computed: {
@@ -735,7 +736,13 @@ ComponentWithComputed({
     },
     // 时间点条件编辑
     handleTimeConditionConfirm(e: { detail: { timeId: string; time: string; periodType: string; week: string } }) {
-      console.log('时间点', e.detail)
+      console.log('时间前', this.data.timeConditionPopupLock ,e.detail)
+      if (this.data.timeConditionPopupLock) {
+        console.log('Lock', this.data.timeConditionPopupLock)
+        return
+      }
+      this.data.timeConditionPopupLock = true
+      console.log('时间点', this.data.timeConditionPopupLock ,e.detail)
       const { timeId, time, periodType, week } = e.detail
       if (this.data.timeConditions.map(item => item.timeId).includes(timeId)) {
         const index = this.data.timeConditions.findIndex((item) => item.timeId === timeId)
@@ -758,6 +765,8 @@ ComponentWithComputed({
         'effectiveTime.endTime': '23:59',
         'effectiveTime.timeType': '1',
         'effectiveTime.timePeriod': '1,2,3,4,5,6,7',
+      }, () => {
+        setTimeout(() => this.data.timeConditionPopupLock = false, 1000);
       })
       this.updateSceneDeviceConditionsFlatten()
     },
