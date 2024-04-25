@@ -187,7 +187,7 @@ ComponentWithComputed({
       const msgObj = bleUtil.transferBroadcastData(device.advertisData)
 
       const { protocolVersion, mac, isConfig } = msgObj
-      if (protocolVersion !== '03') {
+      if (parseInt(protocolVersion) < 3) {
         return
       }
 
