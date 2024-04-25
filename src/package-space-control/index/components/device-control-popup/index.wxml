@@ -62,7 +62,7 @@
               catch:tap="sliderTap"
               catch:slideEnd="handleColorTempChange"
               catch:slideChange="handleColorTempDrag"
-              disabled="{{!deviceProp.power}}"
+              disabled="{{!deviceProp.power || !deviceProp.minColorTemp}}"
               value="{{lightInfoInner.colorTemperature}}"
               use-button-slot
               custom-class="slider-color-temp-bar"

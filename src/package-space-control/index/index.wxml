@@ -123,7 +123,7 @@
           class="w-48rpx h-48rpx"
         />
         <mz-slider
-          disabled="{{!hasSpaceLightOn}}"
+          disabled="{{!hasSpaceLightOn || !canEditSpaceColorTemp}}"
           catch:slideChange="handleColorTempChange"
           catch:slideEnd="handleColorTempEnd"
           value="{{spaceLight.colorTemperature}}"

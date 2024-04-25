@@ -115,7 +115,13 @@ ComponentWithComputed({
         g.some((d) => !!(d.proType === PRO_TYPE.light && d.mzgdPropertyDTOList['light'].power)),
       )
       return flag
-    }, // 空间存在可显示的灯具
+    },
+    // 是否可调整空间色温
+    canEditSpaceColorTemp(data) {
+      const { minColorTemp, maxColorTemp } = data.spaceLight
+      return minColorTemp !== 0 && maxColorTemp !== 0
+    },
+    // 空间存在可显示的灯具
     spaceHasLight(data) {
       const { devicePageList } = data
       const flag = devicePageList.some((g) => g.some((d) => !!(d.proType === PRO_TYPE.light)))
