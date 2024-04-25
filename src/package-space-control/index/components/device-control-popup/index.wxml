@@ -62,7 +62,7 @@
               catch:tap="sliderTap"
               catch:slideEnd="handleColorTempChange"
               catch:slideChange="handleColorTempDrag"
-              disabled="{{!deviceProp.power}}"
+              disabled="{{!deviceProp.power || !deviceProp.minColorTemp}}"
               value="{{lightInfoInner.colorTemperature}}"
               use-button-slot
               custom-class="slider-color-temp-bar"
@@ -192,7 +192,23 @@
         <view>
           <text class="text-26 text-hex-666666">设备日志</text>
         </view>
-        <block wx:if="{{logListView.length}}">
+
+        <!-- 照度传感器，只需要显示一条 -->
+        <block wx:if="{{isLightSensor}}">
+          <view
+            class="log-item"
+            wx:for="{{logListView}}"
+            wx:key="index"
+          >
+            <view class="flex flex-col">
+              <text class="text-32 text-hex-666666">{{item.time}}</text>
+              <text class="text-24 text-hex-8a8a8f">{{item.date}}</text>
+            </view>
+            <text class="text-32 text-hex-000 ml-114rpx">{{item.content}}</text>
+          </view>
+        </block>
+
+        <block wx:elif="{{logListView.length}}">
           <view class="log-step"></view>
           <scroll-view
             scroll-y
@@ -201,7 +217,7 @@
             style="height: 500rpx"
           >
             <view
-              class="log-item"
+              class="log-item ml-100rpx"
               wx:for="{{logListView}}"
               wx:key="index"
             >

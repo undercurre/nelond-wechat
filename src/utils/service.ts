@@ -84,7 +84,7 @@ export async function startWebsocketService() {
     try {
       const res = JSON.parse(e.data as string)
 
-      Logger.console('Ⓦ 收到ws信息：', res)
+      Logger.console('Ⓦ 收到ws信息：', res.result.eventType ?? '', res.result.eventData ?? res.result)
 
       const { topic, message, eventData } = res.result
 

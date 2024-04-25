@@ -89,7 +89,7 @@ declare namespace AutoScene {
   }
   interface TimeCondition {
     time: string
-    timePeriod: string
+    timePeriod: string |null
     timeType: string
   }
   interface AddAutoSceneDto {

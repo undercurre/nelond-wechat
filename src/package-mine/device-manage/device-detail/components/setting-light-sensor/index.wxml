@@ -27,12 +27,12 @@
   </view>
 </view>
 
-<edit-name-dialog
+<edit-dialog
   value="{{ dialogValue }}"
   placeholder="请输入{{dialogName}}"
   title="修改{{dialogName}}"
   show="{{showEditDialog}}"
   bind:confirm="handleConfirm"
-></edit-name-dialog>
+></edit-dialog>
 
 <van-toast id="van-toast" />

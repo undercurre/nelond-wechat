@@ -118,7 +118,7 @@ emitter.on('msgPush', (res) => {
     receiveMsgIdQueue.push(reqId)
   }
 
-  Logger.console('☄ 推送消息：', res, eventType)
+  // Logger.console('☄ 推送消息：', res, eventType)
 
   emitter.emit(eventType as any, eventData)
   emitter.emit('wsReceive', res)

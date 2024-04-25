@@ -18,6 +18,7 @@ import {
   KNOB_PID,
   defaultImgDir,
   NO_COLOR_TEMP,
+  SENSOR_TYPE,
 } from '../../../../config/index'
 import {
   sendDevice,
@@ -149,7 +150,9 @@ ComponentWithComputed({
       if (!data.lightInfoInner?.colorTemperature) {
         return data.minColorTemp
       }
-      return (data.lightInfoInner.colorTemperature / 100) * (data.maxColorTemp - data.minColorTemp) + data.minColorTemp
+      return Math.round(
+        (data.lightInfoInner.colorTemperature / 100) * (data.maxColorTemp - data.minColorTemp) + data.minColorTemp,
+      )
     },
 
     // 是否关联智能开关，模板语法不支持Array.includes,改为通过计算属性控制
@@ -197,6 +200,9 @@ ComponentWithComputed({
           time,
         }
       })
+    },
+    isLightSensor(data) {
+      return SENSOR_TYPE['lightsensor'] === data.deviceInfo.productId
     },
   },
 
@@ -279,7 +285,8 @@ ComponentWithComputed({
       if (proType !== PRO_TYPE.sensor) {
         return
       }
-      const res = await getSensorLogs({ deviceId, projectId: projectStore.currentProjectId })
+      const count = this.data.isLightSensor ? 1 : 999
+      const res = await getSensorLogs({ deviceId, projectId: projectStore.currentProjectId, count })
       console.log(res)
       this.setData({
         logList: res.result,
