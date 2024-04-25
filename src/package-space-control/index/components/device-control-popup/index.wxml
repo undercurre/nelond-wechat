@@ -193,6 +193,7 @@
           <text class="text-26 text-hex-666666">设备日志</text>
         </view>
 
+        <!-- 照度传感器，只需要显示一条 -->
         <block wx:if="{{isLightSensor}}">
           <view
             class="log-item"
@@ -216,7 +217,7 @@
             style="height: 500rpx"
           >
             <view
-              class="log-item ml-100"
+              class="log-item ml-100rpx"
               wx:for="{{logListView}}"
               wx:key="index"
             >

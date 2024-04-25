@@ -111,7 +111,7 @@ page,::before,::after{--un-rotate:0;--un-rotate-x:0;--un-rotate-y:0;--un-rotate-
 .mb-70rpx{margin-bottom:70rpx;}
 .mb-80rpx{margin-bottom:80rpx;}
 .mb-96rpx{margin-bottom:96rpx;}
-.ml-100{margin-left:800rpx;}
+.ml-100rpx{margin-left:100rpx;}
 .ml-10px{margin-left:10px;}
 .ml-10rpx{margin-left:10rpx;}
 .ml-114rpx{margin-left:114rpx;}
