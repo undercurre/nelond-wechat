@@ -488,7 +488,8 @@ export class BleClient {
 export const bleUtil = {
   transferBroadcastData(advertisData: ArrayBuffer) {
     const msgStr = strUtil.ab2hex(advertisData)
-    const macStr = msgStr.substr(6, 16)
+    const protocolVersion = msgStr.slice(-2)
+    const macStr = parseInt(protocolVersion) >= 4 ? msgStr.slice(8, 24) : msgStr.slice(6, 22)
 
     let arr = []
 
@@ -500,16 +501,25 @@ export const bleUtil = {
 
     const zigbeeMac = arr.join('')
 
-    return {
-      brand: msgStr.substr(0, 4),
-      isConfig: msgStr.substr(4, 2), // 设备网络状态 0x00：未入网   0x01：正在入网   0x02:  已经入网
-      mac: zigbeeMac.substr(0, 6) + zigbeeMac.substr(-6, 6),
-      zigbeeMac,
-      proType: `0x${msgStr.slice(22, 24).toUpperCase()}`,
-      bluetoothPid: `0x${msgStr.slice(24, 26)}`,
-      version: msgStr.slice(26, 28),
-      protocolVersion: msgStr.slice(-2),
-    }
+    return parseInt(protocolVersion) >= 4
+      ? {
+          brand: msgStr.slice(0, 4),
+          isConfig: msgStr.slice(6, 8), // 设备网络状态 0x00：未入网   0x01：正在入网   0x02:  已经入网
+          mac: zigbeeMac.slice(0, 6) + zigbeeMac.slice(-6),
+          zigbeeMac,
+          proType: `0x${msgStr.slice(24, 26).toUpperCase()}`,
+          bluetoothPid: `0x${msgStr.slice(26, 28)}`,
+          protocolVersion,
+        }
+      : {
+          brand: msgStr.slice(0, 4),
+          isConfig: msgStr.slice(4, 6), // 设备网络状态 0x00：未入网   0x01：正在入网   0x02:  已经入网
+          mac: zigbeeMac.slice(0, 6) + zigbeeMac.slice(-6),
+          zigbeeMac,
+          proType: `0x${msgStr.slice(22, 24).toUpperCase()}`,
+          bluetoothPid: `0x${msgStr.slice(24, 26)}`,
+          protocolVersion,
+        }
   },
 
   getCheckNum(msgArr: Array<number>) {

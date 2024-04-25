@@ -19,7 +19,6 @@ type IDeviceInfo = {
   zigbeeMac: string
   proType: string
   bluetoothPid: string
-  version: string
   protocolVersion: string
   label: string
   deviceId: string
@@ -167,7 +166,7 @@ ComponentWithComputed({
         const deviceList = res.devices.filter((item) => {
           return (
             item.localName &&
-            item.localName.includes('homlux_ble') &&
+            ['homlux_ble', 'homlux'].includes(item.localName) &&
             this.data.deviceList.findIndex((bleItem) => item.deviceId === bleItem.deviceId) < 0
           )
         })
@@ -188,7 +187,7 @@ ComponentWithComputed({
       const msgObj = bleUtil.transferBroadcastData(device.advertisData)
 
       const { protocolVersion, mac, isConfig } = msgObj
-      if (protocolVersion !== '03') {
+      if (parseInt(protocolVersion) < 3) {
         return
       }
 

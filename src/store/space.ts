@@ -18,6 +18,7 @@ export const spaceStore = observable({
 
   // 当前选中空间栈的末端，即真正存放内容的空间
   get currentSpace(): Space.allSpace {
+    console.log('[get currentSpace]', this.currentSpaceId)
     if (this.currentSpaceId) {
       const currentSpace = this.allSpaceList.find((item) => item.spaceId === this.currentSpaceId) as Space.allSpace
 
@@ -67,7 +68,7 @@ export const spaceStore = observable({
 
   // 当前选中空间全路径名称
   get currentSpaceNameFull(): string {
-    return this.getSpaceFullName(this.currentSpace as Space.allSpace)
+    return this.getSpaceFullName(this.currentSpace as Space.allSpace) ?? ''
   },
 
   get hasSpace() {
@@ -88,11 +89,15 @@ export const spaceStore = observable({
    * 获取指定空间的完整名称
    */
   getSpaceFullName(space: Space.allSpace): string {
-    if (space.pid === '0') {
+    if (space?.pid === '0') {
       return space.spaceName
     }
 
-    const parentSpace = spaceStore.allSpaceList.find((item) => item.spaceId === space.pid) as Space.allSpace
+    const parentSpace = spaceStore.allSpaceList.find((item) => item.spaceId === space?.pid) as Space.allSpace
+
+    if (!parentSpace) {
+      return space.spaceName
+    }
 
     return `${parentSpace.pid === '0' ? parentSpace.spaceName : this.getSpaceFullName(parentSpace)},${space.spaceName}`
   },
@@ -144,6 +149,14 @@ export const spaceStore = observable({
 
 export const spaceBinding = {
   store: spaceStore,
-  fields: ['hasSpace', 'allSpaceList', 'spaceList', 'currentSpace', 'currentSpaceId', 'currentSpaceName'],
+  fields: [
+    'hasSpace',
+    'allSpaceList',
+    'spaceList',
+    'currentSpace',
+    'currentSpaceId',
+    'currentSpaceName',
+    'currentSpaceNameFull',
+  ],
   actions: [],
 }

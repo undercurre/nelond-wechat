@@ -33,9 +33,6 @@ ComponentWithComputed({
   },
 
   computed: {
-    spaceName() {
-      return spaceStore.currentSpaceNameFull ?? ''
-    },
     mac(data) {
       // 网关规则
       if (data.deviceInfo.deviceType === 1) {
@@ -199,6 +196,7 @@ ComponentWithComputed({
         this.updateDeviceInfo()
         await projectStore.updateSpaceCardList()
         await spaceStore.updateSpaceList()
+        spaceStore.setCurrentSpace(this.data.spaceId)
         spaceStore.updateRoomCardLightOnNum()
         emitter.emit('deviceEdit')
       }
