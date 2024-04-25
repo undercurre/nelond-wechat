@@ -105,7 +105,7 @@ ComponentWithComputed({
     colorTempFormatter(data) {
       const { maxColorTemp, minColorTemp } = data.spaceLight
       return (value: number) => {
-        return `${(value / 100) * (maxColorTemp - minColorTemp) + minColorTemp}K`
+        return `${Math.round((value / 100) * (maxColorTemp - minColorTemp) + minColorTemp)}K`
       }
     },
     // 房间灯光可控状态
@@ -332,16 +332,6 @@ ComponentWithComputed({
         'spaceLight.brightness': brightness,
         'spaceLight.colorTemperature': colorTemperature,
       })
-
-      // console.log('本地更新空间灯状态', deviceStore.lightStatusInRoom)
-
-      // const { brightness, colorTemperature } = deviceStore.lightStatusInRoom
-      // const hasLightOn = deviceStore.deviceList.some((d) => d.mzgdPropertyDTOList?.light?.power === 1)
-      // this.setData({
-      //   'spaceLight.power': hasLightOn ? 1 : 0,
-      //   'spaceLight.brightness': brightness,
-      //   'spaceLight.colorTemperature': colorTemperature,
-      // })
     },
 
     // 查询空间分组详情

@@ -150,7 +150,9 @@ ComponentWithComputed({
       if (!data.lightInfoInner?.colorTemperature) {
         return data.minColorTemp
       }
-      return (data.lightInfoInner.colorTemperature / 100) * (data.maxColorTemp - data.minColorTemp) + data.minColorTemp
+      return Math.round(
+        (data.lightInfoInner.colorTemperature / 100) * (data.maxColorTemp - data.minColorTemp) + data.minColorTemp,
+      )
     },
 
     // 是否关联智能开关，模板语法不支持Array.includes,改为通过计算属性控制
