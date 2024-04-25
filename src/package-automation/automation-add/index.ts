@@ -5,7 +5,6 @@ import pageBehavior from '../../behaviors/pageBehaviors'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { deviceStore, sceneStore, projectStore, autosceneStore, spaceStore } from '../../store/index'
 import { PRO_TYPE, SENSOR_TYPE, getModelName, sceneImgDir } from '../../config/index'
-import { debounce } from '../../utils/index'
 import {
   toPropertyDesc,
   storage,
@@ -643,6 +642,10 @@ ComponentWithComputed({
         this.setData({
           opearationType: 'auto',
           showTimeConditionPopup: true,
+          'timeCondition.timeId': '',
+          'timeCondition.time': '',
+          'timeCondition.timeType': '',
+          'timeCondition.timePeriod': '',
         })
       } else if (e.detail === 'touch') {
         if (spaceStore.allSpaceList.length) {
@@ -736,24 +739,32 @@ ComponentWithComputed({
     },
     // 时间点条件编辑
     handleTimeConditionConfirm(e: { detail: { timeId: string; time: string; periodType: string; week: string } }) {
-      console.log('时间前', this.data.timeConditionPopupLock ,e.detail)
+      console.log('时间点确认', e.detail)
       if (this.data.timeConditionPopupLock) {
         console.log('Lock', this.data.timeConditionPopupLock)
         return
       }
       this.data.timeConditionPopupLock = true
-      console.log('时间点', this.data.timeConditionPopupLock ,e.detail)
       const { timeId, time, periodType, week } = e.detail
-      if (this.data.timeConditions.map(item => item.timeId).includes(timeId)) {
-        const index = this.data.timeConditions.findIndex((item) => item.timeId === timeId)
-        this.data.timeConditions.splice(index, 1)
+      if (timeId && timeId !== 'default-timeId') {
+        // 修改
+        const curCondition = this.data.timeConditions.find(item => item.timeId === e.detail.timeId)
+        console.log('找到时间点', curCondition)
+        if (curCondition) {
+          curCondition.time = e.detail.time
+          curCondition.timePeriod = periodType === "4" || periodType === '1' ? week : null
+          curCondition.timeType = e.detail.periodType
+        }
+      } else {
+        // 新增
+        this.data.timeConditions.push({
+          timeId: `time${new Date().getTime().toString()}`,
+          time,
+          timeType: periodType,
+          timePeriod: periodType === "4" || periodType === '1' ? week : null
+        })
       }
-      this.data.timeConditions.push({
-        timeId: `time${new Date().getTime().toString()}`,
-        time,
-        timeType: periodType,
-        timePeriod: periodType === "4" ? week : null
-      })
+      console.log('结算', this.data.timeConditions)
       this.setData({
         timeConditions: [...this.data.timeConditions],
         showTimeConditionPopup: false,
@@ -1124,6 +1135,19 @@ ComponentWithComputed({
               property: {},
               type: 6,
             })
+          } else {
+            const curTimeConditionFlattenIndex = this.data.sceneDeviceConditionsFlatten.findIndex((item) => item.uniId === this.data.timeConditions[i].timeId)
+            if (curTimeConditionFlattenIndex !== -1) {
+              this.data.sceneDeviceConditionsFlatten[curTimeConditionFlattenIndex] = {
+                uniId: this.data.timeConditions[i].timeId,
+                name: this.data.timeConditions[i].time,
+                desc: [strUtil.transPeriodDesc(this.data.timeConditions[i].timeType, this.data.timeConditions[i].timePeriod)],
+                pic: '/package-automation/assets/imgs/automation/time-materialized.png',
+                productId: `time${i}`,
+                property: {},
+                type: 6,
+              }
+            }
           }
         }
       }
@@ -1179,7 +1203,7 @@ ComponentWithComputed({
       )
 
       this.setData({
-        sceneDeviceConditionsFlatten: this.data.sceneDeviceConditionsFlatten.concat(diffSceneDeviceConditionsFlatten),
+        sceneDeviceConditionsFlatten: [...this.data.sceneDeviceConditionsFlatten.concat(diffSceneDeviceConditionsFlatten)],
       })
     },
     // 删除条件
