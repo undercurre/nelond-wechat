@@ -5,6 +5,7 @@ import pageBehavior from '../../behaviors/pageBehaviors'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { deviceStore, sceneStore, projectStore, autosceneStore, spaceStore } from '../../store/index'
 import { PRO_TYPE, SENSOR_TYPE, getModelName, sceneImgDir } from '../../config/index'
+import { debounce } from '../../utils'
 import {
   toPropertyDesc,
   storage,
@@ -630,51 +631,50 @@ ComponentWithComputed({
     onConditionClicked(e: { detail: string }) {
       // 预条件“与”非状态值禁行
       // “与”情况下
-      if (this.data.conditionMultiple === 'all') {
-        // 非状态值单位占用
-        if (
-          this.data.linkSelectSensorListMapProductId.includes('midea.freepad.001.201') ||
-          this.data.timeConditions.length > 0
-        ) {
-          if (e.detail === 'time') {
-            Toast({ message: '非状态值“与”条件不能同时存在多个', zIndex: 9999 })
-            this.setData({
-              showEditConditionPopup: false,
-            })
-            return
+      debounce(() => {
+        if (this.data.conditionMultiple === 'all') {
+          // 非状态值单位占用
+          if (this.data.linkSelectSensorListMapProductId.includes("midea.freepad.001.201") || this.data.timeConditions.length > 0) {
+            if (e.detail === 'time') {
+              Toast({ message: '非状态值“与”条件不能同时存在多个', zIndex: 9999 })
+              this.setData({
+                showEditConditionPopup: false,
+              })
+              return
+            }
           }
         }
-      }
-      if (e.detail === 'time') {
-        this.setData({
-          opearationType: 'auto',
-          showTimeConditionPopup: true,
-        })
-      } else if (e.detail === 'touch') {
-        if (spaceStore.allSpaceList.length) {
+        if (e.detail === 'time') {
           this.setData({
-            opearationType: 'yijian',
-            showEditRoomPopup: true,
+            opearationType: 'auto',
+            showTimeConditionPopup: true,
           })
+        } else if (e.detail === 'touch') {
+          if (spaceStore.allSpaceList.length) {
+            this.setData({
+              opearationType: 'yijian',
+              showEditRoomPopup: true,
+            })
+          } else {
+            Toast({ message: '尚未添加空间', zIndex: 9999 })
+            return
+          }
         } else {
-          Toast({ message: '尚未添加空间', zIndex: 9999 })
-          return
-        }
-      } else {
-        console.log('当前传感器', this.data.sensorList)
-        if (this.data.sensorList.length) {
-          this.addSensorPopup()
-        } else {
-          Toast({ message: '尚未添加传感器', zIndex: 9999 })
-          return
+          console.log('当前传感器', this.data.sensorList)
+          if (this.data.sensorList.length) {
+            this.addSensorPopup()
+          } else {
+            Toast({ message: '尚未添加传感器', zIndex: 9999 })
+            return
+          }
+          this.setData({
+            opearationType: 'auto',
+          })
         }
         this.setData({
-          opearationType: 'auto',
+          showEditConditionPopup: false,
         })
-      }
-      this.setData({
-        showEditConditionPopup: false,
-      })
+      }, 1000)
     },
     /* 设置场景条件弹窗 end */
     onPreConditionClicked(e: { detail: string }) {
