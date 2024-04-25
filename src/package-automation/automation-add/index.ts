@@ -255,8 +255,9 @@ ComponentWithComputed({
         console.log('typeof', typeof autoSceneInfo.deviceConditions, !autoSceneInfo.deviceConditions)
 
         this.data._autosceneInfo = autoSceneInfo
+        const conditionsLength = autoSceneInfo.timeConditions.length + autoSceneInfo.deviceConditions.length
         this.setData({
-          conditionMultiple: autoSceneInfo.conditionType === '1' ? 'all' : 'some',
+          conditionMultiple: conditionsLength > 1 ? (autoSceneInfo.conditionType === '1' ? 'all' : 'some') : '',
           sceneIcon: autoSceneInfo.sceneIcon,
           sceneName: autoSceneInfo.sceneName,
           'effectiveTime.startTime': autoSceneInfo.effectiveTime.startTime.substring(0, 5),
