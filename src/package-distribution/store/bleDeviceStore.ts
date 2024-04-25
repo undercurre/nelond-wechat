@@ -1,5 +1,5 @@
 import { observable, runInAction } from 'mobx-miniprogram'
-import { BleClient, bleUtil, Logger, throttle } from '../../utils/index'
+import { BleClient, bleUtil, Logger, throttle, unique } from '../../utils/index'
 import { spaceBinding, deviceBinding } from '../../store/index'
 import { batchCheckDevice, batchGetProductInfoByBPid } from '../../apis/index'
 
@@ -34,11 +34,15 @@ export const bleDevicesStore = observable({
     this.isStart = true
     // 监听扫描到新设备事件, 安卓 6.0 及以上版本，无定位权限或定位开关未打开时，无法进行设备搜索
     wx.onBluetoothDeviceFound((res: WechatMiniprogram.OnBluetoothDeviceFoundCallbackResult) => {
-      const deviceList = res.devices
-        .filter((item) => {
-          // 先过滤非homlux蓝牙子设备 以及【蓝牙信号值低于-75】的设备
-          return item.localName && item.localName.includes('homlux_ble') && item.RSSI > -75
-        })
+      let allDeviceList = res.devices.filter((item) => {
+        // 先过滤非homlux蓝牙子设备 以及【蓝牙信号值低于-75】的设备
+        return item.localName && ['homlux_ble', 'homlux'].includes(item.localName) && item.RSSI > -75
+      })
+
+      // 对发现的子设备进行去重
+      allDeviceList = unique(allDeviceList, 'deviceId')
+
+      const deviceList = allDeviceList
         .map((item) => getBleDeviceBaseInfo(item))
         .filter((baseInfo) => {
           // 已经展示在列表的设备的广播数据
@@ -342,6 +346,5 @@ export interface IBleBaseInfo {
   zigbeeMac: string
   proType: string
   bluetoothPid: string
-  version: string
   protocolVersion: string
 }

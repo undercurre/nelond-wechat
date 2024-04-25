@@ -92,8 +92,8 @@ ComponentWithComputed({
       wx.onBluetoothDeviceFound((res: WechatMiniprogram.OnBluetoothDeviceFoundCallbackResult) => {
         const deviceList = res.devices.filter((item) => {
           let flag = false
-          // localName为homlux_ble且没有被发现过的
-          if (item.localName && item.localName.includes('homlux_ble')) {
+          // localName为homlux_ble、homlux且没有被发现过的
+          if (item.localName && ['homlux_ble', 'homlux'].includes(item.localName)) {
             flag = true
           }
 
