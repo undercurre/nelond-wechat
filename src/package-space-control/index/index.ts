@@ -269,9 +269,6 @@ ComponentWithComputed({
 
           this.updateQueue(device)
 
-          // 子设备状态变更，刷新全空间灯光可控状态
-          this.refreshLightStatus()
-
           return
         }
         // 节流更新本地数据
@@ -299,15 +296,52 @@ ComponentWithComputed({
 
     // 响应控制弹窗中单灯/灯组的控制变化，直接按本地设备列表数值以及设置值，刷新空间灯的状态
     refreshLightStatus() {
-      console.log('本地更新空间灯状态', deviceStore.lightStatusInRoom)
+      let sumOfBrightness = 0,
+        sumOfColorTemp = 0,
+        count = 0,
+        brightness = 0,
+        colorTemperature = 0
 
-      const { brightness, colorTemperature } = deviceStore.lightStatusInRoom
-      const hasLightOn = deviceStore.deviceList.some((d) => d.mzgdPropertyDTOList?.light?.power === 1)
+      // 房间所有灯的亮度计算
+      deviceStore.deviceFlattenList.forEach((device) => {
+        const { proType, deviceType, mzgdPropertyDTOList, onLineStatus } = device
+
+        // 只需要灯需要参与计算，过滤属性数据不完整的数据，过滤灯组，过滤不在线设备，过滤未开启设备
+        if (
+          proType !== PRO_TYPE.light ||
+          deviceType === 4 ||
+          onLineStatus !== 1 ||
+          mzgdPropertyDTOList?.light?.power !== 1
+        ) {
+          return
+        }
+
+        sumOfBrightness += mzgdPropertyDTOList.light?.brightness ?? 0
+        sumOfColorTemp += mzgdPropertyDTOList.light?.colorTemperature ?? 0
+        count++
+      })
+
+      if (count) {
+        brightness = sumOfBrightness / count
+        colorTemperature = sumOfColorTemp / count
+      }
+
+      console.log('本地更新房间灯状态', { brightness, colorTemperature })
+
       this.setData({
-        'spaceLight.power': hasLightOn ? 1 : 0,
         'spaceLight.brightness': brightness,
         'spaceLight.colorTemperature': colorTemperature,
       })
+
+      // console.log('本地更新空间灯状态', deviceStore.lightStatusInRoom)
+
+      // const { brightness, colorTemperature } = deviceStore.lightStatusInRoom
+      // const hasLightOn = deviceStore.deviceList.some((d) => d.mzgdPropertyDTOList?.light?.power === 1)
+      // this.setData({
+      //   'spaceLight.power': hasLightOn ? 1 : 0,
+      //   'spaceLight.brightness': brightness,
+      //   'spaceLight.colorTemperature': colorTemperature,
+      // })
     },
 
     // 查询空间分组详情
