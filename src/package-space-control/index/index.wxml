@@ -44,7 +44,7 @@
     class="tool-box fixed"
     style="padding-top: {{toolboxTop}}px; height: {{toolboxTop + toolboxContentHeight}}px;"
   >
-    <view class="scene-box {{roomHasLight ? 'scene-border-bottom' : ''}}">
+    <view class="scene-box {{spaceHasLight ? 'scene-border-bottom' : ''}}">
       <image
         src="/assets/img/base/scene.png"
         class="w-64rpx h-64rpx"
@@ -81,15 +81,18 @@
       </view>
     </view>
 
-    <block wx:if="{{roomHasLight}}">
+    <block wx:if="{{spaceHasLight}}">
       <!-- 全空间亮度控制 -->
-      <view class="slider-box">
+      <view
+        class="slider-box"
+        bind:touchend="handleSpaceLightTouch"
+      >
         <image
           src="/package-space-control/assets/img/bright.png"
           class="w-48rpx h-48rpx"
         />
         <mz-slider
-          disabled="{{!spaceLight.power}}"
+          disabled="{{!hasSpaceLightOn}}"
           catch:slideChange="handleLevelChange"
           catch:slideEnd="handleLevelEnd"
           value="{{spaceLight.brightness}}"
@@ -111,13 +114,16 @@
       </view>
 
       <!-- 全空间色温控制 -->
-      <view class="slider-box">
+      <view
+        class="slider-box"
+        bind:touchend="handleSpaceLightTouch"
+      >
         <image
           src="/package-space-control/assets/img/colorTemp.png"
           class="w-48rpx h-48rpx"
         />
         <mz-slider
-          disabled="{{!spaceLight.power}}"
+          disabled="{{!hasSpaceLightOn}}"
           catch:slideChange="handleColorTempChange"
           catch:slideEnd="handleColorTempEnd"
           value="{{spaceLight.colorTemperature}}"

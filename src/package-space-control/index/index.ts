@@ -108,8 +108,15 @@ ComponentWithComputed({
         return `${(value / 100) * (maxColorTemp - minColorTemp) + minColorTemp}K`
       }
     },
-    // 空间存在可显示的灯具
-    roomHasLight(data) {
+    // 房间灯光可控状态
+    hasSpaceLightOn(data) {
+      const { devicePageList } = data
+      const flag = devicePageList.some((g) =>
+        g.some((d) => !!(d.proType === PRO_TYPE.light && d.mzgdPropertyDTOList['light'].power)),
+      )
+      return flag
+    }, // 空间存在可显示的灯具
+    spaceHasLight(data) {
       const { devicePageList } = data
       const flag = devicePageList.some((g) => g.some((d) => !!(d.proType === PRO_TYPE.light)))
       return flag
@@ -187,7 +194,7 @@ ComponentWithComputed({
     },
     // 工具栏内容区域高度
     toolboxContentHeight(data) {
-      return data.roomHasLight ? 150 : 60
+      return data.spaceHasLight ? 150 : 60
     },
     /**
      * 是否打开控制面板（除浴霸和晾衣）
@@ -930,6 +937,11 @@ ComponentWithComputed({
         'spaceLight.colorTemperature': e.detail,
       })
       this.lightSendDeviceControl('colorTemperature')
+    },
+    handleSpaceLightTouch() {
+      if (!this.data.hasSpaceLightOn) {
+        Toast('控制房间色温和亮度前至少开启一盏灯')
+      }
     },
     async lightSendDeviceControl(type: 'colorTemperature' | 'brightness') {
       const deviceId = this.data.spaceLight.groupId
