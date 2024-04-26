@@ -134,6 +134,7 @@
 />
 <all-space-select
   show="{{showEditRoomPopup}}"
+  targetSpaceId="{{spaceId}}"
   showCell="{{false}}"
   showTab="{{false}}"
   initConfirm="{{false}}"
