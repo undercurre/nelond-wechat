@@ -33,6 +33,18 @@ App<IAppOption>({
 
     homOs.init({ mqttLib: mqtt, isDebug: true })
 
+    // 监听houseId变化，切换websocket连接,切换成对应项目的sock连接
+    reaction(
+      () => projectStore.currentProjectDetail.projectId,
+      async () => {
+        Logger.debug('reaction -> projectId', projectStore.currentProjectDetail.projectId)
+        await closeWebSocket()
+        startWebsocketService()
+        // await projectStore.updateLocalKey()
+        // initHomeOs()
+      },
+    )
+
     // 如果用户已经登录，开始请求数据[用户][项目列表、全屋空间、全屋设备]
     if (isLogined()) {
       try {
@@ -58,17 +70,6 @@ App<IAppOption>({
     } else {
       othersStore.setIsInit(false)
     }
-
-    // 监听houseId变化，切换websocket连接,切换成对应项目的sock连接
-    reaction(
-      () => projectStore.currentProjectDetail.projectId,
-      async () => {
-        closeWebSocket()
-        startWebsocketService()
-        // await projectStore.updateLocalKey()
-        // initHomeOs()
-      },
-    )
 
     // 监听内存不足告警事件
     wx.onMemoryWarning(function () {

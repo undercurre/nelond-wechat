@@ -3,6 +3,9 @@ import { rpx2px } from '../utils/index'
 // 设备列表，每次加载的条数 应该为4的倍数
 export const LIST_PAGE = 20
 
+// 依赖 WebSocket 更新设备数据的最大设备数
+export const MAX_DEVICES_USING_WS = 160
+
 // 最多可以移动和删除的设备数（按卡片计数）
 export const MAX_MOVE_CARDS = 20
 
