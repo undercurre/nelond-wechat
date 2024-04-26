@@ -60,7 +60,7 @@ ComponentWithComputed({
         }
 
         // 超时控制
-        const TIME_OUT = Math.min(Math.max(8000, this.data.deviceList.length * 1000), 120000)
+        const TIME_OUT = Math.min(Math.max(15000, this.data.deviceList.length * 1000), 120000)
         timeoutId = setTimeout(() => {
           timeoutId = null
           if (this.data.deviceList.length !== this.data.successList.length) {
