@@ -73,8 +73,8 @@ Component({
         return
       }
 
-      if (this.data.deviceInfo?.deviceName.length > 6) {
-        Toast('名称不能超过6个字符')
+      if (this.data.deviceInfo?.deviceName.length > 10) {
+        Toast('名称不能超过10个字符')
         return
       }
 
