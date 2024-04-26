@@ -2,9 +2,10 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import pageBehaviors from '../../behaviors/pageBehaviors'
 import { deviceStore, projectBinding, spaceBinding } from '../../store/index'
-import { emitter } from '../../utils/index'
+import { emitter, checkInputNameIllegal } from '../../utils/index'
 import { StatusType } from './typings'
 import { addGroup, renameGroup, delGroup, updateGroup } from '../../apis/device'
+import Toast from '@vant/weapp/toast/toast'
 
 let timeoutId: number | null
 
@@ -223,6 +224,17 @@ ComponentWithComputed({
     },
 
     finishBtn() {
+      // 校验名字合法性
+      if (checkInputNameIllegal(this.data.groupName)) {
+        Toast('设备名称不能用特殊符号或表情')
+        return
+      }
+
+      if (this.data.groupName.length > 10) {
+        Toast('设备名称不能超过10个字符')
+        return
+      }
+
       renameGroup({
         groupId: this.data.groupId,
         groupName: this.data.groupName,
