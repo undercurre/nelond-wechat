@@ -276,10 +276,14 @@ ComponentWithComputed({
         return
       }
       const lightList = this.data.editSelectList
+      const lightGroup = deviceStore.deviceList.filter((d) => d.deviceType === 4)
       wx.navigateTo({
         url: '/package-space-control/group/index',
         success: (res) => {
-          res.eventChannel.emit('createGroup', { lightList })
+          res.eventChannel.emit('createGroup', {
+            lightList,
+            groupName: lightGroup?.length ? `灯组${lightGroup.length + 1}` : '',
+          })
         },
       })
       this.triggerEvent('close')

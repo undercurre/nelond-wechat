@@ -4,7 +4,7 @@ import pageBehaviors from '../../behaviors/pageBehaviors'
 import { deviceStore, projectBinding, spaceBinding } from '../../store/index'
 import { emitter, checkInputNameIllegal } from '../../utils/index'
 import { StatusType } from './typings'
-import { addGroup, renameGroup, delGroup, updateGroup } from '../../apis/device'
+import { addGroup, renameGroup, delGroup, updateGroup, retryGroup } from '../../apis/device'
 import Toast from '@vant/weapp/toast/toast'
 
 let timeoutId: number | null
@@ -15,6 +15,7 @@ ComponentWithComputed({
     isEdit: false, // 是否编辑
     deviceList: [] as Device.DeviceItem[],
     status: 'processing' as StatusType,
+    defaultGroupName: '灯组', // 默认分组名称
     groupName: '',
     groupId: '',
     presetNames: ['筒灯', '射灯', '吊灯', '灯组'],
@@ -49,14 +50,21 @@ ComponentWithComputed({
           deviceList,
           groupId: data.groupId,
           isEdit: !!data.groupId,
-          groupName: data.groupName ?? '灯组',
+          groupName: data.groupName ?? this.data.defaultGroupName,
         })
 
         // 开始创建\更新分组
         if (!this.data.groupId) {
           await this.addGroup()
         } else {
-          await this.updateGroup()
+          await updateGroup({
+            applianceGroupDtoList: this.data.deviceList.map((device) => ({
+              deviceId: device.deviceId,
+              deviceType: device.deviceType,
+              proType: device.proType,
+            })),
+            groupId: this.data.groupId,
+          })
         }
 
         // 超时控制
@@ -138,7 +146,7 @@ ComponentWithComputed({
           deviceType: device.deviceType,
           proType: device.proType,
         })),
-        groupName: '灯组',
+        groupName: this.data.groupName, // 不经用户选择，自动命名
         projectId: this.data.currentProjectId,
         spaceId: this.data.currentSpace.spaceId,
       })
@@ -147,33 +155,31 @@ ComponentWithComputed({
       }
     },
 
-    async updateGroup() {
-      await updateGroup({
-        applianceGroupDtoList: this.data.deviceList.map((device) => ({
-          deviceId: device.deviceId,
-          deviceType: device.deviceType,
-          proType: device.proType,
-        })),
-        groupId: this.data.groupId,
-      })
-    },
+    async retryGroup() {
+      if (!this.data.groupId) {
+        this.addGroup()
+      } else {
+        await retryGroup({
+          applianceGroupDtoList: this.data.deviceList
+            .filter((device) => device.status === 'failed')
+            .map((device) => ({
+              deviceId: device.deviceId,
+              deviceType: device.deviceType,
+              proType: device.proType,
+            })),
+          groupId: this.data.groupId,
+        })
+      }
 
-    retryGroup() {
-      // 重新生成列表并设置状态为进行中
+      // 重新生成列表，未成功转为进行中，并设置状态为进行中
       const deviceList = this.data.deviceList.map((device) => ({
         ...device,
-        status: 'processing',
+        status: device.status === 'failed' ? 'processing' : device.status,
       }))
       this.setData({
         deviceList,
         status: 'processing',
       })
-
-      if (!this.data.groupId) {
-        this.addGroup()
-      } else {
-        this.updateGroup()
-      }
     },
 
     toRename() {
@@ -235,10 +241,12 @@ ComponentWithComputed({
         return
       }
 
-      renameGroup({
-        groupId: this.data.groupId,
-        groupName: this.data.groupName,
-      })
+      if (this.data.defaultGroupName !== this.data.groupName) {
+        renameGroup({
+          groupId: this.data.groupId,
+          groupName: this.data.groupName,
+        })
+      }
       this.endGroup()
     },
   },
