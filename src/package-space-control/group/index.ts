@@ -41,16 +41,16 @@ ComponentWithComputed({
       const eventChannel = this.getOpenerEventChannel()
       eventChannel.on('createGroup', async (data) => {
         const deviceList = data.lightList.map((deviceId: string) => ({
-          ...deviceStore.deviceMap[deviceId],
+          ...deviceStore.allDeviceMap[deviceId],
           status: 'processing',
         }))
-        console.log(data.lightList, deviceList, deviceStore.deviceMap)
+        console.log(data.lightList, deviceList, deviceStore.allDeviceMap)
 
         this.setData({
           deviceList,
           groupId: data.groupId,
           isEdit: !!data.groupId,
-          groupName: data.groupName ?? this.data.defaultGroupName,
+          groupName: data.groupName || this.data.defaultGroupName,
         })
 
         // 开始创建\更新分组
