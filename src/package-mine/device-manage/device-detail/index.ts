@@ -96,6 +96,12 @@ ComponentWithComputed({
       }
       return 0
     },
+    spaceName(data) {
+      const { spaceId } = data
+      const { allSpaceList, getSpaceFullName } = spaceStore
+      const currentSpace = allSpaceList.find((item) => item.spaceId === spaceId)
+      return currentSpace ? getSpaceFullName(currentSpace) : ''
+    },
   },
 
   methods: {

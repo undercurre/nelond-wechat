@@ -36,7 +36,7 @@
             is-link="{{canEditDevice}}"
             bind:click="handleDeviceRoomEditPopup"
             title="所在空间"
-            value="{{currentSpaceNameFull}}"
+            value="{{spaceName}}"
           ></van-cell>
           <van-cell
             wx:if="{{isSubDevice}}"
@@ -134,6 +134,7 @@
 />
 <all-space-select
   show="{{showEditRoomPopup}}"
+  targetSpaceId="{{spaceId}}"
   showCell="{{false}}"
   showTab="{{false}}"
   initConfirm="{{false}}"

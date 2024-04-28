@@ -831,6 +831,25 @@ export async function addGroup(
 }
 
 /**
+ * 重试分组
+ */
+export async function retryGroup(
+  data: {
+    applianceGroupDtoList: Device.GroupDTO[]
+    groupId: string
+    userId?: string
+  },
+  options?: { loading?: boolean },
+) {
+  return await mzaioRequest.post<{ groupId: string }>({
+    log: true,
+    loading: options?.loading ?? false,
+    url: '/v1/mzgd/cl/scene/groupRetry',
+    data,
+  })
+}
+
+/**
  * 更新分组
  */
 export async function updateGroup(
