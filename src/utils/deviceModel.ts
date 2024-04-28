@@ -138,7 +138,7 @@ export function toPropertyDesc(proType: string, productId: string, property: IAn
         property.doorStatus ? (!isNullOrUnDef(property.PIRToUnoccupiedDelay) ? '超时未关闭' : '打开') : '关闭',
       )
     !isNullOrUnDef(property.illuminance) &&
-      descList.push(`照度${getValuesMap(property.illuminance_symbol)}${property.illuminance}Lux`)
+      descList.push(`照度${getValuesMap(property.illuminance_symbol)}${Number(property.illuminance)}Lux`)
     !isNullOrUnDef(property.buttonClicked) &&
       descList.push(property.buttonClicked === 1 ? '单击' : property.buttonClicked === 2 ? '双击' : '长按')
   }

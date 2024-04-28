@@ -68,7 +68,7 @@ ComponentWithComputed({
     },
 
     luxDefaultInput(data) {
-      return data._controlAction.illuminance || ''
+      return data._controlAction.illuminance || '0'
     },
 
     popupHeight(data) {

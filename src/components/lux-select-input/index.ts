@@ -42,8 +42,8 @@ VantComponent({
     },
     defaultInput: {
       type: String,
-      value: '',
-      observer(value = '') {
+      value: '0',
+      observer(value = '0') {
         this.setData({
           luxValue: value
         })
@@ -69,7 +69,7 @@ VantComponent({
   },
 
   data: {
-    luxValue: ''
+    luxValue: '0'
   },
 
   methods: {
