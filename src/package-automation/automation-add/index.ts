@@ -28,6 +28,7 @@ ComponentWithComputed({
     dialogConfirmBtnColor: '#27282A',
     sceneImgDir,
     opearationType: 'yijian', // yijian是一键场景，auto是自动化场景
+    preConditionMultiple: true,
     conditionMultiple: '',
     spaceId: '', //选中的最后一级空间Id
     // 选中的四级空间信息
@@ -605,19 +606,25 @@ ComponentWithComputed({
       })
     },
     addMultipleCondition() {
-      if (this.data.conditionMultiple) {
+      if (this.data.preConditionMultiple) {
         this.setData({
-          showEditConditionPopup: true,
+          preConditionMultiple: false,
+          showPreConditionPopup: true,
         })
       } else {
         this.setData({
-          showPreConditionPopup: true
+          showEditConditionPopup: true
         })
       }
     },
     handleConditionClose() {
       this.setData({
         showEditConditionPopup: false,
+      }, () => {
+        this.setData({
+          conditionMultiple: this.data.sceneDeviceConditionsFlatten.length < 2 ? '' : this.data.conditionMultiple,
+          preConditionMultiple: this.data.sceneDeviceConditionsFlatten.length < 2
+        })
       })
     },
     handlePreConditionClose() {
@@ -635,6 +642,8 @@ ComponentWithComputed({
           if (e.detail === 'time') {
             Toast({ message: '你已设置了其他条件，与此条件冲突', zIndex: 9999 })
             this.setData({
+              preConditionMultiple: true,
+              conditionMultiple: '',
               showEditConditionPopup: false,
             })
             return
@@ -681,8 +690,10 @@ ComponentWithComputed({
       this.setData({
         conditionMultiple: e.detail,
         showPreConditionPopup: false,
+        preConditionMultiple: false,
+      }, () => {
+        this.addMultipleCondition()
       })
-      this.addMultipleCondition()
     },
     /* 设置手动场景——空间 */
     handleSceneRoomEditCancel() {
@@ -911,13 +922,14 @@ ComponentWithComputed({
         const allDeviceMap = deviceStore.allDeviceFlattenMap
         const device = allDeviceMap[e.detail]
         const modelName = 'light'
-        findDevice({ gatewayId: device.gatewayId, devId: device.deviceId, modelName })
+        // findDevice({ gatewayId: device.gatewayId, devId: device.deviceId, modelName })
       }
       const listType =
         this.data.selectCardType === 'sensor' ? 'tempSensorlinkSelectList' : 'tempSceneDevicelinkSelectedList'
       // 取消选择逻辑
       if (this.data[listType].includes(selectId)) {
         const index = this.data[listType].findIndex((id) => id === selectId)
+        console.log('找到取消选择的设备', index)
         this.data[listType].splice(index, 1)
         this.setData({
           [`${listType}`]: [...this.data[listType]],
@@ -932,11 +944,11 @@ ComponentWithComputed({
           Toast({ message: '你已设置了其他条件，与此条件冲突', zIndex: 9999 })
           return
         }
-        this.data.sensorlinkSelectList.push({ deviceId: selectId, datetime: new Date().getTime().toString() })
+        // this.data.sensorlinkSelectList.push({ deviceId: selectId, datetime: new Date().getTime().toString() })
         this.data.tempSensorlinkSelectList.push(selectId)
         //传感器只单选
         this.setData({
-          sensorlinkSelectList: [...this.data.sensorlinkSelectList],
+          // sensorlinkSelectList: [...this.data.sensorlinkSelectList],
           tempSensorlinkSelectList: [...this.data.tempSensorlinkSelectList]
         })
       } else {
@@ -962,7 +974,16 @@ ComponentWithComputed({
     },
     // 设备选择确认
     async handleSelectCardConfirm() {
+      console.log('handleSelectCardConfirm', this.data.selectCardType, this.data.tempSceneDevicelinkSelectedList)
       // console.log('handleSelectCardConfirm', e)
+      this.setData(
+        {
+          sensorlinkSelectList: [
+            ...this.data['sensorlinkSelectList'],
+            ...this.data['tempSensorlinkSelectList'].map(item => { return { deviceId: item, datetime: new Date().getTime().toString() } })
+          ]
+        }
+      )
       this.setData({
         tempSensorlinkSelectList: [],
         showSelectCardPopup: false,
@@ -1156,6 +1177,7 @@ ComponentWithComputed({
       }
 
       // 已选中的传感器
+      console.log('即将diff的传感器列表')
       const sensorSelected = JSON.parse(JSON.stringify(this.data.sensorlinkSelectList
         .map((id) => {
           return {
@@ -1239,7 +1261,8 @@ ComponentWithComputed({
       })
       if (this.data.sceneDeviceConditionsFlatten.length <= 1) {
         this.setData({
-          conditionMultiple: ''
+          conditionMultiple: '',
+          preConditionMultiple: true
         })
       }
       console.log(this.data.sensorlinkSelectList, this.data.sceneDeviceConditionsFlatten)
@@ -1347,7 +1370,7 @@ ComponentWithComputed({
           modelName = String(device.switchInfoDTOList[0].switchId)
         }
 
-        device.deviceType === 2 && findDevice({ gatewayId: device.gatewayId, devId: device.deviceId, modelName })
+        // device.deviceType === 2 && findDevice({ gatewayId: device.gatewayId, devId: device.deviceId, modelName })
 
         this.setData({
           sceneEditTitle: action.name,
