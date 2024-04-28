@@ -28,7 +28,6 @@ ComponentWithComputed({
     dialogConfirmBtnColor: '#27282A',
     sceneImgDir,
     opearationType: 'yijian', // yijian是一键场景，auto是自动化场景
-    preConditionMultiple: true,
     conditionMultiple: '',
     spaceId: '', //选中的最后一级空间Id
     // 选中的四级空间信息
@@ -606,9 +605,8 @@ ComponentWithComputed({
       })
     },
     addMultipleCondition() {
-      if (this.data.preConditionMultiple) {
+      if ((this.data.sceneDeviceConditionsFlatten.length + this.data.sceneDeviceActionsFlatten.length) === 1) {
         this.setData({
-          preConditionMultiple: false,
           showPreConditionPopup: true,
         })
       } else {
@@ -620,11 +618,6 @@ ComponentWithComputed({
     handleConditionClose() {
       this.setData({
         showEditConditionPopup: false,
-      }, () => {
-        this.setData({
-          conditionMultiple: this.data.sceneDeviceConditionsFlatten.length < 2 ? '' : this.data.conditionMultiple,
-          preConditionMultiple: this.data.sceneDeviceConditionsFlatten.length < 2
-        })
       })
     },
     handlePreConditionClose() {
@@ -642,8 +635,6 @@ ComponentWithComputed({
           if (e.detail === 'time') {
             Toast({ message: '你已设置了其他条件，与此条件冲突', zIndex: 9999 })
             this.setData({
-              preConditionMultiple: true,
-              conditionMultiple: '',
               showEditConditionPopup: false,
             })
             return
@@ -690,9 +681,10 @@ ComponentWithComputed({
       this.setData({
         conditionMultiple: e.detail,
         showPreConditionPopup: false,
-        preConditionMultiple: false,
       }, () => {
-        this.addMultipleCondition()
+        this.setData({
+          showEditConditionPopup: true
+        })
       })
     },
     /* 设置手动场景——空间 */
@@ -1261,8 +1253,7 @@ ComponentWithComputed({
       })
       if (this.data.sceneDeviceConditionsFlatten.length <= 1) {
         this.setData({
-          conditionMultiple: '',
-          preConditionMultiple: true
+          conditionMultiple: ''
         })
       }
       console.log(this.data.sensorlinkSelectList, this.data.sceneDeviceConditionsFlatten)
