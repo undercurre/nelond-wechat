@@ -937,11 +937,11 @@ ComponentWithComputed({
           return
         }
         // this.data.sensorlinkSelectList.push({ deviceId: selectId, datetime: new Date().getTime().toString() })
-        this.data.tempSensorlinkSelectList.push(selectId)
+        // this.data.tempSensorlinkSelectList.push(selectId)
         //传感器只单选
         this.setData({
           // sensorlinkSelectList: [...this.data.sensorlinkSelectList],
-          tempSensorlinkSelectList: [...this.data.tempSensorlinkSelectList]
+          tempSensorlinkSelectList: [selectId]
         })
       } else {
         this.setData({
