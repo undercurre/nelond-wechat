@@ -287,19 +287,21 @@ ComponentWithComputed({
         })
         // } else {
         //时间条件
-        const timeConditions = autoSceneInfo.timeConditions[0]
-        console.log('初始化的timeCondition', autoSceneInfo.timeConditions)
-        this.setData({
-          timeConditions: autoSceneInfo.timeConditions.map(item => {
-            return {
-              ...item,
-              timeId: `time${(new Date().getTime() + Math.floor(Math.random() * 10) + 1).toString()}`
-            }
-          }),
-          'timeCondition.time': timeConditions.time,
-          'timeCondition.timePeriod': timeConditions.timePeriod,
-          'timeCondition.timeType': timeConditions.timeType,
-        })
+        if (autoSceneInfo.timeConditions.length > 0) {
+          const timeConditions = autoSceneInfo.timeConditions[0]
+          console.log('初始化的timeCondition', autoSceneInfo.timeConditions)
+          this.setData({
+            timeConditions: autoSceneInfo.timeConditions.map(item => {
+              return {
+                ...item,
+                timeId: `time${(new Date().getTime() + Math.floor(Math.random() * 10) + 1).toString()}`
+              }
+            }),
+            'timeCondition.time': timeConditions.time,
+            'timeCondition.timePeriod': timeConditions.timePeriod,
+            'timeCondition.timeType': timeConditions.timeType,
+          })
+        }
         // }
         //处理执行结果
         const tempSceneDeviceActionsFlatten = [] as AutoScene.AutoSceneFlattenAction[]
@@ -631,7 +633,7 @@ ComponentWithComputed({
         // 非状态值单位占用
         if (this.data.linkSelectSensorListMapProductId.includes("midea.freepad.001.201") || this.data.timeConditions.length > 0) {
           if (e.detail === 'time') {
-            Toast({ message: '非状态值“与”条件不能同时存在多个', zIndex: 9999 })
+            Toast({ message: '你已设置了其他条件，与此条件冲突', zIndex: 9999 })
             this.setData({
               showEditConditionPopup: false,
             })
@@ -927,7 +929,7 @@ ComponentWithComputed({
         const limitProductId = ["midea.freepad.001.201"]
         // 非状态值禁行
         if (this.data.conditionMultiple === 'all' && (this.data.timeCondition.time !== '' || this.data.linkSelectSensorListMapProductId.includes("midea.freepad.001.201")) && selectedProductId && limitProductId.includes(selectedProductId)) {
-          Toast({ message: '非状态值“与”条件不能同时存在多个', zIndex: 9999 })
+          Toast({ message: '你已设置了其他条件，与此条件冲突', zIndex: 9999 })
           return
         }
         this.data.sensorlinkSelectList.push({ deviceId: selectId, datetime: new Date().getTime().toString() })
