@@ -168,7 +168,7 @@ function changeBarStyle(_inst, _width) {
 
   var minWidth = isBtnInset[key] ? buttonInfo[key].width / 2 : 0
   var maxWidth = isBtnInset[key] ? sliderInfo[key].width - buttonInfo[key].width / 2 : sliderInfo[key].width
-  var widthInRange = calcDragDis(_width, minWidth, maxWidth)
+  var widthInRange = calcDragDis(key, _width, minWidth, maxWidth)
   var sliderBarWidth = isBtnInset[key] ? widthInRange + buttonInfo[key].width / 2 : widthInRange
 
   // console.log('sliderInfo[key].width', JSON.stringify(sliderInfo[key].width), key)
@@ -194,7 +194,7 @@ function changeBarStyle(_inst, _width) {
  * @param _active 是否激活（淡入）
  */
 function changeToastStyle(_key, _width, _active = true) {
-  var widthInRange = calcDragDis(_width, isBtnInset[_key] ? buttonInfo[_key].width : 0)
+  var widthInRange = calcDragDis(_key, _width, isBtnInset[_key] ? buttonInfo[_key].width : 0)
   var toastInfo = sliderToast[_key].getBoundingClientRect()
   var toastLeft = widthInRange - toastInfo.width / 2
   var compositeActive = _active || !toastActived[_key]
@@ -209,12 +209,19 @@ function changeToastStyle(_key, _width, _active = true) {
 // ! 在此处处理 min~max 值的传化，组件中的事件处理则不必再逐一处理
 function updateValue(_key, _width) {
   setValue[_key] = Math.round(
-    (calcDragDis(_width, 0, sliderInfo[_key].width) / sliderInfo[_key].width) * (max[_key] - min[_key]) + min[_key],
+    (calcDragDis(_key, _width, 0, sliderInfo[_key].width) / sliderInfo[_key].width) * (max[_key] - min[_key]) +
+      min[_key],
   )
 }
 
 // 计算范围约束值
-function calcDragDis(_val, _min = buttonInfo[key].width, _max = sliderInfo[key].width) {
+function calcDragDis(_key, _val, _min, _max) {
+  if (_min === undefined || _min === null) {
+    _min = buttonInfo[_key].width
+  }
+  if (_max === undefined || _max === null) {
+    _max = sliderInfo[_key].width
+  }
   return Math.min(Math.max(_val, _min), _max)
 }
 
