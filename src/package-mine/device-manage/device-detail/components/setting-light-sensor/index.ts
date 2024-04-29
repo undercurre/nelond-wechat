@@ -73,7 +73,13 @@ ComponentWithComputed({
         })
         return
       }
-
+      if (!Number.isInteger(e.detail)) {
+        Toast({
+          message: `请输入整数`,
+          zIndex: 999999,
+        })
+        return
+      }
       const setVal = parseInt(e.detail)
       if (this.data.dialogType === 'blockTime') {
         if (setVal > 60 || setVal < 1) {
@@ -92,13 +98,14 @@ ComponentWithComputed({
           return
         }
       }
+      const parseVal = this.data.dialogType === 'blockTime' ? setVal * 60 : setVal // 时间单位转换
       const res = await sendDevice({
         proType: PRO_TYPE.sensor,
         modelName: 'lightsensor',
         deviceType: 2,
         gatewayId: this.data.deviceInfo.gatewayId,
         deviceId: this.data.deviceInfo.deviceId,
-        property: { [this.data.dialogType]: setVal },
+        property: { [this.data.dialogType]: parseVal },
       })
       if (!res.success) {
         Toast({
