@@ -16,6 +16,12 @@
       bind:clear="changeName"
       bind:change="changeName"
       border="{{false}}"
-    ></van-field>
+    >
+      <text
+        wx:if="{{unit}}"
+        slot="right-icon"
+        >{{unit}}</text
+      >
+    </van-field>
   </view>
 </van-dialog>

@@ -30,6 +30,7 @@
 <edit-dialog
   value="{{ dialogValue }}"
   placeholder="请输入{{dialogName}}"
+  unit="{{dialogUnit}}"
   title="修改{{dialogName}}"
   show="{{showEditDialog}}"
   bind:confirm="handleConfirm"
