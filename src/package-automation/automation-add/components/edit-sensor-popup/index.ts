@@ -114,6 +114,7 @@ ComponentWithComputed({
         _controlAction: {
           illuminance: event.detail.value,
           illuminance_symbol: event.detail.symbol,
+          modelName: 'lightsensor'
         },
       })
     },

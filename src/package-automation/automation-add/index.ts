@@ -231,7 +231,7 @@ ComponentWithComputed({
         } else if (item.productId === SENSOR_TYPE.doorsensor) {
           item.property = { doorStatus: 1, modelName: 'magnet' }
         } else if (item.productId === SENSOR_TYPE.lightsensor) {
-          item.property = { illuminance: 0, illuminance_symbol: 'equalTo', modelName: 'light' }
+          item.property = { illuminance: 0, illuminance_symbol: 'equalTo', modelName: 'lightsensor' }
         } else {
           item.property = { buttonClicked: 1, modelName: 'freepad' }
         }
