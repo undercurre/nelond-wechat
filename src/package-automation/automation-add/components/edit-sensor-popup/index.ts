@@ -112,7 +112,7 @@ ComponentWithComputed({
       this.setData({
         luxDefaultIndex: this.data.lux_en_colums.findIndex((item) => item === event.detail.symbol),
         _controlAction: {
-          illuminance: event.detail.value,
+          illuminance: Number(event.detail.value),
           illuminance_symbol: event.detail.symbol,
           modelName: 'lightsensor'
         },
