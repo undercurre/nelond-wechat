@@ -1,3 +1,4 @@
+import Toast from '@vant/weapp/toast/toast'
 import { VantComponent } from './component';
 
 interface Column {
@@ -114,6 +115,19 @@ VantComponent({
     },
 
     onChangeLux(event: WechatMiniprogram.CustomEvent) {
+      console.log(event.detail)
+      const regex = /^(0|([1-9]\d{0,3})|([1-9][0-9]{0,3}|[1][01][0-9]{3}|12000))$/;
+      if (regex.test(event.detail as any)) {
+        console.log("符合要求");
+      } else {
+        console.log('不符合要求')
+        Toast({ message: '请输入0-12000数字', zIndex: 9999 })
+        if (Number(event.detail as any) > 1000) {
+          (event.detail as any) = 12000
+        } else {
+          (event.detail as any) = 0
+        }
+      }
       if (this.simple) {
         this.$emit('change', {
           value: event.detail,
@@ -141,7 +155,7 @@ VantComponent({
     // set column value by index
     setColumnValue(index: number, value: any) {
       const column = this.getColumn(index);
-
+ 
       if (column == null) {
         return Promise.reject(new Error('setColumnValue: 对应列不存在'));
       }

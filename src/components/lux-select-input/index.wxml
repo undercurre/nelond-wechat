@@ -9,7 +9,7 @@
   </view>
 
   <view class="lux_input">
-    <van-field value="{{ luxValue }}" placeholder="请输入照度" custom-style="padding: 32rpx 32rpx;border-radius: 24rpx;background-color: #F6FAFD;" bind:change="onChangeLux" clearable="{{true}}" border="{{false}}">
+    <van-field type="number" value="{{ luxValue }}" placeholder="请输入照度" custom-style="padding: 32rpx 32rpx;border-radius: 24rpx;background-color: #F6FAFD;" bind:change="onChangeLux" clearable="{{true}}" border="{{false}}">
     </van-field>
   </view>
 
