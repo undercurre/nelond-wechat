@@ -35,6 +35,11 @@ Component({
       type: String,
       value: '',
     },
+    // 输入框右侧单位
+    unit: {
+      type: String,
+      value: '',
+    },
   },
 
   /**

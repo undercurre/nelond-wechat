@@ -2,6 +2,7 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import Toast from '@vant/weapp/toast/toast'
 import { sendDevice } from '../../../../../apis/index'
 import { PRO_TYPE } from '../../../../../config/index'
+import { isNullOrUnDef } from '../../../../../utils/index'
 
 ComponentWithComputed({
   options: {},
@@ -25,15 +26,16 @@ ComponentWithComputed({
     dialogType: '',
     dialogName: '',
     dialogValue: 0,
+    dialogUnit: '',
   },
 
   computed: {
     blockTime(data) {
-      const t = data.deviceInfo?.mzgdPropertyDTOList['light']?.blockTime ?? 0
+      const t = data.deviceInfo?.mzgdPropertyDTOList['lightsensor']?.blockTime ?? 0
       return t / 60
     },
     brightnessThreshold(data) {
-      return data.deviceInfo?.mzgdPropertyDTOList['light']?.brightnessThreshold ?? 0
+      return data.deviceInfo?.mzgdPropertyDTOList['lightsensor']?.brightnessThreshold ?? 0
     },
   },
 
@@ -53,33 +55,39 @@ ComponentWithComputed({
             blockTime: '上报间隔',
             brightnessThreshold: '上报阈值',
           }[key] ?? '',
+        dialogUnit:
+          {
+            blockTime: '分钟',
+            brightnessThreshold: 'Lux',
+          }[key] ?? '',
         showEditDialog: true,
         dialogValue: this.data[key] ?? 0,
       })
     },
     async handleConfirm(e: { detail: string }) {
-      // console.log('handleConfirm', e.detail, this.data.deviceInfo)
-      const setVal = parseInt(e.detail)
-      if (!setVal) {
+      console.log('handleConfirm', e.detail, this.data.deviceInfo)
+      if (isNullOrUnDef(e.detail) || e.detail === '') {
         Toast({
           message: `${this.data.dialogName}不能为空`,
-          zIndex: 99999,
+          zIndex: 999999,
         })
         return
       }
+
+      const setVal = parseInt(e.detail)
       if (this.data.dialogType === 'blockTime') {
-        if (setVal > 60 || setVal <= 0) {
+        if (setVal > 60 || setVal < 1) {
           Toast({
             message: '上报间隔范围为1~60分钟',
-            zIndex: 99999,
+            zIndex: 999999,
           })
           return
         }
       } else if (this.data.dialogType === 'brightnessThreshold') {
-        if (setVal > 1000 || setVal <= 0) {
+        if (setVal > 1000 || setVal < 1) {
           Toast({
             message: '上报阈值时间为1~1000Lux',
-            zIndex: 99999,
+            zIndex: 999999,
           })
           return
         }
@@ -93,7 +101,10 @@ ComponentWithComputed({
         property: { [this.data.dialogType]: setVal },
       })
       if (!res.success) {
-        Toast('控制失败')
+        Toast({
+          message: '控制失败',
+          zIndex: 999999,
+        })
       }
 
       this.triggerEvent('update')
