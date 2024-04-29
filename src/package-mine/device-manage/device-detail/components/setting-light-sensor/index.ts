@@ -65,7 +65,7 @@ ComponentWithComputed({
       })
     },
     async handleConfirm(e: { detail: string }) {
-      console.log('handleConfirm', e.detail, this.data.deviceInfo)
+      console.log('handleConfirm', e.detail)
       if (isNullOrUnDef(e.detail) || e.detail === '') {
         Toast({
           message: `${this.data.dialogName}不能为空`,
@@ -73,14 +73,14 @@ ComponentWithComputed({
         })
         return
       }
-      if (!Number.isInteger(e.detail)) {
+      const setVal = Number(e.detail)
+      if (!Number.isInteger(setVal)) {
         Toast({
           message: `请输入整数`,
           zIndex: 999999,
         })
         return
       }
-      const setVal = parseInt(e.detail)
       if (this.data.dialogType === 'blockTime') {
         if (setVal > 60 || setVal < 1) {
           Toast({
