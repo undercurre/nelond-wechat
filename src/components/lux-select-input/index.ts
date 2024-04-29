@@ -121,7 +121,7 @@ VantComponent({
         console.log("符合要求");
       } else {
         console.log('不符合要求')
-        Toast({ message: '请输入0-12000数字', zIndex: 9999 })
+        Toast({ message: '请输入0-12000整数', zIndex: 9999 })
         if (Number(event.detail as any) > 1000) {
           (event.detail as any) = 12000
         } else {
