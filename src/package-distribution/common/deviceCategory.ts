@@ -11,6 +11,12 @@ export default {
         path: '/package-distribution/pages/scan/index?scanType=subdevice',
       },
       {
+        icon: `${productImgDir}/mining-lamp.png`,
+        name: '工矿灯',
+        tag: 'zigbee',
+        path: '/package-distribution/pages/scan/index?scanType=subdevice',
+      },
+      {
         icon: `${productImgDir}/magnetic-track-light.png`,
         name: '磁吸灯',
         tag: 'zigbee',
