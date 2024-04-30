@@ -50,6 +50,7 @@ declare namespace AutoScene {
     property: IAnyObject
     proType?: string
   }
+
   /** 拍扁的结果集合 */
   interface AutoSceneFlattenAction {
     productId?: string //场景和延时没有productId
@@ -88,7 +89,7 @@ declare namespace AutoScene {
   }
   interface TimeCondition {
     time: string
-    timePeriod: string
+    timePeriod: string |null
     timeType: string
   }
   interface AddAutoSceneDto {

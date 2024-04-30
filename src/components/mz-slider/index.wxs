@@ -10,7 +10,6 @@ var TOAST_DELAY = 500
 /**
  * !! ES5 全局变量会跨组件作用域，以下可能存在混用的属性，须以 data-key 作区分
  */
-var key = 'common' // 组件实例需要通过data-key唯一标识，作变量隔离
 var setValue = {} // 设置值
 var throttle_timer = null // 【值变化】事件的节流计时
 var toast_timer = {} // toast淡入淡出计时
@@ -35,6 +34,8 @@ function propObserver(newValue, oldValue, ownerInstance) {
   if (newValue === oldValue) {
     return
   }
+
+  var key = 'common' // 组件实例需要通过data-key唯一标识，作变量隔离
   var dataset = ownerInstance.getDataset()
   if (dataset.key !== undefined) key = dataset.key
 
@@ -43,7 +44,7 @@ function propObserver(newValue, oldValue, ownerInstance) {
 
   ownerInstance.setTimeout(function () {
     init(ownerInstance)
-    // console.log('propObserver', newValue, oldValue, key, 'min:', min[key])
+    console.log('propObserver in st', newValue, oldValue, key, 'min:', min[key])
 
     // 初始化失败，不执行
     if (!buttonInfo[key].width) {
@@ -56,28 +57,30 @@ function propObserver(newValue, oldValue, ownerInstance) {
 
 function onTouchstart(event, ownerInstance) {
   var dataset = ownerInstance.getDataset()
+  var key = 'common'
   if (dataset.key !== undefined) key = dataset.key
   var touch = event.touches[0] || event.changedTouches[0]
   var barWidth = touch.clientX - sliderInfo[key].left
   isMoving[key] = true
   changeBarStyle(ownerInstance, barWidth)
-  updateValue(barWidth)
+  updateValue(key, barWidth)
   ownerInstance.callMethod('touchstart', { value: setValue[key] })
 }
 
 function onTouchmove(event, ownerInstance) {
   var dataset = ownerInstance.getDataset()
+  var key = 'common'
   if (dataset.key !== undefined) key = dataset.key
 
   var touch = event.touches[0] || event.changedTouches[0]
   var barWidth = touch.clientX - sliderInfo[key].left
 
-  updateValue(barWidth)
+  updateValue(key, barWidth)
   changeBarStyle(ownerInstance, barWidth)
 
   // 气泡提示
   if (dataset.showToast) {
-    changeToastStyle(barWidth)
+    changeToastStyle(key, barWidth)
     toastActived[key] = true
   }
 
@@ -91,6 +94,7 @@ function onTouchmove(event, ownerInstance) {
 
 function onTouchend(event, ownerInstance) {
   var dataset = ownerInstance.getDataset()
+  var key = 'common'
   if (dataset.key !== undefined) key = dataset.key
 
   // 延迟结束点拖动状态
@@ -104,12 +108,12 @@ function onTouchend(event, ownerInstance) {
     var barWidth = touch.clientX - sliderInfo[key].left
 
     if (toastActived[key] && !toast_timer[key]) {
-      changeToastStyle(barWidth, false)
+      changeToastStyle(key, barWidth, false)
       toastActived[key] = false
     }
     // 如果原本未显示toast，或者原本toast未完成淡出动画，则先淡入再淡出
     else {
-      changeToastStyle(barWidth)
+      changeToastStyle(key, barWidth)
       toastActived[key] = true
 
       if (toast_timer[key]) {
@@ -118,7 +122,7 @@ function onTouchend(event, ownerInstance) {
       }
 
       toast_timer[key] = ownerInstance.setTimeout(function () {
-        changeToastStyle(barWidth, false)
+        changeToastStyle(key, barWidth, false)
         toastActived[key] = false
         toast_timer[key] = null
       }, TOAST_DELAY)
@@ -135,6 +139,7 @@ function onTouchend(event, ownerInstance) {
 // 初始化，获取组件设置
 function init(_inst) {
   var dataset = _inst.getDataset()
+  var key = 'common'
   if (dataset.key !== undefined) key = dataset.key
 
   dataset.min === undefined ? (min[key] = 0) : (min[key] = dataset.min)
@@ -153,13 +158,17 @@ function init(_inst) {
 
 // 滑条样式处理
 function changeBarStyle(_inst, _width) {
+  var dataset = _inst.getDataset()
+  var key = 'common'
+  if (dataset.key !== undefined) key = dataset.key
+
   if (!buttonInfo[key].width) {
     init(_inst)
   }
 
   var minWidth = isBtnInset[key] ? buttonInfo[key].width / 2 : 0
   var maxWidth = isBtnInset[key] ? sliderInfo[key].width - buttonInfo[key].width / 2 : sliderInfo[key].width
-  var widthInRange = calcDragDis(_width, minWidth, maxWidth)
+  var widthInRange = calcDragDis(key, _width, minWidth, maxWidth)
   var sliderBarWidth = isBtnInset[key] ? widthInRange + buttonInfo[key].width / 2 : widthInRange
 
   // console.log('sliderInfo[key].width', JSON.stringify(sliderInfo[key].width), key)
@@ -184,12 +193,12 @@ function changeBarStyle(_inst, _width) {
  * @param _width 滑动条激活部分宽度
  * @param _active 是否激活（淡入）
  */
-function changeToastStyle(_width, _active = true) {
-  var widthInRange = calcDragDis(_width, isBtnInset[key] ? buttonInfo[key].width : 0)
-  var toastInfo = sliderToast[key].getBoundingClientRect()
+function changeToastStyle(_key, _width, _active = true) {
+  var widthInRange = calcDragDis(_key, _width, isBtnInset[_key] ? buttonInfo[_key].width : 0)
+  var toastInfo = sliderToast[_key].getBoundingClientRect()
   var toastLeft = widthInRange - toastInfo.width / 2
-  var compositeActive = _active || !toastActived[key]
-  sliderToast[key].setStyle({
+  var compositeActive = _active || !toastActived[_key]
+  sliderToast[_key].setStyle({
     opacity: compositeActive ? 1 : 0,
     transition: FADE_TRANSITION,
     transform: 'translateX(' + toastLeft + 'px)',
@@ -198,14 +207,21 @@ function changeToastStyle(_width, _active = true) {
 
 // 宽度转为设置值
 // ! 在此处处理 min~max 值的传化，组件中的事件处理则不必再逐一处理
-function updateValue(_width) {
-  setValue[key] = Math.round(
-    (calcDragDis(_width, 0, sliderInfo[key].width) / sliderInfo[key].width) * (max[key] - min[key]) + min[key],
+function updateValue(_key, _width) {
+  setValue[_key] = Math.round(
+    (calcDragDis(_key, _width, 0, sliderInfo[_key].width) / sliderInfo[_key].width) * (max[_key] - min[_key]) +
+      min[_key],
   )
 }
 
 // 计算范围约束值
-function calcDragDis(_val, _min = buttonInfo[key].width, _max = sliderInfo[key].width) {
+function calcDragDis(_key, _val, _min, _max) {
+  if (_min === undefined || _min === null) {
+    _min = buttonInfo[_key].width
+  }
+  if (_max === undefined || _max === null) {
+    _max = sliderInfo[_key].width
+  }
   return Math.min(Math.max(_val, _min), _max)
 }
 

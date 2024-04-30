@@ -1,0 +1,27 @@
+<van-dialog
+  use-slot
+  title="{{title}}"
+  show="{{ show }}"
+  show-cancel-button
+  bind:close="onClose"
+  bind:cancel="onClose"
+  bind:confirm="onConfirm"
+  before-close="{{beforeClose}}"
+>
+  <view class="px-32rpx py-32rpx">
+    <van-field
+      custom-style="padding: 32rpx; background-color: #F6FAFD;border-radius: 24rpx;"
+      value="{{ innerValue }}"
+      placeholder="{{placeholder}}"
+      bind:clear="changeName"
+      bind:change="changeName"
+      border="{{false}}"
+    >
+      <text
+        wx:if="{{unit}}"
+        slot="right-icon"
+        >{{unit}}</text
+      >
+    </van-field>
+  </view>
+</van-dialog>

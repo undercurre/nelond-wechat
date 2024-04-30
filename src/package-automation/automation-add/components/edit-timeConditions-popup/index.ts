@@ -10,6 +10,10 @@ ComponentWithComputed({
       type: Boolean,
       value: false,
     },
+    timeId: {
+      type: String,
+      value: `time${new Date().getTime().toString()}`
+    },
     time: {
       type: String,
       value: '10:00',
@@ -58,7 +62,7 @@ ComponentWithComputed({
       this.triggerEvent('cancel')
     },
     handleConfirm() {
-      this.triggerEvent('confirm', { time: this.data.time, periodType: this.data.periodType, week: this.data.week })
+      this.triggerEvent('confirm', { timeId: this.data.timeId, time: this.data.time, periodType: this.data.periodType, week: this.data.week })
     },
     timeChange(e: { detail: number[] }) {
       const value = e.detail.map((item) => String(item).padStart(2, '0'))

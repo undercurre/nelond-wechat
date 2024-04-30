@@ -1,6 +1,6 @@
 import Dialog from '@vant/weapp/dialog/dialog'
 import Toast from '@vant/weapp/toast/toast'
-import { deleteScene, findDevice, addScene, updateScene } from '../../apis/index'
+import { deleteScene, addScene, updateScene } from '../../apis/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { deviceStore, sceneStore, projectStore, autosceneStore, spaceStore } from '../../store/index'
@@ -28,6 +28,7 @@ ComponentWithComputed({
     dialogConfirmBtnColor: '#27282A',
     sceneImgDir,
     opearationType: 'yijian', // yijian是一键场景，auto是自动化场景
+    conditionMultiple: '',
     spaceId: '', //选中的最后一级空间Id
     // 选中的四级空间信息
     selectedSpaceInfo: [] as Space.allSpace[],
@@ -53,6 +54,7 @@ ComponentWithComputed({
     // contentHeight: 0,
     showEditIconPopup: false, //展示编辑场景图标popup
     showEditConditionPopup: false, //展示添加条件popup
+    showPreConditionPopup: false, //展示预制条件popup
     showEditActionPopup: false, //展示添加执行动作popup
     showTimeConditionPopup: false, //展示时间条件popup
     showDelayPopup: false, //展示延时popup
@@ -73,7 +75,8 @@ ComponentWithComputed({
     sceneDevicelinkSelectList: [] as string[],
     tempSceneDevicelinkSelectedList: [] as string[],
     /** 已选中的传感器 */
-    sensorlinkSelectList: [] as string[],
+    sensorlinkSelectList: [] as { deviceId: string; datetime: string }[],
+    tempSensorlinkSelectList: [] as string[],
     selectCardType: 'device', //设备卡片：'device'  场景卡片： 'scene'  传感器卡片：'sensor'
     showSelectCardPopup: false,
     /** 将当前场景里多路的action拍扁 */
@@ -82,8 +85,15 @@ ComponentWithComputed({
     sceneDeviceConditionsFlatten: [] as AutoScene.AutoSceneFlattenCondition[],
     //延时
     delay: [0, 0],
+    timeConditions: [] as {
+      timeId: string
+      time: string
+      timePeriod: string | null
+      timeType: string
+    }[],
     //时间条件
     timeCondition: {
+      timeId: '',
       time: '',
       timePeriod: '',
       timeType: '',
@@ -103,6 +113,7 @@ ComponentWithComputed({
     editingDelayId: '',
     scrollTop: 0,
     _isSaving: false,
+    timeConditionPopupLock: false,
   },
 
   computed: {
@@ -157,11 +168,17 @@ ComponentWithComputed({
     },
     linkSelectList(data) {
       if (data.selectCardType === 'sensor') {
-        return data.sensorlinkSelectList
+        return data.tempSensorlinkSelectList
       } else {
         return data.tempSceneDevicelinkSelectedList
       }
     },
+    linkSelectSensorListMapProductId(data) {
+      return data.sensorList
+        .filter((item) => data.sensorlinkSelectList.map((item) => item.deviceId).includes(item.deviceId))
+        .map((item) => item.productId)
+    },
+
     //只包含场景和设备的动作列表长度
     sceneDeviceActionsLength(data) {
       return data.sceneDeviceActionsFlatten.filter((item) => item.uniId.indexOf('DLY') === -1).length
@@ -213,6 +230,8 @@ ComponentWithComputed({
           item.property = { occupancy: 1, modelName: 'irDetector' }
         } else if (item.productId === SENSOR_TYPE.doorsensor) {
           item.property = { doorStatus: 1, modelName: 'magnet' }
+        } else if (item.productId === SENSOR_TYPE.lightsensor) {
+          item.property = { illuminance: 0, illuminance_symbol: 'equalTo', modelName: 'lightsensor' }
         } else {
           item.property = { buttonClicked: 1, modelName: 'freepad' }
         }
@@ -229,7 +248,7 @@ ComponentWithComputed({
       if (autosceneid) {
         this.setData({ autoSceneId: autosceneid, opearationType: 'auto' })
 
-        const sensorlinkSelectList = [] as string[]
+        const sensorlinkSelectList = [] as { deviceId: string; datetime: string }[]
 
         const autoSceneInfo = autosceneStore.allRoomAutoSceneList.find(
           (item) => item.sceneId === autosceneid,
@@ -238,7 +257,9 @@ ComponentWithComputed({
         console.log('typeof', typeof autoSceneInfo.deviceConditions, !autoSceneInfo.deviceConditions)
 
         this.data._autosceneInfo = autoSceneInfo
+        const conditionsLength = autoSceneInfo.timeConditions.length + autoSceneInfo.deviceConditions.length
         this.setData({
+          conditionMultiple: conditionsLength > 1 ? (autoSceneInfo.conditionType === '1' ? 'all' : 'some') : '',
           sceneIcon: autoSceneInfo.sceneIcon,
           sceneName: autoSceneInfo.sceneName,
           'effectiveTime.startTime': autoSceneInfo.effectiveTime.startTime.substring(0, 5),
@@ -248,32 +269,45 @@ ComponentWithComputed({
         })
         // autoSceneInfo.deviceConditions = autoSceneInfo.deviceConditions || []
         // autoSceneInfo.deviceActions = autoSceneInfo.deviceActions || []
-        console.log('看看', autoSceneInfo.deviceActions, autoSceneInfo.deviceActions.length)
+        console.log('场景数据', autoSceneInfo.deviceActions, autoSceneInfo.deviceActions.length)
         // return
         //处理执行条件
-        if (autoSceneInfo.deviceConditions.length) {
-          //传感器条件
-          autoSceneInfo.deviceConditions.forEach((action) => {
-            const index = this.data.sensorList.findIndex((item) => item.uniId === action.deviceId)
-            if (index !== -1) {
-              sensorlinkSelectList.push(action.deviceId)
+        // if (autoSceneInfo.deviceConditions.length) {
+        //传感器条件
+        autoSceneInfo.deviceConditions.forEach((action, dIndex) => {
+          const index = this.data.sensorList.findIndex((item) => item.uniId === action.deviceId)
+          if (index !== -1) {
+            sensorlinkSelectList.push({
+              deviceId: action.deviceId,
+              datetime: (new Date().getTime() + dIndex).toString(),
+            })
 
-              this.data.sensorList[index].property = {
-                ...action.controlEvent[0],
-              }
-            } else {
-              console.log('设备不存在', action)
+            // TODO: 拿到正确的event回显
+            this.data.sensorList[index].property = {
+              ...action.controlEvent[0],
             }
-          })
-        } else {
-          //时间条件
+          } else {
+            console.log('设备不存在', action)
+          }
+        })
+        // } else {
+        //时间条件
+        if (autoSceneInfo.timeConditions.length > 0) {
           const timeConditions = autoSceneInfo.timeConditions[0]
+          console.log('初始化的timeCondition', autoSceneInfo.timeConditions)
           this.setData({
+            timeConditions: autoSceneInfo.timeConditions.map((item) => {
+              return {
+                ...item,
+                timeId: `time${(new Date().getTime() + Math.floor(Math.random() * 10) + 1).toString()}`,
+              }
+            }),
             'timeCondition.time': timeConditions.time,
             'timeCondition.timePeriod': timeConditions.timePeriod,
             'timeCondition.timeType': timeConditions.timeType,
           })
         }
+        // }
         //处理执行结果
         const tempSceneDeviceActionsFlatten = [] as AutoScene.AutoSceneFlattenAction[]
 
@@ -554,6 +588,7 @@ ComponentWithComputed({
         showEffectiveTimePopup: false,
       })
     },
+    // 生效时间
     handleEffectiveTimeConfirm(e: {
       detail: { startTime: string; endTime: string; periodType: string; week: string }
     }) {
@@ -574,18 +609,54 @@ ComponentWithComputed({
         showEditConditionPopup: true,
       })
     },
+    addMultipleCondition() {
+      if (this.data.sceneDeviceConditionsFlatten.length === 1) {
+        this.setData({
+          showPreConditionPopup: true,
+        })
+      } else {
+        this.setData({
+          showEditConditionPopup: true,
+        })
+      }
+    },
     handleConditionClose() {
       this.setData({
         showEditConditionPopup: false,
       })
     },
+    handlePreConditionClose() {
+      this.setData({
+        showPreConditionPopup: false,
+      })
+    },
     /* 条件弹窗点击回调 */
     onConditionClicked(e: { detail: string }) {
-      console.log(e.detail)
+      // 预条件“与”非状态值禁行
+      // “与”情况下
+      if (this.data.conditionMultiple === 'all') {
+        // 非状态值单位占用
+        if (
+          this.data.linkSelectSensorListMapProductId.includes('midea.freepad.001.201') ||
+          this.data.timeConditions.length > 0
+        ) {
+          if (e.detail === 'time') {
+            Toast({ message: '你已设置了其他条件，与此条件冲突', zIndex: 9999 })
+            this.setData({
+              showEditConditionPopup: false,
+            })
+            return
+          }
+        }
+      }
       if (e.detail === 'time') {
         this.setData({
           opearationType: 'auto',
           showTimeConditionPopup: true,
+          'timeCondition.timeId': '',
+          'timeCondition.time': '',
+          'timeCondition.timeType': '',
+          'timeCondition.timePeriod': '',
         })
       } else if (e.detail === 'touch') {
         if (spaceStore.allSpaceList.length) {
@@ -598,6 +669,7 @@ ComponentWithComputed({
           return
         }
       } else {
+        console.log('当前传感器', this.data.sensorList)
         if (this.data.sensorList.length) {
           this.addSensorPopup()
         } else {
@@ -613,6 +685,19 @@ ComponentWithComputed({
       })
     },
     /* 设置场景条件弹窗 end */
+    onPreConditionClicked(e: { detail: string }) {
+      this.setData(
+        {
+          conditionMultiple: e.detail,
+          showPreConditionPopup: false,
+        },
+        () => {
+          this.setData({
+            showEditConditionPopup: true,
+          })
+        },
+      )
+    },
     /* 设置手动场景——空间 */
     handleSceneRoomEditCancel() {
       this.setData({
@@ -669,19 +754,51 @@ ComponentWithComputed({
       })
       this.handleConditionShow()
     },
-    handleTimeConditionConfirm(e: { detail: { time: string; periodType: string; week: string } }) {
-      const { time, periodType, week } = e.detail
-      this.setData({
-        showTimeConditionPopup: false,
-        _isEditCondition: true,
-        'timeCondition.time': time,
-        'timeCondition.timeType': periodType,
-        'timeCondition.timePeriod': week,
-        'effectiveTime.startTime': '00:00',
-        'effectiveTime.endTime': '23:59',
-        'effectiveTime.timeType': '1',
-        'effectiveTime.timePeriod': '1,2,3,4,5,6,7',
-      })
+    // 时间点条件编辑
+    handleTimeConditionConfirm(e: { detail: { timeId: string; time: string; periodType: string; week: string } }) {
+      console.log('时间点确认', e.detail)
+      if (this.data.timeConditionPopupLock) {
+        console.log('Lock', this.data.timeConditionPopupLock)
+        return
+      }
+      this.data.timeConditionPopupLock = true
+      const { timeId, time, periodType, week } = e.detail
+      if (timeId && timeId !== 'default-timeId') {
+        // 修改
+        const curCondition = this.data.timeConditions.find((item) => item.timeId === e.detail.timeId)
+        console.log('找到时间点', curCondition)
+        if (curCondition) {
+          curCondition.time = e.detail.time
+          curCondition.timePeriod = periodType === '4' || periodType === '1' ? week : null
+          curCondition.timeType = e.detail.periodType
+        }
+      } else {
+        // 新增
+        this.data.timeConditions.push({
+          timeId: `time${new Date().getTime().toString()}`,
+          time,
+          timeType: periodType,
+          timePeriod: periodType === '4' || periodType === '1' ? week : null,
+        })
+      }
+      console.log('结算', this.data.timeConditions)
+      this.setData(
+        {
+          timeConditions: [...this.data.timeConditions],
+          showTimeConditionPopup: false,
+          _isEditCondition: true,
+          'timeCondition.time': time,
+          'timeCondition.timeType': periodType,
+          'timeCondition.timePeriod': week,
+          'effectiveTime.startTime': '00:00',
+          'effectiveTime.endTime': '23:59',
+          'effectiveTime.timeType': '1',
+          'effectiveTime.timePeriod': '1,2,3,4,5,6,7',
+        },
+        () => {
+          setTimeout(() => (this.data.timeConditionPopupLock = false), 1000)
+        },
+      )
       this.updateSceneDeviceConditionsFlatten()
     },
     /* 时间条件 end */
@@ -790,6 +907,7 @@ ComponentWithComputed({
       // const switchUniId = this.data.checkedList[0]
       // 默认场景不可编辑场景设备数据
       if (this.data.isDefaultYijianScene) {
+        console.log('默认场景不可编辑场景设备数据')
         return
       }
       if (
@@ -804,19 +922,20 @@ ComponentWithComputed({
       }
     },
     async handleSelectCardSelect(e: { detail: string }) {
-      console.log('handleSelectCardSelect', e, e.detail)
+      console.log('选择设备', e.detail)
       const selectId = e.detail
       if (this.data.selectCardType === 'device') {
-        const allDeviceMap = deviceStore.allDeviceFlattenMap
-        const device = allDeviceMap[e.detail]
-        const modelName = 'light'
-        findDevice({ gatewayId: device.gatewayId, devId: device.deviceId, modelName })
+        // const allDeviceMap = deviceStore.allDeviceFlattenMap
+        // const device = allDeviceMap[e.detail]
+        // const modelName = 'light'
+        // findDevice({ gatewayId: device.gatewayId, devId: device.deviceId, modelName })
       }
       const listType =
-        this.data.selectCardType === 'sensor' ? 'sensorlinkSelectList' : 'tempSceneDevicelinkSelectedList'
+        this.data.selectCardType === 'sensor' ? 'tempSensorlinkSelectList' : 'tempSceneDevicelinkSelectedList'
       // 取消选择逻辑
       if (this.data[listType].includes(selectId)) {
         const index = this.data[listType].findIndex((id) => id === selectId)
+        console.log('找到取消选择的设备', index)
         this.data[listType].splice(index, 1)
         this.setData({
           [`${listType}`]: [...this.data[listType]],
@@ -824,9 +943,25 @@ ComponentWithComputed({
         return
       }
       if (this.data.selectCardType === 'sensor') {
+        const selectedProductId = this.data.sensorList.find((item) => item.deviceId === e.detail)?.productId
+        const limitProductId = ['midea.freepad.001.201']
+        // 非状态值禁行
+        if (
+          this.data.conditionMultiple === 'all' &&
+          (this.data.timeCondition.time !== '' ||
+            this.data.linkSelectSensorListMapProductId.includes('midea.freepad.001.201')) &&
+          selectedProductId &&
+          limitProductId.includes(selectedProductId)
+        ) {
+          Toast({ message: '你已设置了其他条件，与此条件冲突', zIndex: 9999 })
+          return
+        }
+        // this.data.sensorlinkSelectList.push({ deviceId: selectId, datetime: new Date().getTime().toString() })
+        // this.data.tempSensorlinkSelectList.push(selectId)
         //传感器只单选
         this.setData({
-          sensorlinkSelectList: [selectId],
+          // sensorlinkSelectList: [...this.data.sensorlinkSelectList],
+          tempSensorlinkSelectList: [selectId],
         })
       } else {
         this.setData({
@@ -849,9 +984,20 @@ ComponentWithComputed({
         this.handleActionShow()
       }
     },
+    // 设备选择确认
     async handleSelectCardConfirm() {
+      console.log('handleSelectCardConfirm', this.data.selectCardType, this.data.tempSceneDevicelinkSelectedList)
       // console.log('handleSelectCardConfirm', e)
       this.setData({
+        sensorlinkSelectList: [
+          ...this.data['sensorlinkSelectList'],
+          ...this.data['tempSensorlinkSelectList'].map((item) => {
+            return { deviceId: item, datetime: new Date().getTime().toString() }
+          }),
+        ],
+      })
+      this.setData({
+        tempSensorlinkSelectList: [],
         showSelectCardPopup: false,
       })
       if (this.data.selectCardType === 'sensor') {
@@ -992,83 +1138,168 @@ ComponentWithComputed({
     },
     /* 条件方法 start */
     updateSceneDeviceConditionsFlatten() {
-      const sceneDeviceConditionsFlatten = [] as AutoScene.AutoSceneFlattenCondition[]
+      const diffSceneDeviceConditionsFlatten = [] as AutoScene.AutoSceneFlattenCondition[]
 
       if (this.data.spaceId !== '' && this.data.opearationType === 'yijian') {
         const desc = this.cmptFullSpaceName()
-        sceneDeviceConditionsFlatten.push({
-          uniId: 'room',
-          name: '手动点击场景',
-          desc: [desc],
-          pic: '/package-automation/assets/imgs/automation/touch-materialized.png',
-          productId: 'touch',
-          property: {},
-          type: 5,
+        if (!this.data.sceneDeviceConditionsFlatten.map((item) => item.uniId).includes('room')) {
+          diffSceneDeviceConditionsFlatten.push({
+            uniId: 'room',
+            name: '手动点击场景',
+            desc: [desc],
+            pic: '/package-automation/assets/imgs/automation/touch-materialized.png',
+            productId: 'touch',
+            property: {},
+            type: 5,
+          })
+        }
+        this.setData({
+          sceneDeviceConditionsFlatten: this.data.sceneDeviceConditionsFlatten.concat(diffSceneDeviceConditionsFlatten),
+        })
+        return
+      }
+
+      if (this.data.timeConditions.length > 0) {
+        for (let i = 0; i < this.data.timeConditions.length; i++) {
+          if (
+            !this.data.sceneDeviceConditionsFlatten
+              .map((item) => item.uniId)
+              .includes(this.data.timeConditions[i].timeId)
+          ) {
+            diffSceneDeviceConditionsFlatten.push({
+              uniId: this.data.timeConditions[i].timeId,
+              name: this.data.timeConditions[i].time,
+              desc: [
+                strUtil.transPeriodDesc(this.data.timeConditions[i].timeType, this.data.timeConditions[i].timePeriod),
+              ],
+              pic: '/package-automation/assets/imgs/automation/time-materialized.png',
+              productId: `time${i}`,
+              property: {},
+              type: 6,
+            })
+          } else {
+            const curTimeConditionFlattenIndex = this.data.sceneDeviceConditionsFlatten.findIndex(
+              (item) => item.uniId === this.data.timeConditions[i].timeId,
+            )
+            if (curTimeConditionFlattenIndex !== -1) {
+              this.data.sceneDeviceConditionsFlatten[curTimeConditionFlattenIndex] = {
+                uniId: this.data.timeConditions[i].timeId,
+                name: this.data.timeConditions[i].time,
+                desc: [
+                  strUtil.transPeriodDesc(this.data.timeConditions[i].timeType, this.data.timeConditions[i].timePeriod),
+                ],
+                pic: '/package-automation/assets/imgs/automation/time-materialized.png',
+                productId: `time${i}`,
+                property: {},
+                type: 6,
+              }
+            }
+          }
+        }
+      }
+
+      // 已选中的传感器
+      console.log('即将diff的传感器列表')
+      const sensorSelected = JSON.parse(
+        JSON.stringify(
+          this.data.sensorlinkSelectList
+            .map((id) => {
+              return {
+                device: this.data.sensorList.find((item) => item.uniId === id.deviceId),
+                uniId: `${id.deviceId}${id.datetime}`,
+              }
+            })
+            .filter((item) => item.device !== undefined),
+        ),
+      ) as { device: Device.DeviceItem; uniId: string }[]
+
+      if (this.data._autosceneInfo && this.data._autosceneInfo.deviceConditions) {
+        const deviceConditionsQuchongById = Array.from(
+          new Set(this.data._autosceneInfo.deviceConditions.map((item) => item.deviceId)),
+        )
+
+        deviceConditionsQuchongById.forEach((deviceQuchongById) => {
+          const curIntancesIndexs: number[] = []
+          sensorSelected.forEach((selected, index: number) => {
+            if (selected.device.deviceId === deviceQuchongById) {
+              curIntancesIndexs.push(index)
+            }
+          })
+
+          const curConditions = this.data._autosceneInfo.deviceConditions.filter(
+            (item) => deviceQuchongById === item.deviceId,
+          )
+          if (curIntancesIndexs.length === curConditions.length) {
+            curIntancesIndexs.forEach((instanceIndex, index) => {
+              sensorSelected[instanceIndex].device.property = {
+                ...curConditions[index].controlEvent[0],
+              }
+            })
+          }
         })
       }
 
-      if (this.data.timeCondition.time !== '') {
-        sceneDeviceConditionsFlatten.push({
-          uniId: 'time',
-          name: this.data.timeCondition.time,
-          desc: [strUtil.transPeriodDesc(this.data.timeCondition.timeType, this.data.timeCondition.timePeriod)],
-          pic: '/package-automation/assets/imgs/automation/time-materialized.png',
-          productId: 'time',
-          property: {},
-          type: 6,
-        })
-      }
+      console.log('已选中的传感器', sensorSelected)
 
-      //已选中的传感器
-      const sensorSelected = this.data.sensorlinkSelectList
-        .map((id) => {
-          return this.data.sensorList.find((item) => item.uniId === id)
-        })
-        .filter((item) => item !== undefined) as Device.DeviceItem[]
+      const sensorSelectedChanged = sensorSelected.filter(
+        (item) => !this.data.sceneDeviceConditionsFlatten.map((flatten) => flatten.uniId).includes(item.uniId),
+      )
 
-      sensorSelected.forEach((item) => {
-        sceneDeviceConditionsFlatten.push({
+      sensorSelectedChanged.forEach((item) => {
+        diffSceneDeviceConditionsFlatten.push({
           uniId: item.uniId,
-          name: item.deviceName,
-          desc: toPropertyDesc(item.proType, item.productId, item.property!),
-          pic: item.pic,
-          productId: item.productId,
-          property: item.property!,
-          proType: item.proType,
-          type: item.deviceType as 1 | 2 | 3 | 4 | 5 | 6,
+          name: item.device.deviceName,
+          desc: toPropertyDesc(item.device.proType, item.device.productId, item.device.property!),
+          pic: item.device.pic,
+          productId: item.device.productId,
+          property: item.device.property!,
+          proType: item.device.proType,
+          type: item.device.deviceType as 1 | 2 | 3 | 4 | 5 | 6,
         })
       })
 
       this.setData({
-        sceneDeviceConditionsFlatten,
+        sceneDeviceConditionsFlatten: [
+          ...this.data.sceneDeviceConditionsFlatten.concat(diffSceneDeviceConditionsFlatten),
+        ],
       })
     },
+    // 删除条件
     handleConditionDelete(e: WechatMiniprogram.TouchEvent) {
       this.setData({
-        sceneDeviceActionsFlatten: [],
         sceneDevicelinkSelectList: [],
       })
       const uniId = e.currentTarget.dataset.info.uniId
       console.log('删除条件', uniId)
-      if (this.data.sensorlinkSelectList.includes(uniId)) {
-        const index = this.data.sensorlinkSelectList.findIndex((id) => id === uniId)
+      if (this.data.sensorlinkSelectList.map((item) => `${item.deviceId}${item.datetime}`).includes(uniId)) {
+        const index = this.data.sensorlinkSelectList.findIndex((id) => `${id.deviceId}${id.datetime}` === uniId)
+        console.log('找到传感器列表中', index)
         this.data.sensorlinkSelectList.splice(index, 1)
         this.setData({
           sensorlinkSelectList: [...this.data.sensorlinkSelectList],
         })
       }
-      if (uniId === 'time') {
+      if (uniId.includes('time')) {
         this.setData({
           'timeCondition.time': '',
           'timeCondition.timePeriod': '',
           'timeCondition.timeType': '',
         })
+        this.data.timeConditions = this.data.timeConditions.filter(
+          (item) => item.timeId !== this.data.sceneDeviceConditionsFlatten[e.currentTarget.dataset.index].uniId,
+        )
       }
       this.data.sceneDeviceConditionsFlatten.splice(e.currentTarget.dataset.index, 1)
       this.setData({
         _isEditCondition: true,
         sceneDeviceConditionsFlatten: [...this.data.sceneDeviceConditionsFlatten],
       })
+      if (this.data.sceneDeviceConditionsFlatten.length <= 1) {
+        this.setData({
+          conditionMultiple: '',
+        })
+      }
+      console.log(this.data.sensorlinkSelectList, this.data.sceneDeviceConditionsFlatten)
     },
     /* 条件方法 end */
 
@@ -1079,10 +1310,14 @@ ComponentWithComputed({
       })
     },
     handleEditSensorConfirm(e: { detail: IAnyObject }) {
-      const listEditIndex = this.data.sensorList.findIndex((item) => item.uniId === this.data.editingUniId)
+      console.log('传感器条件编辑', e.detail, this.data.editingUniId)
+      const listEditIndex = this.data.sensorList.findIndex(
+        (item) => item.uniId === this.data.editingUniId.slice(0, -13),
+      )
       const flattenEditIndex = this.data.sceneDeviceConditionsFlatten.findIndex(
         (item) => item.uniId === this.data.editingUniId,
       )
+
       const listItem = this.data.sensorList[listEditIndex]
 
       const conditionItem = this.data.sceneDeviceConditionsFlatten[flattenEditIndex]
@@ -1107,10 +1342,15 @@ ComponentWithComputed({
       const { index } = e.currentTarget.dataset
       const action = this.data.sceneDeviceConditionsFlatten[index]
 
-      console.log('condition type', this.data.sceneDeviceConditionsFlatten[index])
+      console.log('当前编辑condition', this.data.sceneDeviceConditionsFlatten, action)
 
-      if (action.productId === 'time') {
+      if (action.productId.includes('time')) {
+        const curTimeCondition = this.data.timeConditions.find((item) => item.timeId === action.uniId)
         this.setData({
+          'timeCondition.timeId': curTimeCondition?.timeId,
+          'timeCondition.time': curTimeCondition?.time,
+          'timeCondition.timePeriod': curTimeCondition?.timePeriod,
+          'timeCondition.timeType': curTimeCondition?.timeType,
           showTimeConditionPopup: true,
         })
       } else if (action.productId === 'touch') {
@@ -1160,13 +1400,13 @@ ComponentWithComputed({
         const allDeviceMap = deviceStore.allDeviceFlattenMap
         const device = allDeviceMap[action.uniId]
         console.log('device', device)
-        let modelName = 'light'
+        // let modelName = 'light'
 
-        if (action.proType === PRO_TYPE.switch) {
-          modelName = String(device.switchInfoDTOList[0].switchId)
-        }
+        // if (action.proType === PRO_TYPE.switch) {
+        //   modelName = String(device.switchInfoDTOList[0].switchId)
+        // }
 
-        device.deviceType === 2 && findDevice({ gatewayId: device.gatewayId, devId: device.deviceId, modelName })
+        // device.deviceType === 2 && findDevice({ gatewayId: device.gatewayId, devId: device.deviceId, modelName })
 
         this.setData({
           sceneEditTitle: action.name,
@@ -1264,7 +1504,7 @@ ComponentWithComputed({
       const data = {
         sceneId: this.data._sceneInfo.sceneId,
         updateType: '0',
-        conditionType: '0',
+        conditionType: this.data.conditionMultiple === 'all' ? '1' : '0',
         spaceId: this.data.spaceId,
       } as Scene.UpdateSceneDto
       // 检查场景名字是否变更
@@ -1293,7 +1533,7 @@ ComponentWithComputed({
         this.data._isSaving = false
         return
       }
-
+      // TODO: 修改update接口新增参数
       const res = await updateScene(data)
       if (res.success) {
         emitter.emit('sceneEdit')
@@ -1305,6 +1545,17 @@ ComponentWithComputed({
         this.data._isSaving = false
       }
     },
+
+    canonical(object: { [x: string]: any }) {
+      const ordered: { [x: string]: any } = {}
+      Object.keys(object)
+        .sort()
+        .forEach(function (key) {
+          ordered[key] = object[key]
+        })
+      return ordered
+    },
+
     async handleSave() {
       if (this.data._isSaving) return
       this.data._isSaving = true
@@ -1429,7 +1680,7 @@ ComponentWithComputed({
       }
 
       const newSceneData = {
-        conditionType: '1',
+        conditionType: this.data.conditionMultiple === 'all' ? '1' : '0',
         deviceActions: [],
         deviceConditions: [],
         timeConditions: [],
@@ -1445,11 +1696,13 @@ ComponentWithComputed({
         sceneCategory: '1',
         sceneType: '1',
       } as AutoScene.AddAutoSceneDto
-      if (this.data.timeCondition.time !== '') {
-        newSceneData.timeConditions.push({
-          time: this.data.timeCondition.time,
-          timeType: this.data.timeCondition.timeType === '4' ? '1' : this.data.timeCondition.timeType,
-          timePeriod: this.data.timeCondition.timePeriod,
+      if (this.data.timeConditions.length) {
+        newSceneData.timeConditions = this.data.timeConditions.map((item) => {
+          return {
+            time: item.time,
+            timeType: item.timeType === '4' ? '1' : item.timeType,
+            timePeriod: item.timePeriod,
+          }
         })
       }
 
@@ -1568,19 +1821,138 @@ ComponentWithComputed({
         }
       })
 
+      // 去重需要: 准备可对比list
+      const canCompareList: AutoScene.DeviceCondition[] = []
+
       //处理发送请求的deviceConditions字段数据
       this.data.sceneDeviceConditionsFlatten.forEach((action) => {
-        const device = deviceMap[action.uniId]
+        const device = deviceMap[action.uniId.slice(0, -13)]
         if (device) {
-          newSceneData?.deviceConditions?.push({
+          canCompareList.push({
             controlEvent: [{ ...(action.property as { modelName: string }) }],
             deviceId: action.uniId,
+          })
+          newSceneData?.deviceConditions?.push({
+            controlEvent: [{ ...(action.property as { modelName: string }) }],
+            deviceId: action.uniId.slice(0, -13),
           })
         }
       })
 
+      // 校验：条件去重
+
+      console.log('条件去重', newSceneData.timeConditions, canCompareList)
+      const timeConditionsStrList = newSceneData.timeConditions.map((item) => JSON.stringify(item))
+      const deviceConditionsStrList = canCompareList.map((item) => {
+        return JSON.stringify({
+          controlEvent: [this.canonical(item.controlEvent[0])],
+          deviceId: item.deviceId.slice(0, -13),
+        })
+      })
+      // 用于存储已经遇到的元素
+      const timeConditionsSeen = new Set()
+      // 用于存储重复的元素
+      const timeConditionsDuplicates = new Set()
+      // 用于存储已经遇到的元素
+      const deviceConditionsSeen = new Set()
+      // 用于存储重复的元素
+      const deviceConditionsDuplicates = new Set()
+
+      timeConditionsStrList.forEach((item) => {
+        if (timeConditionsSeen.has(item)) {
+          timeConditionsDuplicates.add(item)
+        } else {
+          timeConditionsSeen.add(item)
+        }
+      })
+
+      deviceConditionsStrList.forEach((item) => {
+        if (deviceConditionsSeen.has(item)) {
+          deviceConditionsDuplicates.add(item)
+        } else {
+          deviceConditionsSeen.add(item)
+        }
+      })
+      const iqueTimeStrings = Array.from(timeConditionsDuplicates) as string[]
+      const iqueDeviceStrings = Array.from(deviceConditionsDuplicates) as string[]
+      console.log('去重鉴定', iqueDeviceStrings.length, iqueTimeStrings.length)
+      if (iqueTimeStrings.length || iqueDeviceStrings.length) {
+        const res = await Dialog.confirm({
+          title: '发现有相同的场景触发条件',
+          cancelButtonText: '手动处理',
+          confirmButtonText: '自动删除',
+          zIndex: 9999,
+        }).catch(() => 'cancel')
+        if (res === 'cancel') {
+          this.data._isSaving = false
+          return
+        }
+        iqueTimeStrings.forEach((item) => {
+          // 转回对象
+          const obj = JSON.parse(item)
+          const sameCount = this.data.timeConditions.filter(
+            (item) => item.time === obj.time && item.timePeriod === obj.timePeriod && item.timeType === obj.timeType,
+          )
+          for (let k = 0; k < sameCount.length - 1; k++) {
+            const back = this.data.timeConditions.find(
+              (item) => item.time === obj.time && item.timePeriod === obj.timePeriod && item.timeType === obj.timeType,
+            )
+            const index = this.data.timeConditions.findIndex(
+              (item) => item.time === obj.time && item.timePeriod === obj.timePeriod && item.timeType === obj.timeType,
+            )
+            if (index !== -1) this.data.timeConditions.splice(index, 1)
+            const flattenIndex = this.data.sceneDeviceConditionsFlatten.findIndex(
+              (item) => `${item.uniId}` === back?.timeId,
+            )
+            if (flattenIndex !== -1) {
+              this.data.sceneDeviceConditionsFlatten.splice(flattenIndex, 1)
+            }
+            this.setData({
+              sceneDeviceConditionsFlatten: this.data.sceneDeviceConditionsFlatten,
+            })
+          }
+        })
+
+        iqueDeviceStrings.forEach((item) => {
+          // 转回对象
+          const obj = JSON.parse(item)
+          const sameCount = this.data.timeConditions.filter(
+            (item) => item.time === obj.time && item.timePeriod === obj.timePeriod && item.timeType === obj.timeType,
+          )
+          for (let k = 0; k < sameCount.length - 1; k++) {
+            const back = canCompareList.find(
+              (item) =>
+                `${item.deviceId.slice(0, -13)}` === obj.deviceId &&
+                JSON.stringify(this.canonical(item.controlEvent[0])) ===
+                  JSON.stringify(this.canonical(obj.controlEvent[0])),
+            )
+            console.log('已选传感器删除', this.data.sensorlinkSelectList, back)
+            const index = this.data.sensorlinkSelectList.findIndex(
+              (item) => `${item.deviceId}${item.datetime}` === back?.deviceId,
+            )
+            if (index !== -1) {
+              this.data.sensorlinkSelectList.splice(index, 1)
+            }
+            const flattenIndex = this.data.sceneDeviceConditionsFlatten.findIndex(
+              (item) => `${item.uniId}` === back?.deviceId,
+            )
+            if (flattenIndex !== -1) {
+              this.data.sceneDeviceConditionsFlatten.splice(flattenIndex, 1)
+            }
+            this.setData({
+              sceneDeviceConditionsFlatten: this.data.sceneDeviceConditionsFlatten,
+            })
+          }
+        })
+
+        this.updateSceneDeviceConditionsFlatten()
+        this.data._isSaving = false
+        return
+      }
+
       console.log('创建更新自动化', newSceneData)
       // return
+      // TODO: 修改update和add接口新增参数
       const promise = this.data.autoSceneId
         ? updateScene(newSceneData as AutoScene.AddAutoSceneDto)
         : addScene(newSceneData as AutoScene.AddAutoSceneDto)
@@ -1630,7 +2002,7 @@ ComponentWithComputed({
       // 场景动作数据统一在scene-request-list页面处理
 
       const newSceneData = {
-        conditionType: '0',
+        conditionType: this.data.conditionMultiple === 'all' ? '1' : '0',
         deviceActions: [],
         deviceConditions: [],
         projectId: projectStore.currentProjectDetail.projectId,

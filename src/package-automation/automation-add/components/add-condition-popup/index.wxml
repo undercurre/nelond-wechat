@@ -10,18 +10,18 @@
 >
   <view
     class="w-750rpx relative flex flex-col items-center"
-    style="height: {{ isEdit ? 620 : 800 }}rpx"
+    style="height: {{ (isEdit || isMultiple) ? 620 : 800 }}rpx"
   >
     <template
       is="title"
-      data="{{title: '触发条件'}}"
+      data="{{ title: isMultiple ? '添加条件' : '触发条件'}}"
     />
     <view class="flex-1 w-718rpx">
       <view class="h-32rpx"></view>
       <van-cell-group
         inset
         border="{{ false }}"
-        wx:for="{{isEdit ? conditionListEditing : conditionList}}"
+        wx:for="{{(isEdit || isMultiple) ? conditionListEditing : conditionList}}"
         wx:key="index"
         data-key="{{item.key}}"
         bindtap="onConditionClicked"

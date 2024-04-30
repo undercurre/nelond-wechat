@@ -4,17 +4,16 @@
     {
       "root": "package-distribution",
       "pages": [
-        "scan/index",
-        "link-gateway/index",
-        "wifi-connect/index",
-        "add-subdevice/index",
-        "search-subdevice/index",
-        "bind-home/index",
-        "change-wifi-success/index",
-        "choose-device/index",
-        "choose-sensor/index",
-        "choose-light/index",
-        "connect-guide/index",
+        "pages/scan/index",
+        "pages/link-gateway/index",
+        "pages/wifi-connect/index",
+        "pages/add-subdevice/index",
+        "pages/search-subdevice/index",
+        "pages/bind-home/index",
+        "pages/change-wifi-success/index",
+        "pages/choose-device/index",
+        "pages/choose-model/index",
+        "pages/connect-guide/index",
         "pages/auth-screen/index"
       ]
     },
@@ -67,7 +66,7 @@
       "network": "all",
       "packages": ["package-space-control", "package-distribution", "package-mine", "package-automation"]
     },
-    "package-distribution/choose-device/index": {
+    "package-distribution/pages/choose-device/index": {
       "network": "all",
       "packages": []
     }

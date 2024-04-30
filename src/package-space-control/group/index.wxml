@@ -159,3 +159,5 @@
     <text class="text-28rpx text-hex-555659 py-30rpx text-center">{{'部分灯具添加分组失败，请确保\n所有灯具在线后重试'}}</text>
   </view>
 </van-dialog>
+
+<van-toast id="van-toast" />

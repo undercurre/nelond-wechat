@@ -276,10 +276,14 @@ ComponentWithComputed({
         return
       }
       const lightList = this.data.editSelectList
+      const lightGroup = deviceStore.deviceList.filter((d) => d.deviceType === 4)
       wx.navigateTo({
         url: '/package-space-control/group/index',
         success: (res) => {
-          res.eventChannel.emit('createGroup', { lightList })
+          res.eventChannel.emit('createGroup', {
+            lightList,
+            groupName: lightGroup?.length ? `灯组${lightGroup.length + 1}` : '',
+          })
         },
       })
       this.triggerEvent('close')
@@ -328,8 +332,8 @@ ComponentWithComputed({
           }
 
           // TODO 只有WIFI设备时，不需要超时检测逻辑
-          // 超时后检查云端上报，是否已成功移动完毕 5~120s
-          const TIME_OUT = Math.min(Math.max(5000, this.data.moveWaitlist.length * 1000), 120000)
+          // 超时后检查云端上报，是否已成功移动完毕 15~120s
+          const TIME_OUT = Math.min(Math.max(15000, this.data.moveWaitlist.length * 1000), 120000)
 
           showLoading('正在移动设备空间，请稍候')
           timeId = setTimeout(async () => {
@@ -402,12 +406,12 @@ ComponentWithComputed({
             Toast('设备名称不能用特殊符号或表情')
             return
           }
-          if (this.data.editSwitchName.length > 5) {
-            Toast('按键名称不能超过5个字符')
+          if (this.data.editSwitchName.length > 10) {
+            Toast('按键名称不能超过10个字符')
             return
           }
-          if (this.data.editSwitchName.length > 6) {
-            Toast('面板名称不能超过6个字符')
+          if (this.data.editDeviceName.length > 10) {
+            Toast('面板名称不能超过10个字符')
             return
           }
           const [deviceId, switchId] = this.data.editSelectList[0].split(':')
@@ -480,8 +484,8 @@ ComponentWithComputed({
             Toast('设备名称不能用特殊符号或表情')
             return
           }
-          if (this.data.editSwitchName.length > 6) {
-            Toast('设备名称不能超过6个字符')
+          if (this.data.editDeviceName.length > 10) {
+            Toast('设备名称不能超过10个字符')
             return
           }
           const res =

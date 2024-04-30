@@ -1,0 +1,39 @@
+<view class="h-full flex flex-col">
+  <view class="w-750rpx flex mt-16rpx">
+    <text class="ml-48rpx text-black-59 font-normal text-28rpx">参数设置</text>
+  </view>
+  <view
+    class="mt-24rpx w-750rpx"
+    class="{{!deviceInfo.onLineStatus?'opacity-50':''}}"
+  >
+    <van-cell-group inset>
+      <van-cell
+        is-link="{{deviceInfo.onLineStatus}}"
+        bind:click="handleDialogShow"
+        data-key="blockTime"
+        title="上报间隔"
+        value="{{blockTime}}分钟"
+        label="每隔{{blockTime}}分钟上报一次照度"
+      ></van-cell>
+      <van-cell
+        is-link="{{deviceInfo.onLineStatus}}"
+        bind:click="handleDialogShow"
+        data-key="brightnessThreshold"
+        title="上报阈值"
+        value="{{brightnessThreshold}}Lux"
+        label="照度变化超过{{brightnessThreshold}}Lux时上报"
+      ></van-cell>
+    </van-cell-group>
+  </view>
+</view>
+
+<edit-dialog
+  value="{{ dialogValue }}"
+  placeholder="请输入{{dialogName}}"
+  unit="{{dialogUnit}}"
+  title="修改{{dialogName}}"
+  show="{{showEditDialog}}"
+  bind:confirm="handleConfirm"
+></edit-dialog>
+
+<van-toast id="van-toast" />

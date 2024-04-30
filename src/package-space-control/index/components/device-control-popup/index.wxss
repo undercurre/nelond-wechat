@@ -27,6 +27,7 @@
   border-radius: 52rpx;
   border: 3rpx solid #ffffff;
   background-image: linear-gradient(30deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 60%) !important;
+  box-shadow: 3px 3px 6px 0px rgba(0, 0, 0, 0.1);
 }
 
 .slider-color-temp-bar {
@@ -67,7 +68,6 @@
   border-radius: 24rpx;
   background-color: #f6fafd;
   margin-top: 32rpx;
-  margin-left: 100rpx;
 }
 
 .log-step {

@@ -235,12 +235,17 @@ export async function sendDevice(
   let promise
 
   switch (data.deviceType) {
-    case 2:
+    case 2: {
+      const methodMap = {
+        [PRO_TYPE.light]: 'lightControlNew',
+        [PRO_TYPE.switch]: 'panelSingleControlNew',
+        [PRO_TYPE.sensor]: 'lightSensorControl', // 目前只有照度传感器
+      } as Record<string, string>
       params = {
         topic: '/subdevice/control',
         deviceId: data.gatewayId as string,
         deviceType: data.deviceType,
-        method: data.proType === PRO_TYPE.light ? 'lightControlNew' : 'panelSingleControlNew',
+        method: methodMap[data.proType],
         inputData: [
           {
             devId: data.deviceId,
@@ -251,6 +256,7 @@ export async function sendDevice(
       }
       promise = controlDevice(params, option)
       break
+    }
 
     case 3:
       if (data.proType === PRO_TYPE.light) {
@@ -604,6 +610,7 @@ export async function getSensorLogs(
   data: {
     projectId?: string
     deviceId: string
+    count?: number
   },
   options?: { loading?: boolean },
 ) {
@@ -824,6 +831,25 @@ export async function addGroup(
 }
 
 /**
+ * 重试分组
+ */
+export async function retryGroup(
+  data: {
+    applianceGroupDtoList: Device.GroupDTO[]
+    groupId: string
+    userId?: string
+  },
+  options?: { loading?: boolean },
+) {
+  return await mzaioRequest.post<{ groupId: string }>({
+    log: true,
+    loading: options?.loading ?? false,
+    url: '/v1/mzgd/cl/scene/groupRetry',
+    data,
+  })
+}
+
+/**
  * 更新分组
  */
 export async function updateGroup(
@@ -1018,5 +1044,24 @@ export async function verifySn(sn: string, options?: { loading?: boolean }) {
       sn,
       systemType: '2',
     },
+  })
+}
+
+/**
+ * 查询产品信息
+ */
+export async function queryDeviceProInfo(
+  data: {
+    proType: string
+    productId: string
+  },
+  options?: { loading?: boolean },
+) {
+  return await mzaioRequest.post<Device.MzgdDeviceProTypeInfoEntity>({
+    log: true,
+    loading: options?.loading ?? false,
+    isDefaultErrorTips: false,
+    url: '/v1/cl/device/queryDeviceProInfo',
+    data,
   })
 }

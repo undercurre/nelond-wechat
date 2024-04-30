@@ -97,10 +97,10 @@
 
 <van-toast id="van-toast" />
 
-<edit-name-dialog
+<edit-dialog
   value="{{ spaceInfo.spaceName }}"
   placeholder="请输入{{spaceLevelName}}名称"
   title="新增{{spaceLevelName}}"
   show="{{showAddDialog}}"
   bind:confirm="toAddSpace"
-></edit-name-dialog>
+></edit-dialog>

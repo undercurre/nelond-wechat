@@ -14,6 +14,7 @@ type Events = {
   bind_device: {
     deviceId: string
     proType: string
+    productId: string
   } // 绑定子设备
   wsReceive: {
     result: {
@@ -117,7 +118,7 @@ emitter.on('msgPush', (res) => {
     receiveMsgIdQueue.push(reqId)
   }
 
-  Logger.console('☄ 推送消息：', res, eventType)
+  // Logger.console('☄ 推送消息：', res, eventType)
 
   emitter.emit(eventType as any, eventData)
   emitter.emit('wsReceive', res)

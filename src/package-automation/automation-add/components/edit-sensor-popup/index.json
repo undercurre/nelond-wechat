@@ -2,6 +2,7 @@
   "component": true,
   "styleIsolation": "apply-shared",
   "usingComponents": {
-    "sensor-ability-select": "../../../../components/sensor-ability-select/index"
+    "sensor-ability-select": "../../../../components/sensor-ability-select/index",
+    "lux-select-input": "../../../../components/lux-select-input/index"
   }
 }

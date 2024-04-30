@@ -1,0 +1,318 @@
+<page-meta page-style="{{ isEditDevice ? 'overflow: hidden;' : '' }}" />
+
+<view class="page-container flex flex-col h-screen">
+  <!-- 导航栏 -->
+  <nav-bar
+    leftArrow="{{status !== 'requesting'}}"
+    bind:leftTap="goBack"
+    title="{{pageTitle}}"
+  ></nav-bar>
+
+  <view class="grow shrink flex flex-col justify-between box-border pt-40rpx">
+    <block wx:if="{{status === 'discover'}}">
+      <tips-box
+        text="正在搜索附近的设备…"
+        icon="/package-distribution/assets/search-subdevice/search.gif"
+        size="{{ bleDeviceList.length ? 180 : 300}}"
+        textStyle="margin-top: 28rpx;"
+      ></tips-box>
+
+      <view
+        wx:if="{{bleDeviceList.length}}"
+        class="px-32rpx pt-86rpx grow shrink flex flex-col"
+      >
+        <view class="flex flex-row items-center justify-between pb-34rpx">
+          <text class="text-26 text-black-59">发现{{bleDeviceList.length}}个附近的设备</text>
+
+          <van-button
+            wx:if="{{isManual === '0'}}"
+            plain
+            round
+            type="info"
+            size="small"
+            bind:click="toggleSelectAll"
+          >
+            {{ isAllSelected ? '取消全选' : '全选'}}
+          </van-button>
+        </view>
+
+        <scroll-view
+          class="grow shrink h-500"
+          scroll-y="{{true}}"
+          enhanced
+          show-scrollbar="{{false}}"
+        >
+          <view
+            wx:for="{{bleDeviceList}}"
+            wx:key="deviceUuid"
+            class="flex flex-row items-center bg-white rounded-32rpx mb-24rpx px-24rpx py-20rpx"
+            bind:longpress="showMac"
+            data-mac="{{item.mac}}"
+            data-rssi="{{item.RSSI}}"
+          >
+            <van-checkbox
+              disabled="{{isManual === '1'}}"
+              use-icon-slot
+              bind:change="toggleDevice"
+              data-index="{{index}}"
+            >
+              <view class="relative ml-10rpx my-20rpx border-4rpx border-solid border-hex-F6F6F8 rounded-full leading-0 p-10rpx">
+                <image
+                  src="{{item.icon}}"
+                  class="w-72 h-72"
+                ></image>
+
+                <view
+                  wx:if="{{isManual === '0'}}"
+                  class="signal-box bottom-0 leading-0 rounded-14rpx {{ item.signal === 'weak' ? 'bg-hex-FFF4F4' : 'bg-hex-F4F8FF'}}"
+                >
+                  <image
+                    src="/package-distribution/assets/search-subdevice/signal-{{ item.signal }}.png"
+                    class="w-46 h-28"
+                  ></image>
+                </view>
+              </view>
+
+              <image
+                wx:if="{{isManual === '0'}}"
+                slot="icon"
+                class="w-48 h-48"
+                src="{{ item.isChecked ? '/assets/img/base/check.png' : '/assets/img/base/uncheck.png' }}"
+              />
+            </van-checkbox>
+
+            <view
+              class="grow pl-32rpx"
+              bind:tap="editDevice"
+              data-id="{{item.deviceUuid}}"
+            >
+              <view class="flex flex-row items-center pb-4rpx">
+                <text class="max-w-200 pr-24rpx text-32 text-black-2a single-text">{{ item.name }}</text>
+
+                <image
+                  class="w-60 h-38"
+                  src="/package-distribution/assets/search-subdevice/edit.png"
+                />
+              </view>
+
+              <text class="text-26 text-black-59 opacity-95 single-text">{{ item.spaceName }}</text>
+            </view>
+
+            <view
+              class="shrink-0"
+              wx:if="{{isManual === '0'}}"
+            >
+              <van-button
+                plain
+                type="primary"
+                size="small"
+                round
+                bind:click="tryControl"
+                data-id="{{item.deviceUuid}}"
+                loading="{{item.mac === flashInfo.mac && flashInfo.isConnecting}}"
+                custom-style="background: rgba(139,195,74,0.1) !important;border-radius: 12rpx; font-size: 24rpx; width: 120rpx;padding: 0;"
+              >
+                {{ item.mac === flashInfo.mac ? '正在闪烁' : '找一找'}}
+              </van-button>
+            </view>
+          </view>
+        </scroll-view>
+
+        <van-button
+          wx:if="{{isManual === '0'}}"
+          class="mt-24rpx"
+          block
+          type="primary"
+          size="large"
+          bind:click="confirmAdd"
+          disabled="{{selectedList.length===0}}"
+          >确认添加（已选{{selectedList.length}}个）
+        </van-button>
+        <van-button
+          wx:else
+          class="mt-24rpx"
+          block
+          type="primary"
+          size="large"
+          bind:click="confirmAddSensor"
+          disabled="{{selectedList.length===0}}"
+          loading="{{confirmLoading}}"
+          loading-text="添加中..."
+          >确认添加
+        </van-button>
+      </view>
+    </block>
+
+    <block wx:if="{{isManual === '0' && status === 'requesting' && (successList.length + failList.length) !== selectedList.length}}">
+      <view class="flex flex-col items-center">
+        <canvas
+          id="canvas"
+          type="2d"
+          class="w-400rpx h-400rpx inline-block"
+        ></canvas>
+
+        <text class="px-100rpx text-28 text-black-59 leading-40rpx">已添加{{successList.length}}/{{selectedList.length}}个设备</text>
+
+        <mz-progress
+          show-progress="{{true}}"
+          active-index="{{successList.length + failList.length}}"
+          step-num="{{selectedList.length}}"
+          step-list="{{[]}}"
+        ></mz-progress>
+      </view>
+    </block>
+
+    <view
+      class="grow flex flex-col justify-between"
+      wx:if="{{status === 'requesting' && (successList.length + failList.length) === selectedList.length && failList.length !== selectedList.length}}"
+    >
+      <tips-box
+        text="{{successList.length}}个设备添加成功！"
+        icon="{{defaultImgDir}}/success.png"
+      ></tips-box>
+
+      <view
+        wx:if="{{failList.length > 0}}"
+        class="px-24rpx pt-90rpx grow shrink flex flex-col"
+      >
+        <view class="flex flex-row items-center justify-between pb-24rpx">
+          <text class="text-28 text-hex-000">以下{{failList.length}}个设备添加失败</text>
+
+          <van-button
+            plain
+            round
+            size="small"
+            type="info"
+            bind:click="reAdd"
+            >重新添加</van-button
+          >
+        </view>
+
+        <scroll-view
+          class="grow shrink h-500"
+          scroll-y="{{true}}"
+          enhanced
+          show-scrollbar="{{false}}"
+        >
+          <view
+            wx:for="{{failList}}"
+            wx:key="deviceUuid"
+            class="flex flex-row items-center bg-white rounded-32rpx mb-24rpx px-50rpx py-40rpx"
+            bind:longpress="showMac"
+            data-mac="{{item.mac}}"
+            data-rssi="{{item.RSSI}}"
+          >
+            <view class="relative my-20rpx border-4rpx border-solid border-hex-F6F6F8 rounded-full leading-0 p-10rpx">
+              <image
+                src="{{item.icon}}"
+                class="w-72 h-72"
+              ></image>
+
+              <view
+                wx:if="{{isManual === '0'}}"
+                class="signal-box bottom-0 leading-0 rounded-14rpx {{ item.signal === 'weak' ? 'bg-hex-FFF4F4' : 'bg-hex-F4F8FF'}}"
+              >
+                <image
+                  src="/package-distribution/assets/search-subdevice/signal-{{ item.signal }}.png"
+                  class="w-46 h-28"
+                ></image>
+              </view>
+            </view>
+
+            <view
+              class="grow pl-32rpx"
+              bind:tap="editDevice"
+              data-id="{{item.deviceUuid}}"
+            >
+              <view class="flex flex-row items-center pb-4rpx">
+                <text class="max-w-200 pr-24rpx text-32 text-black-2a single-text">{{ item.name }}</text>
+
+                <image
+                  class="w-60 h-38"
+                  src="/package-distribution/assets/search-subdevice/edit.png"
+                />
+              </view>
+
+              <text class="text-26 text-black-59 opacity-95 single-text">{{ item.spaceName }}</text>
+            </view>
+
+            <view
+              class="shrink-0"
+              wx:if="{{isManual === '0'}}"
+            >
+              <van-button
+                plain
+                type="primary"
+                size="small"
+                round
+                bind:click="tryControl"
+                data-id="{{item.deviceUuid}}"
+                loading="{{item.mac === flashInfo.mac && flashInfo.isConnecting}}"
+                custom-style="background: rgba(139,195,74,0.1) !important;border-radius: 12rpx; font-size: 24rpx; width: 120rpx;padding: 0;"
+              >
+                {{ item.mac === flashInfo.mac ? '正在闪烁' : '找一找'}}
+              </van-button>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
+
+      <view class="px-24rpx">
+        <van-button
+          class="mt-24rpx"
+          type="primary"
+          block
+          size="large"
+          bind:click="finish"
+          >完成</van-button
+        >
+      </view>
+    </view>
+
+    <block wx:if="{{status === 'requesting' && selectedList.length && failList.length === selectedList.length}}">
+      <tips-box
+        text="添加失败！"
+        icon="{{defaultImgDir}}/no-found.png"
+      ></tips-box>
+
+      <view class="grow px-88rpx pt-180rpx">
+        <view class="text-28 text-black-2a">
+          <text>请排查以下情况：</text>
+        </view>
+
+        <view class="py-30rpx text-26 text-hex-666 leading-46rpx">
+          <view>
+            <text>1、项目网络是否正常</text>
+          </view>
+          <view>
+            <text>2、网关是否正常供电，且已连接项目网络</text>
+          </view>
+          <view>
+            <text>3、子设备是否离网关过远，或被障碍物遮挡</text>
+          </view>
+        </view>
+      </view>
+
+      <van-button
+        class="mx-32rpx mt-24rpx"
+        block
+        type="primary"
+        size="large"
+        bind:click="finish"
+        >返回首页</van-button
+      >
+    </block>
+  </view>
+</view>
+
+<edit-device-info
+  show="{{isEditDevice}}"
+  switch-list="{{editDeviceInfo.switchList}}"
+  device-name="{{editDeviceInfo.deviceName}}"
+  space-id="{{editDeviceInfo.spaceId}}"
+  space-name="{{editDeviceInfo.spaceName}}"
+  bind:close="cancelEditDevice"
+  bind:confirm="confirmEditDevice"
+></edit-device-info>
+
+<van-toast id="van-toast" />

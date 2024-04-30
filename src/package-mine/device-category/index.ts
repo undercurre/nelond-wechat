@@ -87,7 +87,7 @@ ComponentWithComputed({
       })
     },
     handleAddDevice() {
-      wx.navigateTo({ url: '/package-distribution/scan/index' })
+      wx.navigateTo({ url: '/package-distribution/pages/scan/index' })
     },
   },
 })

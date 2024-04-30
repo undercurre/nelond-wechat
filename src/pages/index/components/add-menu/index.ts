@@ -50,7 +50,7 @@ ComponentWithComputed({
             title: '添加设备',
             key: 'device',
             icon: 'add',
-            url: '/package-distribution/choose-device/index',
+            url: '/package-distribution/pages/choose-device/index',
           },
           {
             title: '创建场景',

@@ -3,13 +3,15 @@
 // 小程序（图片存放）
 export const ossDomain = 'https://mzgd-oss-bucket.oss-cn-shenzhen.aliyuncs.com' // ossFile根目录
 // const imgBaseUrl = `${domain}/${getEnv() === 'sit' || getEnv() == 'dev' ? 'sit' : 'prod'}`
-export const sceneImgDir = `${ossDomain}/homlux/auto-scene`
+export const sceneImgDir = `${ossDomain}/nelond/auto-scene`
 
 export const defaultImgDir = `${ossDomain}/nelond/default-img`
 
-export const productImgDir = `${ossDomain}/homlux/product-icon` // 产品图
+export const productImgDir = `${ossDomain}/nelond/product-icon` // 产品图
 
 export const ShareImgUrl = `${defaultImgDir}/welcome.jpg`
+
+export const guideDir = `${defaultImgDir}/nelond/connect-guide`
 
 export const imgList = {
   success: `${defaultImgDir}/success.png`,

@@ -12,7 +12,7 @@ import {
 } from '../../../store/index'
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { waitingDeleteDevice, editDeviceInfo, queryDeviceInfoByDeviceId, sendDevice } from '../../../apis/index'
-import { proName, PRO_TYPE, SCREEN_PID } from '../../../config/index'
+import { proName, PRO_TYPE, SCREEN_PID, SENSOR_TYPE } from '../../../config/index'
 import Dialog from '@vant/weapp/dialog/dialog'
 import { emitter } from '../../../utils/index'
 
@@ -33,9 +33,6 @@ ComponentWithComputed({
   },
 
   computed: {
-    spaceName() {
-      return spaceStore.currentSpaceNameFull ?? ''
-    },
     mac(data) {
       // 网关规则
       if (data.deviceInfo.deviceType === 1) {
@@ -89,12 +86,21 @@ ComponentWithComputed({
     hasSwitchSetting(data) {
       return data.deviceInfo.proType === PRO_TYPE.switch || SCREEN_PID.includes(data.deviceInfo.productId)
     },
+    isLightSensor(data) {
+      return SENSOR_TYPE['lightsensor'] === data.deviceInfo.productId
+    },
     laundryHeight(data) {
       if (data.deviceInfo.proType === PRO_TYPE.clothesDryingRack) {
         const modelName = 'clothesDryingRack'
         return data.deviceInfo.mzgdPropertyDTOList[modelName].custom_height
       }
       return 0
+    },
+    spaceName(data) {
+      const { spaceId } = data
+      const { allSpaceList, getSpaceFullName } = spaceStore
+      const currentSpace = allSpaceList.find((item) => item.spaceId === spaceId)
+      return currentSpace ? getSpaceFullName(currentSpace) : ''
     },
   },
 
@@ -196,6 +202,7 @@ ComponentWithComputed({
         this.updateDeviceInfo()
         await projectStore.updateSpaceCardList()
         await spaceStore.updateSpaceList()
+        spaceStore.setCurrentSpace(this.data.spaceId)
         spaceStore.updateRoomCardLightOnNum()
         emitter.emit('deviceEdit')
       }

@@ -77,7 +77,7 @@ ComponentWithComputed({
       }
 
       wx.navigateTo({
-        url: `/package-distribution/wifi-connect/index?type=changeWifi&sn=${this.data.deviceInfo.sn}`,
+        url: `/package-distribution/pages/wifi-connect/index?type=changeWifi&sn=${this.data.deviceInfo.sn}`,
       })
     },
 

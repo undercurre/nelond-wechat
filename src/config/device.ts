@@ -1,8 +1,10 @@
 import { rpx2px } from '../utils/index'
-import { ossDomain, productImgDir } from './img'
 
 // 设备列表，每次加载的条数 应该为4的倍数
 export const LIST_PAGE = 20
+
+// 依赖 WebSocket 更新设备数据的最大设备数
+export const MAX_DEVICES_USING_WS = 160
 
 // 最多可以移动和删除的设备数（按卡片计数）
 export const MAX_MOVE_CARDS = 20
@@ -34,6 +36,7 @@ export const SENSOR_MODEL_NAME = {
   'midea.ir.201': 'irDetector',
   'midea.magnet.001.201': 'magnet',
   'midea.freepad.001.201': 'freepad',
+  'midea.hlightsensor.001.001': 'lightsensor',
 } as Record<string, string>
 
 /**
@@ -56,8 +59,11 @@ export const SCREEN_PID: readonly string[] = ['zk527b6c944a454e9fb15d3cc1f4d55b'
 // 旋钮开关pid
 export const KNOB_PID: readonly string[] = ['midea.knob.001.003']
 
-// 无色温调节pid (工矿灯)
-export const NO_COLOR_TEMP: readonly string[] = ['midea.hlight.005.001']
+// 无色温调节pid
+export const NO_COLOR_TEMP: readonly string[] = [
+  'midea.hlight.005.001', // 工矿灯
+  'midea.hlight.006.001', // 线条灯
+]
 
 // 设备品类码 -> modelName
 export const proName: Record<string, string> = {
@@ -75,31 +81,5 @@ export const SENSOR_TYPE = {
   humanSensor: 'midea.ir.201',
   doorsensor: 'midea.magnet.001.201',
   freepad: 'midea.freepad.001.201',
+  lightsensor: 'midea.hlightsensor.001.001',
 } as const
-
-export const sensorList: Record<string, string>[] = [
-  {
-    icon: `${productImgDir}/sensor-body.png`,
-    img: `${ossDomain}/homlux/sensor_body.gif`,
-    name: '人体传感器',
-    desc: '1、确认传感器电池已安装好\n2、长按球体顶部「配网按键」5秒以上，至指示灯开始闪烁（1秒/次）',
-    path: 'sensor_door.gif',
-    productId: 'midea.ir.201',
-  },
-  {
-    icon: `${productImgDir}/sensor-door.png`,
-    img: `${ossDomain}/homlux/sensor_door.gif`,
-    name: '门磁传感器',
-    desc: '1、确认传感器电池已安装好\n2、长按顶部「配网按键」5秒以上，至指示灯开始闪烁（1秒/次）',
-    path: '',
-    productId: 'midea.magnet.001.201',
-  },
-  {
-    icon: `${productImgDir}/sensor-switch.png`,
-    img: `${ossDomain}/homlux/sensor_switch.gif`,
-    name: '无线开关',
-    desc: '1、确认传感器电池已安装好\n2、点击「开关键」，随后立刻长按5秒以上，至指示灯开始闪烁（1秒/次）',
-    path: '',
-    productId: 'midea.freepad.001.201',
-  },
-]
