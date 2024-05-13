@@ -1,5 +1,5 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { proName, PRO_TYPE, defaultImgDir, getModelName } from '../../config/index'
+import { proName, PRO_TYPE, getModelName } from '../../config/index'
 import { throttle } from '../../utils/index'
 
 const CONTROL_INTERVAL = 3000 // 开关操作间隔时间
@@ -73,7 +73,7 @@ ComponentWithComputed({
   computed: {
     picUrl(data) {
       if (data.isLoadImgError) {
-        return `${defaultImgDir}/default-device.png`
+        return `/assets/img/offline/default-device.png`
       }
       if (data.deviceInfo.proType === PRO_TYPE.switch && data.showBtnDetail) {
         return data.deviceInfo?.switchInfoDTOList[0]?.pic
