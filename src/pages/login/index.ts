@@ -163,7 +163,7 @@ Component({
 
     toPage(e: WechatMiniprogram.TouchEvent) {
       wx.navigateTo({
-        url: '/package-protocol/protocol-show/index?protocal=' + e.currentTarget.dataset.value,
+        url: '/package-about/pages/protocol-show/index?protocal=' + e.currentTarget.dataset.value,
       })
     },
   },

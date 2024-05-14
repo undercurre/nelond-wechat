@@ -1,5 +1,7 @@
-import pageBehavior from '../../behaviors/pageBehaviors'
-import meta from '../../meta'
+import pageBehavior from '../../../behaviors/pageBehaviors'
+import meta from '../../../meta'
+
+let debugTimeId = 0
 
 Component({
   behaviors: [pageBehavior],
@@ -58,7 +60,7 @@ Component({
   methods: {
     handleTap(e: WechatMiniprogram.TouchEvent) {
       wx.navigateTo({
-        url: '/package-protocol/protocol-show/index?protocal=' + e.currentTarget.dataset.value,
+        url: '/package-about/pages/protocol-show/index?protocal=' + e.currentTarget.dataset.value,
       })
     },
 
@@ -67,6 +69,19 @@ Component({
       this.setData({
         showVersion: !this.data.showVersion,
       })
+    },
+
+    touchVersionStart() {
+      // 长按5s进入工程模式功能
+      debugTimeId = setTimeout(() => {
+        wx.navigateTo({
+          url: '/package-about/pages/engineering-mode/index',
+        })
+      }, 5000)
+    },
+
+    touchVersionEnd() {
+      clearTimeout(debugTimeId)
     },
   },
 })

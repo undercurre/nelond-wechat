@@ -1,0 +1,18 @@
+<view class="h-100vh bg-hex-eef2f7">
+  <nav-bar
+    title="工程模式"
+    left-arrow
+    bind:leftTap="goBack"
+  ></nav-bar>
+
+  <view class="h-24rpx"></view>
+
+  <van-cell-group inset>
+    <van-cell
+      title="局域网模式"
+      is-link
+      center
+      border="{{false}}"
+    />
+  </van-cell-group>
+</view>

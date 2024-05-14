@@ -34,7 +34,7 @@ Component({
       deviceReplace: '/package-mine/device-replace/index',
       feedback: '/package-mine/feedback/index',
       help: '/package-mine/help/list/index',
-      about: '/package-protocol/protocol-list/index',
+      about: '/package-about/pages/index/index',
       deviceCategory: '/package-mine/device-category/index',
       ota: '/package-mine/ota/index',
     },

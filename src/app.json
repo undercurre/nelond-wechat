@@ -44,8 +44,8 @@
       "pages": ["index/index", "space-list/index", "scene-list/index", "group/index"]
     },
     {
-      "root": "package-protocol",
-      "pages": ["protocol-show/index", "protocol-list/index"]
+      "root": "package-about",
+      "pages": ["pages/protocol-show/index", "pages/index/index", "pages/engineering-mode/index"]
     },
     {
       "root": "package-automation",

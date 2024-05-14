@@ -1,6 +1,6 @@
-import { storage } from '../../utils/index'
+import { storage } from '../../../utils/index'
 import { userService, privacyPolicy } from './protocol-doc'
-import pageBehavior from '../../behaviors/pageBehaviors'
+import pageBehavior from '../../../behaviors/pageBehaviors'
 Component({
   behaviors: [pageBehavior],
   /**
@@ -46,7 +46,7 @@ Component({
         this.setData({
           title: '已收集个人信息清单',
           type: 'img',
-          url: '/package-protocol/assets/img/userInfoList.png',
+          url: '/package-about/assets/img/userInfoList.png',
           width: '750rpx',
           height: '1060rpx',
         })
@@ -54,7 +54,7 @@ Component({
         this.setData({
           title: '美的商照权限列表',
           type: 'img',
-          url: '/package-protocol/assets/img/authList.png',
+          url: '/package-about/assets/img/authList.png',
           width: '141vh',
           height: '100vh',
         })
