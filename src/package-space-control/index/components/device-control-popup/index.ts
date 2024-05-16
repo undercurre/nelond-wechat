@@ -191,6 +191,7 @@ ComponentWithComputed({
       return !data.deviceInfo.onLineStatus && data.deviceInfo.canLanCtrl
     },
     logListView(data) {
+      if (!data.logList?.length) return []
       return data.logList.map((log) => {
         const { reportAt } = log
         const [date, time] = reportAt.split(' ')
