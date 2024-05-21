@@ -19,6 +19,14 @@ Component({
     isLanOn: getEnv() === 'Lan',
   },
 
+  pageLifetimes: {
+    show() {
+      this.setData({
+        isLanOn: getEnv() === 'Lan',
+      })
+    },
+  },
+
   /**
    * 组件的方法列表
    */
