@@ -1142,19 +1142,23 @@ ComponentWithComputed({
 
       if (this.data.spaceId !== '' && this.data.opearationType === 'yijian') {
         const desc = this.cmptFullSpaceName()
-        if (!this.data.sceneDeviceConditionsFlatten.map((item) => item.uniId).includes('room')) {
-          diffSceneDeviceConditionsFlatten.push({
-            uniId: 'room',
-            name: '手动点击场景',
-            desc: [desc],
-            pic: '/package-automation/assets/imgs/automation/touch-materialized.png',
-            productId: 'touch',
-            property: {},
-            type: 5,
-          })
+        const curSceneInfo: AutoScene.AutoSceneFlattenCondition = {
+          uniId: 'room',
+          name: '手动点击场景',
+          desc: [desc],
+          pic: '/package-automation/assets/imgs/automation/touch-materialized.png',
+          productId: 'touch',
+          property: {},
+          type: 5,
+        }
+        const roomConditionIndex = this.data.sceneDeviceConditionsFlatten.findIndex((item) => item.uniId === 'room')
+        if (roomConditionIndex !== -1) {
+          this.data.sceneDeviceConditionsFlatten[roomConditionIndex] = curSceneInfo
+        } else {
+          this.data.sceneDeviceConditionsFlatten.push(curSceneInfo)
         }
         this.setData({
-          sceneDeviceConditionsFlatten: this.data.sceneDeviceConditionsFlatten.concat(diffSceneDeviceConditionsFlatten),
+          sceneDeviceConditionsFlatten: [...this.data.sceneDeviceConditionsFlatten],
         })
         return
       }

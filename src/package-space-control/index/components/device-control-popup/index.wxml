@@ -194,7 +194,7 @@
         </view>
 
         <!-- 照度传感器，只需要显示一条 -->
-        <block wx:if="{{isLightSensor}}">
+        <block wx:if="{{isLightSensor && logListView.length}}">
           <view
             class="log-item"
             wx:for="{{logListView}}"
