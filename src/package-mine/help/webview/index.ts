@@ -1,5 +1,5 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { getEnv } from '../../../config/index'
+import { getEnv, mzaioDomain } from '../../../config/index'
 
 ComponentWithComputed({
   /**
@@ -7,16 +7,11 @@ ComponentWithComputed({
    */
   data: {
     webviewSrc: '',
-    domainMap: {
-      dev: 'https://test.meizgd.com',
-      sit: 'https://mzaio.meizgd.com',
-      prod: 'https://mzaio.meizgd.com',
-    },
   },
 
   methods: {
     onLoad(e: { url: string }) {
-      const domain = this.data.domainMap[getEnv()]
+      const domain = mzaioDomain[getEnv()]
 
       this.setData({
         webviewSrc: `${domain}${e.url}`,

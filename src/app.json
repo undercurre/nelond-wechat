@@ -58,17 +58,25 @@
     },
     {
       "root": "package-debug",
-      "pages": ["pages/index/index", "pages/homos-debug/index", "pages/ble-test/index"]
+      "pages": ["pages/index/index", "pages/ble-test/index"]
     }
   ],
   "preloadRule": {
     "pages/index/index": {
       "network": "all",
-      "packages": ["package-space-control", "package-distribution", "package-mine", "package-automation"]
+      "packages": ["package-space-control", "package-distribution"]
     },
-    "package-distribution/pages/choose-device/index": {
+    "pages/mine/index": {
       "network": "all",
-      "packages": []
+      "packages": ["package-mine"]
+    },
+    "pages/automation/index": {
+      "network": "all",
+      "packages": ["package-automation"]
+    },
+    "package-about/pages/engineering-mode/index": {
+      "network": "all",
+      "packages": ["package-space-control", "package-distribution", "package-mine", "package-automation"]
     }
   },
   "tabBar": {

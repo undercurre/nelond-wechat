@@ -10,9 +10,19 @@
   <van-cell-group inset>
     <van-cell
       title="局域网模式"
-      is-link
       center
+      label="局域网适用于私有化部署工程"
       border="{{false}}"
-    />
+    >
+      <van-switch
+        slot="right-icon"
+        checked="{{ isLanOn }}"
+        bind:change="onChangeLanSwitch"
+      />
+    </van-cell>
   </van-cell-group>
 </view>
+
+<van-toast id="van-toast" />
+
+<van-dialog id="van-dialog" />

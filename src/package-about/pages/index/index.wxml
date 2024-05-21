@@ -42,6 +42,7 @@
     value="v{{version}}"
     center
     border="{{false}}"
+    center
     bind:touchstart="touchVersionStart"
     bind:touchend="touchVersionEnd"
   />

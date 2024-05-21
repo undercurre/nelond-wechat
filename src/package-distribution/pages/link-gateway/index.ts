@@ -6,7 +6,7 @@ import { queryDeviceOnlineStatus, bindDevice, verifySn } from '../../../apis/ind
 import { projectBinding, spaceBinding, deviceBinding } from '../../../store/index'
 import { WifiSocket, getCurrentPageParams, strUtil, isAndroid, isAndroid10Plus, Logger } from '../../../utils/index'
 import { stepListForBind, stepListForChangeWiFi } from './conifg'
-import { defaultImgDir } from '../../../config/index'
+import { defaultImgDir, mzaioDomain, getEnv } from '../../../config/index'
 
 let start = 0
 
@@ -334,7 +334,7 @@ ComponentWithComputed({
       const params = getCurrentPageParams()
 
       const begin = Date.now()
-      const data: IAnyObject = { method: gatewayStatus.method }
+      const data: IAnyObject = { method: gatewayStatus.method, url: `https://${mzaioDomain[getEnv()]}` }
 
       if (data.method === 'wifi') {
         data.ssid = params.wifiSSID

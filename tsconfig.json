@@ -25,5 +25,5 @@
     }
   },
   "include": ["./**/*.ts"],
-  "exclude": ["node_modules", "miniprogram_npm", "unocss.config.ts", "./src/lib/*.js"]
+  "exclude": ["node_modules/**/*", "miniprogram_npm", "unocss.config.ts", "src/lib/*.js"]
 }

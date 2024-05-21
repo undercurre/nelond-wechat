@@ -20,11 +20,4 @@
     link-type="navigateTo"
     url="/package-debug/pages/ble-test/index"
   />
-  <van-cell
-    title="HomOS调试"
-    is-link
-    center
-    link-type="navigateTo"
-    url="/package-debug/pages/homos-debug/index"
-  />
 </van-cell-group>

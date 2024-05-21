@@ -1,4 +1,4 @@
-import { mzaioWSURL, getEnv } from '../config/index'
+import { getMzaioWSURL } from '../config/index'
 import { projectStore } from '../store/index'
 import { Logger, storage, strUtil } from '../utils/index'
 
@@ -7,8 +7,9 @@ import { Logger, storage, strUtil } from '../utils/index'
  * @param projectId 项目id
  */
 export function connectSocket(projectId: string) {
-  Logger.log('连接项目socket: ', projectId, projectStore.currentProjectDetail.projectName)
-  const url = strUtil.getUrlWithParams(mzaioWSURL[getEnv()], { projectId })
+  const url = strUtil.getUrlWithParams(getMzaioWSURL(), { projectId })
+
+  Logger.log('连接项目socket: ', projectId, projectStore.currentProjectDetail.projectName, url)
   return wx.connectSocket({
     url,
     protocols: [storage.get<string>('token') as string],
