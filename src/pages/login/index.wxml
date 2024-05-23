@@ -93,22 +93,26 @@
   </van-field>
 
   <van-field
-    model:value="{{ captchaInput }}"
-    placeholder="请输入短信验证码"
-    custom-style="margin-bottom: 32rpx;margin-top: 40rpx;padding: 32rpx 32rpx;border-radius: 24rpx;"
-    clearable="{{true}}"
+    model:value="{{ pw }}"
+    placeholder="请输入密码"
+    password="{{!isShowPw}}"
+    custom-style="padding: 24rpx 32rpx;border-radius: 24rpx;"
+    use-button-slot
     border="{{false}}"
+    clearable
   >
     <van-button
       slot="button"
-      type="primary"
-      size="mini"
-      custom-style="font-size: 28rpx;padding-left: 20rpx;padding-right: 20rpx;"
+      bind:click="togglePw"
+      custom-style="border: 0;"
+      type="default"
       plain
-      bind:click="queryCaptcha"
-      disabled="{{!mobilePhone || validTime > 0}}"
     >
-      {{ smsBtnText }}
+      <svg-icon
+        name="icon-park-outline:preview-{{!isShowPw ? 'close-one' : 'open'}}"
+        color="#555659"
+        height="56rpx"
+      ></svg-icon>
     </van-button>
   </van-field>
 
@@ -120,7 +124,7 @@
       type="primary"
       size="large"
       bind:click="toLogin"
-      disabled="{{!isAgree || !mobilePhone || !captchaInput}}"
+      disabled="{{!isAgree || !mobilePhone || !pw}}"
       >登录</van-button
     >
   </view>

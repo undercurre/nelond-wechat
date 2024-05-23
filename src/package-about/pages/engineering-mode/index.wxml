@@ -8,18 +8,7 @@
   <view class="h-24rpx"></view>
 
   <van-cell-group inset>
-    <van-cell
-      title="局域网模式"
-      center
-      label="局域网适用于私有化部署工程"
-      border="{{false}}"
-    >
-      <van-switch
-        slot="right-icon"
-        checked="{{ isLanOn }}"
-        bind:change="onChangeLanSwitch"
-      />
-    </van-cell>
+    <lan-switch-cell></lan-switch-cell>
   </van-cell-group>
 </view>
 

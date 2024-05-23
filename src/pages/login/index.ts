@@ -1,7 +1,7 @@
 import Toast from '@vant/weapp/toast/toast'
 import Dialog from '@vant/weapp/dialog/dialog'
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { RegMobile, RegSmsAuthCode } from '@midea/reg-awsome'
+import { RegMobile } from '@midea/reg-awsome'
 import { login, getCaptcha, loginByMz } from '../../apis/index'
 import { projectStore, othersStore, userStore } from '../../store/index'
 import { storage, showLoading, hideLoading, Logger } from '../../utils/index'
@@ -26,7 +26,9 @@ ComponentWithComputed({
     needCaptcha: false, // 是否需要验证码登录
     captchaInput: '',
     validTime: -1, // 验证码60秒过期， -1代表还没发送过短信
+    isShowPw: false,
     mobilePhone: '',
+    pw: '',
     _jsCode: '', // 暂存微信登录码
     _code: '', // 暂存微信获取手机的动态令牌
   },
@@ -52,6 +54,12 @@ ComponentWithComputed({
         (storage.get<number>('statusBarHeight') as number) + (storage.get<number>('navigationBarHeight') as number)
       this.setData({
         marginTop: 200 - navigationBarAndStatusBarHeight,
+      })
+    },
+
+    togglePw() {
+      this.setData({
+        isShowPw: !this.data.isShowPw,
       })
     },
 
@@ -148,21 +156,17 @@ ComponentWithComputed({
           if (!RegMobile.reg.test(this.data.mobilePhone)) {
             throw '请输入正确的手机号码'
           }
-
-          if (!RegSmsAuthCode.reg.test(this.data.mobilePhone)) {
-            throw '请输入正确的验证码'
-          }
         }
 
         const res = this.data.isLan
-          ? await loginByMz({ mobilePhone: this.data.mobilePhone, captcha: this.data.captchaInput })
+          ? await loginByMz({ mobilePhone: this.data.mobilePhone, password: this.data.pw })
           : await login(data)
         // 如果返回未激活状态，则自动调用获取验证码的接口
         if (res.success && res.code === UNACTIVATED) {
           this.setData({
             needCaptcha: true,
           })
-          this.data.mobilePhone = res.result?.mobilePhone
+          this.data.mobilePhone = res.result?.mobilePhone || ''
           this.queryCaptcha()
         }
         // 登录成功

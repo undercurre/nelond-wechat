@@ -42,7 +42,9 @@
     value="v{{version}}"
     center
     border="{{false}}"
-    center
+    is-link
+    link-type="navigateTo"
+    url="/package-about/pages/engineering-mode/index"
     bind:touchstart="touchVersionStart"
     bind:touchend="touchVersionEnd"
   />

@@ -23,14 +23,35 @@ export async function login(data: { jsCode?: string; code?: string; captcha?: st
 }
 
 /**
- * 美智用户登录,手机+验证码
+ * 美智用户登录,手机+密码
  */
-export async function loginByMz(data: { mobilePhone: string; captcha: string }) {
+export async function loginByMz(data: { mobilePhone: string; password: string }) {
+  const codeRes = await getVerifyCode()
+
+  if (!codeRes.success) {
+    return { success: false, code: -1, result: null }
+  }
+
   return await mzaioRequest.post<User.UserInfo>({
     log: true,
     loading: true,
     url: '/v1/mzgd/cl/auth/web/login',
-    data,
+    data: {
+      ...data,
+      verifyCode: codeRes.result.verifyCode,
+      verifyCodeKey: codeRes.result.verifyCodeKey,
+    },
+  })
+}
+
+/**
+ * web端用户获取校验码
+ */
+export async function getVerifyCode() {
+  return await mzaioRequest.post<{ verifyCode: string; verifyCodeKey: string }>({
+    log: true,
+    loading: true,
+    url: '/v1/mzgd/cl/auth/get/verifyCode',
   })
 }
 
