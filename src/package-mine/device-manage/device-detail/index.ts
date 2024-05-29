@@ -98,9 +98,8 @@ ComponentWithComputed({
     },
     spaceName(data) {
       const { spaceId } = data
-      const { allSpaceList, getSpaceFullName } = spaceStore
-      const currentSpace = allSpaceList.find((item) => item.spaceId === spaceId)
-      return currentSpace ? getSpaceFullName(currentSpace) : ''
+      const currentSpace = spaceBinding.store.allSpaceList.find((item) => item.spaceId === spaceId)
+      return currentSpace ? spaceBinding.store.getSpaceFullName(currentSpace) : ''
     },
   },
 
