@@ -48,7 +48,7 @@ ComponentWithComputed({
       }
       const list = (data.projectList as Project.IProjectItem[]).map((item) => ({
         ...item,
-        projectName: item.projectName?.length > 6 ? item.projectName.slice(0, 6) + '...' : item.projectName,
+        projectName: item.projectName?.length > 14 ? item.projectName.slice(0, 14) + '...' : item.projectName,
         selected: item.projectId === projectStore.currentProjectId,
       }))
 

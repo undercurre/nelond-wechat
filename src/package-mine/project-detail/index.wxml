@@ -13,38 +13,52 @@
     <view>
       <van-cell-group inset>
         <van-cell
+          title="代理商"
+          value="{{currentProjectDetail.merchantName}}"
+          value-class="longValue"
+          title-class="shortTitle"
+          center
+        />
+        <van-cell
           title="项目名称"
           value="{{currentProjectDetail.projectName}}"
+          value-class="longValue"
+          title-class="shortTitle"
           center
         />
         <van-cell
           title="项目类型"
           value="{{projectTypeName}}"
+          value-class="longValue"
+          title-class="shortTitle"
           center
         />
         <van-cell
           title="项目区域"
           value="{{currentProjectDetail.projectArea}}"
+          value-class="longValue"
+          title-class="shortTitle"
           center
         />
         <van-cell
           title="负责人"
           value="{{currentProjectDetail.projectLeader}}"
+          value-class="longValue"
+          title-class="shortTitle"
           center
         />
         <van-cell
           title="联系方式"
           value="{{currentProjectDetail.contract}}"
+          value-class="longValue"
+          title-class="shortTitle"
           center
         />
         <van-cell
           title="详细地址"
           value="{{currentProjectDetail.address}}"
-          center
-        />
-        <van-cell
-          title="代理商"
-          value="{{currentProjectDetail.merchantName}}"
+          value-class="longValue"
+          title-class="shortTitle"
           center
           border="{{false}}"
         />
