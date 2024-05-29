@@ -140,17 +140,8 @@ ComponentWithComputed({
      * 空间显示名称
      */
     title(data) {
-      const { currentSpace, parentSpace } = data
-
-      // 如果非公共空间，则直接显示当前空间名称
-      if (currentSpace?.publicSpaceFlag === 0) {
-        return currentSpace?.spaceName ?? ''
-      }
-
-      // 如果为公共空间，则显示{父空间名称}-公共空间
-      const _title = `${parentSpace?.spaceName ?? ''}-${currentSpace?.spaceName}`
-      console.log('_title', _title)
-      return _title.length > 9 ? _title.slice(0, 4) + '..' + _title.slice(-5) : _title
+      const { currentSpaceNameClear } = data
+      return currentSpaceNameClear?.slice(0, 11)
     },
     sceneListInBar(data) {
       if (data.sceneList) {

@@ -17,7 +17,7 @@ ComponentWithComputed({
     isLoaded: false,
     defaultImgDir,
     spaceId: '0',
-    spaceName: spaceStore.currentSpaceNameFull ?? '全部',
+    spaceName: spaceStore.currentSpaceNameClear ?? '全部',
     listHeight: 0,
     roomSelectMenu: {
       x: '0px',

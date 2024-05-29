@@ -71,6 +71,11 @@ export const spaceStore = observable({
     return this.getSpaceFullName(this.currentSpace as Space.allSpace) ?? ''
   },
 
+  // 如果非公共空间，则直接显示当前空间名称；如果为公共空间，则显示{父空间名称}-公共空间
+  get currentSpaceNameClear(): string {
+    return this.getSpaceClearName(this.currentSpace) ?? ''
+  },
+
   get hasSpace() {
     const { spaceList } = this
     return spaceList?.length
@@ -100,6 +105,27 @@ export const spaceStore = observable({
     }
 
     return `${parentSpace.pid === '0' ? parentSpace.spaceName : this.getSpaceFullName(parentSpace)},${space.spaceName}`
+  },
+
+  /**
+   * 获取指定空间的简明名称
+   * 如果为公共空间，则显示{父空间名称}-公共空间
+   */
+  getSpaceClearName(space: Space.allSpace): string {
+    // 如果非公共空间，则直接显示当前空间名称；
+    if (space.publicSpaceFlag === 0) {
+      return space?.spaceName ?? ''
+    }
+
+    if (space?.pid === '0') {
+      return space?.spaceName
+    }
+
+    const parentSpace = spaceStore.allSpaceList.find((item) => item.spaceId === space?.pid) as Space.allSpace
+    if (!parentSpace) {
+      return space.spaceName
+    }
+    return `${parentSpace?.spaceName ?? ''}-${space.spaceName}`
   },
 
   /**
@@ -157,6 +183,7 @@ export const spaceBinding = {
     'currentSpaceId',
     'currentSpaceName',
     'currentSpaceNameFull',
+    'currentSpaceNameClear',
   ],
   actions: [],
 }

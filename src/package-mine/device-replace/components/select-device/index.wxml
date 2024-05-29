@@ -21,6 +21,7 @@
       bind:click="handleSpaceSelect"
       title="所在空间"
       value="{{spaceName}}"
+      value-class="longValue"
     ></van-cell>
 
     <scroll-view

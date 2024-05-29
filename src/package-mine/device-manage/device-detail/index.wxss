@@ -8,10 +8,10 @@
 }
 
 .shortTitle {
-  flex: 0 !important;
   white-space: nowrap;
 }
 
 .longValue {
+  flex: 2 !important;
   white-space: nowrap;
 }

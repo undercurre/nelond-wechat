@@ -30,7 +30,7 @@ ComponentWithComputed({
     allDeviceList: Array<Device.DeviceItem>(),
     checkedDevice: {},
     spaceId: '0',
-    spaceName: spaceStore.currentSpace?.spaceName ?? '全部',
+    spaceName: spaceStore.currentSpaceNameFull ?? '全部',
     showSpaceSelectPopup: false,
   },
 
@@ -91,7 +91,7 @@ ComponentWithComputed({
       const spaceInfo = e.detail[e.detail.length - 1]
       this.setData({
         spaceId: spaceInfo.spaceId,
-        spaceName: spaceInfo.spaceName,
+        spaceName: spaceStore.getSpaceFullName(spaceInfo),
       })
     },
 

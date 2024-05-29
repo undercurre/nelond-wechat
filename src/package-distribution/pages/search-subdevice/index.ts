@@ -227,7 +227,7 @@ ComponentWithComputed({
         status: 'waiting' as const,
         deviceUuid: device.deviceId,
         spaceId: spaceBinding.store.currentSpace.spaceId,
-        spaceName: spaceBinding.store.currentSpaceNameFull,
+        spaceName: spaceBinding.store.currentSpaceNameClear,
         mac: '',
         signal: '',
         zigbeeMac: device.deviceId,

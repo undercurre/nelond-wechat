@@ -4,11 +4,8 @@
 }
 
 .cell-value {
-  flex: 3 !important;
-  font-size: 28rpx !important;
+  flex: 2 !important;
   color: #555659 !important;
-  margin-right: 16rpx !important;
-  font-weight: 400 !important;
 }
 
 .checked-1,

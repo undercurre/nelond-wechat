@@ -328,11 +328,12 @@ ComponentWithComputed({
             const scene = this.data.sceneList.find((item) => item.sceneId === action.deviceId)
             if (scene) {
               //是场景
+              const space = spaceStore.allSpaceList.find((item) => item.spaceId === scene.spaceId) as Space.allSpace
               tempSceneDeviceActionsFlatten.push({
                 uniId: scene.sceneId,
                 name: scene.sceneName,
                 type: 5,
-                desc: [scene.spaceName],
+                desc: [spaceStore.getSpaceClearName(space)],
                 pic: `https://mzgd-oss-bucket.oss-cn-shenzhen.aliyuncs.com/homlux/auto-scene/${scene.sceneIcon}.png`,
                 value: {},
                 orderNum: index,
@@ -1101,6 +1102,7 @@ ComponentWithComputed({
           })
         } else {
           const scene = this.data.sceneList.find((item) => item.sceneId === id)
+          const space = spaceStore.allSpaceList.find((item) => item.spaceId === scene?.spaceId) as Space.allSpace
           if (scene) {
             //是场景
             console.log('是场景', scene)
@@ -1108,7 +1110,7 @@ ComponentWithComputed({
               uniId: scene.sceneId,
               name: scene.sceneName,
               type: 5,
-              desc: [scene.spaceName],
+              desc: [spaceStore.getSpaceClearName(space)],
               pic: `https://mzgd-oss-bucket.oss-cn-shenzhen.aliyuncs.com/homlux/auto-scene/${scene.sceneIcon}.png`,
               value: {},
               orderNum: 0,
@@ -1141,11 +1143,11 @@ ComponentWithComputed({
       const diffSceneDeviceConditionsFlatten = [] as AutoScene.AutoSceneFlattenCondition[]
 
       if (this.data.spaceId !== '' && this.data.opearationType === 'yijian') {
-        const desc = this.cmptFullSpaceName()
+        const space = spaceStore.allSpaceList.find((item) => item.spaceId === this.data.spaceId) as Space.allSpace
         const curSceneInfo: AutoScene.AutoSceneFlattenCondition = {
           uniId: 'room',
           name: '手动点击场景',
-          desc: [desc],
+          desc: [spaceStore.getSpaceClearName(space)],
           pic: '/package-automation/assets/imgs/automation/touch-materialized.png',
           productId: 'touch',
           property: {},
@@ -2109,25 +2111,6 @@ ComponentWithComputed({
         const drag = this.selectComponent('#drag')
         drag.init()
       }
-    },
-    /* 执行结果拖拽相关方法 end */
-    cmptFullSpaceName() {
-      const [firstSpace, secondSpace, thirdSpace, fourthSpace] = this.data.selectedSpaceInfo
-
-      let desc = ''
-      if (firstSpace) {
-        desc += firstSpace.spaceName
-        if (secondSpace) {
-          desc += `，${secondSpace.spaceName}`
-          if (thirdSpace) {
-            desc += `，${thirdSpace.spaceName}`
-            if (fourthSpace) {
-              desc += `，${fourthSpace.spaceName}`
-            }
-          }
-        }
-      }
-      return desc
     },
   },
 })

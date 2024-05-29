@@ -37,6 +37,8 @@
             bind:click="handleDeviceRoomEditPopup"
             title="所在空间"
             value="{{spaceName}}"
+            value-class="longValue"
+            title-class="shortTitle"
           ></van-cell>
           <van-cell
             wx:if="{{isSubDevice}}"
