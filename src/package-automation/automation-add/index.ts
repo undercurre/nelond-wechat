@@ -1,6 +1,6 @@
 import Dialog from '@vant/weapp/dialog/dialog'
 import Toast from '@vant/weapp/toast/toast'
-import { deleteScene, addScene, updateScene } from '../../apis/index'
+import { deleteScene, addScene, updateScene, findDevice } from '../../apis/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { deviceStore, sceneStore, projectStore, autosceneStore, spaceStore } from '../../store/index'
@@ -127,6 +127,10 @@ ComponentWithComputed({
           (item) => !data.sceneDevicelinkSelectList.includes(item.uniId) && item.onLineStatus === 1,
         )
       }
+    },
+    showTry(data) {
+      const { selectCardType, linkSelectList } = data
+      return linkSelectList?.length === 1 && selectCardType === 'device'
     },
     // cardType(data) {
     //   return data.selectCardType === 'device' || data.selectCardType === 'sensor' ? 'device' : 'scene'
@@ -936,12 +940,6 @@ ComponentWithComputed({
     async handleSelectCardSelect(e: { detail: string }) {
       console.log('选择设备', e.detail)
       const selectId = e.detail
-      if (this.data.selectCardType === 'device') {
-        // const allDeviceMap = deviceStore.allDeviceFlattenMap
-        // const device = allDeviceMap[e.detail]
-        // const modelName = 'light'
-        // findDevice({ gatewayId: device.gatewayId, devId: device.deviceId, modelName })
-      }
       const listType =
         this.data.selectCardType === 'sensor' ? 'tempSensorlinkSelectList' : 'tempSceneDevicelinkSelectedList'
       // 取消选择逻辑
@@ -986,15 +984,26 @@ ComponentWithComputed({
         showSelectCardPopup: false,
       })
     },
-    handleSelectCardReturn() {
-      this.setData({
-        showSelectCardPopup: false,
-      })
+    handleSelectCardReturn(e: { detail: string[] }) {
       if (this.data.selectCardType === 'sensor') {
         this.handleConditionShow()
-      } else {
-        this.handleActionShow()
       }
+      // 设备找一找
+      else if (this.data.selectCardType === 'device') {
+        console.log('handleSelectCardReturn', e)
+        const allDeviceMap = deviceStore.allDeviceFlattenMap
+        const device = allDeviceMap[e.detail[0]]
+        const modelName = 'light'
+        findDevice({ gatewayId: device.gatewayId, devId: device.deviceId, modelName })
+      } else {
+        this.setData({
+          showSelectCardPopup: false,
+        })
+      }
+      // 是否还有其他情况？
+      // else {
+      //   this.handleActionShow()
+      // }
     },
     // 设备选择确认
     async handleSelectCardConfirm() {
