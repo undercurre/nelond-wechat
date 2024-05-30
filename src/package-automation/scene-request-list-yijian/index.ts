@@ -4,7 +4,7 @@ import Dialog from '@vant/weapp/dialog/dialog'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { storage, emitter, getCurrentPageParams } from '../../utils/index'
 import { addScene, retryScene, updateScene } from '../../apis/index'
-import { sceneStore, deviceStore, projectStore } from '../../store/index'
+import { sceneStore, deviceStore, projectStore, spaceStore } from '../../store/index'
 import { PRO_TYPE } from '../../config/index'
 
 ComponentWithComputed({
@@ -45,7 +45,7 @@ ComponentWithComputed({
         })
           .then(() => {
             // on confirm
-          })    
+          })
           .catch(() => {
             // on cancel
           })
@@ -86,13 +86,23 @@ ComponentWithComputed({
       const deviceList = deviceStore.allDeviceFlattenList
         .filter((item) => selectIdList.includes(item.uniId))
         .map((item) => {
-          if (item.proType === PRO_TYPE.switch) {
-            ;(item.pic = item.switchInfoDTOList[0]?.pic),
-              (item.deviceName = `${item.switchInfoDTOList[0].switchName} | ${item.deviceName}`)
+          const isSwitch = item.proType === PRO_TYPE.switch
+          let { deviceName } = item
+          let name = deviceName
+          if (isSwitch) {
+            const { switchName } = item.switchInfoDTOList[0]
+            if (switchName.length + deviceName.length > 15) {
+              deviceName = deviceName.slice(0, 12 - switchName.length) + '...' + deviceName.slice(-2)
+            }
+            name = `${switchName}|${deviceName}`
           }
+          const space = spaceStore.allSpaceList.find((s) => s.spaceId === item.spaceId) as Space.allSpace
 
           return {
             ...item,
+            pic: isSwitch ? item.switchInfoDTOList[0]?.pic : item.pic,
+            deviceName: name,
+            spaceName: spaceStore.getSpaceClearName(space),
             status: this.data.isDefault ? 'success' : 'waiting',
           }
         })

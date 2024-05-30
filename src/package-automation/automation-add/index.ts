@@ -356,9 +356,15 @@ ComponentWithComputed({
                 //是开关面板
                 const power = action.controlAction[0].power
                 const desc = toPropertyDesc(device.proType, device.productId, action.controlAction[0])
+                const { switchName } = device.switchInfoDTOList[0]
+                let { deviceName } = device
+                console.log('[ssss]', switchName, deviceName)
+                if (switchName.length + deviceName.length > 15) {
+                  deviceName = deviceName.slice(0, 12 - switchName.length) + '...' + deviceName.slice(-2)
+                }
                 tempSceneDeviceActionsFlatten.push({
                   uniId: device.uniId,
-                  name: `${device.switchInfoDTOList[0].switchName} | ${device.deviceName}`,
+                  name: `${switchName}|${deviceName}`,
                   type: device.deviceType as 1 | 2 | 3 | 4 | 5 | 6,
                   desc,
                   pic: device.switchInfoDTOList[0].pic,
@@ -454,10 +460,15 @@ ComponentWithComputed({
                   console.log('找到选项', device)
                   const power = action.controlAction[switchIndex].power
                   const desc = toPropertyDesc(device.proType, device.productId, action.controlAction[switchIndex])
+                  const { switchName } = device.switchInfoDTOList[0]
+                  let { deviceName } = device
+                  if (switchName.length + deviceName.length > 15) {
+                    deviceName = deviceName.slice(0, 12 - switchName.length) + '...' + deviceName.slice(-2)
+                  }
                   tempSceneDevicelinkSelectList.push(device.uniId)
                   tempSceneDeviceActionsFlatten.push({
                     uniId: device.uniId,
-                    name: `${device.switchInfoDTOList[0].switchName} | ${device.deviceName}`,
+                    name: `${switchName}|${deviceName}`,
                     type: device.deviceType as 1 | 2 | 3 | 4 | 5 | 6,
                     desc,
                     pic: device.switchInfoDTOList[0].pic,
@@ -1079,8 +1090,16 @@ ComponentWithComputed({
         if (device) {
           //是设备
           console.log('是设备', device)
+          let { deviceName } = device
+          let name = deviceName
           const isSwitch = device.proType === PRO_TYPE.switch
-          const name = isSwitch ? `${device.switchInfoDTOList[0].switchName} | ${device.deviceName}` : device.deviceName
+          if (isSwitch) {
+            const { switchName } = device.switchInfoDTOList[0]
+            if (switchName.length + deviceName.length > 15) {
+              deviceName = deviceName.slice(0, 12 - switchName.length) + '...' + deviceName.slice(-2)
+            }
+            name = `${switchName}|${deviceName}`
+          }
           const modelName = isSwitch ? device.uniId.split(':')[1] : getModelName(device.proType, device.productId)
           const pic = isSwitch ? device.switchInfoDTOList[0].pic : device.pic
           const desc = toPropertyDesc(device.proType, device.productId, device.property!)

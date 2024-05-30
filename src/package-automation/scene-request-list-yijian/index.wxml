@@ -32,7 +32,7 @@
       />
 
       <view class="grow px-32rpx flex flex-col">
-        <text class="pb-8rpx leading-44rpx text-32 text-hex-27282A font-medium">{{ item.deviceName }}</text>
+        <text class="pb-8rpx leading-44rpx text-26 text-hex-27282A font-medium">{{ item.deviceName }}</text>
 
         <text class="leading-40rpx text-28 text-hex-A2A2A2">{{ item.spaceName }}{{ item.onLineStatus === 0 ? ' | 离线' : '' }}</text>
       </view>

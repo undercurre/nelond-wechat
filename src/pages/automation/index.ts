@@ -173,11 +173,24 @@ ComponentWithComputed({
           let linkName = ''
           if (scene.deviceConditions?.length > 0) {
             const device = deviceMap[scene.deviceConditions[0].deviceId]
-            const switchName = device.switchInfoDTOList.find(
-              (switchItem) => switchItem.switchId === scene.deviceConditions[0].controlEvent[0].modelName.toString(),
-            )?.switchName
+            const switchName =
+              device.switchInfoDTOList.find(
+                (switchItem) => switchItem.switchId === scene.deviceConditions[0].controlEvent[0].modelName.toString(),
+              )?.switchName ?? ''
 
-            linkName = `${switchName} | ${device.deviceName}`
+            const { deviceName } = device
+            if (switchName.length + deviceName.length > 12) {
+              linkName =
+                switchName.slice(0, 4) +
+                '...' +
+                switchName.slice(-2) +
+                '|' +
+                deviceName.slice(0, 2) +
+                '...' +
+                deviceName.slice(-2)
+            } else {
+              linkName = `${switchName} | ${deviceName}`
+            }
           }
 
           listData.push({

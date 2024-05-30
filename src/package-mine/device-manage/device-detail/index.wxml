@@ -31,6 +31,8 @@
             bind:click="handleDeviceNameEditPopup"
             title="设备名称"
             value="{{deviceName}}"
+            value-class="longValue"
+            title-class="shortTitle"
           ></van-cell>
           <van-cell
             is-link="{{canEditDevice}}"

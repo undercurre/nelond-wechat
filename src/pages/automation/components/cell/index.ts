@@ -20,8 +20,8 @@ ComponentWithComputed({
       return '暂未关联开关'
     },
     sceneName(data) {
-      if (data.item?.data?.sceneName?.length && data.item?.data?.sceneName?.length > 10) {
-        return data.item.data.sceneName.slice(0, 8) + '...'
+      if (data.item?.data?.sceneName?.length > 10) {
+        return data.item.data.sceneName.slice(0, 11) + '...'
       } else {
         return data.item.data.sceneName
       }

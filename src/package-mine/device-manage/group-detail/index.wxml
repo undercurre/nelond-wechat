@@ -17,8 +17,10 @@
       <van-cell
         is-link="{{canEditDevice}}"
         bind:click="handleDeviceNameEditPopup"
-        title="设备名称"
+        title="灯组名称"
         value="{{deviceName}}"
+        value-class="longValue"
+        title-class="shortTitle"
       ></van-cell>
       <van-cell
         title="所在空间"

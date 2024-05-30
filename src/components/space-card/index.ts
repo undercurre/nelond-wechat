@@ -39,7 +39,7 @@ ComponentWithComputed({
       }
       if (deviceCount) {
         list.push({
-          text: `共${deviceCount}个设备`,
+          text: `${deviceCount}个设备`,
           type: 'normal',
         })
       }
