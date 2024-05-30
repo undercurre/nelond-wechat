@@ -25,10 +25,14 @@
     ></image>
 
     <view
-      class="flex flex-col pl-40rpx grow"
+      class="flex flex-row pl-40rpx grow"
       bindtap="handleUserInfoTap"
     >
       <text class="text-40 text-hex-000 font-medium">{{isLogin?userInfo.userName:'未登录'}}</text>
+      <image
+        class="w-48rpx h-48rpx ml-10rpx"
+        src="/assets/img/base/edit.png"
+      ></image>
     </view>
   </view>
 
