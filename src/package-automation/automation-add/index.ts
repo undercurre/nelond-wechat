@@ -1,6 +1,6 @@
 import Dialog from '@vant/weapp/dialog/dialog'
 import Toast from '@vant/weapp/toast/toast'
-import { deleteScene, addScene, updateScene, findDevice } from '../../apis/index'
+import { deleteScene, addScene, updateScene, findDevice, sendDevice } from '../../apis/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { deviceStore, sceneStore, projectStore, autosceneStore, spaceStore } from '../../store/index'
@@ -128,7 +128,7 @@ ComponentWithComputed({
         )
       }
     },
-    showTry(data) {
+    showFindBtn(data) {
       const { selectCardType, linkSelectList } = data
       return linkSelectList?.length === 1 && selectCardType === 'device'
     },
@@ -2138,6 +2138,30 @@ ComponentWithComputed({
       if (e.detail.listData.length) {
         const drag = this.selectComponent('#drag')
         drag.init()
+      }
+    },
+
+    // 试一试
+    haveATry() {
+      let flag = true
+      this.data.sceneDeviceActionsFlatten?.forEach(async (d) => {
+        const deviceId = d.uniId.split(':')[0]
+        const device = deviceStore.allDeviceFlattenMap[d.uniId]
+        const res = await sendDevice({
+          deviceId,
+          gatewayId: device.gatewayId,
+          deviceType: device.deviceType,
+          proType: d.proType ?? '',
+          modelName: d.value.modelName,
+          property: JSON.parse(JSON.stringify(d.value)),
+        })
+        // forEach中await不会堵塞控制
+        if (!res.success) {
+          flag = false
+        }
+      })
+      if (!flag) {
+        Toast(this.data.sceneDeviceActionsFlatten.length > 1 ? '部分设备控制失败' : '控制失败')
       }
     },
   },

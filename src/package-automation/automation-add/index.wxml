@@ -185,6 +185,16 @@
     </van-cell-group>
     <view class="h-48rpx mt-64rpx mb-36rpx mx-48rpx flex justify-between align-center">
       <text class="text-40rpx font-medium text-hex-1a1a1c leading-48rpx">就执行</text>
+      <view
+        class="flex-1"
+        wx:if="{{sceneDeviceActionsFlatten.length}}"
+      >
+        <van-button
+          class="ml-20rpx"
+          bind:click="haveATry"
+          >试一试</van-button
+        >
+      </view>
       <image
         wx:if="{{sceneDeviceActionsFlatten.length && !isDefaultYijianScene}}"
         class="w-48 h-48"
@@ -332,7 +342,7 @@
   cardType="{{selectCardType}}"
   list="{{list}}"
   selectList="{{linkSelectList}}"
-  showCancel="{{(selectCardType !== 'sensor'||!sceneDeviceConditionsFlatten.length) && showTry}}"
+  showCancel="{{(selectCardType !== 'sensor'||!sceneDeviceConditionsFlatten.length) && showFindBtn}}"
   bind:select="handleSelectCardSelect"
   bind:close="handleSelectCardClose"
   bind:confirm="handleSelectCardConfirm"
@@ -341,6 +351,7 @@
 <light-control-popup
   show="{{showEditPopup === '0x13'}}"
   title="{{sceneEditTitle}}"
+  isControl="{{false}}"
   lightInfo="{{sceneEditInfo}}"
   bind:confirm="handleSceneEditConfirm"
   bind:close="handleEditPopupClose"
@@ -348,6 +359,7 @@
 <switch-control-popup
   show="{{showEditPopup === '0x21'}}"
   title="{{sceneEditTitle}}"
+  isControl="{{false}}"
   switchInfo="{{sceneEditInfo}}"
   bind:confirm="handleSceneEditConfirm"
   bind:close="handleEditPopupClose"
