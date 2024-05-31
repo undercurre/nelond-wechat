@@ -2147,13 +2147,19 @@ ComponentWithComputed({
       this.data.sceneDeviceActionsFlatten?.forEach(async (d) => {
         const deviceId = d.uniId.split(':')[0]
         const device = deviceStore.allDeviceFlattenMap[d.uniId]
+        const property = JSON.parse(JSON.stringify(d.value))
+
+        // 去掉多余的属性
+        delete property.OnOff
+        delete property.colorTempRange
+
         const res = await sendDevice({
           deviceId,
           gatewayId: device.gatewayId,
           deviceType: device.deviceType,
           proType: d.proType ?? '',
           modelName: d.value.modelName,
-          property: JSON.parse(JSON.stringify(d.value)),
+          property,
         })
         // forEach中await不会堵塞控制
         if (!res.success) {
