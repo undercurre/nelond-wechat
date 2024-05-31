@@ -30,14 +30,25 @@ export function getEnv() {
 }
 
 /**
- * 获取美智云云端地址
+ * 获取美智云云端域名地址
+ */
+export function getMzaioDomain() {
+  return `${isLan() ? 'http' : 'https'}://${mzaioDomain[env]}`
+}
+
+export function isLan() {
+  return env === 'Lan'
+}
+
+/**
+ * 获取美智云云端地址,包括上下文
  * // dev: `https://${mzaioDomain.dev}/mzaio`,
   // sit: `https://${mzaioDomain.sit}/mzaio`,
   // prod: `https://${mzaioDomain.prod}/mzaio`,
   // Lan: `https://${mzaioDomain.Lan}/mzaio`,
  */
 export function getMzaioBaseURL() {
-  return `https://${mzaioDomain[env]}/mzaio`
+  return `${getMzaioDomain()}/mzaio`
 }
 
 /**
@@ -48,7 +59,7 @@ export function getMzaioBaseURL() {
   Lan: `wss://${mzaioDomain.Lan}/mzaio/v1/mzgd/cl/wss`,
  */
 export function getMzaioWSURL() {
-  return `wss://${mzaioDomain[env]}/mzaio/v1/mzgd/cl/wss`
+  return `${env === 'Lan' ? 'ws' : 'wss'}://${mzaioDomain[env]}/mzaio/v1/mzgd/cl/wss`
 }
 
 export function setEnv(val: ENV_TYPE) {

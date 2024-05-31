@@ -86,6 +86,8 @@
   <van-field
     model:value="{{ mobilePhone }}"
     placeholder="请输入手机号"
+    type="number"
+    maxlength="11"
     custom-style="margin-bottom: 32rpx;margin-top: 40rpx;padding: 32rpx 32rpx;border-radius: 24rpx;"
     clearable="{{true}}"
     border="{{false}}"

@@ -16,8 +16,8 @@ ComponentWithComputed({
   data: {
     ishowPopup: false,
     isLanOn: getEnv() === 'Lan',
-    lanIP: '',
-    port: '',
+    lanIP: '47.113.114.145',
+    port: '80',
   },
   computed: {
     labelText(data) {
@@ -82,7 +82,7 @@ ComponentWithComputed({
 
       logout(false) // 切换局域网模式，需要重新登录
 
-      mzaioDomain.Lan = 'test.meizgd.com'
+      mzaioDomain.Lan = `${this.data.lanIP}:${this.data.port}`
       storage.set('mzaioDomainLan', mzaioDomain.Lan)
       setCurrentEnv('Lan')
 

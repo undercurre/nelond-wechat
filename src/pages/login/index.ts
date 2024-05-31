@@ -148,7 +148,7 @@ ComponentWithComputed({
           await this.checkAuthLan()
 
           // 每次进入小程序仅弹一次提示
-          if (hasToastLan) {
+          if (!hasToastLan) {
             this.toastLinkLanWifi()
             return
           }
@@ -253,6 +253,9 @@ ComponentWithComputed({
           })
           .catch((err) => err)
 
+        if (!res.errMsg.includes('ok')) {
+          isAllAuth = false
+        }
         console.log('bluetooth', res)
       }
 
@@ -263,6 +266,9 @@ ComponentWithComputed({
           })
           .catch((err) => err)
 
+        if (!res.errMsg.includes('ok')) {
+          isAllAuth = false
+        }
         console.log('camera', res)
       }
 

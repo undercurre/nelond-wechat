@@ -363,7 +363,6 @@ ComponentWithComputed({
           confirmButtonOpenType: 'openSetting',
         }).catch(() => {
           // on cancel
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           this.goBack() // 拒绝授权摄像头，则退出当前页面
         })
