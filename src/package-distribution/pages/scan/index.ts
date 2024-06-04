@@ -18,6 +18,7 @@ import {
   strUtil,
 } from '../../../utils/index'
 import { checkDevice, getGwNetworkInfo, getUploadFileForOssInfo, queryWxImgQrCode } from '../../../apis/index'
+import { isLan } from '../../../config/index'
 
 ComponentWithComputed({
   options: {
@@ -328,6 +329,11 @@ ComponentWithComputed({
 
     // 检查摄像头权限
     async checkCameraPerssion() {
+      // 局域网情况，没有网络，无法检查权限
+      if (isLan()) {
+        return true
+      }
+
       showLoading()
       const settingRes = await wx.getSetting().catch((err) => {
         return {
@@ -405,6 +411,15 @@ ComponentWithComputed({
     getCameraError(event: WechatMiniprogram.CustomEvent) {
       Logger.error('getCameraError', event)
 
+      // 该错误回调可能需要比较久才触发，需要判断是否还在当前页面
+      if (this.data.isShowPage && isLan()) {
+        Dialog.alert({
+          message: '局域网模式下授权异常，请在外网重新打开局域网模式',
+          showCancelButton: false,
+          confirmButtonText: '确定',
+        })
+      }
+
       this.checkCameraPerssion()
     },
 
@@ -426,6 +441,8 @@ ComponentWithComputed({
         !this.data._listenLocationTimeId
       ) {
         const systemSetting = wx.getSystemSetting()
+
+        console.debug('getSystemSetting', systemSetting)
 
         if (!systemSetting.locationEnabled) {
           wx.showModal({

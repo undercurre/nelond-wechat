@@ -54,8 +54,10 @@
         size="large"
         type="primary"
         bind:click="confirmOpenLan"
-        >确认切换</van-button
+        >开始切换</van-button
       >
     </view>
   </view>
 </van-popup>
+
+<van-dialog id="van-dialog" />

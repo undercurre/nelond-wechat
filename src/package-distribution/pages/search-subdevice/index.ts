@@ -41,7 +41,7 @@ ComponentWithComputed({
    * 页面的初始数据
    */
   data: {
-    defaultImgDir,
+    defaultImgDir: defaultImgDir(),
     _startTime: 0,
     _gatewayInfo: {
       channel: 0,
@@ -881,11 +881,17 @@ ComponentWithComputed({
       wx.closeBluetoothAdapter()
       bleDevicesStore.reset()
 
-      wx.reLaunch({
-        url: strUtil.getUrlWithParams(cacheData.pageEntry, {
-          from: 'addDevice',
-        }),
-      })
+      if (cacheData.pageEntry) {
+        wx.reLaunch({
+          url: strUtil.getUrlWithParams(cacheData.pageEntry, {
+            from: 'addDevice',
+          }),
+        })
+      } else {
+        wx.reLaunch({
+          url: '/pages/index/index',
+        })
+      }
     },
 
     toggleSelectAll() {

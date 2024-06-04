@@ -21,8 +21,8 @@ ComponentWithComputed({
    * 页面的初始数据
    */
   data: {
-    productImgDir,
-    defaultImgDir,
+    productImgDir: productImgDir(),
+    defaultImgDir: defaultImgDir(),
     _timeId: 0,
     status: 'linking' as StatusName,
     activeIndex: 0,

@@ -6,7 +6,7 @@ import { queryDeviceOnlineStatus, bindDevice, verifySn } from '../../../apis/ind
 import { projectBinding, spaceBinding, deviceBinding } from '../../../store/index'
 import { WifiSocket, getCurrentPageParams, strUtil, isAndroid, isAndroid10Plus, Logger } from '../../../utils/index'
 import { stepListForBind, stepListForChangeWiFi } from './conifg'
-import { defaultImgDir, getMzaioDomain, getEnv } from '../../../config/index'
+import { defaultImgDir, getMzaioDomain, isLan } from '../../../config/index'
 
 let start = 0
 
@@ -41,7 +41,7 @@ ComponentWithComputed({
   data: {
     _hasVerifySn: false, // 是否已验证sn所属系统
     hasInit: false,
-    defaultImgDir,
+    defaultImgDir: defaultImgDir(),
     isShowForceBindTips: false,
     isAndroid10Plus: isAndroid10Plus(),
     status: 'linking',
@@ -134,7 +134,7 @@ ComponentWithComputed({
 
     async authLocationPermission() {
       // Android 调用前需要 用户授权 scope.userLocation。该权限流程需前置，否则会出现在配网过程连接设备热点导致无法联网，请求失败
-      if (isAndroid()) {
+      if (!isLan() && isAndroid()) {
         const authorizeRes = await wx
           .authorize({
             scope: 'scope.userLocation',
@@ -271,6 +271,20 @@ ComponentWithComputed({
           activeIndex: 1,
         })
 
+        console.debug(
+          'sendMessage',
+          'hasInit',
+          this.data.hasInit,
+          'activeIndex',
+          this.data.activeIndex,
+          'hasLinkDevice',
+          this.data.hasLinkDevice,
+          'isManual',
+          this.data.isManual,
+          'isAndroid10Plus',
+          this.data.isAndroid10Plus,
+        )
+
         reportInfo.connect_wifi_time = Date.now() - now
 
         const initRes = await this.data._socket.init()
@@ -335,7 +349,7 @@ ComponentWithComputed({
 
       const begin = Date.now()
       // flag=0代表网关走https， 1走http
-      const data: IAnyObject = { method: gatewayStatus.method, url: getMzaioDomain(), flag: getEnv() === 'Lan' ? 1 : 0 }
+      const data: IAnyObject = { method: gatewayStatus.method, url: getMzaioDomain(), flag: isLan() ? 1 : 0 }
 
       if (data.method === 'wifi') {
         data.ssid = params.wifiSSID
@@ -364,6 +378,8 @@ ComponentWithComputed({
       }, 10000)
 
       this.data._socket.close()
+
+      isLan() && this.toTipsLinkLanWifi()
     },
 
     /**
@@ -398,6 +414,22 @@ ComponentWithComputed({
       }, 10000)
 
       this.data._socket.close()
+
+      isLan() && this.toTipsLinkLanWifi()
+    },
+
+    async toTipsLinkLanWifi() {
+      const dialogRes = await Dialog.confirm({
+        title: '已与网关设备通讯完成，请连接到内部无线局域网，才能正常使用',
+        cancelButtonText: '跳过',
+        confirmButtonText: '去连接',
+      }).catch(() => false)
+
+      console.log('dialogRes', dialogRes)
+
+      if (dialogRes) {
+        this.data._socket.connectWifi()
+      }
     },
 
     async requestBindDevice(sn: string, deviceId: string) {

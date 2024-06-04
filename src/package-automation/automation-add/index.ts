@@ -26,7 +26,7 @@ ComponentWithComputed({
    */
   data: {
     dialogConfirmBtnColor: '#27282A',
-    sceneImgDir,
+    sceneImgDir: sceneImgDir(),
     opearationType: 'yijian', // yijian是一键场景，auto是自动化场景
     conditionMultiple: '',
     spaceId: '', //选中的最后一级空间Id

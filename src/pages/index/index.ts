@@ -11,7 +11,7 @@ import {
   spaceStore,
 } from '../../store/index'
 import { storage, strUtil } from '../../utils/index'
-import { defaultImgDir } from '../../config/index'
+import { ossDomain } from '../../config/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 
 ComponentWithComputed({
@@ -23,7 +23,7 @@ ComponentWithComputed({
     pageBehavior,
   ],
   data: {
-    defaultImgDir,
+    ossDomain,
     navigationBarAndStatusBarHeight:
       (storage.get('statusBarHeight') as number) + (storage.get('navigationBarHeight') as number) + 'px',
     // 状态栏高度

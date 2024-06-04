@@ -16,8 +16,8 @@ ComponentWithComputed({
    * 组件的初始数据
    */
   data: {
-    sceneImgDir,
-    defaultImgDir,
+    sceneImgDir: sceneImgDir(),
+    defaultImgDir: defaultImgDir(),
     contentHeight: 0,
     isRefreshing: false,
     isAllLogs: false,

@@ -4,7 +4,7 @@
   bind:touchstart="hideMenu"
 >
   <image
-    src="{{defaultImgDir}}/bg.jpg"
+    src="{{ossDomain}}/default-img/bg.jpg"
     class="bg-image"
   ></image>
 </view>
@@ -83,7 +83,7 @@
         class="w-full mt-68rpx flex flex-col items-center"
       >
         <image
-          src="{{defaultImgDir}}/no-device.png"
+          src="{{ossDomain}}/default-img/no-device.png"
           class="w-300rpx h-300rpx"
         ></image>
         <text class="text-32rpx text-black-59 mt-44rpx mb-32rpx">尚未添加{{projectList.length ? '空间' : '项目'}}</text>
@@ -191,7 +191,7 @@
     <text class="text-hex-1e2c46 text-48rpx font-semibold single-text block ml-32rpx mt-8rpx">我的项目</text>
     <view class="flex items-center flex-col w-750rpx mt-66rpx">
       <image
-        src="{{defaultImgDir}}/no-device.png"
+        src="{{ossDomain}}/default-img/no-device.png"
         class="w-300rpx h-300rpx"
       ></image>
       <text class="text-32rpx text-black-59 mt-44rpx mb-32rpx">尚未登录</text>
