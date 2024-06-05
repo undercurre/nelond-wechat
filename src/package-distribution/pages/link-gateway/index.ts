@@ -6,7 +6,7 @@ import { queryDeviceOnlineStatus, bindDevice, verifySn } from '../../../apis/ind
 import { projectBinding, spaceBinding, deviceBinding } from '../../../store/index'
 import { WifiSocket, getCurrentPageParams, strUtil, isAndroid, isAndroid10Plus, Logger } from '../../../utils/index'
 import { stepListForBind, stepListForChangeWiFi } from './conifg'
-import { defaultImgDir, getMzaioDomain, isLan } from '../../../config/index'
+import { defaultImgDir, getMzaioDomain, isLan, isHttpsDomain } from '../../../config/index'
 
 let start = 0
 
@@ -348,8 +348,9 @@ ComponentWithComputed({
       const params = getCurrentPageParams()
 
       const begin = Date.now()
+      const domain = getMzaioDomain()
       // flag=0代表网关走https， 1走http
-      const data: IAnyObject = { method: gatewayStatus.method, url: getMzaioDomain(), flag: isLan() ? 1 : 0 }
+      const data: IAnyObject = { method: gatewayStatus.method, url: domain, flag: !isHttpsDomain() ? 1 : 0 }
 
       if (data.method === 'wifi') {
         data.ssid = params.wifiSSID

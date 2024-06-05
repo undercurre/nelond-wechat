@@ -33,7 +33,13 @@ export function getEnv() {
  * 获取美智云云端域名地址
  */
 export function getMzaioDomain() {
-  return `${isLan() ? 'http' : 'https'}://${mzaioDomain[env]}`
+  // 如不包含http前缀，自动补全
+  return mzaioDomain[env].includes('http') ? mzaioDomain[env] : `${isLan() ? 'http' : 'https'}://${mzaioDomain[env]}`
+}
+
+export function isHttpsDomain() {
+  const domain = getMzaioDomain()
+  return domain.includes('https')
 }
 
 export function isLan() {
@@ -59,7 +65,11 @@ export function getMzaioBaseURL() {
   Lan: `wss://${mzaioDomain.Lan}/mzaio/v1/mzgd/cl/wss`,
  */
 export function getMzaioWSURL() {
-  return `${env === 'Lan' ? 'ws' : 'wss'}://${mzaioDomain[env]}/mzaio/v1/mzgd/cl/wss`
+  const domain = getMzaioDomain()
+  const isHttps = isHttpsDomain()
+
+  const server = domain.replace('https://', '').replace('http://', '')
+  return `${!isHttps ? 'ws' : 'wss'}://${server}/mzaio/v1/mzgd/cl/wss`
 }
 
 export function setEnv(val: ENV_TYPE) {
