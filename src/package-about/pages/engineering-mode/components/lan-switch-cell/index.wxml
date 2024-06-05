@@ -61,3 +61,12 @@
 </van-popup>
 
 <van-dialog id="van-dialog" />
+
+<camera
+  wx:show="{{false}}"
+  mode="scanCode"
+  device-position="back"
+  class="w-0 h-0"
+  bind:error="getCameraError"
+  bind:initdone="initCameraDone"
+></camera>

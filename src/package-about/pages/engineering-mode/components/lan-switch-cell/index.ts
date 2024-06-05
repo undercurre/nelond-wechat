@@ -107,6 +107,15 @@ ComponentWithComputed({
         // 无法访问互联网的情况下，wx.getWifiList()调用不成功,猜测微信存在查询外网接口信息的流程，堵塞流程，
         // 需在可访问外网时先调用一次，后面即使断网，再次调用getWifiList也能正常调用
         wx.getWifiList().catch((err) => console.error('getWifiList', err))
+
+        // 蓝牙权限同理,相机权限需要通过页面组件方式预授权
+        const openBleRes = await wx
+          .openBluetoothAdapter({
+            mode: 'central',
+          })
+          .catch((err: WechatMiniprogram.BluetoothError) => err)
+
+        console.log('openBleRes', openBleRes)
       }
 
       return isAllAuth
@@ -185,6 +194,14 @@ ComponentWithComputed({
       } catch (error) {
         error && Toast(error)
       }
+    },
+
+    getCameraError(event: WechatMiniprogram.CustomEvent) {
+      console.error('getCameraError', event)
+    },
+
+    initCameraDone(event: WechatMiniprogram.CustomEvent) {
+      console.log('initCameraDone', event)
     },
   },
 })
