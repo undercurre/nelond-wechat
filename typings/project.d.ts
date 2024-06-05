@@ -12,7 +12,10 @@ declare namespace Project {
      * 项目名称
      */
     projectName: string
-
+    /**
+     * 项目类型
+     */
+    projectType: string
     /**
      * 是否创建者
      */
