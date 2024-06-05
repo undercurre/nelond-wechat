@@ -1,0 +1,81 @@
+<!-- 背景 -->
+<view
+  class="fixed left-0 top-0 w-100vw h-100vh bg-hex-eef2f7"
+  style="z-index: -1"
+></view>
+<view class="h-100vh flex flex-col">
+  <!-- 标题 -->
+  <nav-bar
+    title="网关子设备"
+    left-arrow
+    show-go-home
+    bind:leftTap="goBack"
+  ></nav-bar>
+
+  <!-- 无设备 -->
+  <view
+    wx:if="{{deviceList.length === 0}}"
+    class="w-750rpx h-100vh mt-80rpx flex flex-col items-center"
+  >
+    <image
+      src="{{defaultImgDir}}/no-device.png"
+      class="w-300rpx h-300rpx"
+    ></image>
+    <text class="text-28rpx text-black-59 mt-48rpx mb-64rpx">暂无设备</text>
+  </view>
+  <!-- 设备列表 -->
+  <scroll-view
+    class="grow shrink h-1000"
+    enhanced
+    scroll-y
+    show-scrollbar="{{false}}"
+    refresher-triggered="{{isRefresh}}"
+    bindrefresherrefresh="onPullDownRefresh"
+    refresher-enabled
+  >
+    <van-cell-group
+      inset
+      wx:for="{{deviceList}}"
+      wx:key="deviceId"
+    >
+      <van-cell
+        clickable
+        bind:click="handleCardClick"
+        data-device-id="{{item.deviceId}}"
+        data-device-type="{{item.deviceType}}"
+      >
+        <view class="flex item-center">
+          <view class="w-96rpx h-96rpx bg-hex-F6FAFD rounded-999 flex-center">
+            <image
+              src="{{item.pic}}"
+              class="w-72rpx h-72rpx"
+            />
+          </view>
+          <view class="h-96rpx flex flex-col justify-center items-start ml-32rpx">
+            <text class="text-black-2a text-32rpx">{{item.deviceName}}</text>
+            <view>
+              <text class="text-black-tips text-28rpx mt-8rpx">{{item.roomName}}{{item.onLineStatus ? '' : ' | '}}</text>
+              <text
+                wx:if="{{!item.onLineStatus}}"
+                class="text-28rpx text-hex-fbbb32"
+                >离线</text
+              >
+            </view>
+          </view>
+        </view>
+        <view
+          slot="right-icon"
+          class="h-96rpx flex-center"
+        >
+          <svg-icon
+            color="#c8c7cc"
+            name="icon-park:right"
+            width="48rpx"
+            height="48rpx"
+          ></svg-icon>
+        </view>
+      </van-cell>
+    </van-cell-group>
+    <view class="list-bottom-placeholder"> </view>
+  </scroll-view>
+</view>
