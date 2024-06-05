@@ -157,8 +157,13 @@ ComponentWithComputed({
 
     async confirmOpenLan() {
       try {
+        wx.showLoading({
+          title: '加载中',
+        })
         // 通过抛出异常中断逻辑
         await this.checkAuthLan()
+
+        wx.hideLoading()
 
         this.setData({
           ishowPopup: false,
@@ -192,6 +197,7 @@ ComponentWithComputed({
         await delay(1000) // 强行延时，等toast提示完成
         wx.reLaunch({ url: '/pages/login/index' }) // 切换成功，跳转登录
       } catch (error) {
+        wx.hideLoading()
         error && Toast(error)
       }
     },
