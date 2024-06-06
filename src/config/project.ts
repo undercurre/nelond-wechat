@@ -28,3 +28,9 @@ export const SpaceConfig = {
     color: '#f37c99',
   },
 } as Record<SpaceLevel, { text: string; name: string; color: string }>
+
+/**
+ * 01: 照明电工
+ * 02: 智能门锁
+ */
+export const PROJECT_TYPE = '01'

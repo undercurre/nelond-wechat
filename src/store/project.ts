@@ -11,6 +11,7 @@ import { deviceStore } from './device'
 import { othersStore } from './others'
 import { spaceStore } from './space'
 import { userStore } from './user'
+import { PROJECT_TYPE } from '../config/project'
 
 export const projectStore = observable({
   key: '', // 局域网本地场景key
@@ -116,7 +117,7 @@ export const projectStore = observable({
 
     if (res.success) {
       runInAction(() => {
-        projectStore.projectList = res.result.content
+        projectStore.projectList = res.result.content.filter((p) => p.projectType === PROJECT_TYPE)
       })
     }
 
