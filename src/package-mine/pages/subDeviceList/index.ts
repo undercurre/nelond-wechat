@@ -25,7 +25,12 @@ ComponentWithComputed({
       const list = data.allDeviceList?.length ? [...data.allDeviceList] : []
 
       // 需要排除屏的2路开关
-      return list.filter((d) => d.gatewayId === data.deviceId && !SCREEN_PID.includes(d.productId))
+      return list
+        .filter((d) => d.gatewayId === data.deviceId && !SCREEN_PID.includes(d.productId))
+        .filter((item) => ({
+          ...item,
+          fullSpaceName: '',
+        }))
     },
   },
 

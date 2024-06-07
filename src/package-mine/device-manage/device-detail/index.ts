@@ -209,7 +209,7 @@ ComponentWithComputed({
     handleToOTA() {
       if (!this.data.canEditDevice) return
       wx.navigateTo({
-        url: '/package-mine/ota/index?fromDevice=1',
+        url: '/package-mine/pages/ota/index?fromDevice=1',
       })
     },
     handleDeviceDelete() {

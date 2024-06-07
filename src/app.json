@@ -28,7 +28,7 @@
         "space-new/index",
         "member-manage/index",
         "device-replace/index",
-        "ota/index",
+        "pages/ota/index",
         "device-manage/index",
         "device-manage/device-detail/index",
         "device-manage/group-detail/index",
@@ -37,7 +37,8 @@
         "help/list/index",
         "help/show/index",
         "help/webview/index",
-        "pages/subDeviceList/index"
+        "pages/subDeviceList/index",
+        "pages/ota-gateway/index"
       ]
     },
     {
