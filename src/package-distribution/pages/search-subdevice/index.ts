@@ -10,7 +10,7 @@ import { batchUpdate, bindDevice, isDeviceOnline, sendCmdAddSubdevice, queryDevi
 import lottie from 'lottie-miniprogram'
 import { addDevice } from '../../assets/search-subdevice/lottie/index'
 import PromiseQueue from '../../../lib/promise-queue'
-import { defaultImgDir } from '../../../config/index'
+import { defaultImgDir, isLan } from '../../../config/index'
 import dayjs from 'dayjs'
 import cacheData from '../../common/cacheData'
 
@@ -677,6 +677,11 @@ ComponentWithComputed({
     },
 
     async bindBleDeviceToCloud(device: Device.ISubDevice) {
+      // 由于局域网工控机性能问题，设备数据入库速度比较慢，需要前端强行延时进行绑定，否则绑定接口因为设备数据查不到绑定失败
+      if (isLan()) {
+        await delay(3000)
+      }
+
       const res = await bindDevice({
         deviceId: device.zigbeeMac,
         projectId: projectBinding.store.currentProjectId,
