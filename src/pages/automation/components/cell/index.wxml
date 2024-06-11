@@ -16,7 +16,7 @@
         class="flex items-center h-100rpx"
       >
         <image
-          src="https://mzgd-oss-bucket.oss-cn-shenzhen.aliyuncs.com/homlux/auto-scene/{{item.data.sceneIcon}}.png"
+          src="{{sceneImgDir}}/{{item.data.sceneIcon}}.png"
           class="w-64 h-64 bg-hex-F5F5F5 rounded-full"
         />
         <view class="flex flex-col items-start ml-24rpx">

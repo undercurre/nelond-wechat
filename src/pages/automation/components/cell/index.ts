@@ -1,4 +1,5 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
+import { sceneImgDir } from '../../../../config/index'
 
 ComponentWithComputed({
   options: {},
@@ -33,6 +34,7 @@ ComponentWithComputed({
    */
   data: {
     tapAnimate: false,
+    sceneImgDir: sceneImgDir(),
   },
 
   /**

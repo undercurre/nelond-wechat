@@ -117,7 +117,7 @@
                 >
                   <image
                     class="w-64 h-64 bg-hex-F5F5F5 rounded-full"
-                    src="https://mzgd-oss-bucket.oss-cn-shenzhen.aliyuncs.com/homlux/auto-scene/{{item.sceneIcon}}.png"
+                    src="{{sceneImgDir}}/{{item.sceneIcon}}.png"
                   ></image>
                 </view>
                 <view
@@ -189,7 +189,7 @@
                 >
                   <image
                     class="w-64 h-64 bg-hex-F5F5F5 rounded-full"
-                    src="https://mzgd-oss-bucket.oss-cn-shenzhen.aliyuncs.com/homlux/auto-scene/{{item.sceneIcon}}.png"
+                    src="{{sceneImgDir}}/{{item.sceneIcon}}.png"
                   ></image>
                 </view>
                 <view

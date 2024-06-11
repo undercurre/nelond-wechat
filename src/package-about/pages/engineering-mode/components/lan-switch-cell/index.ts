@@ -179,11 +179,15 @@ ComponentWithComputed({
         console.log('dialogRes', dialogRes)
 
         if (dialogRes) {
-          const wifiClient = new WifiSocket({ ssid: '' })
+          if (isAndroid()) {
+            const wifiClient = new WifiSocket({ ssid: '' })
 
-          await wifiClient.connectWifi()
+            await wifiClient.connectWifi()
 
-          wifiClient.close()
+            wifiClient.close()
+          } else {
+            wx.getWifiList().catch((err) => console.error('getWifiList', err))
+          }
         }
 
         Toast('切换成功')
