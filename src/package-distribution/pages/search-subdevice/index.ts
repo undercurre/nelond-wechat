@@ -16,6 +16,8 @@ import cacheData from '../../common/cacheData'
 
 type StatusName = 'discover' | 'requesting' | 'success' | 'error'
 const productInfoMap: Record<string, Device.MzgdDeviceProTypeInfoEntity> = {}
+const BLE_TASK_MAX = 3 // 允许并发连接蓝牙的设备数量
+const ZIGBEE_TASK_MAX = 6 // 允许并发进行zigbee配网的设备数量
 
 ComponentWithComputed({
   options: {
@@ -49,8 +51,8 @@ ComponentWithComputed({
       panId: 0,
     },
     _proType: '',
-    _bleTaskQueue: new PromiseQueue({ concurrency: 3 }), // 允许同时进行蓝牙通讯配网的任务队列，暂定3个
-    _zigbeeTaskQueue: new PromiseQueue({ concurrency: 6 }), // 允许同时进行zigbee设备配网的任务队列，暂定6个
+    _bleTaskQueue: new PromiseQueue({ concurrency: BLE_TASK_MAX }), // 允许同时进行蓝牙通讯配网的任务队列，暂定3个
+    _zigbeeTaskQueue: new PromiseQueue({ concurrency: ZIGBEE_TASK_MAX }), // 允许同时进行zigbee设备配网的任务队列，暂定6个
     _id: Math.floor(Math.random() * 100),
     _errorList: [] as string[],
     _addModeTimeId: 0,
@@ -130,8 +132,8 @@ ComponentWithComputed({
         item.status = 'waiting'
       })
 
-      this.data._bleTaskQueue = new PromiseQueue({ concurrency: 3 })
-      this.data._zigbeeTaskQueue = new PromiseQueue({ concurrency: 6 })
+      this.data._bleTaskQueue = new PromiseQueue({ concurrency: BLE_TASK_MAX })
+      this.data._zigbeeTaskQueue = new PromiseQueue({ concurrency: ZIGBEE_TASK_MAX })
 
       bleDevicesStore.updateBleDeviceList()
 
