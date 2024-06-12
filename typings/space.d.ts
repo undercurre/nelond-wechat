@@ -12,6 +12,10 @@ declare namespace Space {
    */
   type SpaceInfo = {
     /**
+     * 灯组数量
+     */
+    groupCount: number
+    /**
      * 设备数量
      */
     deviceCount: number
