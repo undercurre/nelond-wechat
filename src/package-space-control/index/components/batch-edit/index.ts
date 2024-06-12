@@ -129,13 +129,18 @@ ComponentWithComputed({
      * 非智慧屏开关
      */
     canDelete(data) {
-      const noScreenOrGateway = data.editSelectList.every((uId: string) => {
+      const { noScreenOrGateway, selectedAmountInRange } = data
+      return noScreenOrGateway && selectedAmountInRange
+    },
+    selectedAmountInRange(data) {
+      return data.editSelectList?.length && data.editSelectList?.length <= MAX_MOVE_CARDS
+    },
+    noScreenOrGateway(data) {
+      return data.editSelectList.every((uId: string) => {
         const deviceId = uId.split(':')[0]
         const device = deviceStore.deviceMap[deviceId]
         return !SCREEN_PID.includes(device.productId) && device.proType !== PRO_TYPE.gateway
       })
-
-      return noScreenOrGateway && data.editSelectList?.length && data.editSelectList?.length <= MAX_MOVE_CARDS
     },
     editDeviceNameTitle(data) {
       return data.editProType === PRO_TYPE.switch ? '面板名称' : '设备名称'
@@ -193,7 +198,11 @@ ComponentWithComputed({
     },
     // TODO 处理分组解散的交互提示
     handleDeleteDialog() {
-      if (!this.data.canDelete) {
+      if (!this.data.noScreenOrGateway) {
+        Toast('网关类设备需在设备管理中删除')
+        return
+      }
+      if (!this.data.selectedAmountInRange) {
         Toast(`最多同时删除${MAX_MOVE_CARDS}个设备`)
         return
       }
