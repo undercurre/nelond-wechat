@@ -1,3 +1,5 @@
+import { isLan } from '../../config/index'
+
 Component({
   options: {},
 
@@ -51,6 +53,21 @@ Component({
       { title: '五', key: '6', checked: false },
       { title: '六', key: '7', checked: false },
     ],
+  },
+
+  pageLifetimes: {
+    show() {
+      // 法定工作日和节假日需要每年同步一下国家的数据, 法定工作日和节假日在私有化模式下没法设
+      if (isLan()) {
+        this.setData({
+          periodList: [
+            { radio: '0', title: '仅一次' },
+            { radio: '1', title: '每天' },
+            { radio: '4', title: '自定义' },
+          ],
+        })
+      }
+    },
   },
 
   /**
