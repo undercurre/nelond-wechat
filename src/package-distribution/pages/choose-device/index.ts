@@ -2,6 +2,7 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import pageBehaviors from '../../../behaviors/pageBehaviors'
 import cacheData from '../../common/cacheData'
 import { productImgDir } from '../../../config/index'
+// import { strUtil } from '../../../utils/index'
 
 ComponentWithComputed({
   options: {},
@@ -35,6 +36,11 @@ ComponentWithComputed({
         icon: `${productImgDir}/sensor.png`,
         name: '传感器',
         path: '/package-distribution/pages/choose-model/index?proType=0xBC',
+      },
+      {
+        icon: `${productImgDir}/0x14.png`,
+        name: '窗帘',
+        path: `/package-distribution/pages/connect-guide/index?proType=0x14&modelId=dooya.curtain.103`,
       },
     ],
   },
