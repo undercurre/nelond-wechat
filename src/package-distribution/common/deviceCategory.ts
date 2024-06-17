@@ -1,4 +1,4 @@
-import { guideDir, productImgDir } from '../../config/index'
+import { guideDir, productImgDir, CURTAIN_PID } from '../../config/index'
 
 export default {
   '0x13': {
@@ -39,6 +39,19 @@ export default {
         name: '智能开关',
         tag: 'zigbee',
         path: '/package-distribution/pages/scan/index?scanType=subdevice',
+      },
+    ],
+  },
+  '0x14': {
+    name: '传感器',
+    modelList: [
+      {
+        guideImg: `${guideDir()}/0x14_zigbee.gif`,
+        guideDesc: '1、将智能窗帘插上电源\n2、快速点按「SET-2」键4次，再长按「SET-2」键1次，直至指示灯闪烁',
+        productId: CURTAIN_PID.join(','),
+        icon: `${productImgDir}/0x14.png`,
+        name: '窗帘',
+        path: `/package-distribution/pages/connect-guide/index?proType=0x14&modelId=${CURTAIN_PID.join(',')}`,
       },
     ],
   },
