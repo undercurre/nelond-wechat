@@ -61,6 +61,9 @@ Component({
     },
   },
   methods: {
+    onLoad() {
+      console.log('onLoad', this.data.urls)
+    },
     toPage(e: { currentTarget: { dataset: { url: string; auth: string; param: string } } }) {
       console.log('e.currentTarget.dataset', e.currentTarget)
       const { url, auth, param } = e.currentTarget.dataset
