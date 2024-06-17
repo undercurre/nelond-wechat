@@ -18,7 +18,7 @@ import {
   KNOB_PID,
   defaultImgDir,
   NO_COLOR_TEMP,
-  SENSOR_TYPE,
+  PRODUCT_ID,
 } from '../../../../config/index'
 import {
   sendDevice,
@@ -203,7 +203,7 @@ ComponentWithComputed({
       })
     },
     isLightSensor(data) {
-      return SENSOR_TYPE['lightsensor'] === data.deviceInfo.productId
+      return PRODUCT_ID.lightSensor === data.deviceInfo.productId
     },
   },
 
