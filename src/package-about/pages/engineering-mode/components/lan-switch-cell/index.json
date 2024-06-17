@@ -3,6 +3,8 @@
   "styleIsolation": "apply-shared",
   "usingComponents": {
     "van-cell": "@vant/weapp/cell/index",
-    "van-switch": "@vant/weapp/switch/index"
+    "van-switch": "@vant/weapp/switch/index",
+    "van-dialog": "@vant/weapp/dialog/index",
+    "van-toast": "@vant/weapp/toast/index"
   }
 }

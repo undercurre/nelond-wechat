@@ -15,7 +15,7 @@ ComponentWithComputed({
    * 页面的初始数据
    */
   data: {
-    defaultImgDir,
+    defaultImgDir: defaultImgDir(),
     subSpaceList: [] as Space.SpaceInfo[],
     pid: '0',
     pname: '', // 父空间名称

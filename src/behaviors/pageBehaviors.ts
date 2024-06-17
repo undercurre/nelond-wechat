@@ -49,7 +49,7 @@ export default BehaviorWithComputed({
       return {
         title: '欢迎使用美的商照',
         path: '/pages/index/index',
-        imageUrl: ShareImgUrl,
+        imageUrl: ShareImgUrl(),
       }
     },
     // onShareTimeline() {

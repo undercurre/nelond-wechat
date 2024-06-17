@@ -112,7 +112,7 @@ ComponentWithComputed({
    * 组件的初始数据
    */
   data: {
-    defaultImgDir,
+    defaultImgDir: defaultImgDir(),
     show: false,
     lightInfoInner: {
       brightness: 10,

@@ -269,7 +269,7 @@
       </view>
     </view>
 
-    <block wx:if="{{status === 'requesting' && selectedList.length && failList.length === selectedList.length}}">
+    <block wx:if="{{status === 'error' || (status === 'requesting' && selectedList.length && failList.length === selectedList.length)}}">
       <tips-box
         text="添加失败！"
         icon="{{defaultImgDir}}/no-found.png"

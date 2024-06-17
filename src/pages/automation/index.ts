@@ -39,8 +39,8 @@ ComponentWithComputed({
     // scheduleList:[] as AutoScene.AutoSceneItem[],
     // 用于存储以传感器为条件触发的自动场景
     // autoSceneList:[] as AutoScene.AutoSceneItem[],
-    sceneImgDir,
-    defaultImgDir,
+    sceneImgDir: sceneImgDir(),
+    defaultImgDir: defaultImgDir(),
     hasAutoScene: true,
     // autoSceneList: [] as AutoScene.AutoSceneItem[],
 

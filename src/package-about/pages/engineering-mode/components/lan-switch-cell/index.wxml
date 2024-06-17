@@ -54,8 +54,19 @@
         size="large"
         type="primary"
         bind:click="confirmOpenLan"
-        >确认切换</van-button
+        >开始切换</van-button
       >
     </view>
   </view>
 </van-popup>
+
+<van-dialog id="van-dialog" />
+
+<camera
+  wx:show="{{false}}"
+  mode="scanCode"
+  device-position="back"
+  class="w-0 h-0"
+  bind:error="getCameraError"
+  bind:initdone="initCameraDone"
+></camera>

@@ -26,7 +26,7 @@ ComponentWithComputed({
    */
   data: {
     dialogConfirmBtnColor: '#27282A',
-    sceneImgDir,
+    sceneImgDir: sceneImgDir(),
     opearationType: 'yijian', // yijian是一键场景，auto是自动化场景
     conditionMultiple: '',
     spaceId: '', //选中的最后一级空间Id
@@ -338,7 +338,7 @@ ComponentWithComputed({
                 name: scene.sceneName,
                 type: 5,
                 desc: [spaceStore.getSpaceClearName(space)],
-                pic: `https://mzgd-oss-bucket.oss-cn-shenzhen.aliyuncs.com/homlux/auto-scene/${scene.sceneIcon}.png`,
+                pic: `${sceneImgDir}/${scene.sceneIcon}.png`,
                 value: {},
                 orderNum: index,
                 dragId: scene.sceneId + Math.floor(Math.random() * 1001),
@@ -1139,7 +1139,7 @@ ComponentWithComputed({
               name: scene.sceneName,
               type: 5,
               desc: [spaceStore.getSpaceClearName(space)],
-              pic: `https://mzgd-oss-bucket.oss-cn-shenzhen.aliyuncs.com/homlux/auto-scene/${scene.sceneIcon}.png`,
+              pic: `${sceneImgDir}/${scene.sceneIcon}.png`,
               value: {},
               orderNum: 0,
               dragId: scene.sceneId + Math.floor(Math.random() * 1001),

@@ -30,7 +30,7 @@ ComponentWithComputed({
     pid: '0',
     plevel: SpaceLevel.undef, // 父层级
     pname: '',
-    defaultImgDir,
+    defaultImgDir: defaultImgDir(),
     navigationBarAndStatusBarHeight:
       (storage.get('statusBarHeight') as number) + (storage.get('navigationBarHeight') as number) + 'px',
     // 状态栏高度

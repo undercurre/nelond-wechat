@@ -242,14 +242,14 @@ ComponentWithComputed({
               time.valueOf() +
               '&shareId=' +
               projectBinding.store.shareId,
-            imageUrl: ShareImgUrl,
+            imageUrl: ShareImgUrl(),
           })
         }, 500)
       })
       return {
         title: '邀请你加入我的项目',
         path: '/pages/index/index?type=visitor',
-        imageUrl: ShareImgUrl,
+        imageUrl: ShareImgUrl(),
         promise,
       }
     },

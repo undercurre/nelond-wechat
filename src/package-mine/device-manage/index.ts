@@ -15,7 +15,7 @@ ComponentWithComputed({
    */
   data: {
     isLoaded: false,
-    defaultImgDir,
+    defaultImgDir: defaultImgDir(),
     spaceId: '0',
     spaceName: spaceStore.currentSpaceNameClear ?? '全部',
     listHeight: 0,

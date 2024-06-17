@@ -10,12 +10,14 @@ import { batchUpdate, bindDevice, isDeviceOnline, sendCmdAddSubdevice, queryDevi
 import lottie from 'lottie-miniprogram'
 import { addDevice } from '../../assets/search-subdevice/lottie/index'
 import PromiseQueue from '../../../lib/promise-queue'
-import { defaultImgDir } from '../../../config/index'
+import { defaultImgDir, isLan } from '../../../config/index'
 import dayjs from 'dayjs'
 import cacheData from '../../common/cacheData'
 
 type StatusName = 'discover' | 'requesting' | 'success' | 'error'
 const productInfoMap: Record<string, Device.MzgdDeviceProTypeInfoEntity> = {}
+const BLE_TASK_MAX = 3 // 允许并发连接蓝牙的设备数量
+const ZIGBEE_TASK_MAX = 6 // 允许并发进行zigbee配网的设备数量
 
 ComponentWithComputed({
   options: {
@@ -41,7 +43,7 @@ ComponentWithComputed({
    * 页面的初始数据
    */
   data: {
-    defaultImgDir,
+    defaultImgDir: defaultImgDir(),
     _startTime: 0,
     _gatewayInfo: {
       channel: 0,
@@ -49,8 +51,8 @@ ComponentWithComputed({
       panId: 0,
     },
     _proType: '',
-    _bleTaskQueue: new PromiseQueue({ concurrency: 3 }), // 允许同时进行蓝牙通讯配网的任务队列，暂定3个
-    _zigbeeTaskQueue: new PromiseQueue({ concurrency: 6 }), // 允许同时进行zigbee设备配网的任务队列，暂定6个
+    _bleTaskQueue: new PromiseQueue({ concurrency: BLE_TASK_MAX }), // 允许同时进行蓝牙通讯配网的任务队列，暂定3个
+    _zigbeeTaskQueue: new PromiseQueue({ concurrency: ZIGBEE_TASK_MAX }), // 允许同时进行zigbee设备配网的任务队列，暂定6个
     _id: Math.floor(Math.random() * 100),
     _errorList: [] as string[],
     _addModeTimeId: 0,
@@ -130,8 +132,8 @@ ComponentWithComputed({
         item.status = 'waiting'
       })
 
-      this.data._bleTaskQueue = new PromiseQueue({ concurrency: 3 })
-      this.data._zigbeeTaskQueue = new PromiseQueue({ concurrency: 6 })
+      this.data._bleTaskQueue = new PromiseQueue({ concurrency: BLE_TASK_MAX })
+      this.data._zigbeeTaskQueue = new PromiseQueue({ concurrency: ZIGBEE_TASK_MAX })
 
       bleDevicesStore.updateBleDeviceList()
 
@@ -677,6 +679,11 @@ ComponentWithComputed({
     },
 
     async bindBleDeviceToCloud(device: Device.ISubDevice) {
+      // 由于局域网工控机性能问题，设备数据入库速度比较慢，需要前端强行延时进行绑定，否则绑定接口因为设备数据查不到绑定失败
+      if (isLan()) {
+        await delay(3000)
+      }
+
       const res = await bindDevice({
         deviceId: device.zigbeeMac,
         projectId: projectBinding.store.currentProjectId,
@@ -881,11 +888,17 @@ ComponentWithComputed({
       wx.closeBluetoothAdapter()
       bleDevicesStore.reset()
 
-      wx.reLaunch({
-        url: strUtil.getUrlWithParams(cacheData.pageEntry, {
-          from: 'addDevice',
-        }),
-      })
+      if (cacheData.pageEntry) {
+        wx.reLaunch({
+          url: strUtil.getUrlWithParams(cacheData.pageEntry, {
+            from: 'addDevice',
+          }),
+        })
+      } else {
+        wx.reLaunch({
+          url: '/pages/index/index',
+        })
+      }
     },
 
     toggleSelectAll() {

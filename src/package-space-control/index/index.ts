@@ -56,8 +56,8 @@ ComponentWithComputed({
    * 页面的初始数据
    */
   data: {
-    sceneImgDir,
-    defaultImgDir,
+    sceneImgDir: sceneImgDir(),
+    defaultImgDir: defaultImgDir(),
     _firstShow: true, // 是否首次进入
     _from: '', // 页面进入来源
     _updating: false, // 列表更新中标志
