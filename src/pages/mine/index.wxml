@@ -90,23 +90,25 @@
         bind:click="toPage"
       /> -->
 
-      <van-cell is-link>
-        <button
-          icon="/assets/img/mine/advise.png"
-          open-type="feedback"
-          class="bg-transparent rounded-none p-0 menu-item-button"
-        >
-          <view class="flex flex-row items-center justify-between">
-            <view class="flex flex-row items-center">
-              <image
-                class="w-48 h-48 mr-26rpx"
-                src="/assets/img/mine/advise.png"
-              ></image>
-              <text class="text-32 text-black leading-none">建议反馈</text>
-            </view>
+      <button
+        open-type="feedback"
+        class="feedback-btn bg-white border-0 rounded-none menu-item-button box-border"
+      >
+        <view class="grow flex flex-row items-center justify-between feedback-cell">
+          <view class="flex flex-row items-center">
+            <image
+              class="w-48 h-48 mr-26rpx"
+              src="/assets/img/mine/advise.png"
+            ></image>
+            <text class="text-32 text-black leading-none">建议反馈</text>
           </view>
-        </button>
-      </van-cell>
+
+          <image
+            class="w-32 h-32 opacity-60"
+            src="/assets/img/base/arrow-right-cell.png"
+          ></image>
+        </view>
+      </button>
 
       <van-cell
         icon="/assets/img/mine/about.png"
