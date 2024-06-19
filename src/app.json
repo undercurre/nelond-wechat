@@ -138,5 +138,8 @@
     "skyline": {
       "defaultDisplayBlock": true
     }
+  },
+  "miniApp": {
+    "useAuthorizePage": true
   }
 }
