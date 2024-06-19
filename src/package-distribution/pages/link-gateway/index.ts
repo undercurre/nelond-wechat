@@ -395,8 +395,14 @@ ComponentWithComputed({
 
     async changeWifi() {
       const params = getCurrentPageParams()
-
-      const data: IAnyObject = { ssid: params.wifiSSID, passwd: params.wifiPassword }
+      const domain = getMzaioDomain()
+      // flag=0代表网关走https， 1走http
+      const data: IAnyObject = {
+        ssid: params.wifiSSID,
+        passwd: params.wifiPassword,
+        url: domain,
+        flag: !isHttpsDomain() ? 1 : 0,
+      }
 
       const res = await this.data._socket.sendCmd({
         topic: '/gateway/net/change', //指令名称
