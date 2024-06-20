@@ -51,14 +51,19 @@ ComponentWithComputed({
     curtain_position: 0,
   },
 
+  computed: {
+    posAttrName(data) {
+      return data.deviceInfo.deviceType === 2 ? 'level' : 'curtain_position'
+    },
+  },
+
   /**
    * 组件的方法列表
    */
   methods: {
     async controlSubDevice() {
       const { deviceType, deviceId, gatewayId, proType } = this.data.deviceInfo
-      const posAttrName = deviceType === 2 ? 'level' : 'curtain_position'
-      const property = { [posAttrName]: this.data.curtain_position }
+      const property = { [this.data.posAttrName]: this.data.curtain_position }
       const modelName = getModelName(proType)
 
       const res = await sendDevice({
@@ -83,14 +88,14 @@ ComponentWithComputed({
       if (this.data.isControl) {
         this.controlSubDevice()
       }
+      console.log('[handleConfirm]', { [this.data.posAttrName]: this.data.curtain_position })
 
-      this.triggerEvent('confirm', { curtain_position: this.data.curtain_position })
+      this.triggerEvent('confirm', { [this.data.posAttrName]: this.data.curtain_position })
     },
     handleChange(e: { detail: number }) {
-      console.log('handleChange', e)
-      const curtain_position = e.detail
+      console.log('[handleChange]', e)
       this.setData({
-        curtain_position: curtain_position,
+        curtain_position: e.detail,
       })
     },
   },

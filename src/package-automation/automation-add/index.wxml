@@ -368,6 +368,7 @@
   show="{{showEditPopup === '0x14'}}"
   title="{{sceneEditTitle}}"
   deviceInfo="{{sceneEditInfo}}"
+  isControl="{{false}}"
   bind:confirm="handleSceneEditConfirm"
   bind:close="handleEditPopupClose"
 ></curtain-control-popup>
