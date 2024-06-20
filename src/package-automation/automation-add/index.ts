@@ -130,7 +130,10 @@ ComponentWithComputed({
     },
     showFindBtn(data) {
       const { selectCardType, linkSelectList } = data
-      return linkSelectList?.length === 1 && selectCardType === 'device'
+      if (linkSelectList?.length !== 1) return false
+
+      const { proType } = deviceStore.allDeviceMap[linkSelectList[0]]
+      return selectCardType === 'device' && proType === PRO_TYPE.light
     },
     // cardType(data) {
     //   return data.selectCardType === 'device' || data.selectCardType === 'sensor' ? 'device' : 'scene'
