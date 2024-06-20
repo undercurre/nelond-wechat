@@ -158,6 +158,10 @@ export const spaceStore = observable({
           pid: '0',
         }))
       })
+    } else {
+      runInAction(() => {
+        spaceStore.spaceList = []
+      })
     }
   },
 

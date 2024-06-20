@@ -142,7 +142,8 @@ ComponentWithComputed({
             //   ctrlAction = toWifiProperty(device.proType, ctrlAction)
             // }
           } else if (device.proType === PRO_TYPE.curtain) {
-            ctrlAction.curtain_position = property.curtain_position
+            const posAttrName = device.deviceType === 2 ? 'level' : 'curtain_position'
+            ctrlAction[posAttrName] = property[posAttrName]
           } else if (device.proType === PRO_TYPE.bathHeat) {
             ctrlAction.light_mode = property.light_mode
             ctrlAction.heating_temperature = property.heating_temperature
