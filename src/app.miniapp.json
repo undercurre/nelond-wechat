@@ -4,7 +4,7 @@
   },
   "identityServiceConfig": {
     "authorizeMiniprogramType": 1,
-    "miniprogramLoginPath": "__default__",
+    "miniprogramLoginPath": "/pages/donut/login/index",
     "adaptWxLogin": true
   }
 }

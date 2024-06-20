@@ -34,12 +34,13 @@
     "toolkitVersion": "0.0.9",
     "useExtendedSdk": {
       "WeAppOpenFuns": true,
-      "WeAppNetwork": false,
-      "WeAppBluetooth": false,
+      "WeAppNetwork": true,
+      "WeAppBluetooth": true,
       "WeAppMedia": false,
       "WeAppLBS": false,
       "WeAppOthers": false,
-      "WeAppIdaas": true
+      "WeAppIdaas": true,
+      "WeAppImage": true
     },
     "enableVConsole": "open",
     "icons": {
