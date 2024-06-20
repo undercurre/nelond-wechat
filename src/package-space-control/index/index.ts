@@ -815,13 +815,16 @@ ComponentWithComputed({
       }
 
       if (device.proType === PRO_TYPE.curtain) {
-        const OldPosition = device.mzgdPropertyDTOList[modelName].curtain_position
+        const posAttrName = device.deviceType === 2 ? 'level' : 'curtain_position'
+        const OldPosition = device.mzgdPropertyDTOList[modelName][posAttrName]
         const NewPosition = Number(OldPosition) > 0 ? '0' : '100'
         const res = await sendDevice({
           proType: device.proType,
           deviceType: device.deviceType,
           deviceId: device.deviceId,
-          property: { curtain_position: NewPosition },
+          gatewayId: device.gatewayId,
+          property: { [posAttrName]: NewPosition },
+          modelName,
         })
 
         if (!res.success) {

@@ -1,6 +1,6 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import Toast from '@vant/weapp/toast/toast'
-import { PRO_TYPE } from '../../config/index'
+import { getModelName } from '../../config/index'
 import { sendDevice } from '../../apis/index'
 
 ComponentWithComputed({
@@ -24,7 +24,10 @@ ComponentWithComputed({
       observer(value) {
         if (value) {
           this.setData({
-            curtain_position: this.data.deviceInfo.curtain_position,
+            curtain_position:
+              this.data.deviceInfo.deviceType === 2
+                ? this.data.deviceInfo.level
+                : this.data.deviceInfo.curtain_position,
           })
         }
       },
@@ -53,14 +56,18 @@ ComponentWithComputed({
    */
   methods: {
     async controlSubDevice() {
-      const deviceInfo = this.data.deviceInfo
-      const property = { curtain_position: this.data.curtain_position }
+      const { deviceType, deviceId, gatewayId, proType } = this.data.deviceInfo
+      const posAttrName = deviceType === 2 ? 'level' : 'curtain_position'
+      const property = { [posAttrName]: this.data.curtain_position }
+      const modelName = getModelName(proType)
 
       const res = await sendDevice({
-        deviceId: deviceInfo.deviceId,
-        deviceType: 3,
-        proType: PRO_TYPE.curtain,
+        proType,
+        deviceType,
+        deviceId,
+        gatewayId,
         property,
+        modelName,
       })
 
       if (!res.success) {
@@ -85,7 +92,6 @@ ComponentWithComputed({
       this.setData({
         curtain_position: curtain_position,
       })
-
     },
   },
 })

@@ -67,7 +67,7 @@ ComponentWithComputed({
           if (!isNullOrUnDef(prop.colorTemperature)) diffData['lightInfoInner.colorTemperature'] = prop.colorTemperature
         } else if (device.proType === PRO_TYPE.curtain) {
           diffData.curtainInfo = {
-            position: prop.curtain_position,
+            position: device.deviceType === 2 ? prop.level : prop.curtain_position,
           }
         }
 
@@ -204,6 +204,9 @@ ComponentWithComputed({
     },
     isLightSensor(data) {
       return PRODUCT_ID.lightSensor === data.deviceInfo.productId
+    },
+    posAttrName(data) {
+      return data.deviceInfo.deviceType === 2 ? 'level' : 'curtain_position'
     },
   },
 
@@ -837,7 +840,9 @@ ComponentWithComputed({
     },
     async curtainControl(property: IAnyObject) {
       const deviceId = this.data.checkedList[0]
-      const { deviceType, proType } = this.data.deviceInfo
+
+      const { deviceType, proType, gatewayId } = this.data.deviceInfo
+      const modelName = getModelName(proType)
       if (proType !== PRO_TYPE.curtain) {
         return
       }
@@ -847,6 +852,8 @@ ComponentWithComputed({
         deviceType,
         deviceId,
         property,
+        gatewayId,
+        modelName,
       })
 
       if (!res.success) {
@@ -855,13 +862,13 @@ ComponentWithComputed({
     },
     openCurtain() {
       this.curtainControl({
-        curtain_position: '100',
+        [this.data.posAttrName]: '100',
         curtain_status: 'open',
       })
     },
     closeCurtain() {
       this.curtainControl({
-        curtain_position: '0',
+        [this.data.posAttrName]: '0',
         curtain_status: 'close',
       })
     },
@@ -872,7 +879,7 @@ ComponentWithComputed({
     },
     changeCurtain(e: { detail: number }) {
       this.curtainControl({
-        curtain_position: e.detail,
+        [this.data.posAttrName]: e.detail,
       })
     },
     handleCardTap() {},

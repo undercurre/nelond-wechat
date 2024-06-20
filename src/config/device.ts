@@ -45,9 +45,9 @@ export const SENSOR_MODEL_NAME = {
  * @param proType
  * @param productId
  */
-export const getModelName = (proType: string, productId: string) => {
+export const getModelName = (proType: string, productId?: string) => {
   if (proType === PRO_TYPE.sensor) {
-    return SENSOR_MODEL_NAME[productId]
+    return SENSOR_MODEL_NAME[productId ?? '']
   }
 
   return proName[proType]
