@@ -42,6 +42,8 @@ export const projectStore = observable({
       this.projectList = []
       this.currentProjectDetail = {} as Project.IProjectDetail
     })
+
+    this.setProjectId('')
   },
 
   setProjectId(id: string) {

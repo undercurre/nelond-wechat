@@ -1,10 +1,12 @@
 import { deviceStore, projectStore } from '../store/index'
 import homOs from 'js-homos'
-import { Logger, emitter, debounce } from './index'
+import { Logger, emitter, debounce, isLogined } from './index'
 
 export async function initHomeOs() {
-  if (!projectStore.currentProjectId) {
-    Logger.debug('initHomeOs终止, projectStore.currentProjectId:', projectStore.currentProjectId)
+  const isLogin = isLogined()
+
+  if (!isLogin || !projectStore.currentProjectId) {
+    Logger.debug('initHomeOs终止, projectStore.currentProjectId:', projectStore.currentProjectId, isLogin)
     return
   }
 
