@@ -4,7 +4,7 @@ import {
   queryProjectInfo,
   queryHouseUserList,
   saveOrUpdateUserHouseInfo,
-  // queryLocalKey,
+  queryLocalKey,
 } from '../apis/index'
 import { asyncStorage, storage, IApiRequestOption } from '../utils/index'
 import { deviceStore } from './device'
@@ -215,19 +215,19 @@ export const projectStore = observable({
     if (key) {
       this.key = key
     } else {
-      // await this.updateLocalKey()
+      await this.updateLocalKey()
     }
   },
 
-  // async updateLocalKey() {
-  //   const res = await queryLocalKey({ projectId: this.currentProjectId })
+  async updateLocalKey() {
+    const res = await queryLocalKey({ projectId: this.currentProjectId })
 
-  //   if (res.success) {
-  //     this.key = res.result
-  //     // key的有效期是30天，设置缓存过期时间25天
-  //     storage.set('localKey', this.key, Date.now() + 1000 * 60 * 60 * 24 * 25)
-  //   }
-  // },
+    if (res.success) {
+      this.key = res.result
+      // key的有效期是30天，设置缓存过期时间25天
+      storage.set('localKey', this.key, Date.now() + 1000 * 60 * 60 * 24 * 25)
+    }
+  },
 
   /**
    * 从缓存加载数据，如果成功加载返回true，否则false

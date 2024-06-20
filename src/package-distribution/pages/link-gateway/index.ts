@@ -395,8 +395,14 @@ ComponentWithComputed({
 
     async changeWifi() {
       const params = getCurrentPageParams()
-
-      const data: IAnyObject = { ssid: params.wifiSSID, passwd: params.wifiPassword }
+      const domain = getMzaioDomain()
+      // flag=0代表网关走https， 1走http
+      const data: IAnyObject = {
+        ssid: params.wifiSSID,
+        passwd: params.wifiPassword,
+        url: domain,
+        flag: !isHttpsDomain() ? 1 : 0,
+      }
 
       const res = await this.data._socket.sendCmd({
         topic: '/gateway/net/change', //指令名称
@@ -442,6 +448,8 @@ ComponentWithComputed({
 
       // 强绑情况下，取旧命名
       const deviceName = existDevice ? existDevice.deviceName : params.deviceName + (gatewayNum > 0 ? ++gatewayNum : '')
+
+      Logger.log('requestBindDevice', 'existDevice', existDevice, 'params', params)
 
       const res = await bindDevice({
         deviceId: deviceId,

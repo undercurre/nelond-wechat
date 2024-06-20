@@ -1,7 +1,7 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import Toast from '@vant/weapp/toast/toast'
 import Dialog from '@vant/weapp/dialog/dialog'
-import { mzaioDomain, getEnv } from '../../../../../config/index'
+import { mzaioDomain, isLan } from '../../../../../config/index'
 import {
   isAndroid,
   logout,
@@ -23,20 +23,20 @@ ComponentWithComputed({
    */
   data: {
     ishowPopup: false,
-    isLanOn: getEnv() === 'Lan',
-    lanIP: '192.168.31.139',
+    isLanOn: isLan(),
+    lanIP: 'https://wq.meizgd.com',
     port: '80',
   },
   computed: {
     labelText(data) {
-      return data.isLanOn ? `IP: ${data.lanIP}:${data.port}` : '局域网适用于私有化部署工程'
+      return data.isLanOn ? `IP: ${mzaioDomain.Lan}` : '局域网适用于私有化部署工程'
     },
   },
 
   pageLifetimes: {
     show() {
       this.setData({
-        isLanOn: getEnv() === 'Lan',
+        isLanOn: isLan(),
       })
     },
   },
@@ -165,6 +165,11 @@ ComponentWithComputed({
 
         wx.hideLoading()
 
+        logout(false) // 切换局域网模式，需要退出登录
+        mzaioDomain.Lan = `${this.data.lanIP}:${this.data.port}`
+        storage.set('mzaioDomainLan', mzaioDomain.Lan)
+        setCurrentEnv('Lan')
+
         this.setData({
           ishowPopup: false,
           isLanOn: true,
@@ -191,12 +196,6 @@ ComponentWithComputed({
         }
 
         Toast('切换成功')
-
-        logout(false) // 切换局域网模式，需要重新登录
-
-        mzaioDomain.Lan = `${this.data.lanIP}:${this.data.port}`
-        storage.set('mzaioDomainLan', mzaioDomain.Lan)
-        setCurrentEnv('Lan')
 
         await delay(1000) // 强行延时，等toast提示完成
         wx.reLaunch({ url: '/pages/login/index' }) // 切换成功，跳转登录

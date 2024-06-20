@@ -130,7 +130,10 @@ ComponentWithComputed({
     },
     showFindBtn(data) {
       const { selectCardType, linkSelectList } = data
-      return linkSelectList?.length === 1 && selectCardType === 'device'
+      if (linkSelectList?.length !== 1) return false
+
+      const { proType } = deviceStore.allDeviceMap[linkSelectList[0]]
+      return selectCardType === 'device' && proType === PRO_TYPE.light
     },
     // cardType(data) {
     //   return data.selectCardType === 'device' || data.selectCardType === 'sensor' ? 'device' : 'scene'
@@ -359,7 +362,7 @@ ComponentWithComputed({
               if (device.proType === PRO_TYPE.switch) {
                 //是开关面板
                 const power = action.controlAction[0].power
-                const desc = toPropertyDesc(device.proType, device.productId, action.controlAction[0])
+                const desc = toPropertyDesc(device, action.controlAction[0])
                 const { switchName } = device.switchInfoDTOList[0]
                 let { deviceName } = device
                 console.log('[ssss]', switchName, deviceName)
@@ -388,7 +391,7 @@ ComponentWithComputed({
                   ...device.mzgdPropertyDTOList[modelName],
                   ...action.controlAction[0],
                 }
-                const desc = toPropertyDesc(device.proType, device.productId, property)
+                const desc = toPropertyDesc(device, property)
                 tempSceneDeviceActionsFlatten.push({
                   uniId: device.uniId,
                   name: device.deviceName,
@@ -463,7 +466,7 @@ ComponentWithComputed({
                 if (device) {
                   console.log('找到选项', device)
                   const power = action.controlAction[switchIndex].power
-                  const desc = toPropertyDesc(device.proType, device.productId, action.controlAction[switchIndex])
+                  const desc = toPropertyDesc(device, action.controlAction[switchIndex])
                   const { switchName } = device.switchInfoDTOList[0]
                   let { deviceName } = device
                   if (switchName.length + deviceName.length > 15) {
@@ -500,7 +503,7 @@ ComponentWithComputed({
               }
               console.log('propertyproperty', property)
 
-              const desc = toPropertyDesc(device.proType, device.productId, property)
+              const desc = toPropertyDesc(device, property)
               tempSceneDevicelinkSelectList.push(device.uniId)
               tempSceneDeviceActionsFlatten.push({
                 uniId: device.uniId,
@@ -1111,7 +1114,8 @@ ComponentWithComputed({
           }
           const modelName = isSwitch ? device.uniId.split(':')[1] : getModelName(device.proType, device.productId)
           const pic = isSwitch ? device.switchInfoDTOList[0].pic : device.pic
-          const desc = toPropertyDesc(device.proType, device.productId, device.property!)
+          const desc = toPropertyDesc(device, device.property!)
+          console.log('dddddd]]]', desc)
 
           tempSceneDeviceActionsFlatten.push({
             uniId: device.uniId,
@@ -1283,7 +1287,7 @@ ComponentWithComputed({
         diffSceneDeviceConditionsFlatten.push({
           uniId: item.uniId,
           name: item.device.deviceName,
-          desc: toPropertyDesc(item.device.proType, item.device.productId, item.device.property!),
+          desc: toPropertyDesc(item.device, item.device.property!),
           pic: item.device.pic,
           productId: item.device.productId,
           property: item.device.property!,
@@ -1359,7 +1363,7 @@ ComponentWithComputed({
       conditionItem.property = {
         ...e.detail,
       }
-      conditionItem.desc = toPropertyDesc(conditionItem.proType!, conditionItem.productId, conditionItem.property)
+      conditionItem.desc = toPropertyDesc(listItem, conditionItem.property)
       listItem.property = {
         ...e.detail,
       }
@@ -1480,7 +1484,8 @@ ComponentWithComputed({
         delete oldProperty.maxColorTemp
 
         if (oldProperty.proType === PRO_TYPE.curtain) {
-          oldProperty = { curtain_position: oldProperty.curtain_position }
+          const posAttrName = device.deviceType === 2 ? 'level' : 'curtain_position'
+          oldProperty = { [posAttrName]: oldProperty[posAttrName] }
         }
 
         _cacheDeviceMap[actionItem.uniId] = {
@@ -1502,7 +1507,9 @@ ComponentWithComputed({
         ...e.detail,
       }
 
-      actionItem.desc = toPropertyDesc(actionItem.proType as string, actionItem.productId as string, actionItem.value)
+      actionItem.desc = toPropertyDesc(listItem, actionItem.value)
+
+      console.log('actionItem', actionItem)
 
       this.setData(
         {
@@ -1825,7 +1832,8 @@ ComponentWithComputed({
                 //   ctrlAction = toWifiProperty(device.proType, ctrlAction)
                 // }
               } else if (device.proType === PRO_TYPE.curtain) {
-                ctrlAction.curtain_position = property.curtain_position
+                const posAttrName = device.deviceType === 2 ? 'level' : 'curtain_position'
+                ctrlAction[posAttrName] = property[posAttrName]
               } else if (device.proType === PRO_TYPE.bathHeat) {
                 ctrlAction.light_mode = property.light_mode
                 ctrlAction.heating_temperature = property.heating_temperature

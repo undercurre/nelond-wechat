@@ -16,6 +16,7 @@ declare namespace Device {
     ButtonMode?: number
     buttonScene?: number
     curtain_position?: string
+    level?: string // zigbee窗帘位置
     curtain_status?: string
     curtain_direction?: 'positive' | 'reverse' // 窗帘开合方向
     mode?: string // 浴霸模式，'close_all' | 'heating' | 'bath' | 'ventilation' | 'drying' | 'blowing' | 'soft_wind'，双模式用,分隔

@@ -61,6 +61,8 @@ ComponentWithComputed({
 
       const res = await queryDeviceInfoByDeviceId({ deviceId: pageParams.deviceId }, { loading: true })
 
+      Logger.log('queryDeviceInfoByDeviceId', res)
+
       const spaceInfo = spaceStore.allSpaceList.find((item) => item.spaceId === res.result.spaceId) as Space.allSpace
 
       if (res.success) {

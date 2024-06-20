@@ -1,4 +1,12 @@
-/* pages/mine/index.wxss */
 .menu-item-button::after {
   border: 0;
+}
+
+.feedback-btn {
+  padding: 32rpx 34rpx 0;
+}
+
+.feedback-cell {
+  border-bottom: 1rpx solid #eef2f7;
+  padding-bottom: 32rpx;
 }

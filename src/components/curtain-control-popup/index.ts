@@ -1,6 +1,6 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import Toast from '@vant/weapp/toast/toast'
-import { PRO_TYPE } from '../../config/index'
+import { getModelName } from '../../config/index'
 import { sendDevice } from '../../apis/index'
 
 ComponentWithComputed({
@@ -24,7 +24,10 @@ ComponentWithComputed({
       observer(value) {
         if (value) {
           this.setData({
-            curtain_position: this.data.deviceInfo.curtain_position,
+            curtain_position:
+              this.data.deviceInfo.deviceType === 2
+                ? this.data.deviceInfo.level
+                : this.data.deviceInfo.curtain_position,
           })
         }
       },
@@ -48,19 +51,28 @@ ComponentWithComputed({
     curtain_position: 0,
   },
 
+  computed: {
+    posAttrName(data) {
+      return data.deviceInfo.deviceType === 2 ? 'level' : 'curtain_position'
+    },
+  },
+
   /**
    * 组件的方法列表
    */
   methods: {
     async controlSubDevice() {
-      const deviceInfo = this.data.deviceInfo
-      const property = { curtain_position: this.data.curtain_position }
+      const { deviceType, deviceId, gatewayId, proType } = this.data.deviceInfo
+      const property = { [this.data.posAttrName]: this.data.curtain_position }
+      const modelName = getModelName(proType)
 
       const res = await sendDevice({
-        deviceId: deviceInfo.deviceId,
-        deviceType: 3,
-        proType: PRO_TYPE.curtain,
+        proType,
+        deviceType,
+        deviceId,
+        gatewayId,
         property,
+        modelName,
       })
 
       if (!res.success) {
@@ -76,16 +88,15 @@ ComponentWithComputed({
       if (this.data.isControl) {
         this.controlSubDevice()
       }
+      console.log('[handleConfirm]', { [this.data.posAttrName]: this.data.curtain_position })
 
-      this.triggerEvent('confirm', { curtain_position: this.data.curtain_position })
+      this.triggerEvent('confirm', { [this.data.posAttrName]: this.data.curtain_position })
     },
     handleChange(e: { detail: number }) {
-      console.log('handleChange', e)
-      const curtain_position = e.detail
+      console.log('[handleChange]', e)
       this.setData({
-        curtain_position: curtain_position,
+        curtain_position: e.detail,
       })
-
     },
   },
 })

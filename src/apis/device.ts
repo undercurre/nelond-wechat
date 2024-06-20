@@ -234,12 +234,17 @@ export async function sendDevice(
   let params
   let promise
 
+  /**
+   * 设备类型 deviceType
+   * 1:网关 2:子设备 3:wifi, 4:灯组
+   */
   switch (data.deviceType) {
     case 2: {
       const methodMap = {
         [PRO_TYPE.light]: 'lightControlNew',
         [PRO_TYPE.switch]: 'panelSingleControlNew',
         [PRO_TYPE.sensor]: 'lightSensorControl', // 目前只有照度传感器
+        [PRO_TYPE.curtain]: 'zigbeeCurtainControl',
       } as Record<string, string>
       params = {
         topic: '/subdevice/control',
