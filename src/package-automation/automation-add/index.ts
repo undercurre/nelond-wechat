@@ -1115,7 +1115,6 @@ ComponentWithComputed({
           const modelName = isSwitch ? device.uniId.split(':')[1] : getModelName(device.proType, device.productId)
           const pic = isSwitch ? device.switchInfoDTOList[0].pic : device.pic
           const desc = toPropertyDesc(device, device.property!)
-          console.log('dddddd]]]', desc)
 
           tempSceneDeviceActionsFlatten.push({
             uniId: device.uniId,

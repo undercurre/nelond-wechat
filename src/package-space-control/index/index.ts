@@ -934,8 +934,9 @@ ComponentWithComputed({
 
       wx.navigateTo({ url: '/package-distribution/pages/choose-device/index' })
     },
+    // ! 目前只有网关离线卡片会有重新联网操作
     handleRebindGateway() {
-      const gateway = deviceStore.allDeviceMap[this.data.offlineDevice.gatewayId]
+      const gateway = deviceStore.allDeviceMap[this.data.offlineDevice.deviceId]
       wx.navigateTo({
         url: `/package-distribution/pages/wifi-connect/index?type=changeWifi&sn=${gateway.sn}`,
       })
