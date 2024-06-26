@@ -93,7 +93,7 @@
           data-url="/package-mine/space-new/index"
           type="primary"
           custom-class="add-immediately-btn"
-          wx:if="{{isInit && isManager && hasDevice}}"
+          wx:if="{{isInit && isManager}}"
         >
           <text class="text-white text-36rpx font-normal">添加项目空间</text>
         </van-button>
