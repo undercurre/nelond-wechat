@@ -187,8 +187,9 @@ ComponentWithComputed({
       this.setData({
         colorTemperature: e.detail,
       })
-
-      this.controlSubDevice({ colorTemperature: this.data.colorTemperature })
+      if (this.data.isControl) {
+        this.controlSubDevice({ colorTemperature: this.data.colorTemperature })
+      }
       this.handleChange()
     },
   },
