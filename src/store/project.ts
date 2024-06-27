@@ -6,7 +6,7 @@ import {
   saveOrUpdateUserHouseInfo,
   queryLocalKey,
 } from '../apis/index'
-import { asyncStorage, storage, IApiRequestOption } from '../utils/index'
+import { asyncStorage, storage, IApiRequestOption, showLoading, hideLoading } from '../utils/index'
 import { deviceStore } from './device'
 import { othersStore } from './others'
 import { spaceStore } from './space'
@@ -61,6 +61,7 @@ export const projectStore = observable({
    * 首页加载逻辑
    */
   async spaceInit() {
+    showLoading()
     const success = this.loadSpaceDataFromStorage()
     if (success) {
       othersStore.setIsInit(true)
@@ -95,6 +96,8 @@ export const projectStore = observable({
       othersStore.setIsInit(true)
       console.log('[KS]云端数据加载成功, isInit:', othersStore.isInit)
     }
+
+    hideLoading()
   },
 
   /**
