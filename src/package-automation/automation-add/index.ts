@@ -1179,7 +1179,7 @@ ComponentWithComputed({
         const curSceneInfo: AutoScene.AutoSceneFlattenCondition = {
           uniId: 'room',
           name: '手动点击场景',
-          desc: [spaceStore.getSpaceFullName(space)],
+          desc: [spaceStore.getSpaceClearName(space)],
           pic: '/package-automation/assets/imgs/automation/touch-materialized.png',
           productId: 'touch',
           property: {},
