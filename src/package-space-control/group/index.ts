@@ -1,7 +1,7 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import pageBehaviors from '../../behaviors/pageBehaviors'
-import { deviceStore, projectBinding, spaceBinding } from '../../store/index'
+import { deviceStore, projectBinding, spaceBinding, spaceStore } from '../../store/index'
 import { emitter, checkInputNameIllegal } from '../../utils/index'
 import { StatusType } from './typings'
 import { addGroup, renameGroup, delGroup, updateGroup, retryGroup } from '../../apis/device'
@@ -40,10 +40,15 @@ ComponentWithComputed({
     onLoad() {
       const eventChannel = this.getOpenerEventChannel()
       eventChannel.on('createGroup', async (data) => {
-        const deviceList = data.lightList.map((deviceId: string) => ({
-          ...deviceStore.allDeviceMap[deviceId],
-          status: 'processing',
-        }))
+        const deviceList = data.lightList.map((deviceId: string) => {
+          const device = deviceStore.allDeviceMap[deviceId]
+          return {
+            ...device,
+            spaceClearName: spaceStore.getSpaceClearNameById(device.spaceId),
+            status: 'processing',
+          }
+        })
+
         console.log(data.lightList, deviceList, deviceStore.allDeviceMap)
 
         this.setData({

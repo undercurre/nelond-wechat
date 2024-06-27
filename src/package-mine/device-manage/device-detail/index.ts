@@ -63,10 +63,8 @@ ComponentWithComputed({
     belongsToGateway(data) {
       if (data.deviceInfo.gatewayId) {
         const gateway = deviceStore.allDeviceList.find((device) => device.deviceId === data.deviceInfo.gatewayId)
-        const gatewaySpace =
-          spaceStore.allSpaceList.find((d) => d.spaceId === gateway?.spaceId) ?? ({} as Space.allSpace)
         if (gateway) {
-          return `${gateway.deviceName} | ${spaceStore.getSpaceClearName(gatewaySpace)}`
+          return `${gateway.deviceName} | ${spaceStore.getSpaceClearNameById(gateway.spaceId)}`
         }
         return ''
       }

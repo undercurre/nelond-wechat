@@ -96,13 +96,12 @@ ComponentWithComputed({
             }
             name = `${switchName}|${deviceName}`
           }
-          const space = spaceStore.allSpaceList.find((s) => s.spaceId === item.spaceId) as Space.allSpace
 
           return {
             ...item,
             pic: isSwitch ? item.switchInfoDTOList[0]?.pic : item.pic,
             deviceName: name,
-            spaceName: spaceStore.getSpaceClearName(space),
+            spaceName: spaceStore.getSpaceClearNameById(item.spaceId),
             status: this.data.isDefault ? 'success' : 'waiting',
           }
         })

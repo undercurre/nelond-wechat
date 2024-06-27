@@ -127,6 +127,10 @@ export const spaceStore = observable({
     }
     return `${parentSpace?.spaceName ?? ''}-${space.spaceName}`
   },
+  getSpaceClearNameById(spaceId: string) {
+    const space = spaceStore.allSpaceList.find((item: Space.allSpace) => item.spaceId === spaceId)
+    return this.getSpaceClearName(space!)
+  },
 
   /**
    * 更新空间开灯数量
