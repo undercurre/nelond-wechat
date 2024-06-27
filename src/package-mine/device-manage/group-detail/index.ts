@@ -1,7 +1,7 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
-import { deviceStore, projectBinding, projectStore, spaceBinding, userBinding } from '../../../store/index'
+import { deviceStore, projectBinding, projectStore, spaceBinding, spaceStore, userBinding } from '../../../store/index'
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { delGroup, queryGroup, renameGroup, updateGroup } from '../../../apis/index'
 import { PRO_TYPE, proName } from '../../../config/index'
@@ -167,7 +167,7 @@ ComponentWithComputed({
           deviceInfo: res.result,
           deviceName: res.result.groupName,
           spaceId: res.result.spaceId,
-          spaceName: res.result.spaceName,
+          spaceName: spaceStore.getSpaceClearNameById(res.result.spaceId),
         })
       }
     },
