@@ -873,9 +873,15 @@ ComponentWithComputed({
       })
     },
     pauseCurtain() {
-      this.curtainControl({
-        curtain_status: 'stop',
-      })
+      const params =
+        this.data.deviceInfo.deviceType === 2
+          ? {
+              power: 240,
+            }
+          : {
+              curtain_status: 'stop',
+            }
+      this.curtainControl(params)
     },
     changeCurtain(e: { detail: number }) {
       this.curtainControl({
