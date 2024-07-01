@@ -28,9 +28,6 @@ export const projectStore = observable({
   currentProjectId: '',
 
   get currentProjectName() {
-    if (this.currentProjectDetail?.projectName?.length > 6) {
-      return this.currentProjectDetail.projectName.slice(0, 6) + '...'
-    }
     return this.currentProjectDetail?.projectName ?? ''
   },
   /**
