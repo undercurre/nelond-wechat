@@ -26,6 +26,7 @@
         >确定</van-button
       >
     </view>
+    <view style="height: 64rpx"></view>
   </view>
 </van-popup>
 
