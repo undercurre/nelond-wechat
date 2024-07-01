@@ -47,6 +47,18 @@ export function isLan() {
 }
 
 /**
+ * 判断是否dount多端app编译环境
+ */
+export function isNative() {
+  let isNative = false
+  // #if NATIVE
+  isNative = true
+  // #endif
+
+  return isNative
+}
+
+/**
  * 获取美智云云端地址,包括上下文
  * // dev: `https://${mzaioDomain.dev}/mzaio`,
   // sit: `https://${mzaioDomain.sit}/mzaio`,

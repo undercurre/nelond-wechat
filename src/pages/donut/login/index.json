@@ -1,5 +1,0 @@
-{
-  "usingComponents": {
-    "van-checkbox": "@vant/weapp/checkbox/index"
-  }
-}

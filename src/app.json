@@ -6,22 +6,10 @@
     }
   ],
   "mini-ios": {
-    "pages": [
-      "pages/index/index",
-      "pages/login/index",
-      "pages/automation/index",
-      "pages/mine/index",
-      "pages/donut/login/index"
-    ]
+    "pages": ["pages/index/index", "pages/login/index", "pages/automation/index", "pages/mine/index"]
   },
   "mini-android": {
-    "pages": [
-      "pages/index/index",
-      "pages/login/index",
-      "pages/automation/index",
-      "pages/mine/index",
-      "pages/donut/login/index"
-    ]
+    "pages": ["pages/index/index", "pages/login/index", "pages/automation/index", "pages/mine/index"]
   },
   "pages": ["pages/index/index", "pages/login/index", "pages/automation/index", "pages/mine/index"],
   "subpackages": [

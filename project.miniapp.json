@@ -1,17 +1,18 @@
 {
   "miniVersion": "v2",
   "name": "美的商照",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "i18nFilePath": "i18n",
   "mini-android": {
-    "sdkVersion": "1.3.19",
+    "sdkVersion": "1.3.20",
     "toolkitVersion": "0.10.0",
     "useExtendedSdk": {
       "media": false,
       "bluetooth": true,
       "network": true,
-      "scanner": false,
-      "xweb": false
+      "scanner": true,
+      "xweb": true,
+      "xwebEmbed": true
     },
     "icons": {
       "hdpi": "",
@@ -27,10 +28,17 @@
     "enableVConsole": "open",
     "privacy": {
       "enable": true
+    },
+    "abi": {
+      "arm64-v8a": true,
+      "armeabi-v7a": true
+    },
+    "usePluginSdk": {
+      "map": ""
     }
   },
   "mini-ios": {
-    "sdkVersion": "1.3.27",
+    "sdkVersion": "1.3.28",
     "toolkitVersion": "0.0.9",
     "useExtendedSdk": {
       "WeAppOpenFuns": true,
@@ -38,9 +46,10 @@
       "WeAppBluetooth": true,
       "WeAppMedia": false,
       "WeAppLBS": false,
-      "WeAppOthers": false,
+      "WeAppOthers": true,
       "WeAppIdaas": true,
-      "WeAppImage": true
+      "WeAppImage": true,
+      "WeAppCamera": true
     },
     "enableVConsole": "open",
     "icons": {
@@ -60,6 +69,14 @@
     "privacy": {
       "enable": false
     },
-    "enableOpenUrlNavigate": true
-  }
+    "enableOpenUrlNavigate": true,
+    "buildCloud": {
+      "useRemote": false
+    },
+    "enableDebugLog": true,
+    "gdt": {
+      "splashAd_defaultEnable": false
+    }
+  },
+  "versionCode": 100
 }

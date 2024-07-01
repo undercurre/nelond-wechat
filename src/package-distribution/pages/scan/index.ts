@@ -18,7 +18,7 @@ import {
   strUtil,
 } from '../../../utils/index'
 import { checkDevice, getGwNetworkInfo, getUploadFileForOssInfo, queryWxImgQrCode } from '../../../apis/index'
-import { isLan } from '../../../config/index'
+import { isLan, isNative } from '../../../config/index'
 
 ComponentWithComputed({
   options: {
@@ -226,6 +226,11 @@ ComponentWithComputed({
      * 检查蓝牙使用权限
      */
     async checkBlePermission() {
+      // 微信特有交互流程，app无需调用
+      if (isNative()) {
+        return true
+      }
+
       Logger.log('checkBlePermission', bleDevicesStore.available)
       // 没有打开系统蓝牙开关异常处理
       if (!bleDevicesStore.available) {
@@ -331,6 +336,11 @@ ComponentWithComputed({
     async checkCameraPerssion() {
       // 局域网情况，没有网络，无法检查权限
       if (isLan()) {
+        return true
+      }
+
+      // 微信特有交互流程，app无需调用
+      if (isNative()) {
         return true
       }
 

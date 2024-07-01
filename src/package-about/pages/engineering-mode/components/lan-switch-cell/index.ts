@@ -1,7 +1,7 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import Toast from '@vant/weapp/toast/toast'
 import Dialog from '@vant/weapp/dialog/dialog'
-import { mzaioDomain, isLan } from '../../../../../config/index'
+import { mzaioDomain, isLan, isNative } from '../../../../../config/index'
 import {
   isAndroid,
   logout,
@@ -49,6 +49,11 @@ ComponentWithComputed({
      * 局域网模式需要提前检查相机、蓝牙等授权，需要前置授权，无网环境wx.getSetting()调用失败，无法校验
      */
     async checkAuthLan() {
+      // 微信特有交互流程，app无需调用
+      if (isNative()) {
+        return true
+      }
+
       const settingRes = await wx.getSetting().catch((err) => err)
 
       let isAllAuth = true // 是否已全部授权

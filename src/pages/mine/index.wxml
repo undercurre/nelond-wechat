@@ -90,6 +90,7 @@
         bind:click="toPage"
       /> -->
 
+      <!-- #if MP -->
       <button
         open-type="feedback"
         class="feedback-btn bg-white border-0 rounded-none menu-item-button box-border"
@@ -109,6 +110,7 @@
           ></image>
         </view>
       </button>
+      <!-- #endif -->
 
       <van-cell
         icon="/assets/img/mine/about.png"
