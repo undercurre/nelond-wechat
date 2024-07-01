@@ -2160,6 +2160,9 @@ ComponentWithComputed({
         // 去掉多余的属性
         delete property.OnOff
         delete property.colorTempRange
+        if (device.proType === PRO_TYPE.curtain) {
+          delete property.power
+        }
 
         const res = await sendDevice({
           deviceId,
