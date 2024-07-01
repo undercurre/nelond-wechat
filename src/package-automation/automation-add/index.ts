@@ -1,6 +1,6 @@
 import Dialog from '@vant/weapp/dialog/dialog'
 import Toast from '@vant/weapp/toast/toast'
-import { deleteScene, addScene, updateScene, findDevice, sendDevice } from '../../apis/index'
+import { deleteScene, addScene, updateScene, findDevice, sendDevice, execScene } from '../../apis/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { deviceStore, sceneStore, projectStore, autosceneStore, spaceStore } from '../../store/index'
@@ -2151,34 +2151,46 @@ ComponentWithComputed({
 
     // 试一试
     haveATry() {
-      let flag = true
+      let flag = true // forEach中await不会堵塞控制，设置专门的标识
+
       this.data.sceneDeviceActionsFlatten?.forEach(async (d) => {
-        const deviceId = d.uniId.split(':')[0]
-        const device = deviceStore.allDeviceFlattenMap[d.uniId]
-        const property = JSON.parse(JSON.stringify(d.value))
+        // 设备
+        if (d.proType) {
+          const deviceId = d.uniId.split(':')[0]
+          const device = deviceStore.allDeviceFlattenMap[d.uniId]
+          const property = JSON.parse(JSON.stringify(d.value))
 
-        // 去掉多余的属性
-        delete property.OnOff
-        delete property.colorTempRange
-        if (device.proType === PRO_TYPE.curtain) {
-          delete property.power
+          // 去掉多余的属性
+          delete property.OnOff
+          delete property.colorTempRange
+          if (device.proType === PRO_TYPE.curtain) {
+            delete property.power
+          }
+
+          const res = await sendDevice({
+            deviceId,
+            gatewayId: device.gatewayId,
+            deviceType: device.deviceType,
+            proType: d.proType ?? '',
+            modelName: d.value.modelName,
+            property,
+          })
+
+          if (!res.success) {
+            flag = false
+          }
         }
-
-        const res = await sendDevice({
-          deviceId,
-          gatewayId: device.gatewayId,
-          deviceType: device.deviceType,
-          proType: d.proType ?? '',
-          modelName: d.value.modelName,
-          property,
-        })
-        // forEach中await不会堵塞控制
-        if (!res.success) {
-          flag = false
+        // 场景
+        else {
+          const res = await execScene(d.uniId)
+          if (!res.success) {
+            flag = false
+          }
         }
       })
+
       if (!flag) {
-        Toast(this.data.sceneDeviceActionsFlatten.length > 1 ? '部分设备控制失败' : '控制失败')
+        Toast(this.data.sceneDeviceActionsFlatten.length > 1 ? '部分项目控制失败' : '控制失败')
       }
     },
   },
