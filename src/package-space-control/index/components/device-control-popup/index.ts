@@ -1,4 +1,4 @@
-import { Logger, isArrEqual, showLoading, hideLoading, isNullOrUnDef } from '../../../../utils/index'
+import { Logger, isArrEqual, showLoading, hideLoading, isNullOrUnDef, delay } from '../../../../utils/index'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import {
@@ -860,19 +860,31 @@ ComponentWithComputed({
         Toast('控制失败')
       }
     },
-    openCurtain() {
+    async openCurtain() {
       this.curtainControl({
         [this.data.posAttrName]: '100',
         curtain_status: 'open',
       })
+
+      await delay(1000)
+
+      this.setData({
+        curtainInfo: { position: 100 },
+      })
     },
-    closeCurtain() {
+    async closeCurtain() {
       this.curtainControl({
         [this.data.posAttrName]: '0',
         curtain_status: 'close',
       })
+
+      await delay(1000)
+
+      this.setData({
+        curtainInfo: { position: 0 },
+      })
     },
-    pauseCurtain() {
+    async pauseCurtain() {
       const params =
         this.data.deviceInfo.deviceType === 2
           ? {
@@ -882,11 +894,28 @@ ComponentWithComputed({
               curtain_status: 'stop',
             }
       this.curtainControl(params)
+
+      await delay(3000)
+
+      this.renewCurtainStatus()
     },
     changeCurtain(e: { detail: number }) {
       this.curtainControl({
         [this.data.posAttrName]: e.detail,
       })
+    },
+    // 主动获取窗帘状态
+    async renewCurtainStatus() {
+      const deviceInfo = deviceStore.deviceFlattenMap[this.data.deviceInfo.uniId]
+      const modelName = getModelName(deviceInfo.proType)
+      const prop = deviceInfo.mzgdPropertyDTOList[modelName]
+      const position = deviceInfo.deviceType === 2 ? prop.level : prop.curtain_position
+      console.log('[active renewCurtainStatus]', position)
+      if (typeof position === 'number') {
+        this.setData({
+          curtainInfo: { position },
+        })
+      }
     },
     handleCardTap() {},
   },
