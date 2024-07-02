@@ -43,6 +43,8 @@
     title="所在空间"
     border="{{false}}"
     custom-class="space-cell"
+    value-class="longValue"
+    title-class="shortTitle"
     value="{{deviceInfo.spaceName}}"
   ></van-cell>
 </view>
