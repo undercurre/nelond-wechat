@@ -51,6 +51,7 @@
       enhanced
       scroll-y
       show-scrollbar="{{false}}"
+      style="height: {{scrollHeight}}px;"
     >
       <view class="ml-32rpx mb-32rpx">
         <text class="text-hex-555659 text-28">{{tips}}</text>
@@ -104,7 +105,7 @@
       </van-cell-group>
     </scroll-view>
   </view>
-  <view class="flex flex-row">
+  <view class="flex flex-col">
     <van-button
       wx:if="{{status === 'hasFailure'}}"
       class="flex-1 mx-24rpx"
@@ -141,9 +142,8 @@
       type="primary"
       >完成</van-button
     >
+    <view class="list-bottom-placeholder"> </view>
   </view>
-
-  <view class="list-bottom-placeholder"> </view>
 </view>
 
 <van-dialog

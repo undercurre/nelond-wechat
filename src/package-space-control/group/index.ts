@@ -2,7 +2,7 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import pageBehaviors from '../../behaviors/pageBehaviors'
 import { deviceStore, projectBinding, spaceBinding, spaceStore } from '../../store/index'
-import { emitter, checkInputNameIllegal } from '../../utils/index'
+import { emitter, checkInputNameIllegal, storage } from '../../utils/index'
 import { StatusType } from './typings'
 import { addGroup, renameGroup, delGroup, updateGroup, retryGroup } from '../../apis/device'
 import Toast from '@vant/weapp/toast/toast'
@@ -20,6 +20,11 @@ ComponentWithComputed({
     groupId: '',
     presetNames: ['筒灯', '射灯', '吊灯', '灯组'],
     showGroupFailTips: false,
+    scrollHeight:
+      (storage.get('windowHeight') as number) -
+      (storage.get('statusBarHeight') as number) -
+      (storage.get('bottomBarHeight') as number) - // IPX
+      (storage.get('navigationBarHeight') as number),
   },
   computed: {
     pageTitle(data) {
@@ -33,6 +38,18 @@ ComponentWithComputed({
     },
     tips(data) {
       return `正在将分组数据下发至灯具（${data.successList.length}/${data.deviceList.length}）…`
+    },
+  },
+  observers: {
+    status(status) {
+      const max =
+        (storage.get('windowHeight') as number) -
+        (storage.get('statusBarHeight') as number) -
+        (storage.get('bottomBarHeight') as number) - // IPX
+        (storage.get('navigationBarHeight') as number)
+      this.setData({
+        scrollHeight: status === 'processing' ? max : max - 90, // 有按钮减少
+      })
     },
   },
 
