@@ -20,7 +20,7 @@
     </view>
 
     <view class="w-full box-border mt-64rpx px-48rpx">
-      <text class="text-32rpx text-black-59">亮度 | {{levelShow}}%</text>
+      <text class="text-32rpx text-black-59">亮度 | {{brightness}}%</text>
       <view class="pt-28rpx">
         <mz-slider
           bind:slideEnd="handleLevelChange"

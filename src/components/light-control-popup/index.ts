@@ -70,14 +70,11 @@ ComponentWithComputed({
    */
   data: {
     power: 0,
-    brightness: 1,
+    brightness: -1, // HACK 未加载前不设置实际值，加载完成后才能触发进度条变化
     colorTemperature: 0,
   },
 
   computed: {
-    levelShow(data) {
-      return data.brightness
-    },
     colorTempShow(data) {
       const { maxColorTemp, minColorTemp } = data.lightInfo.colorTempRange || data.lightInfo
 
