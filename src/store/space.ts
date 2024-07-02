@@ -128,8 +128,10 @@ export const spaceStore = observable({
     return `${parentSpace?.spaceName ?? ''}-${space.spaceName}`
   },
   getSpaceClearNameById(spaceId: string) {
+    if (!spaceId) return ''
     const space = spaceStore.allSpaceList.find((item: Space.allSpace) => item.spaceId === spaceId)
-    return this.getSpaceClearName(space!)
+    if (!space) return ''
+    return this.getSpaceClearName(space)
   },
 
   /**
