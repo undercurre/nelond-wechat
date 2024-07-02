@@ -140,8 +140,8 @@ ComponentWithComputed({
      * 空间显示名称
      */
     title(data) {
-      const { currentSpaceNameClear } = data
-      return currentSpaceNameClear?.slice(0, 11)
+      const { currentSpaceNameClear = '' } = data
+      return currentSpaceNameClear.length > 9 ? currentSpaceNameClear + '　　' : currentSpaceNameClear
     },
     sceneListInBar(data) {
       if (data.sceneList) {
