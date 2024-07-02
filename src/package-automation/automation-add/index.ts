@@ -1817,7 +1817,7 @@ ComponentWithComputed({
               const ctrlAction = {} as IAnyObject
 
               if (device.deviceType === 2) {
-                ctrlAction.modelName = device.proType === PRO_TYPE.light ? 'light' : 'wallSwitch1'
+                ctrlAction.modelName = getModelName(device.proType)
               }
 
               if (device.proType === PRO_TYPE.light) {

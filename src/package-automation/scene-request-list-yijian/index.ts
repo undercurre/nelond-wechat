@@ -5,7 +5,7 @@ import pageBehavior from '../../behaviors/pageBehaviors'
 import { storage, emitter, getCurrentPageParams } from '../../utils/index'
 import { addScene, retryScene, updateScene } from '../../apis/index'
 import { sceneStore, deviceStore, projectStore, spaceStore } from '../../store/index'
-import { PRO_TYPE } from '../../config/index'
+import { getModelName, PRO_TYPE } from '../../config/index'
 
 ComponentWithComputed({
   options: {
@@ -126,7 +126,7 @@ ComponentWithComputed({
           const ctrlAction = {} as IAnyObject
 
           if (device.deviceType === 2) {
-            ctrlAction.modelName = device.proType === PRO_TYPE.light ? 'light' : 'wallSwitch1'
+            ctrlAction.modelName = getModelName(device.proType)
           }
 
           if (device.proType === PRO_TYPE.light) {
