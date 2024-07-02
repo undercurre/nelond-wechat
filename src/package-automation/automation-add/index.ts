@@ -133,7 +133,7 @@ ComponentWithComputed({
       if (selectCardType !== 'device') return false
       if (linkSelectList?.length !== 1) return false
 
-      const { proType } = deviceStore.allDeviceMap[linkSelectList[0]]
+      const { proType } = deviceStore.allDeviceFlattenMap[linkSelectList[0]]
       return proType === PRO_TYPE.light
     },
     // cardType(data) {
