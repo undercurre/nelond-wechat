@@ -216,8 +216,8 @@ ComponentWithComputed({
       Logger.log('space-onShow, _firstShow', this.data._firstShow, spaceStore.currentSpace)
       // 首次进入
       if (this.data._firstShow && this.data._from !== 'addDevice') {
+        await sceneStore.updateAllRoomSceneList()
         this.updateQueue({ isRefresh: true })
-        sceneStore.updateAllRoomSceneList()
         this.queryGroupInfo()
         this.data._firstShow = false
       }
@@ -359,8 +359,9 @@ ComponentWithComputed({
       }
 
       try {
-        sceneStore.updateAllRoomSceneList(), this.queryGroupInfo()
-        await Promise.all([projectStore.updateSpaceCardList()])
+        await projectStore.updateSpaceCardList()
+        await sceneStore.updateAllRoomSceneList()
+        this.queryGroupInfo()
 
         this.updateQueue({ isRefresh: true })
       } finally {
