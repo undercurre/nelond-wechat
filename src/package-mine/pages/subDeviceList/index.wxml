@@ -54,7 +54,7 @@
           <view class="h-96rpx flex flex-col justify-center items-start ml-32rpx">
             <text class="text-black-2a text-32rpx">{{item.deviceName}}</text>
             <view>
-              <text class="text-black-tips text-28rpx mt-8rpx">{{item.spaceName}}{{item.onLineStatus ? '' : ' | '}}</text>
+              <text class="text-black-tips text-28rpx mt-8rpx">{{item.spaceClearName}}{{item.onLineStatus ? '' : ' | '}}</text>
               <text
                 wx:if="{{!item.onLineStatus}}"
                 class="text-28rpx text-hex-fbbb32"

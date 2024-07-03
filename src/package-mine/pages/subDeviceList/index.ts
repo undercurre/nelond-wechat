@@ -1,5 +1,5 @@
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
-import { deviceBinding, otaStore } from '../../../store/index'
+import { deviceBinding, otaStore, spaceStore } from '../../../store/index'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { emitter } from '../../../utils/index'
@@ -17,7 +17,7 @@ ComponentWithComputed({
    * 页面的初始数据
    */
   data: {
-    defaultImgDir,
+    defaultImgDir: defaultImgDir(),
   },
 
   computed: {
@@ -27,9 +27,9 @@ ComponentWithComputed({
       // 需要排除屏的2路开关
       return list
         .filter((d) => d.gatewayId === data.deviceId && !SCREEN_PID.includes(d.productId))
-        .filter((item) => ({
+        .map((item) => ({
           ...item,
-          fullSpaceName: '',
+          spaceClearName: spaceStore.getSpaceClearNameById(item.spaceId),
         }))
     },
   },
