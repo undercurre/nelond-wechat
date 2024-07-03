@@ -1,8 +1,8 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import pageBehaviors from '../../behaviors/pageBehaviors'
-import { deviceStore, projectBinding, spaceBinding } from '../../store/index'
-import { emitter, checkInputNameIllegal } from '../../utils/index'
+import { deviceStore, projectBinding, spaceBinding, spaceStore } from '../../store/index'
+import { emitter, checkInputNameIllegal, storage } from '../../utils/index'
 import { StatusType } from './typings'
 import { addGroup, renameGroup, delGroup, updateGroup, retryGroup } from '../../apis/device'
 import Toast from '@vant/weapp/toast/toast'
@@ -20,6 +20,11 @@ ComponentWithComputed({
     groupId: '',
     presetNames: ['筒灯', '射灯', '吊灯', '灯组'],
     showGroupFailTips: false,
+    scrollHeight:
+      (storage.get('windowHeight') as number) -
+      (storage.get('statusBarHeight') as number) -
+      (storage.get('bottomBarHeight') as number) - // IPX
+      (storage.get('navigationBarHeight') as number),
   },
   computed: {
     pageTitle(data) {
@@ -35,15 +40,39 @@ ComponentWithComputed({
       return `正在将分组数据下发至灯具（${data.successList.length}/${data.deviceList.length}）…`
     },
   },
+  observers: {
+    status(status) {
+      const max =
+        (storage.get('windowHeight') as number) -
+        (storage.get('statusBarHeight') as number) -
+        (storage.get('bottomBarHeight') as number) - // IPX
+        (storage.get('navigationBarHeight') as number)
+      let scrollHeight
+      if (status === 'processing') {
+        scrollHeight = max
+      } else if (status === 'hasFailure') {
+        scrollHeight = max - 140 // 有两个按钮减少
+      } else {
+        scrollHeight = max - 90 // 有按钮减少
+      }
+
+      this.setData({ scrollHeight })
+    },
+  },
 
   methods: {
     onLoad() {
       const eventChannel = this.getOpenerEventChannel()
       eventChannel.on('createGroup', async (data) => {
-        const deviceList = data.lightList.map((deviceId: string) => ({
-          ...deviceStore.allDeviceMap[deviceId],
-          status: 'processing',
-        }))
+        const deviceList = data.lightList.map((deviceId: string) => {
+          const device = deviceStore.allDeviceMap[deviceId]
+          return {
+            ...device,
+            spaceClearName: spaceStore.getSpaceClearNameById(device.spaceId),
+            status: 'processing',
+          }
+        })
+
         console.log(data.lightList, deviceList, deviceStore.allDeviceMap)
 
         this.setData({

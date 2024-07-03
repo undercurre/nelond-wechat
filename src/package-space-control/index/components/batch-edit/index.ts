@@ -84,26 +84,28 @@ ComponentWithComputed({
     },
     /**
      * @description 当前选项是否可以移动空间
-     * 设备数量不能为0
+     * 设备数量不能为0，并少于 `MAX_MOVE_CARDS`
      * 设备均为子设备或WIFI设备或86网关
      * 设备均在线
      */
     canMoveRoom(data) {
-      const noScreen = data.editSelectList.every((uId: string) => {
-        const deviceId = uId.split(':')[0]
-        const device = deviceStore.deviceMap[deviceId]
-        return !SCREEN_PID.includes(device.productId)
-      })
+      const { hasScreen, selectedAmountInRange } = data
       return (
-        noScreen &&
-        data.editSelectList?.length &&
-        data.editSelectList?.length <= MAX_MOVE_CARDS &&
+        !hasScreen &&
+        selectedAmountInRange &&
         data.editSelectList.every((uId: string) => {
           const deviceId = uId.split(':')[0] // 不管有没有:
           const device = deviceStore.deviceMap[deviceId]
           return [1, 2, 3].includes(device.deviceType) && device.onLineStatus === 1
         })
       )
+    },
+    hasScreen(data) {
+      return data.editSelectList.every((uId: string) => {
+        const deviceId = uId.split(':')[0]
+        const device = deviceStore.deviceMap[deviceId]
+        return SCREEN_PID.includes(device.productId)
+      })
     },
     /**
      * @description 当前选项是否可以分组
@@ -203,7 +205,7 @@ ComponentWithComputed({
         return
       }
       if (!this.data.selectedAmountInRange) {
-        Toast(`最多同时删除${MAX_MOVE_CARDS}个设备`)
+        Toast(`最多同时删除1~${MAX_MOVE_CARDS}个设备`)
         return
       }
       const hasSwitch = this.data.editSelectList.some((uniId: string) => uniId.includes(':'))
@@ -270,7 +272,25 @@ ComponentWithComputed({
     },
     handleMoveRoomPopup() {
       if (!this.data.canMoveRoom) {
-        Toast(`最多同时移动${MAX_MOVE_CARDS}个设备`)
+        if (!this.data.selectedAmountInRange) {
+          Toast(`最多同时移动1~${MAX_MOVE_CARDS}个设备`)
+          return
+        }
+        if (this.data.hasScreen) {
+          Toast(`智慧屏开关不能单独移动房间`)
+          return
+        }
+        if (
+          this.data.editSelectList.some((uId: string) => {
+            const deviceId = uId.split(':')[0] // 不管有没有:
+            const device = deviceStore.deviceMap[deviceId]
+            return device.onLineStatus !== 1
+          })
+        ) {
+          Toast('设备需在线')
+          return
+        }
+        Toast('灯组不能移动房间')
         return
       }
       const uniId = this.data.editSelectList[0]

@@ -6,4 +6,5 @@
 .longValue {
   flex: 2 !important;
   white-space: normal !important;
+  word-break: break-all;
 }

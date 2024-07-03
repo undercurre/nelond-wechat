@@ -121,11 +121,17 @@ export const spaceStore = observable({
       return space?.spaceName
     }
 
-    const parentSpace = spaceStore.allSpaceList.find((item) => item.spaceId === space?.pid) as Space.allSpace
+    const parentSpace = space.parentSpace
     if (!parentSpace) {
       return space.spaceName
     }
     return `${parentSpace?.spaceName ?? ''}-${space.spaceName}`
+  },
+  getSpaceClearNameById(spaceId: string) {
+    if (!spaceId) return ''
+    const space = spaceStore.allSpaceList.find((item: Space.allSpace) => item.spaceId === spaceId)
+    if (!space) return ''
+    return this.getSpaceClearName(space)
   },
 
   /**
@@ -169,8 +175,20 @@ export const spaceStore = observable({
     const res = await queryAllSpaceByProjectId(projectStore.currentProjectId, options)
     console.log('updateAllSpaceListres', res)
     if (res.success) {
+      let allSpaceList = res.result
+
+      // 整理空间树数据，增加parentSpace属性
+      allSpaceList = allSpaceList.map((item) => {
+        if (item.pid !== '0') {
+          const parentSpace = allSpaceList.find((parentItem) => parentItem.spaceId === item.pid)
+
+          item.parentSpace = parentSpace
+        }
+        return item
+      })
+
       runInAction(() => {
-        spaceStore.allSpaceList = res.result
+        spaceStore.allSpaceList = allSpaceList
         console.log('updateAllSpaceList', spaceStore.allSpaceList)
       })
     }

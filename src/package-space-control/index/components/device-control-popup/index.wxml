@@ -266,6 +266,7 @@
       </view>
     </view>
   </view>
+  <view style="height: 64rpx"></view>
 </van-popup>
 
 <!-- 关联列表（场景列表 or 设备列表）弹窗 -->

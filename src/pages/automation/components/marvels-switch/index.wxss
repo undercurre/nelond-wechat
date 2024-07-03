@@ -38,4 +38,5 @@
   width: 148rpx;
   height: 64rpx;
   background-color: #7cd06a;
+  transition: left 0.1s ease;
 }

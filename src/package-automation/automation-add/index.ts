@@ -1,6 +1,6 @@
 import Dialog from '@vant/weapp/dialog/dialog'
 import Toast from '@vant/weapp/toast/toast'
-import { deleteScene, addScene, updateScene, findDevice, sendDevice } from '../../apis/index'
+import { deleteScene, addScene, updateScene, findDevice, sendDevice, execScene } from '../../apis/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { deviceStore, sceneStore, projectStore, autosceneStore, spaceStore } from '../../store/index'
@@ -130,10 +130,11 @@ ComponentWithComputed({
     },
     showFindBtn(data) {
       const { selectCardType, linkSelectList } = data
+      if (selectCardType !== 'device') return false
       if (linkSelectList?.length !== 1) return false
 
-      const { proType } = deviceStore.allDeviceMap[linkSelectList[0]]
-      return selectCardType === 'device' && proType === PRO_TYPE.light
+      const { proType } = deviceStore.allDeviceFlattenMap[linkSelectList[0]]
+      return proType === PRO_TYPE.light
     },
     // cardType(data) {
     //   return data.selectCardType === 'device' || data.selectCardType === 'sensor' ? 'device' : 'scene'
@@ -1115,7 +1116,6 @@ ComponentWithComputed({
           const modelName = isSwitch ? device.uniId.split(':')[1] : getModelName(device.proType, device.productId)
           const pic = isSwitch ? device.switchInfoDTOList[0].pic : device.pic
           const desc = toPropertyDesc(device, device.property!)
-          console.log('dddddd]]]', desc)
 
           tempSceneDeviceActionsFlatten.push({
             uniId: device.uniId,
@@ -1179,7 +1179,7 @@ ComponentWithComputed({
         const curSceneInfo: AutoScene.AutoSceneFlattenCondition = {
           uniId: 'room',
           name: '手动点击场景',
-          desc: [spaceStore.getSpaceFullName(space)],
+          desc: [spaceStore.getSpaceClearName(space)],
           pic: '/package-automation/assets/imgs/automation/touch-materialized.png',
           productId: 'touch',
           property: {},
@@ -1817,7 +1817,7 @@ ComponentWithComputed({
               const ctrlAction = {} as IAnyObject
 
               if (device.deviceType === 2) {
-                ctrlAction.modelName = device.proType === PRO_TYPE.light ? 'light' : 'wallSwitch1'
+                ctrlAction.modelName = getModelName(device.proType)
               }
 
               if (device.proType === PRO_TYPE.light) {
@@ -2151,31 +2151,46 @@ ComponentWithComputed({
 
     // 试一试
     haveATry() {
-      let flag = true
+      let flag = true // forEach中await不会堵塞控制，设置专门的标识
+
       this.data.sceneDeviceActionsFlatten?.forEach(async (d) => {
-        const deviceId = d.uniId.split(':')[0]
-        const device = deviceStore.allDeviceFlattenMap[d.uniId]
-        const property = JSON.parse(JSON.stringify(d.value))
+        // 设备
+        if (d.proType) {
+          const deviceId = d.uniId.split(':')[0]
+          const device = deviceStore.allDeviceFlattenMap[d.uniId]
+          const property = JSON.parse(JSON.stringify(d.value))
 
-        // 去掉多余的属性
-        delete property.OnOff
-        delete property.colorTempRange
+          // 去掉多余的属性
+          delete property.OnOff
+          delete property.colorTempRange
+          if (device.proType === PRO_TYPE.curtain) {
+            delete property.power
+          }
 
-        const res = await sendDevice({
-          deviceId,
-          gatewayId: device.gatewayId,
-          deviceType: device.deviceType,
-          proType: d.proType ?? '',
-          modelName: d.value.modelName,
-          property,
-        })
-        // forEach中await不会堵塞控制
-        if (!res.success) {
-          flag = false
+          const res = await sendDevice({
+            deviceId,
+            gatewayId: device.gatewayId,
+            deviceType: device.deviceType,
+            proType: d.proType ?? '',
+            modelName: d.value.modelName,
+            property,
+          })
+
+          if (!res.success) {
+            flag = false
+          }
+        }
+        // 场景
+        else {
+          const res = await execScene(d.uniId)
+          if (!res.success) {
+            flag = false
+          }
         }
       })
+
       if (!flag) {
-        Toast(this.data.sceneDeviceActionsFlatten.length > 1 ? '部分设备控制失败' : '控制失败')
+        Toast(this.data.sceneDeviceActionsFlatten.length > 1 ? '部分项目控制失败' : '控制失败')
       }
     },
   },

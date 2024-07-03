@@ -18,9 +18,13 @@ export const userStore = observable({
     return this.currentRoldLevel === UserRole.SuperAdmin
   },
 
-  // 是否管理员权限+，代理商管理员|1 项目管理员|2
+  // 是否管理员权限+
   get isManager() {
-    return this.currentRoldLevel === UserRole.Creator || this.currentRoldLevel === UserRole.Admin
+    return (
+      this.currentRoldLevel === UserRole.Creator ||
+      this.currentRoldLevel === UserRole.Admin ||
+      this.currentRoldLevel === UserRole.ProjectSuperAdmin
+    )
   },
 
   logout() {

@@ -82,9 +82,12 @@ ComponentWithComputed({
     },
 
     async uploadDeviceLog() {
-      const res = await uploadDeviceLog({
-        deviceId: this.data.deviceInfo.deviceId,
-      })
+      const res = await uploadDeviceLog(
+        {
+          deviceId: this.data.deviceInfo.deviceId,
+        },
+        { loading: true },
+      )
       Toast(res.success ? '上传成功' : '上传失败')
     },
   },

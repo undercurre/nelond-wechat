@@ -4,6 +4,7 @@
   <view
     id="slider"
     class="slider-wrapper z-1"
+    style="left:{{left}}rpx"
   >
   </view>
   <view class="flex flex-row">

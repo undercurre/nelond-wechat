@@ -103,8 +103,14 @@ ComponentWithComputed({
       //   return
       // }
 
+      // 子公共空间
+      const childSpace = spaceStore.allSpaceList.find(
+        (s) => s.pid === this.data.spaceInfo.spaceId && s.publicSpaceFlag !== 1,
+      )
+      const errMsg = childSpace ? '确认删除该空间，并同时删除所有的下级空间？' : '确定删除该空间？'
+
       const dialogRes = await Dialog.confirm({
-        title: '确定删除该空间？',
+        title: errMsg,
       }).catch(() => {
         return 'cancel'
       })
@@ -113,7 +119,7 @@ ComponentWithComputed({
         return
       }
 
-      const res = await delSpace(this.data.spaceInfo.spaceId)
+      const res = await delSpace(this.data.spaceInfo.spaceId, { loading: true })
 
       if (res.success) {
         spaceStore.updateSpaceList()

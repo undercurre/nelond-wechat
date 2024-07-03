@@ -140,8 +140,8 @@ ComponentWithComputed({
      * 空间显示名称
      */
     title(data) {
-      const { currentSpaceNameClear } = data
-      return currentSpaceNameClear?.slice(0, 11)
+      const { currentSpaceNameClear = '' } = data
+      return currentSpaceNameClear.length > 9 ? currentSpaceNameClear + '　　' : currentSpaceNameClear
     },
     sceneListInBar(data) {
       if (data.sceneList) {
@@ -216,8 +216,8 @@ ComponentWithComputed({
       Logger.log('space-onShow, _firstShow', this.data._firstShow, spaceStore.currentSpace)
       // 首次进入
       if (this.data._firstShow && this.data._from !== 'addDevice') {
+        await sceneStore.updateAllRoomSceneList()
         this.updateQueue({ isRefresh: true })
-        sceneStore.updateAllRoomSceneList()
         this.queryGroupInfo()
         this.data._firstShow = false
       }
@@ -359,8 +359,9 @@ ComponentWithComputed({
       }
 
       try {
-        sceneStore.updateAllRoomSceneList(), this.queryGroupInfo()
-        await Promise.all([projectStore.updateSpaceCardList()])
+        await projectStore.updateSpaceCardList()
+        await sceneStore.updateAllRoomSceneList()
+        this.queryGroupInfo()
 
         this.updateQueue({ isRefresh: true })
       } finally {
@@ -934,8 +935,9 @@ ComponentWithComputed({
 
       wx.navigateTo({ url: '/package-distribution/pages/choose-device/index' })
     },
+    // ! 目前只有网关离线卡片会有重新联网操作
     handleRebindGateway() {
-      const gateway = deviceStore.allDeviceMap[this.data.offlineDevice.gatewayId]
+      const gateway = deviceStore.allDeviceMap[this.data.offlineDevice.deviceId]
       wx.navigateTo({
         url: `/package-distribution/pages/wifi-connect/index?type=changeWifi&sn=${gateway.sn}`,
       })

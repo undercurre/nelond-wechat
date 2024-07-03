@@ -55,7 +55,7 @@
       wx:if="{{currentProjectName}}"
     >
       <view class="absolute top-8rpx left-32rpx">
-        <text class="text-hex-1e2c46 text-48rpx font-semibold">{{currentProjectName}}</text>
+        <text class="inline-block text-hex-1e2c46 text-48rpx font-semibold max-w-375 truncate">{{currentProjectName}}</text>
         <svg-icon
           id="homeSelectArrow"
           class="absolute home-select-arrow"
@@ -93,7 +93,7 @@
           data-url="/package-mine/space-new/index"
           type="primary"
           custom-class="add-immediately-btn"
-          wx:if="{{isInit && isManager && hasDevice}}"
+          wx:if="{{isInit && isManager}}"
         >
           <text class="text-white text-36rpx font-normal">添加项目空间</text>
         </van-button>

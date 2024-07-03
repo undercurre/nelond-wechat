@@ -76,7 +76,7 @@ export default {
       },
       {
         icon: `${productImgDir()}/sensor-switch.png`,
-        guideImg: `${guideDir()}/homlux/sensor_switch.gif`,
+        guideImg: `${guideDir()}/sensor_switch.gif`,
         name: '无线开关',
         guideDesc: '1、确认传感器电池已安装好\n2、点击「开关键」，随后立刻长按5秒以上，至指示灯开始闪烁（1秒/次）',
         path: `/package-distribution/pages/connect-guide/index?proType=0xBC&modelId=midea.freepad.001.201`,

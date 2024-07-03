@@ -246,7 +246,6 @@
         bind:actionDelete="handleActionDelete"
         bind:sortend="handleSortEnd"
       ></drag>
-      <view style="height: calc(116rpx + env(safe-area-inset-bottom))"></view>
     </view>
 
     <view style="height: calc(146rpx + env(safe-area-inset-bottom))"></view>

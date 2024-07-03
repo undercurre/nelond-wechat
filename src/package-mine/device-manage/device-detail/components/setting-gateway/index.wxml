@@ -22,13 +22,13 @@
         wx:if="{{canEditDevice}}"
         title="网关日志"
         border="{{false}}"
-        bind:click="uploadDeviceLog"
       >
         <van-button
           slot="right-icon"
           type="primary"
           round
           size="small"
+          bind:click="uploadDeviceLog"
           >日志上传</van-button
         >
       </van-cell>

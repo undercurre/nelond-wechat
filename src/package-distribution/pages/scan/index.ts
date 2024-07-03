@@ -63,7 +63,12 @@ ComponentWithComputed({
     gatewayList(data) {
       const allDeviceList: Device.DeviceItem[] = (data as IAnyObject).allDeviceList || []
 
-      return allDeviceList.filter((item) => item.deviceType === 1)
+      return allDeviceList
+        .filter((item) => item.deviceType === 1)
+        .map((item) => ({
+          ...item,
+          spaceName: spaceStore.getSpaceClearNameById(item.spaceId),
+        }))
     },
     isShowTips(data) {
       return (data.scanType === 'subdevice' && data._isBlePermit) || data.scanType === 'gateway'
