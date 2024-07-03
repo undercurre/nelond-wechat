@@ -47,9 +47,16 @@ ComponentWithComputed({
         (storage.get('statusBarHeight') as number) -
         (storage.get('bottomBarHeight') as number) - // IPX
         (storage.get('navigationBarHeight') as number)
-      this.setData({
-        scrollHeight: status === 'processing' ? max : max - 90, // 有按钮减少
-      })
+      let scrollHeight
+      if (status === 'processing') {
+        scrollHeight = max
+      } else if (status === 'hasFailure') {
+        scrollHeight = max - 140 // 有两个按钮减少
+      } else {
+        scrollHeight = max - 90 // 有按钮减少
+      }
+
+      this.setData({ scrollHeight })
     },
   },
 

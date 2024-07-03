@@ -108,7 +108,7 @@
   <view class="flex flex-col">
     <van-button
       wx:if="{{status === 'hasFailure'}}"
-      class="flex-1 mx-24rpx"
+      class="flex-1 mx-24rpx mb-24rpx"
       size="large"
       block
       bind:click="jumpFail"
