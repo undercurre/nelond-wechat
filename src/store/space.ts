@@ -113,7 +113,7 @@ export const spaceStore = observable({
    */
   getSpaceClearName(space: Space.allSpace): string {
     // 如果非公共空间，则直接显示当前空间名称；
-    if (space.publicSpaceFlag === 0) {
+    if (space?.publicSpaceFlag === 0) {
       return space?.spaceName ?? ''
     }
 

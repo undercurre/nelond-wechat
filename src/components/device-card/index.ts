@@ -125,7 +125,7 @@ ComponentWithComputed({
       } else {
         name = data.deviceInfo.deviceName
       }
-      return name.length > 5 ? name.slice(0, 2) + '...' + name.slice(-2) : name
+      return name?.length > 5 ? name.slice(0, 2) + '...' + name.slice(-2) : name
     },
     bottomDesc(data) {
       return data.deviceInfo.deviceName.length > 5
