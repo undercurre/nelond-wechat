@@ -364,7 +364,6 @@ ComponentWithComputed({
 
     async handleLinkSelect(e: { detail: string }) {
       const deviceMap = deviceStore.allDeviceFlattenMap
-      const switchUniId = this.data.checkedList[0]
       const selectId = e.detail
 
       // 取消选择逻辑
@@ -377,7 +376,7 @@ ComponentWithComputed({
         return
       }
 
-      const switchSceneConditionMap = deviceStore.switchSceneConditionMap
+      const { switchSceneConditionMap } = deviceStore
 
       // 关联开关和灯时，选择设备的预校验
       if (['light', 'switch'].includes(this.data.selectLinkType)) {
@@ -389,7 +388,7 @@ ComponentWithComputed({
         // 关联开关时，针对选择的开关做校验，是否已关联场景
         if (this.data.selectLinkType === 'switch' && linkScene) {
           const dialogRes = await Dialog.confirm({
-            title: '此开关已关联场景，是否取消关联？',
+            title: '此开关已关联场景，确定变更？',
             cancelButtonText: '取消',
             confirmButtonText: '确定',
             zIndex: 2000,
@@ -408,12 +407,11 @@ ComponentWithComputed({
           linkSelectList: this.data.selectLinkType === 'switch' ? [...this.data.linkSelectList, selectId] : [selectId],
         })
       } else if (this.data.selectLinkType === 'scene') {
-        const switchSceneActionMap = deviceStore.switchSceneActionMap
+        const linkedScenes = Object.values(switchSceneConditionMap) // 所有被其他开关关联的场景列表
 
-        // todo: 是否需要该提示
-        if (switchSceneActionMap[switchUniId]?.includes(selectId)) {
+        if (linkedScenes?.includes(selectId)) {
           const dialogRes = await Dialog.confirm({
-            title: '此开关已被当前场景使用，是否需要变更？',
+            title: '此场景已被其他开关关联，确定变更？',
             cancelButtonText: '取消',
             confirmButtonText: '变更',
             zIndex: 2000,
