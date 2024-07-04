@@ -101,7 +101,7 @@ export const spaceStore = observable({
     const parentSpace = spaceStore.allSpaceList.find((item) => item.spaceId === space?.pid) as Space.allSpace
 
     if (!parentSpace) {
-      return space.spaceName
+      return space?.spaceName ?? ''
     }
 
     return `${parentSpace.pid === '0' ? parentSpace.spaceName : this.getSpaceFullName(parentSpace)},${space.spaceName}`
