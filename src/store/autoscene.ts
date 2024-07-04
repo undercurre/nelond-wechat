@@ -41,7 +41,7 @@ export const autosceneStore = observable({
           }
         })
         runInAction(() => {
-          item.sceneName = formLimitString(item.sceneName, 13, 9, 2)
+          item.sceneName = formLimitString(item.sceneName, 13, 11, 0)
         })
         return item
       })
