@@ -12,6 +12,10 @@ declare namespace Space {
    */
   type SpaceInfo = {
     /**
+     * 灯组数量
+     */
+    groupCount: number
+    /**
      * 设备数量
      */
     deviceCount: number
@@ -48,7 +52,8 @@ declare namespace Space {
   }
 
   interface allSpace {
-    pid: string
+    pid: string // 项目空间父id,若为顶层空间，pid: 0
+    parentSpace?: allSpace // 父空间对象
     spaceId: string
     spaceLevel: SpaceLevel
     spaceName: string

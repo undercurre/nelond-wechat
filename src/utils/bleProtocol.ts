@@ -16,6 +16,17 @@ export const REPORT_TYPE = {
   REPORT_CONFIG_ZIGBEE_NET_RESULT: '03', // 上报ZigBee配网结果
 } as const
 
+// 蓝牙广播数据
+export interface IAdData {
+  brand: string
+  isConfig: string
+  mac: string
+  zigbeeMac: string
+  proType: string
+  bluetoothPid: string
+  protocolVersion: string
+}
+
 // 记录正在连接过的蓝牙子设备实例
 const deviceUuidMap: Record<string, BleClient> = {}
 
@@ -486,7 +497,7 @@ export class BleClient {
 }
 
 export const bleUtil = {
-  transferBroadcastData(advertisData: ArrayBuffer) {
+  transferBroadcastData(advertisData: ArrayBuffer): IAdData {
     const msgStr = strUtil.ab2hex(advertisData)
     const protocolVersion = msgStr.slice(-2)
     const macStr = parseInt(protocolVersion) >= 4 ? msgStr.slice(8, 24) : msgStr.slice(6, 22)

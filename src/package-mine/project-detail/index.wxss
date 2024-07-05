@@ -1,1 +1,10 @@
 /* package-mine/project-detail/index.wxss */
+.shortTitle {
+  white-space: nowrap;
+}
+
+.longValue {
+  flex: 2 !important;
+  white-space: normal !important;
+  word-break: break-all;
+}

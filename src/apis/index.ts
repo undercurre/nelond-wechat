@@ -8,7 +8,7 @@ export * from './scene'
 export * from './meiju'
 
 /**
- * 用户登录
+ * 微信用户登录
  * @param data.code 微信登录动态令牌
  * @param data.jsCode 获取手机的动态令牌
  * @param data.captcha 激活验证码
@@ -19,6 +19,39 @@ export async function login(data: { jsCode?: string; code?: string; captcha?: st
     loading: false,
     url: '/v1/mzgd/cl/auth/wx/login',
     data,
+  })
+}
+
+/**
+ * 美智用户登录,手机+密码
+ */
+export async function loginByMz(data: { mobilePhone: string; password: string }) {
+  const codeRes = await getVerifyCode()
+
+  if (!codeRes.success) {
+    return { success: false, code: -1, result: null }
+  }
+
+  return await mzaioRequest.post<User.UserInfo>({
+    log: true,
+    loading: true,
+    url: '/v1/mzgd/cl/auth/web/login',
+    data: {
+      ...data,
+      verifyCode: codeRes.result.verifyCode,
+      verifyCodeKey: codeRes.result.verifyCodeKey,
+    },
+  })
+}
+
+/**
+ * web端用户获取校验码
+ */
+export async function getVerifyCode() {
+  return await mzaioRequest.post<{ verifyCode: string; verifyCodeKey: string }>({
+    log: true,
+    loading: true,
+    url: '/v1/mzgd/cl/auth/get/verifyCode',
   })
 }
 

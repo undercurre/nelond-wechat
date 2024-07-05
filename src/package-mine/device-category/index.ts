@@ -17,9 +17,9 @@ ComponentWithComputed({
   data: {
     pageParam: '',
     defaultImg: {
-      gateway: `${defaultImgDir}/only-gateway.png`,
-      sensor: `${defaultImgDir}/sensor.png`,
-      screen: `${defaultImgDir}/smart_screen.png`,
+      gateway: `${defaultImgDir()}/only-gateway.png`,
+      sensor: `${defaultImgDir()}/sensor.png`,
+      screen: `${defaultImgDir()}/smart_screen.png`,
     },
   },
 

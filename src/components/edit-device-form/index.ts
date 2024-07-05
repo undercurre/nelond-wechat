@@ -75,7 +75,7 @@ Component({
 
       this.setData({
         'deviceInfo.spaceId': spaceInfo.spaceId,
-        'deviceInfo.spaceName': selectList.map((item) => item.spaceName).join(','),
+        'deviceInfo.spaceName': spaceBinding.store.getSpaceClearName(spaceInfo),
       })
 
       this.triggerEvent('change', Object.assign({}, this.data.deviceInfo))

@@ -30,16 +30,22 @@ ComponentWithComputed({
     },
     desc(data) {
       const list = [] as { text: string; type: string }[]
-      const { deviceCount, offlineDeviceCount, nodeCount } = (data.spaceInfo || {}) as Space.SpaceInfo
+      const { groupCount, deviceCount, offlineDeviceCount, nodeCount } = (data.spaceInfo || {}) as Space.SpaceInfo
       if (nodeCount) {
         list.push({
-          text: `${nodeCount}个下级空间`,
+          text: `下级空间${nodeCount}`,
           type: 'normal',
         })
       }
       if (deviceCount) {
         list.push({
-          text: `共${deviceCount}个设备`,
+          text: `设备${deviceCount}`,
+          type: 'normal',
+        })
+      }
+      if (groupCount) {
+        list.push({
+          text: `灯组${groupCount}`,
           type: 'normal',
         })
       }

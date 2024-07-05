@@ -267,15 +267,34 @@
     />
     <view class="flex flex-col mt-88rpx">
       <text class="text-hex-555659 text-32rpx">可能的原因：</text>
-      <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">1、路由器密码被修改，建议将智能网关 </text>
-      <text
-        class="text-28rpx text-blue decoration-solid decoration-blue ml-46rpx mt-8rpx"
-        bindtap="handleRebindGateway"
-        >重新联网</text
-      >
-      <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">2、设备与网关未通电</text>
-      <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">3、设备与网关距离过远，或有其他遮挡物</text>
-      <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">4、路由器未通电或网络异常</text>
+
+      <!-- 网关离线提示 -->
+      <block wx:if="{{offlineDevice.proType === '0x16' && !offlineDevice.isScreen}}">
+        <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">1、路由器密码被修改，建议将智能网关 </text>
+        <text
+          class="text-28rpx text-blue decoration-solid decoration-blue ml-46rpx mt-8rpx"
+          bindtap="handleRebindGateway"
+          >重新联网</text
+        >
+        <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">2、设备未通电</text>
+        <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">3、设备与网关距离过远，或有其他遮挡物</text>
+        <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">4、路由器未通电或网络异常</text>
+      </block>
+
+      <!-- zigbee子设备离线提示,需要排除中弘设备和屏的2路开关 -->
+      <block wx:elif="{{offlineDevice.deviceType === 2 && !offlineDevice.isZhongHong && !offlineDevice.isScreen}}">
+        <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">1、设备未上电</text>
+        <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">2、网关未上电或者离线</text>
+        <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">3、在网关断电情况下子设备被重置</text>
+        <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">4、zigbee网络异常</text>
+      </block>
+
+      <block wx:else>
+        <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">1、设备未上电</text>
+        <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">2、路由器未通电或网络异常</text>
+        <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">3、路由器密码被修改</text>
+        <text class="text-hex-A2A2A2 text-28rpx mt-20rpx">4、设备被重置</text>
+      </block>
     </view>
     <view class="h-80rpx"></view>
   </view>

@@ -1,7 +1,7 @@
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { logout, storage, strUtil } from '../../utils/index'
 import { userBinding, projectBinding, userStore, projectStore } from '../../store/index'
-import { defaultImgDir } from '../../config/index'
+import { ossDomain } from '../../config/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import Toast from '@vant/weapp/toast/toast'
 
@@ -11,7 +11,7 @@ Component({
    * 页面的初始数据
    */
   data: {
-    defaultImgDir,
+    ossDomain,
     managerList: [
       {
         icon: '/assets/img/mine/home.png',
@@ -34,9 +34,9 @@ Component({
       deviceReplace: '/package-mine/device-replace/index',
       feedback: '/package-mine/feedback/index',
       help: '/package-mine/help/list/index',
-      about: '/package-protocol/protocol-list/index',
+      about: '/package-about/pages/index/index',
       deviceCategory: '/package-mine/device-category/index',
-      ota: '/package-mine/ota/index',
+      ota: '/package-mine/pages/ota/index',
     },
     scrollViewHeight:
       (storage.get('windowHeight') as number) -

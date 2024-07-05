@@ -5,7 +5,7 @@ import {
   setCurrentEnv,
   Logger,
   isConnect,
-  // initHomeOs,
+  initHomeOs,
   networkStatusListen,
   removeNetworkStatusListen,
   verifyNetwork,
@@ -40,8 +40,9 @@ App<IAppOption>({
         Logger.debug('reaction -> projectId', projectStore.currentProjectDetail.projectId)
         await closeWebSocket()
         startWebsocketService()
-        // await projectStore.updateLocalKey()
-        // initHomeOs()
+
+        projectStore.key = '' // 清空旧家庭的homOS的key
+        initHomeOs()
       },
     )
 
@@ -57,6 +58,7 @@ App<IAppOption>({
         userStore.setUserInfo(userInfo)
         if (!userInfo.roleList?.length) {
           console.log('已登录，但用户无权限')
+          othersStore.setIsInit(true)
           return
         }
 
@@ -93,8 +95,7 @@ App<IAppOption>({
       return
     }
 
-    // todo: 暂时屏蔽homOS相关逻辑，第一期不接屏，不存在host
-    // initHomeOs()
+    initHomeOs()
 
     if (!isConnect()) {
       return

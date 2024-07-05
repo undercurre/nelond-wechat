@@ -110,9 +110,18 @@
     <view class="h-48rpx mt-64rpx mb-36rpx mx-48rpx flex justify-between align-center">
       <view>
         <text class="text-40rpx font-medium text-hex-1a1a1c leading-48rpx">如果</text>
-        <text class="text-30rpx font-medium text-hex-778899 ml-10px" wx:if="{{sceneDeviceConditionsFlatten.length > 1}}">满足{{ conditionMultiple === 'all' ? '所有' : '任一' }}条件</text>
+        <text
+          class="text-30rpx font-medium text-hex-778899 ml-10px"
+          wx:if="{{sceneDeviceConditionsFlatten.length > 1}}"
+          >满足{{ conditionMultiple === 'all' ? '所有' : '任一' }}条件</text
+        >
       </view>
-      <image wx:if="{{sceneDeviceConditionsFlatten.length && opearationType === 'auto'}}" class="w-48 h-48" src="/package-automation/assets/imgs/automation/add.png" bindtap="addMultipleCondition"></image>
+      <image
+        wx:if="{{sceneDeviceConditionsFlatten.length && opearationType === 'auto'}}"
+        class="w-48 h-48"
+        src="/package-automation/assets/imgs/automation/add.png"
+        bindtap="addMultipleCondition"
+      ></image>
     </view>
     <van-cell-group inset>
       <van-cell
@@ -176,6 +185,16 @@
     </van-cell-group>
     <view class="h-48rpx mt-64rpx mb-36rpx mx-48rpx flex justify-between align-center">
       <text class="text-40rpx font-medium text-hex-1a1a1c leading-48rpx">就执行</text>
+      <view
+        class="flex-1"
+        wx:if="{{sceneDeviceActionsFlatten.length}}"
+      >
+        <van-button
+          class="ml-20rpx"
+          bind:click="haveATry"
+          >试一试</van-button
+        >
+      </view>
       <image
         wx:if="{{sceneDeviceActionsFlatten.length && !isDefaultYijianScene}}"
         class="w-48 h-48"
@@ -227,7 +246,6 @@
         bind:actionDelete="handleActionDelete"
         bind:sortend="handleSortEnd"
       ></drag>
-      <view style="height: calc(116rpx + env(safe-area-inset-bottom))"></view>
     </view>
 
     <view style="height: calc(146rpx + env(safe-area-inset-bottom))"></view>
@@ -315,13 +333,15 @@
   bind:confirm="handleDelayConfirm"
   bind:cancel="handleDelayReturn"
 />
+<!-- FIXME 返回按钮显示的逻辑可能有问题，且耦合过多；暂时沿用 -->
 <select-card-popup
   show="{{showSelectCardPopup}}"
   title="{{selectCardType === 'device'? '选择设备': selectCardType === 'scene' ?'选择场景':'选择传感器'}}"
+  cancelText="{{selectCardType === 'scene' ?'上一步':'找一找'}}"
   cardType="{{selectCardType}}"
   list="{{list}}"
   selectList="{{linkSelectList}}"
-  showCancel="{{selectCardType !== 'sensor'||!sceneDeviceConditionsFlatten.length}}"
+  showCancel="{{(selectCardType !== 'sensor'||!sceneDeviceConditionsFlatten.length) && showFindBtn}}"
   bind:select="handleSelectCardSelect"
   bind:close="handleSelectCardClose"
   bind:confirm="handleSelectCardConfirm"
@@ -330,6 +350,7 @@
 <light-control-popup
   show="{{showEditPopup === '0x13'}}"
   title="{{sceneEditTitle}}"
+  isControl="{{false}}"
   lightInfo="{{sceneEditInfo}}"
   bind:confirm="handleSceneEditConfirm"
   bind:close="handleEditPopupClose"
@@ -337,6 +358,7 @@
 <switch-control-popup
   show="{{showEditPopup === '0x21'}}"
   title="{{sceneEditTitle}}"
+  isControl="{{false}}"
   switchInfo="{{sceneEditInfo}}"
   bind:confirm="handleSceneEditConfirm"
   bind:close="handleEditPopupClose"
@@ -345,6 +367,7 @@
   show="{{showEditPopup === '0x14'}}"
   title="{{sceneEditTitle}}"
   deviceInfo="{{sceneEditInfo}}"
+  isControl="{{false}}"
   bind:confirm="handleSceneEditConfirm"
   bind:close="handleEditPopupClose"
 ></curtain-control-popup>

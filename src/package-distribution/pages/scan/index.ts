@@ -18,6 +18,7 @@ import {
   strUtil,
 } from '../../../utils/index'
 import { checkDevice, getGwNetworkInfo, getUploadFileForOssInfo, queryWxImgQrCode } from '../../../apis/index'
+import { isLan } from '../../../config/index'
 
 ComponentWithComputed({
   options: {
@@ -62,7 +63,12 @@ ComponentWithComputed({
     gatewayList(data) {
       const allDeviceList: Device.DeviceItem[] = (data as IAnyObject).allDeviceList || []
 
-      return allDeviceList.filter((item) => item.deviceType === 1)
+      return allDeviceList
+        .filter((item) => item.deviceType === 1)
+        .map((item) => ({
+          ...item,
+          spaceName: spaceStore.getSpaceClearNameById(item.spaceId),
+        }))
     },
     isShowTips(data) {
       return (data.scanType === 'subdevice' && data._isBlePermit) || data.scanType === 'gateway'
@@ -328,6 +334,11 @@ ComponentWithComputed({
 
     // 检查摄像头权限
     async checkCameraPerssion() {
+      // 局域网情况，没有网络，无法检查权限
+      if (isLan()) {
+        return true
+      }
+
       showLoading()
       const settingRes = await wx.getSetting().catch((err) => {
         return {
@@ -363,7 +374,6 @@ ComponentWithComputed({
           confirmButtonOpenType: 'openSetting',
         }).catch(() => {
           // on cancel
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           this.goBack() // 拒绝授权摄像头，则退出当前页面
         })
@@ -383,14 +393,10 @@ ComponentWithComputed({
     async getQrCodeInfo(e: WechatMiniprogram.CustomEvent) {
       let isReady = true // 标志扫码环境条件是否准备好
 
-      if ((this.data.scanType === 'gateway' || this.data.scanType === 'subdevice') && isAndroid()) {
-        const systemSetting = wx.getSystemSetting()
+      if (!isLan() && (this.data.scanType === 'gateway' || this.data.scanType === 'subdevice') && isAndroid()) {
+        const systemSetting = wx.getSystemSetting() // 局域网（无网环境）该接口无法调用
 
         isReady = systemSetting.locationEnabled
-      }
-
-      if (this.data.scanType === 'subdevice') {
-        isReady = isReady && bleDevicesStore.discovering
       }
 
       // 必须等待初始化好或者非处于扫码状态后才能扫码
@@ -405,6 +411,15 @@ ComponentWithComputed({
 
     getCameraError(event: WechatMiniprogram.CustomEvent) {
       Logger.error('getCameraError', event)
+
+      // 该错误回调可能需要比较久才触发，需要判断是否还在当前页面
+      if (this.data.isShowPage && isLan()) {
+        Dialog.alert({
+          message: '局域网模式下授权异常，请在外网重新打开局域网模式',
+          showCancelButton: false,
+          confirmButtonText: '确定',
+        })
+      }
 
       this.checkCameraPerssion()
     },
@@ -427,6 +442,8 @@ ComponentWithComputed({
         !this.data._listenLocationTimeId
       ) {
         const systemSetting = wx.getSystemSetting()
+
+        console.debug('getSystemSetting', systemSetting)
 
         if (!systemSetting.locationEnabled) {
           wx.showModal({

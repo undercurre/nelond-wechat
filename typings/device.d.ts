@@ -16,6 +16,7 @@ declare namespace Device {
     ButtonMode?: number
     buttonScene?: number
     curtain_position?: string
+    level?: string // zigbee窗帘位置
     curtain_status?: string
     curtain_direction?: 'positive' | 'reverse' // 窗帘开合方向
     mode?: string // 浴霸模式，'close_all' | 'heating' | 'bath' | 'ventilation' | 'drying' | 'blowing' | 'soft_wind'，双模式用,分隔
@@ -101,6 +102,7 @@ declare namespace Device {
     controlAction: IAnyObject //自动化传感器使用
 
     updateStamp: number
+    createdTime: string
 
     canLanCtrl?: boolean // 是否可以局域网控制,前端自定义属性
     colorTempRangeMap: {

@@ -1,5 +1,6 @@
 import Toast from '@vant/weapp/toast/toast'
 import { checkInputNameIllegal } from '../../../../../utils/index'
+import { spaceStore } from '../../../../../store/index'
 
 Component({
   /**
@@ -36,13 +37,13 @@ Component({
   },
 
   observers: {
-    'deviceName, spaceId, spaceName, switchList': function (deviceName, spaceId, spaceName, switchList) {
+    'deviceName, spaceId, spaceName, switchList': function (deviceName, spaceId, switchList) {
       this.setData({
         deviceInfo: {
-          spaceId: spaceId,
-          spaceName: spaceName,
-          deviceName: deviceName,
-          switchList: switchList,
+          spaceId,
+          spaceName: spaceStore.getSpaceClearNameById(spaceId),
+          deviceName,
+          switchList,
         },
       })
     },

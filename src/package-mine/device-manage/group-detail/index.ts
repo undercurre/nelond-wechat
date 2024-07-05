@@ -1,12 +1,12 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
-import { deviceStore, projectBinding, projectStore, spaceBinding, userBinding } from '../../../store/index'
+import { deviceStore, projectBinding, projectStore, spaceBinding, spaceStore, userBinding } from '../../../store/index'
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { delGroup, queryGroup, renameGroup, updateGroup } from '../../../apis/index'
 import { PRO_TYPE, proName } from '../../../config/index'
 import Dialog from '@vant/weapp/dialog/dialog'
-import { emitter } from '../../../utils/index'
+import { emitter, storage } from '../../../utils/index'
 ComponentWithComputed({
   behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding, projectBinding, userBinding] }), pageBehavior],
   /**
@@ -20,6 +20,12 @@ ComponentWithComputed({
     showEditNamePopup: false,
     showAddLightPopup: false,
     deviceInfo: {} as Device.DeviceItem,
+    scrollHeight:
+      (storage.get('windowHeight') as number) -
+      (storage.get('statusBarHeight') as number) -
+      (storage.get('bottomBarHeight') as number) - // IPX
+      (storage.get('navigationBarHeight') as number) -
+      250, // 滚动列表前内容
   },
 
   computed: {
@@ -167,7 +173,7 @@ ComponentWithComputed({
           deviceInfo: res.result,
           deviceName: res.result.groupName,
           spaceId: res.result.spaceId,
-          spaceName: res.result.spaceName,
+          spaceName: spaceStore.getSpaceClearNameById(res.result.spaceId),
         })
       }
     },

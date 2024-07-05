@@ -1,8 +1,15 @@
 import { deviceStore, projectStore } from '../store/index'
 import homOs from 'js-homos'
-import { Logger, emitter, debounce } from './index'
+import { Logger, emitter, debounce, isLogined } from './index'
 
 export async function initHomeOs() {
+  const isLogin = isLogined()
+
+  if (!isLogin || !projectStore.currentProjectId) {
+    Logger.debug('initHomeOs终止, projectStore.currentProjectId:', projectStore.currentProjectId, isLogin)
+    return
+  }
+
   await projectStore.initLocalKey()
 
   // 调试阶段可写死传递host参数，PC模拟调试
@@ -13,8 +20,6 @@ export async function initHomeOs() {
   })
 
   homOs.onMessage((res: { topic: string; reqId?: string; data: IAnyObject; ts: string }) => {
-    Logger.console('Ⓜ 收到mqtt推送：', res)
-
     const { topic, reqId, data } = res
 
     // 子设备状态变更

@@ -20,7 +20,7 @@ ComponentWithComputed({
    * 组件的初始数据
    */
   data: {
-    defaultImgDir,
+    defaultImgDir: defaultImgDir(),
     deviceInfo: {
       deviceId: '',
       deviceName: '',
@@ -60,6 +60,8 @@ ComponentWithComputed({
       console.log('getCurrentPageParams', pageParams)
 
       const res = await queryDeviceInfoByDeviceId({ deviceId: pageParams.deviceId }, { loading: true })
+
+      Logger.log('queryDeviceInfoByDeviceId', res)
 
       const spaceInfo = spaceStore.allSpaceList.find((item) => item.spaceId === res.result.spaceId) as Space.allSpace
 
@@ -145,6 +147,7 @@ ComponentWithComputed({
         wx.closeBluetoothAdapter()
 
         Logger.console('cacheData', cacheData)
+
         if (cacheData.pageEntry) {
           wx.reLaunch({
             url: cacheData.pageEntry,

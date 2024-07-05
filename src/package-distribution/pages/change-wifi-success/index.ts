@@ -14,7 +14,7 @@ ComponentWithComputed({
    * 组件的初始数据
    */
   data: {
-    defaultImgDir,
+    defaultImgDir: defaultImgDir(),
   },
 
   lifetimes: {

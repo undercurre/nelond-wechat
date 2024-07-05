@@ -20,7 +20,7 @@ HomLux小程序
 ├── .husky // git hooks
 ├── build // 一些自动化脚本
 ├── docs // 项目文档
-├── ossFile // OSS静态资源文件备份目录,对应地址：https://mzgd-oss-bucket.oss-cn-shenzhen.aliyuncs.com/homlux
+├── ossFile // OSS静态资源文件备份目录,对应地址：https://mzgd-oss-bucket.oss-cn-shenzhen.aliyuncs.com/nelond
 ├── src // 小程序源码
     ├── apis // 后端接口封装
     ├── assets // 资源目录
@@ -42,7 +42,7 @@ HomLux小程序
     ├── store // 全局状态
     ├── package-distribution // 配网相关页面分包（添加设备、附近设备、连接wifi等）
     ├── package-mine // 我的相关页面分包（项目管理、空间管理、设备管理、OTA、语音控制、设备替换）
-    ├── package-protocol // 用户协议列表和协议展示分包
+    ├── package-about // 关于 分包
     ├── package-space-control // 空间相关页面分包（空间页面控制设备、场景列表、场景管理）
     ├── package-auth // 第三方授权相关页面分包
     ├── package-automation // 场景模块相关页面分包

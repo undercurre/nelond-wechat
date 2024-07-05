@@ -17,7 +17,7 @@ ComponentWithComputed({
    * 页面的初始数据
    */
   data: {
-    defaultImgDir,
+    defaultImgDir: defaultImgDir(),
     status: 'introduce' as StatusType,
     isSelectOldDevice: false,
     isSelectNewDevice: false,

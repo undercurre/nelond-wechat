@@ -16,11 +16,12 @@
     "getIconify": "esno build/getIconify json=../iconify.json path=./src/assets/svg/iconify.ts"
   },
   "dependencies": {
+    "@midea/reg-awsome": "^1.0.8",
     "@vant/weapp": "^1.10.18",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.11.7",
     "fast-deep-equal": "^2.0.1",
-    "js-homos": "^0.1.7",
+    "js-homos": "^0.2.11",
     "lottie-miniprogram": "^1.0.12",
     "miniprogram-computed": "^4.4.0",
     "miniprogram-recycle-view": "^0.1.5",

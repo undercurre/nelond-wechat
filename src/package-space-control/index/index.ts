@@ -56,8 +56,8 @@ ComponentWithComputed({
    * 页面的初始数据
    */
   data: {
-    sceneImgDir,
-    defaultImgDir,
+    sceneImgDir: sceneImgDir(),
+    defaultImgDir: defaultImgDir(),
     _firstShow: true, // 是否首次进入
     _from: '', // 页面进入来源
     _updating: false, // 列表更新中标志
@@ -140,17 +140,8 @@ ComponentWithComputed({
      * 空间显示名称
      */
     title(data) {
-      const { currentSpace, parentSpace } = data
-
-      // 如果非公共空间，则直接显示当前空间名称
-      if (currentSpace?.publicSpaceFlag === 0) {
-        return currentSpace?.spaceName ?? ''
-      }
-
-      // 如果为公共空间，则显示{父空间名称}-公共空间
-      const _title = `${parentSpace?.spaceName ?? ''}-${currentSpace?.spaceName}`
-      console.log('_title', _title)
-      return _title.length > 9 ? _title.slice(0, 4) + '..' + _title.slice(-5) : _title
+      const { currentSpaceNameClear = '' } = data
+      return currentSpaceNameClear.length > 9 ? currentSpaceNameClear + '　　' : currentSpaceNameClear
     },
     sceneListInBar(data) {
       if (data.sceneList) {
@@ -225,8 +216,8 @@ ComponentWithComputed({
       Logger.log('space-onShow, _firstShow', this.data._firstShow, spaceStore.currentSpace)
       // 首次进入
       if (this.data._firstShow && this.data._from !== 'addDevice') {
+        await sceneStore.updateAllRoomSceneList()
         this.updateQueue({ isRefresh: true })
-        sceneStore.updateAllRoomSceneList()
         this.queryGroupInfo()
         this.data._firstShow = false
       }
@@ -275,6 +266,8 @@ ComponentWithComputed({
 
           this.updateQueue(device)
 
+          this.refreshLightStatusThrottle()
+
           return
         }
         // 节流更新本地数据
@@ -302,6 +295,8 @@ ComponentWithComputed({
 
     // 响应控制弹窗中单灯/灯组的控制变化，直接按本地设备列表数值以及设置值，刷新空间灯的状态
     refreshLightStatus() {
+      if (!this.data.spaceHasLight) return
+
       let sumOfBrightness = 0,
         sumOfColorTemp = 0,
         count = 0,
@@ -340,6 +335,11 @@ ComponentWithComputed({
       })
     },
 
+    // 节流更新空间灯信息
+    refreshLightStatusThrottle: throttle(function (this: IAnyObject) {
+      this.refreshLightStatus()
+    }, 2000),
+
     // 查询空间分组详情
     async queryGroupInfo() {
       const res = await queryGroupBySpaceId({ spaceId: spaceStore.currentSpaceId })
@@ -368,8 +368,9 @@ ComponentWithComputed({
       }
 
       try {
-        sceneStore.updateAllRoomSceneList(), this.queryGroupInfo()
-        await Promise.all([projectStore.updateSpaceCardList()])
+        await projectStore.updateSpaceCardList()
+        await sceneStore.updateAllRoomSceneList()
+        this.queryGroupInfo()
 
         this.updateQueue({ isRefresh: true })
       } finally {
@@ -824,13 +825,16 @@ ComponentWithComputed({
       }
 
       if (device.proType === PRO_TYPE.curtain) {
-        const OldPosition = device.mzgdPropertyDTOList[modelName].curtain_position
+        const posAttrName = device.deviceType === 2 ? 'level' : 'curtain_position'
+        const OldPosition = device.mzgdPropertyDTOList[modelName][posAttrName]
         const NewPosition = Number(OldPosition) > 0 ? '0' : '100'
         const res = await sendDevice({
           proType: device.proType,
           deviceType: device.deviceType,
           deviceId: device.deviceId,
-          property: { curtain_position: NewPosition },
+          gatewayId: device.gatewayId,
+          property: { [posAttrName]: NewPosition },
+          modelName,
         })
 
         if (!res.success) {
@@ -940,8 +944,9 @@ ComponentWithComputed({
 
       wx.navigateTo({ url: '/package-distribution/pages/choose-device/index' })
     },
+    // ! 目前只有网关离线卡片会有重新联网操作
     handleRebindGateway() {
-      const gateway = deviceStore.allDeviceMap[this.data.offlineDevice.gatewayId]
+      const gateway = deviceStore.allDeviceMap[this.data.offlineDevice.deviceId]
       wx.navigateTo({
         url: `/package-distribution/pages/wifi-connect/index?type=changeWifi&sn=${gateway.sn}`,
       })

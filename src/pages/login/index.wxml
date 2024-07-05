@@ -1,4 +1,3 @@
-<!--pages/login/index.wxml-->
 <view class="-z-1 fixed left-0 top-0 w-100vw h-100vh">
   <image
     src="{{defaultImgDir}}/bg-login.png"
@@ -25,95 +24,112 @@
   >
 </view>
 
-<view
-  wx:if="{{needCaptcha}}"
-  class="px-32rpx mt-50rpx mb-128rpx"
->
-  <view class="mx-24rpx mb-16rpx">
-    <text class="text-24rpx link">首次登录需要先激活账号，已向您的手机号发送验证码</text>
+<block wx:if="{{!isLan}}">
+  <view
+    wx:if="{{needCaptcha}}"
+    class="px-32rpx mt-50rpx mb-128rpx"
+  >
+    <view class="mx-24rpx mb-16rpx">
+      <text class="text-24rpx link">首次登录需要先激活账号，已向您的手机号发送验证码</text>
+    </view>
+
+    <van-field
+      value=""
+      custom-style="padding: 32rpx 32rpx; margin: 16rpx 0; background-color: #F6FAFD;border-radius: 24rpx;"
+      type="number"
+      maxlength="{{6}}"
+      placeholder="请输入短信验证码{{validTime ? '（' + validTime + 's）' : ''}}"
+      bind:change="captchaChange"
+    />
+    <van-button
+      wx:if="{{validTime}}"
+      bind:tap="handleLoginWithCaptcha"
+      block
+      disabled="{{!captchaInput}}"
+      type="primary"
+      size="large"
+      >激活账号并登录
+    </van-button>
+    <van-button
+      wx:else
+      bind:tap="queryCaptcha"
+      block
+      type="primary"
+      size="large"
+      >重新获取验证码
+    </van-button>
   </view>
 
-  <van-field
-    value=""
-    custom-style="padding: 32rpx 32rpx; margin: 16rpx 0; background-color: #F6FAFD;border-radius: 24rpx;"
-    type="number"
-    maxlength="{{6}}"
-    placeholder="请输入短信验证码{{validTime ? '（' + validTime + 's）' : ''}}"
-    bind:change="captchaChange"
-  />
-  <van-button
-    wx:if="{{validTime}}"
-    bind:tap="handleLoginWithCaptcha"
-    block
-    disabled="{{!captchaInput}}"
-    type="primary"
-    size="large"
-    >激活账号并登录
-  </van-button>
-  <van-button
+  <view
     wx:else
-    bind:tap="queryCaptcha"
-    block
-    type="primary"
-    size="large"
-    >重新获取验证码
-  </van-button>
-</view>
+    class="px-32rpx mt-50rpx mb-128rpx"
+  >
+    <include src="./agree.wxml" />
+
+    <van-button
+      open-type="getPhoneNumber|agreePrivacyAuthorization"
+      bind:tap="handleLoginTap"
+      bindgetphonenumber="handleLoginClick"
+      block
+      disabled="{{!isAgree}}"
+      type="primary"
+      size="large"
+      >快速登录</van-button
+    >
+  </view>
+</block>
 
 <view
   wx:else
-  class="px-32rpx mt-50rpx mb-128rpx"
+  class="grow px-32rpx pt-100rpx"
 >
-  <view class="mx-74rpx mt-140rpx mb-32rpx">
-    <van-checkbox
-      custom-class="items-start_el_"
-      use-icon-slot
-      class="text-24rpx"
-      value="{{ isAgree }}"
-      bind:change="onAgreeClick"
-    >
-      <text class="text-24rpx">
-        <text>我已阅读并同意</text>
-        <text
-          class="link"
-          data-value="privacyPolicy"
-          catchtap="toPage"
-          >《美的商照隐私协议》</text
-        ><text
-          class="link"
-          data-value="userService"
-          catchtap="toPage"
-          >《软件许可及用户服务协议》</text
-        ><text
-          class="link"
-          data-value="userInfoList"
-          catchtap="toPage"
-          >《已收集个人信息清单》</text
-        >和<text
-          class="link"
-          data-value="authList"
-          catchtap="toPage"
-          >《美的商照权限列表》</text
-        >
-      </text>
-      <image
-        class="h-36 w-36"
-        slot="icon"
-        src="{{ isAgree ? checkImg : uncheckImg }}"
-      />
-    </van-checkbox>
-  </view>
-
-  <van-button
-    open-type="getPhoneNumber|agreePrivacyAuthorization"
-    bind:tap="handleLoginTap"
-    bindgetphonenumber="handleLoginClick"
-    block
-    disabled="{{!isAgree}}"
-    type="primary"
-    size="large"
-    >快速登录</van-button
+  <van-field
+    model:value="{{ mobilePhone }}"
+    placeholder="请输入手机号"
+    type="number"
+    maxlength="11"
+    custom-style="margin-bottom: 32rpx;margin-top: 40rpx;padding: 32rpx 32rpx;border-radius: 24rpx;"
+    clearable="{{true}}"
+    border="{{false}}"
   >
+  </van-field>
+
+  <van-field
+    model:value="{{ pw }}"
+    placeholder="请输入密码"
+    password="{{!isShowPw}}"
+    custom-style="padding: 24rpx 32rpx;border-radius: 24rpx;"
+    use-button-slot
+    border="{{false}}"
+    clearable
+  >
+    <van-button
+      slot="button"
+      bind:click="togglePw"
+      custom-style="border: 0;"
+      type="default"
+      plain
+    >
+      <svg-icon
+        name="icon-park-outline:preview-{{!isShowPw ? 'close-one' : 'open'}}"
+        color="#555659"
+        height="56rpx"
+      ></svg-icon>
+    </van-button>
+  </van-field>
+
+  <include src="./agree.wxml" />
+
+  <view class="flex flex-col mt-32rpx">
+    <van-button
+      block
+      type="primary"
+      size="large"
+      bind:click="toLogin"
+      disabled="{{!isAgree || !mobilePhone || !pw}}"
+      >登录</van-button
+    >
+  </view>
 </view>
 
 <van-toast id="van-toast" />

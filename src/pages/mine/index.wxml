@@ -1,4 +1,3 @@
-<!--pages/mine/index.wxml-->
 <nav-bar background="transparent"></nav-bar>
 
 <view
@@ -6,7 +5,7 @@
   class="fixed left-0 top-0 w-100vw h-100vh"
 >
   <image
-    src="{{defaultImgDir}}/bg.jpg"
+    src="{{ossDomain}}/default-img/bg.jpg"
     style="width: 100vw; height: 100vh"
   ></image>
 </view>
@@ -20,15 +19,19 @@
   <view class="mt-32rpx mb-42rpx px-48rpx flex flex-row items-center">
     <image
       class="w-96rpx h-96rpx rounded-full border-white border-8rpx border-solid"
-      src="{{userInfo.headImageUrl ? userInfo.headImageUrl : defaultImgDir + '/default-avatar.png'}}"
+      src="{{userInfo.headImageUrl ? userInfo.headImageUrl : ossDomain + '/default-img/default-avatar.png'}}"
       style="background-image: linear-gradient(141deg, #ffffff 0%, rgba(255, 255, 255, 0.61) 100%)"
     ></image>
 
     <view
-      class="flex flex-col pl-40rpx grow"
+      class="flex flex-row pl-40rpx grow"
       bindtap="handleUserInfoTap"
     >
       <text class="text-40 text-hex-000 font-medium">{{isLogin?userInfo.userName:'未登录'}}</text>
+      <image
+        class="w-48rpx h-48rpx ml-10rpx"
+        src="/assets/img/base/edit.png"
+      ></image>
     </view>
   </view>
 
@@ -87,23 +90,25 @@
         bind:click="toPage"
       /> -->
 
-      <van-cell is-link>
-        <button
-          icon="/assets/img/mine/advise.png"
-          open-type="feedback"
-          class="bg-transparent rounded-none p-0 menu-item-button"
-        >
-          <view class="flex flex-row items-center justify-between">
-            <view class="flex flex-row items-center">
-              <image
-                class="w-48 h-48 mr-26rpx"
-                src="/assets/img/mine/advise.png"
-              ></image>
-              <text class="text-32 text-black leading-none">建议反馈</text>
-            </view>
+      <button
+        open-type="feedback"
+        class="feedback-btn bg-white border-0 rounded-none menu-item-button box-border"
+      >
+        <view class="grow flex flex-row items-center justify-between feedback-cell">
+          <view class="flex flex-row items-center">
+            <image
+              class="w-48 h-48 mr-26rpx"
+              src="/assets/img/mine/advise.png"
+            ></image>
+            <text class="text-32 text-black leading-none">建议反馈</text>
           </view>
-        </button>
-      </van-cell>
+
+          <image
+            class="w-32 h-32 opacity-60"
+            src="/assets/img/base/arrow-right-cell.png"
+          ></image>
+        </view>
+      </button>
 
       <van-cell
         icon="/assets/img/mine/about.png"

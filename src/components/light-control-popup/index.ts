@@ -70,14 +70,11 @@ ComponentWithComputed({
    */
   data: {
     power: 0,
-    brightness: 1,
-    colorTemperature: 0,
+    brightness: -1, // HACK 未加载前不设置实际值，加载完成后才能触发进度条变化
+    colorTemperature: -1,
   },
 
   computed: {
-    levelShow(data) {
-      return data.brightness
-    },
     colorTempShow(data) {
       const { maxColorTemp, minColorTemp } = data.lightInfo.colorTempRange || data.lightInfo
 
@@ -187,8 +184,9 @@ ComponentWithComputed({
       this.setData({
         colorTemperature: e.detail,
       })
-
-      this.controlSubDevice({ colorTemperature: this.data.colorTemperature })
+      if (this.data.isControl) {
+        this.controlSubDevice({ colorTemperature: this.data.colorTemperature })
+      }
       this.handleChange()
     },
   },

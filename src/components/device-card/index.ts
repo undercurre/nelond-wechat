@@ -1,5 +1,5 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { proName, PRO_TYPE, defaultImgDir, getModelName } from '../../config/index'
+import { proName, PRO_TYPE, getModelName } from '../../config/index'
 import { throttle } from '../../utils/index'
 
 const CONTROL_INTERVAL = 3000 // 开关操作间隔时间
@@ -73,7 +73,7 @@ ComponentWithComputed({
   computed: {
     picUrl(data) {
       if (data.isLoadImgError) {
-        return `${defaultImgDir}/default-device.png`
+        return `/assets/img/offline/default-device.png`
       }
       if (data.deviceInfo.proType === PRO_TYPE.switch && data.showBtnDetail) {
         return data.deviceInfo?.switchInfoDTOList[0]?.pic
@@ -88,7 +88,8 @@ ComponentWithComputed({
       }
       // 窗帘，位置大于0即为开启
       if (data.deviceInfo.proType === PRO_TYPE.curtain) {
-        const pos = data.deviceInfo.mzgdPropertyDTOList['curtain'].curtain_position
+        const posAttrName = data.deviceInfo.deviceType === 2 ? 'level' : 'curtain_position'
+        const pos = data.deviceInfo.mzgdPropertyDTOList['curtain'][posAttrName]
         const isClosed = pos === '0'
         if (data.isProcessing) {
           return isClosed ? '/assets/img/base/curtain-opening.png' : '/assets/img/base/curtain-closing.png'
@@ -124,11 +125,11 @@ ComponentWithComputed({
       } else {
         name = data.deviceInfo.deviceName
       }
-      return name.length > 5 ? name.slice(0, 2) + '...' + name.slice(-2) : name
+      return name?.length > 5 ? name.slice(0, 2) + '...' + name.slice(-2) : name
     },
     bottomDesc(data) {
-      return data.deviceInfo.deviceName.length > 5
-        ? data.deviceInfo.deviceName.slice(0, 2) + '...' + data.deviceInfo.deviceName.slice(-2)
+      return data.deviceInfo?.deviceName?.length > 5
+        ? data.deviceInfo?.deviceName?.slice(0, 2) + '...' + data.deviceInfo?.deviceName?.slice(-2)
         : data.deviceInfo.deviceName
     },
     deviceType(data) {

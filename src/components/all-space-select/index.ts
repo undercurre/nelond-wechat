@@ -120,6 +120,7 @@ ComponentWithComputed({
   },
   computed: {
     checkedSpaceName(data: IAnyObject) {
+      console.log('[computed]data.spaceData', data.spaceData)
       const spaceIds = [data._firstSpaceId, data._secondSpaceId, data._thirdSpaceId, data._fourthSpaceId]
       const spaceNames = []
       let currentSpace = data.spaceData[data._firstSpaceId]
@@ -138,7 +139,14 @@ ComponentWithComputed({
             }
           }
         }
-        return spaceNames.join('，')
+        const lastName = spaceNames[spaceNames.length - 1]
+        const lastName2 = spaceNames[spaceNames.length - 2]
+        if (lastName === '公区' || lastName === '公共区域') {
+          // FIXME 使用更可靠的方法
+          return `${lastName2}-${lastName}`
+        } else {
+          return lastName
+        }
       } else {
         return ''
       }

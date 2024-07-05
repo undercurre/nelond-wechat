@@ -67,16 +67,16 @@ mzaioRequest.get<UserInfo>({ url: 'xxx' })
 
 > 目前 baseRequest 封装了通用 header：
 
-| header | 默认值 | 说明 |
-| - | - | - |
+| header         | 默认值                                 | 说明              |
+| -------------- | -------------------------------------- | ----------------- |
 | Authentication | `'Bearer ' + storage.get('token', '')` | 美智云请求 header |
 
-> 封装了 Url 处理，根据/src/config/index.ts 的 mzaioBaseURL 和请求传入的 URL 进行拼接。
+> 封装了 Url 处理，根据/src/config/index.ts 的 getMzaioBaseURL() 和请求传入的 URL 进行拼接。
 
-> 封装了请求超时时间，默认6s。
+> 封装了请求超时时间，默认 6s。
 
 > 封装了部分请求参数
 
-| data | 默认值 | 说明 |
-| - | - | - |
+| data  | 默认值     | 说明                                                                     |
+| ----- | ---------- | ------------------------------------------------------------------------ |
 | reqId | Date.now() | 请求 ID，由于小程序不支持安全的随机字符串生成，所以展示先用时间戳作为 id |

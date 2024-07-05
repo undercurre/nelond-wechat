@@ -1,0 +1,9 @@
+{
+  "component": true,
+  "usingComponents": {
+    "van-dialog": "@vant/weapp/dialog/index",
+    "van-toast": "@vant/weapp/toast/index",
+    "van-cell-group": "@vant/weapp/cell-group/index",
+    "lan-switch-cell": "./components/lan-switch-cell/index"
+  }
+}

@@ -14,7 +14,7 @@ ComponentWithComputed({
    * 页面的初始数据
    */
   data: {
-    defaultImgDir,
+    defaultImgDir: defaultImgDir(),
     type: '', // bind: 绑定网关，changeWifi： 更改wifi
     isShowPw: false, // 是否展示密码明文
     isShowWifiTips: false,

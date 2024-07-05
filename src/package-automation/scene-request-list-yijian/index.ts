@@ -4,8 +4,8 @@ import Dialog from '@vant/weapp/dialog/dialog'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { storage, emitter, getCurrentPageParams } from '../../utils/index'
 import { addScene, retryScene, updateScene } from '../../apis/index'
-import { sceneStore, deviceStore, projectStore } from '../../store/index'
-import { PRO_TYPE } from '../../config/index'
+import { sceneStore, deviceStore, projectStore, spaceStore } from '../../store/index'
+import { getModelName, PRO_TYPE } from '../../config/index'
 
 ComponentWithComputed({
   options: {
@@ -45,7 +45,7 @@ ComponentWithComputed({
         })
           .then(() => {
             // on confirm
-          })    
+          })
           .catch(() => {
             // on cancel
           })
@@ -86,13 +86,22 @@ ComponentWithComputed({
       const deviceList = deviceStore.allDeviceFlattenList
         .filter((item) => selectIdList.includes(item.uniId))
         .map((item) => {
-          if (item.proType === PRO_TYPE.switch) {
-            ;(item.pic = item.switchInfoDTOList[0]?.pic),
-              (item.deviceName = `${item.switchInfoDTOList[0].switchName} | ${item.deviceName}`)
+          const isSwitch = item.proType === PRO_TYPE.switch
+          let { deviceName } = item
+          let name = deviceName
+          if (isSwitch) {
+            const { switchName } = item.switchInfoDTOList[0]
+            if (switchName.length + deviceName.length > 15) {
+              deviceName = deviceName.slice(0, 12 - switchName.length) + '...' + deviceName.slice(-2)
+            }
+            name = `${switchName}|${deviceName}`
           }
 
           return {
             ...item,
+            pic: isSwitch ? item.switchInfoDTOList[0]?.pic : item.pic,
+            deviceName: name,
+            spaceName: spaceStore.getSpaceClearNameById(item.spaceId),
             status: this.data.isDefault ? 'success' : 'waiting',
           }
         })
@@ -117,7 +126,7 @@ ComponentWithComputed({
           const ctrlAction = {} as IAnyObject
 
           if (device.deviceType === 2) {
-            ctrlAction.modelName = device.proType === PRO_TYPE.light ? 'light' : 'wallSwitch1'
+            ctrlAction.modelName = getModelName(device.proType)
           }
 
           if (device.proType === PRO_TYPE.light) {
@@ -132,7 +141,8 @@ ComponentWithComputed({
             //   ctrlAction = toWifiProperty(device.proType, ctrlAction)
             // }
           } else if (device.proType === PRO_TYPE.curtain) {
-            ctrlAction.curtain_position = property.curtain_position
+            const posAttrName = device.deviceType === 2 ? 'level' : 'curtain_position'
+            ctrlAction[posAttrName] = property[posAttrName]
           } else if (device.proType === PRO_TYPE.bathHeat) {
             ctrlAction.light_mode = property.light_mode
             ctrlAction.heating_temperature = property.heating_temperature

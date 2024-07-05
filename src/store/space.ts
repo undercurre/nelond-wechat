@@ -71,6 +71,11 @@ export const spaceStore = observable({
     return this.getSpaceFullName(this.currentSpace as Space.allSpace) ?? ''
   },
 
+  // 如果非公共空间，则直接显示当前空间名称；如果为公共空间，则显示{父空间名称}-公共空间
+  get currentSpaceNameClear(): string {
+    return this.getSpaceClearName(this.currentSpace) ?? ''
+  },
+
   get hasSpace() {
     const { spaceList } = this
     return spaceList?.length
@@ -96,10 +101,37 @@ export const spaceStore = observable({
     const parentSpace = spaceStore.allSpaceList.find((item) => item.spaceId === space?.pid) as Space.allSpace
 
     if (!parentSpace) {
-      return space.spaceName
+      return space?.spaceName ?? ''
     }
 
     return `${parentSpace.pid === '0' ? parentSpace.spaceName : this.getSpaceFullName(parentSpace)},${space.spaceName}`
+  },
+
+  /**
+   * 获取指定空间的简明名称
+   * 如果为公共空间，则显示{父空间名称}-公共空间
+   */
+  getSpaceClearName(space: Space.allSpace): string {
+    // 如果非公共空间，则直接显示当前空间名称；
+    if (space?.publicSpaceFlag === 0) {
+      return space?.spaceName ?? ''
+    }
+
+    if (space?.pid === '0') {
+      return space?.spaceName
+    }
+
+    const parentSpace = space.parentSpace
+    if (!parentSpace) {
+      return space.spaceName
+    }
+    return `${parentSpace?.spaceName ?? ''}-${space.spaceName}`
+  },
+  getSpaceClearNameById(spaceId: string) {
+    if (!spaceId) return ''
+    const space = spaceStore.allSpaceList.find((item: Space.allSpace) => item.spaceId === spaceId)
+    if (!space) return ''
+    return this.getSpaceClearName(space)
   },
 
   /**
@@ -132,6 +164,10 @@ export const spaceStore = observable({
           pid: '0',
         }))
       })
+    } else {
+      runInAction(() => {
+        spaceStore.spaceList = []
+      })
     }
   },
 
@@ -139,8 +175,20 @@ export const spaceStore = observable({
     const res = await queryAllSpaceByProjectId(projectStore.currentProjectId, options)
     console.log('updateAllSpaceListres', res)
     if (res.success) {
+      let allSpaceList = res.result
+
+      // 整理空间树数据，增加parentSpace属性
+      allSpaceList = allSpaceList.map((item) => {
+        if (item.pid !== '0') {
+          const parentSpace = allSpaceList.find((parentItem) => parentItem.spaceId === item.pid)
+
+          item.parentSpace = parentSpace
+        }
+        return item
+      })
+
       runInAction(() => {
-        spaceStore.allSpaceList = res.result
+        spaceStore.allSpaceList = allSpaceList
         console.log('updateAllSpaceList', spaceStore.allSpaceList)
       })
     }
@@ -157,6 +205,7 @@ export const spaceBinding = {
     'currentSpaceId',
     'currentSpaceName',
     'currentSpaceNameFull',
+    'currentSpaceNameClear',
   ],
   actions: [],
 }

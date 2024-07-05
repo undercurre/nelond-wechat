@@ -16,7 +16,7 @@
         bind:tap="handleShowHomeSelectMenu"
         id="homeName"
       >
-        <text class="text-40 text-hex-1E2C46 font-semibold leading-56rpx">{{ currentProjectName }}</text>
+        <text class="inline-block text-40 text-hex-1E2C46 font-semibold leading-56rpx max-w-375 truncate">{{ currentProjectName }}</text>
 
         <svg-icon
           id="homeSelectArrow"
@@ -30,7 +30,7 @@
     </view>
 
     <view class="pt-16rpx leading-40rpx text-black-59 text-28 opacity-75">
-      <text>设备{{ currentProjectDetail.deviceCount }}｜成员{{ currentProjectDetail.userCount }}</text>
+      <text>灯组{{ currentProjectDetail.groupCount }}｜设备{{ currentProjectDetail.deviceCount }}｜成员{{ currentProjectDetail.userCount }}</text>
     </view>
   </view>
 

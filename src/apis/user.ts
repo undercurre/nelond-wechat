@@ -75,7 +75,7 @@ export async function authQrcode(qrcode: string) {
 export async function getCaptcha(data: { mobilePhone: string }) {
   return await mzaioRequest.post({
     log: true,
-    loading: false,
+    loading: true,
     url: '/v1/mzgd/cl/auth/get/captcha',
     data,
   })

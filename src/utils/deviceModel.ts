@@ -85,22 +85,23 @@ export function toWifiProperty(proType: string, properties: IAnyObject) {
 }
 
 function getValuesMap(key: string) {
-  const map :Record<string, string> = {
-    'greaterThan': '大于',
-    'lessThan': '小于',
-    'greaterThanOrEqualTo': '大于等于',
-    'lessThanOrEqualTo': '小于等于',
-    'equalTo': '等于'
+  const map: Record<string, string> = {
+    greaterThan: '大于',
+    lessThan: '小于',
+    greaterThanOrEqualTo: '大于等于',
+    lessThanOrEqualTo: '小于等于',
+    equalTo: '等于',
   }
   return map[key]
 }
 
 /**
  * 转换成属性描述
- * @param proType
- * @param property 设备属性
+ * @param deviceInfo 设备信息
+ * @param property 设备控制属性
  */
-export function toPropertyDesc(proType: string, productId: string, property: IAnyObject) {
+export function toPropertyDesc(deviceInfo: Optional<Device.DeviceItem>, property: IAnyObject) {
+  const { proType, productId = '', deviceType } = deviceInfo ?? {}
   const descList = [] as string[]
   if (proType === PRO_TYPE.light) {
     !isNullOrUnDef(property.power) && descList.push(property.power ? '打开' : '关闭')
@@ -120,12 +121,14 @@ export function toPropertyDesc(proType: string, productId: string, property: IAn
   }
 
   if (proType === PRO_TYPE.curtain) {
-    if (property.curtain_position === 0) {
+    const posAttrName = deviceType === 2 ? 'level' : 'curtain_position'
+
+    if (property[posAttrName] === 0) {
       descList.push(`关闭`)
-    } else if (property.curtain_position === 100) {
+    } else if (property[posAttrName] === 100) {
       descList.push(`打开`)
     } else {
-      descList.push(`开启至${property.curtain_position}%`)
+      descList.push(`开启至${property[posAttrName]}%`)
     }
   }
 

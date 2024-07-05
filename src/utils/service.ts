@@ -6,18 +6,25 @@ import { isLogined, Logger, storage, verifyNetwork } from './index'
 import { emitter } from './eventBus'
 import homos from 'js-homos'
 
-export function logout() {
+export function logout(isRedirect = true) {
+  // 退出登录，清除账号相关本地缓存数据
   storage.remove('mobilePhone')
   storage.remove('token')
+  storage.remove('ROLELIST')
+  storage.remove('USERNAME')
+  storage.remove('CURRENTPROJECTID')
+  storage.remove('HOMEDATA')
   storage.remove('localKey') // 清除局域网的项目key
   userStore.logout()
   projectStore.reset() // 清空项目数据
   homos.logout()
   closeWebSocket()
 
-  wx.switchTab({
-    url: '/pages/index/index',
-  })
+  if (isRedirect) {
+    wx.switchTab({
+      url: '/pages/index/index',
+    })
+  }
 }
 
 // WS连接

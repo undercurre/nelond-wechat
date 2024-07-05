@@ -1,5 +1,5 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { SENSOR_TYPE } from '../../../../config/index'
+import { PRODUCT_ID } from '../../../../config/index'
 
 ComponentWithComputed({
   options: {
@@ -52,11 +52,11 @@ ComponentWithComputed({
   },
   computed: {
     title(data) {
-      if (data.productId === SENSOR_TYPE.doorsensor) {
+      if (data.productId === PRODUCT_ID.doorSensor) {
         return '门磁传感器'
-      } else if (data.productId === SENSOR_TYPE.freepad) {
+      } else if (data.productId === PRODUCT_ID.freePad) {
         return '无线开关'
-      } else if (data.productId === SENSOR_TYPE.lightsensor) {
+      } else if (data.productId === PRODUCT_ID.lightSensor) {
         return '照度传感器'
       } else {
         return '人体传感器'
@@ -64,7 +64,7 @@ ComponentWithComputed({
     },
 
     isLuxSensor(data) {
-      return data.productId === SENSOR_TYPE.lightsensor
+      return data.productId === PRODUCT_ID.lightSensor
     },
 
     luxDefaultInput(data) {
@@ -72,9 +72,9 @@ ComponentWithComputed({
     },
 
     popupHeight(data) {
-      if (data.productId === SENSOR_TYPE.doorsensor) {
+      if (data.productId === PRODUCT_ID.doorSensor) {
         return 602
-      } else if (data.productId === SENSOR_TYPE.freepad) {
+      } else if (data.productId === PRODUCT_ID.freePad) {
         return 602
       } else {
         return 506
@@ -114,7 +114,7 @@ ComponentWithComputed({
         _controlAction: {
           illuminance: Number(event.detail.value),
           illuminance_symbol: event.detail.symbol,
-          modelName: 'lightsensor'
+          modelName: 'lightsensor',
         },
       })
     },

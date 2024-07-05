@@ -317,7 +317,7 @@ function handleBleDeviceInfo(
       protocolVersion: deviceInfo.protocolVersion,
     }),
     spaceId: spaceBinding.store.currentSpace.spaceId,
-    spaceName: spaceBinding.store.currentSpaceNameFull,
+    spaceName: spaceBinding.store.currentSpaceNameClear,
     switchList: [],
     status: 'waiting',
   }

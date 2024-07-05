@@ -17,13 +17,17 @@
       <van-cell
         is-link="{{canEditDevice}}"
         bind:click="handleDeviceNameEditPopup"
-        title="设备名称"
+        title="灯组名称"
         value="{{deviceName}}"
+        value-class="longValue"
+        title-class="shortTitle"
       ></van-cell>
       <van-cell
         title="所在空间"
         value="{{spaceName}}"
         border="{{false}}"
+        value-class="longValue"
+        title-class="shortTitle"
       ></van-cell>
     </van-cell-group>
   </view>
@@ -42,51 +46,58 @@
         ></image>
       </view>
     </view>
-    <view class="w-full">
-      <van-cell-group
-        wx:for="{{deviceInfo.groupDeviceList}}"
-        wx:key="deviceId"
-        inset
+    <view class="flex-1">
+      <scroll-view
+        enhanced
+        scroll-y
+        show-scrollbar="{{false}}"
+        style="height: {{scrollHeight}}px;"
       >
-        <van-cell
-          data-device-id="{{item.deviceId}}"
-          border="{{false}}"
+        <van-cell-group
+          wx:for="{{deviceInfo.groupDeviceList}}"
+          wx:key="deviceId"
+          inset
         >
-          <view class="flex item-center">
-            <view class="w-96rpx h-96rpx bg-hex-F6FAFD rounded-999 flex-center">
-              <image
-                src="{{item.devicePic}}"
-                class="w-72rpx h-72rpx"
-              />
-            </view>
-            <view class="h-96rpx flex flex-col justify-center items-start ml-32rpx">
-              <text class="text-black-2a text-32rpx">{{item.deviceName}}</text>
-              <view>
-                <text class="text-black-tips text-28rpx mt-8rpx">{{spaceName}}{{item.onLineStatus ? '' : ' | '}}</text>
-                <text
-                  wx:if="{{!item.onLineStatus}}"
-                  class="text-28rpx text-hex-fbbb32"
-                  >离线</text
-                >
+          <van-cell
+            data-device-id="{{item.deviceId}}"
+            border="{{false}}"
+          >
+            <view class="flex item-center">
+              <view class="w-96rpx h-96rpx bg-hex-F6FAFD rounded-999 flex-center">
+                <image
+                  src="{{item.devicePic}}"
+                  class="w-72rpx h-72rpx"
+                />
+              </view>
+              <view class="h-96rpx flex flex-col justify-center items-start ml-32rpx">
+                <text class="text-black-2a text-32rpx">{{item.deviceName}}</text>
+                <view>
+                  <text class="text-black-tips text-28rpx mt-8rpx">{{spaceName}}{{item.onLineStatus ? '' : ' | '}}</text>
+                  <text
+                    wx:if="{{!item.onLineStatus}}"
+                    class="text-28rpx text-hex-fbbb32"
+                    >离线</text
+                  >
+                </view>
               </view>
             </view>
-          </view>
-          <view
-            slot="right-icon"
-            wx:if="{{canEditDevice}}"
-            class="h-96rpx"
-            catchtap="toDeleteLight"
-            data-device-id="{{item.deviceId}}"
-          >
-            <svg-icon
-              color="#c8c7cc"
-              name="icon-park:close"
-              width="32rpx"
-              height="32rpx"
-            ></svg-icon>
-          </view>
-        </van-cell>
-      </van-cell-group>
+            <view
+              slot="right-icon"
+              wx:if="{{canEditDevice}}"
+              class="h-96rpx"
+              catchtap="toDeleteLight"
+              data-device-id="{{item.deviceId}}"
+            >
+              <svg-icon
+                color="#c8c7cc"
+                name="icon-park:close"
+                width="32rpx"
+                height="32rpx"
+              ></svg-icon>
+            </view>
+          </van-cell>
+        </van-cell-group>
+      </scroll-view>
     </view>
   </view>
   <!-- 隔开一点距离 -->

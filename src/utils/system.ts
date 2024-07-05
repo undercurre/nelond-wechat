@@ -1,4 +1,4 @@
-import { envMap, setEnv } from '../config/index'
+import { envMap, setEnv, mzaioDomain } from '../config/index'
 import { storage } from './storage'
 import { Logger } from './log'
 
@@ -92,19 +92,36 @@ export function isRelease() {
   return accountInfo.miniProgram.envVersion === 'release'
 }
 
+const info = wx.getAccountInfoSync()
+
+/**
+ * 重置当前小程序的运行环境设置
+ */
+export function resetCurrentEnv() {
+  const { envVersion } = info.miniProgram
+
+  const envStr = envMap[envVersion]
+
+  setCurrentEnv(envStr)
+}
+
 /**
  * 根据小程序当前运行环境设置不同的env配置
  * 开发版、体验版使用dev配置
  * 正式版使用prod配置
  */
 export function setCurrentEnv(env?: ENV_TYPE) {
-  const info = wx.getAccountInfoSync()
   const { envVersion } = info.miniProgram
   const storageKey = `${envVersion}_env`
   let envStr = env ?? (storage.get(storageKey) as ENV_TYPE)
 
   if (!envStr) {
     envStr = envMap[envVersion]
+  }
+
+  // 设置局域网云服务地址
+  if (envStr === 'Lan') {
+    mzaioDomain.Lan = storage.get('mzaioDomainLan') as string
   }
 
   storage.set(storageKey, envStr)

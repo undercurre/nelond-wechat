@@ -28,7 +28,7 @@
         "space-new/index",
         "member-manage/index",
         "device-replace/index",
-        "ota/index",
+        "pages/ota/index",
         "device-manage/index",
         "device-manage/device-detail/index",
         "device-manage/group-detail/index",
@@ -36,7 +36,9 @@
         "device-category/index",
         "help/list/index",
         "help/show/index",
-        "help/webview/index"
+        "help/webview/index",
+        "pages/subDeviceList/index",
+        "pages/ota-gateway/index"
       ]
     },
     {
@@ -44,8 +46,8 @@
       "pages": ["index/index", "space-list/index", "scene-list/index", "group/index"]
     },
     {
-      "root": "package-protocol",
-      "pages": ["protocol-show/index", "protocol-list/index"]
+      "root": "package-about",
+      "pages": ["pages/protocol-show/index", "pages/index/index", "pages/engineering-mode/index"]
     },
     {
       "root": "package-automation",
@@ -58,17 +60,25 @@
     },
     {
       "root": "package-debug",
-      "pages": ["pages/index/index", "pages/homos-debug/index", "pages/ble-test/index"]
+      "pages": ["pages/index/index", "pages/ble-test/index"]
     }
   ],
   "preloadRule": {
     "pages/index/index": {
       "network": "all",
-      "packages": ["package-space-control", "package-distribution", "package-mine", "package-automation"]
+      "packages": ["package-space-control", "package-distribution"]
     },
-    "package-distribution/pages/choose-device/index": {
+    "pages/mine/index": {
       "network": "all",
-      "packages": []
+      "packages": ["package-mine"]
+    },
+    "pages/automation/index": {
+      "network": "all",
+      "packages": ["package-automation"]
+    },
+    "package-about/pages/engineering-mode/index": {
+      "network": "all",
+      "packages": ["package-space-control", "package-distribution", "package-mine", "package-automation"]
     }
   },
   "tabBar": {

@@ -7,3 +7,12 @@
   height: 72rpx !important;
   margin-right: 28rpx !important;
 }
+
+.shortTitle {
+  white-space: nowrap;
+}
+
+.longValue {
+  white-space: nowrap;
+  flex: 2 !important;
+}

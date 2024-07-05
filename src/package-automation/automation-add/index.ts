@@ -1,10 +1,10 @@
 import Dialog from '@vant/weapp/dialog/dialog'
 import Toast from '@vant/weapp/toast/toast'
-import { deleteScene, addScene, updateScene } from '../../apis/index'
+import { deleteScene, addScene, updateScene, findDevice, sendDevice, execScene } from '../../apis/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { deviceStore, sceneStore, projectStore, autosceneStore, spaceStore } from '../../store/index'
-import { PRO_TYPE, SENSOR_TYPE, getModelName, sceneImgDir } from '../../config/index'
+import { PRO_TYPE, PRODUCT_ID, getModelName, sceneImgDir } from '../../config/index'
 import {
   toPropertyDesc,
   storage,
@@ -26,7 +26,7 @@ ComponentWithComputed({
    */
   data: {
     dialogConfirmBtnColor: '#27282A',
-    sceneImgDir,
+    sceneImgDir: sceneImgDir(),
     opearationType: 'yijian', // yijian是一键场景，auto是自动化场景
     conditionMultiple: '',
     spaceId: '', //选中的最后一级空间Id
@@ -128,6 +128,14 @@ ComponentWithComputed({
         )
       }
     },
+    showFindBtn(data) {
+      const { selectCardType, linkSelectList } = data
+      if (selectCardType !== 'device') return false
+      if (linkSelectList?.length !== 1) return false
+
+      const { proType } = deviceStore.allDeviceFlattenMap[linkSelectList[0]]
+      return proType === PRO_TYPE.light
+    },
     // cardType(data) {
     //   return data.selectCardType === 'device' || data.selectCardType === 'sensor' ? 'device' : 'scene'
     // },
@@ -226,11 +234,11 @@ ComponentWithComputed({
       ])
       const sensorList = deviceStore.allDeviceFlattenList.filter((item) => item.proType === PRO_TYPE.sensor)
       sensorList.forEach((item) => {
-        if (item.productId === SENSOR_TYPE.humanSensor) {
+        if (item.productId === PRODUCT_ID.humanSensor) {
           item.property = { occupancy: 1, modelName: 'irDetector' }
-        } else if (item.productId === SENSOR_TYPE.doorsensor) {
+        } else if (item.productId === PRODUCT_ID.doorSensor) {
           item.property = { doorStatus: 1, modelName: 'magnet' }
-        } else if (item.productId === SENSOR_TYPE.lightsensor) {
+        } else if (item.productId === PRODUCT_ID.lightSensor) {
           item.property = { illuminance: 0, illuminance_symbol: 'equalTo', modelName: 'lightsensor' }
         } else {
           item.property = { buttonClicked: 1, modelName: 'freepad' }
@@ -328,12 +336,13 @@ ComponentWithComputed({
             const scene = this.data.sceneList.find((item) => item.sceneId === action.deviceId)
             if (scene) {
               //是场景
+              const space = spaceStore.allSpaceList.find((item) => item.spaceId === scene.spaceId) as Space.allSpace
               tempSceneDeviceActionsFlatten.push({
                 uniId: scene.sceneId,
                 name: scene.sceneName,
                 type: 5,
-                desc: [scene.spaceName],
-                pic: `https://mzgd-oss-bucket.oss-cn-shenzhen.aliyuncs.com/homlux/auto-scene/${scene.sceneIcon}.png`,
+                desc: [spaceStore.getSpaceClearName(space)],
+                pic: `${this.data.sceneImgDir}/${scene.sceneIcon}.png`,
                 value: {},
                 orderNum: index,
                 dragId: scene.sceneId + Math.floor(Math.random() * 1001),
@@ -354,10 +363,16 @@ ComponentWithComputed({
               if (device.proType === PRO_TYPE.switch) {
                 //是开关面板
                 const power = action.controlAction[0].power
-                const desc = toPropertyDesc(device.proType, device.productId, action.controlAction[0])
+                const desc = toPropertyDesc(device, action.controlAction[0])
+                const { switchName } = device.switchInfoDTOList[0]
+                let { deviceName } = device
+                console.log('[ssss]', switchName, deviceName)
+                if (switchName.length + deviceName.length > 15) {
+                  deviceName = deviceName.slice(0, 12 - switchName.length) + '...' + deviceName.slice(-2)
+                }
                 tempSceneDeviceActionsFlatten.push({
                   uniId: device.uniId,
-                  name: `${device.switchInfoDTOList[0].switchName} | ${device.deviceName}`,
+                  name: `${switchName}|${deviceName}`,
                   type: device.deviceType as 1 | 2 | 3 | 4 | 5 | 6,
                   desc,
                   pic: device.switchInfoDTOList[0].pic,
@@ -377,7 +392,7 @@ ComponentWithComputed({
                   ...device.mzgdPropertyDTOList[modelName],
                   ...action.controlAction[0],
                 }
-                const desc = toPropertyDesc(device.proType, device.productId, property)
+                const desc = toPropertyDesc(device, property)
                 tempSceneDeviceActionsFlatten.push({
                   uniId: device.uniId,
                   name: device.deviceName,
@@ -452,11 +467,16 @@ ComponentWithComputed({
                 if (device) {
                   console.log('找到选项', device)
                   const power = action.controlAction[switchIndex].power
-                  const desc = toPropertyDesc(device.proType, device.productId, action.controlAction[switchIndex])
+                  const desc = toPropertyDesc(device, action.controlAction[switchIndex])
+                  const { switchName } = device.switchInfoDTOList[0]
+                  let { deviceName } = device
+                  if (switchName.length + deviceName.length > 15) {
+                    deviceName = deviceName.slice(0, 12 - switchName.length) + '...' + deviceName.slice(-2)
+                  }
                   tempSceneDevicelinkSelectList.push(device.uniId)
                   tempSceneDeviceActionsFlatten.push({
                     uniId: device.uniId,
-                    name: `${device.switchInfoDTOList[0].switchName} | ${device.deviceName}`,
+                    name: `${switchName}|${deviceName}`,
                     type: device.deviceType as 1 | 2 | 3 | 4 | 5 | 6,
                     desc,
                     pic: device.switchInfoDTOList[0].pic,
@@ -484,7 +504,7 @@ ComponentWithComputed({
               }
               console.log('propertyproperty', property)
 
-              const desc = toPropertyDesc(device.proType, device.productId, property)
+              const desc = toPropertyDesc(device, property)
               tempSceneDevicelinkSelectList.push(device.uniId)
               tempSceneDeviceActionsFlatten.push({
                 uniId: device.uniId,
@@ -924,12 +944,6 @@ ComponentWithComputed({
     async handleSelectCardSelect(e: { detail: string }) {
       console.log('选择设备', e.detail)
       const selectId = e.detail
-      if (this.data.selectCardType === 'device') {
-        // const allDeviceMap = deviceStore.allDeviceFlattenMap
-        // const device = allDeviceMap[e.detail]
-        // const modelName = 'light'
-        // findDevice({ gatewayId: device.gatewayId, devId: device.deviceId, modelName })
-      }
       const listType =
         this.data.selectCardType === 'sensor' ? 'tempSensorlinkSelectList' : 'tempSceneDevicelinkSelectedList'
       // 取消选择逻辑
@@ -974,15 +988,26 @@ ComponentWithComputed({
         showSelectCardPopup: false,
       })
     },
-    handleSelectCardReturn() {
-      this.setData({
-        showSelectCardPopup: false,
-      })
+    handleSelectCardReturn(e: { detail: string[] }) {
       if (this.data.selectCardType === 'sensor') {
         this.handleConditionShow()
-      } else {
-        this.handleActionShow()
       }
+      // 设备找一找
+      else if (this.data.selectCardType === 'device') {
+        console.log('handleSelectCardReturn', e)
+        const allDeviceMap = deviceStore.allDeviceFlattenMap
+        const device = allDeviceMap[e.detail[0]]
+        const modelName = 'light'
+        findDevice({ gatewayId: device.gatewayId, devId: device.deviceId, modelName })
+      } else {
+        this.setData({
+          showSelectCardPopup: false,
+        })
+      }
+      // 是否还有其他情况？
+      // else {
+      //   this.handleActionShow()
+      // }
     },
     // 设备选择确认
     async handleSelectCardConfirm() {
@@ -1078,11 +1103,19 @@ ComponentWithComputed({
         if (device) {
           //是设备
           console.log('是设备', device)
+          let { deviceName } = device
+          let name = deviceName
           const isSwitch = device.proType === PRO_TYPE.switch
-          const name = isSwitch ? `${device.switchInfoDTOList[0].switchName} | ${device.deviceName}` : device.deviceName
+          if (isSwitch) {
+            const { switchName } = device.switchInfoDTOList[0]
+            if (switchName.length + deviceName.length > 15) {
+              deviceName = deviceName.slice(0, 12 - switchName.length) + '...' + deviceName.slice(-2)
+            }
+            name = `${switchName}|${deviceName}`
+          }
           const modelName = isSwitch ? device.uniId.split(':')[1] : getModelName(device.proType, device.productId)
           const pic = isSwitch ? device.switchInfoDTOList[0].pic : device.pic
-          const desc = toPropertyDesc(device.proType, device.productId, device.property!)
+          const desc = toPropertyDesc(device, device.property!)
 
           tempSceneDeviceActionsFlatten.push({
             uniId: device.uniId,
@@ -1101,6 +1134,7 @@ ComponentWithComputed({
           })
         } else {
           const scene = this.data.sceneList.find((item) => item.sceneId === id)
+          const space = spaceStore.allSpaceList.find((item) => item.spaceId === scene?.spaceId) as Space.allSpace
           if (scene) {
             //是场景
             console.log('是场景', scene)
@@ -1108,8 +1142,8 @@ ComponentWithComputed({
               uniId: scene.sceneId,
               name: scene.sceneName,
               type: 5,
-              desc: [scene.spaceName],
-              pic: `https://mzgd-oss-bucket.oss-cn-shenzhen.aliyuncs.com/homlux/auto-scene/${scene.sceneIcon}.png`,
+              desc: [spaceStore.getSpaceClearName(space)],
+              pic: `${this.data.sceneImgDir}/${scene.sceneIcon}.png`,
               value: {},
               orderNum: 0,
               dragId: scene.sceneId + Math.floor(Math.random() * 1001),
@@ -1141,20 +1175,24 @@ ComponentWithComputed({
       const diffSceneDeviceConditionsFlatten = [] as AutoScene.AutoSceneFlattenCondition[]
 
       if (this.data.spaceId !== '' && this.data.opearationType === 'yijian') {
-        const desc = this.cmptFullSpaceName()
-        if (!this.data.sceneDeviceConditionsFlatten.map((item) => item.uniId).includes('room')) {
-          diffSceneDeviceConditionsFlatten.push({
-            uniId: 'room',
-            name: '手动点击场景',
-            desc: [desc],
-            pic: '/package-automation/assets/imgs/automation/touch-materialized.png',
-            productId: 'touch',
-            property: {},
-            type: 5,
-          })
+        const space = spaceStore.allSpaceList.find((item) => item.spaceId === this.data.spaceId) as Space.allSpace
+        const curSceneInfo: AutoScene.AutoSceneFlattenCondition = {
+          uniId: 'room',
+          name: '手动点击场景',
+          desc: [spaceStore.getSpaceClearName(space)],
+          pic: '/package-automation/assets/imgs/automation/touch-materialized.png',
+          productId: 'touch',
+          property: {},
+          type: 5,
+        }
+        const roomConditionIndex = this.data.sceneDeviceConditionsFlatten.findIndex((item) => item.uniId === 'room')
+        if (roomConditionIndex !== -1) {
+          this.data.sceneDeviceConditionsFlatten[roomConditionIndex] = curSceneInfo
+        } else {
+          this.data.sceneDeviceConditionsFlatten.push(curSceneInfo)
         }
         this.setData({
-          sceneDeviceConditionsFlatten: this.data.sceneDeviceConditionsFlatten.concat(diffSceneDeviceConditionsFlatten),
+          sceneDeviceConditionsFlatten: [...this.data.sceneDeviceConditionsFlatten],
         })
         return
       }
@@ -1249,7 +1287,7 @@ ComponentWithComputed({
         diffSceneDeviceConditionsFlatten.push({
           uniId: item.uniId,
           name: item.device.deviceName,
-          desc: toPropertyDesc(item.device.proType, item.device.productId, item.device.property!),
+          desc: toPropertyDesc(item.device, item.device.property!),
           pic: item.device.pic,
           productId: item.device.productId,
           property: item.device.property!,
@@ -1325,7 +1363,7 @@ ComponentWithComputed({
       conditionItem.property = {
         ...e.detail,
       }
-      conditionItem.desc = toPropertyDesc(conditionItem.proType!, conditionItem.productId, conditionItem.property)
+      conditionItem.desc = toPropertyDesc(listItem, conditionItem.property)
       listItem.property = {
         ...e.detail,
       }
@@ -1446,7 +1484,8 @@ ComponentWithComputed({
         delete oldProperty.maxColorTemp
 
         if (oldProperty.proType === PRO_TYPE.curtain) {
-          oldProperty = { curtain_position: oldProperty.curtain_position }
+          const posAttrName = device.deviceType === 2 ? 'level' : 'curtain_position'
+          oldProperty = { [posAttrName]: oldProperty[posAttrName] }
         }
 
         _cacheDeviceMap[actionItem.uniId] = {
@@ -1468,7 +1507,9 @@ ComponentWithComputed({
         ...e.detail,
       }
 
-      actionItem.desc = toPropertyDesc(actionItem.proType as string, actionItem.productId as string, actionItem.value)
+      actionItem.desc = toPropertyDesc(listItem, actionItem.value)
+
+      console.log('actionItem', actionItem)
 
       this.setData(
         {
@@ -1776,7 +1817,7 @@ ComponentWithComputed({
               const ctrlAction = {} as IAnyObject
 
               if (device.deviceType === 2) {
-                ctrlAction.modelName = device.proType === PRO_TYPE.light ? 'light' : 'wallSwitch1'
+                ctrlAction.modelName = getModelName(device.proType)
               }
 
               if (device.proType === PRO_TYPE.light) {
@@ -1791,7 +1832,8 @@ ComponentWithComputed({
                 //   ctrlAction = toWifiProperty(device.proType, ctrlAction)
                 // }
               } else if (device.proType === PRO_TYPE.curtain) {
-                ctrlAction.curtain_position = property.curtain_position
+                const posAttrName = device.deviceType === 2 ? 'level' : 'curtain_position'
+                ctrlAction[posAttrName] = property[posAttrName]
               } else if (device.proType === PRO_TYPE.bathHeat) {
                 ctrlAction.light_mode = property.light_mode
                 ctrlAction.heating_temperature = property.heating_temperature
@@ -2106,24 +2148,50 @@ ComponentWithComputed({
         drag.init()
       }
     },
-    /* 执行结果拖拽相关方法 end */
-    cmptFullSpaceName() {
-      const [firstSpace, secondSpace, thirdSpace, fourthSpace] = this.data.selectedSpaceInfo
 
-      let desc = ''
-      if (firstSpace) {
-        desc += firstSpace.spaceName
-        if (secondSpace) {
-          desc += `，${secondSpace.spaceName}`
-          if (thirdSpace) {
-            desc += `，${thirdSpace.spaceName}`
-            if (fourthSpace) {
-              desc += `，${fourthSpace.spaceName}`
-            }
+    // 试一试
+    haveATry() {
+      let flag = true // forEach中await不会堵塞控制，设置专门的标识
+
+      this.data.sceneDeviceActionsFlatten?.forEach(async (d) => {
+        // 设备
+        if (d.proType) {
+          const deviceId = d.uniId.split(':')[0]
+          const device = deviceStore.allDeviceFlattenMap[d.uniId]
+          const property = JSON.parse(JSON.stringify(d.value))
+
+          // 去掉多余的属性
+          delete property.OnOff
+          delete property.colorTempRange
+          if (device.proType === PRO_TYPE.curtain) {
+            delete property.power
+          }
+
+          const res = await sendDevice({
+            deviceId,
+            gatewayId: device.gatewayId,
+            deviceType: device.deviceType,
+            proType: d.proType ?? '',
+            modelName: d.value.modelName,
+            property,
+          })
+
+          if (!res.success) {
+            flag = false
           }
         }
+        // 场景
+        else {
+          const res = await execScene(d.uniId)
+          if (!res.success) {
+            flag = false
+          }
+        }
+      })
+
+      if (!flag) {
+        Toast(this.data.sceneDeviceActionsFlatten.length > 1 ? '部分项目控制失败' : '控制失败')
       }
-      return desc
     },
   },
 })

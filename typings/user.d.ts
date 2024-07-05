@@ -8,6 +8,7 @@ declare namespace User {
     Creator = 1, // 代理商管理员
     Admin = 2, // 项目管理员
     Visitor = 3, // 项目使用者
+    ProjectSuperAdmin = 4, // 项目超级管理员
   }
 
   interface RoleItem {

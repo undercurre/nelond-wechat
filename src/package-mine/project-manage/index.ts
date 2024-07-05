@@ -52,7 +52,7 @@ ComponentWithComputed({
       query.select('#homeName').boundingClientRect((res) => {
         this.setData({
           selectHomeMenu: {
-            x: `${res.left + 10}px`,
+            x: `${res.left}px`,
             y: `${res.bottom + 10}px`,
             isShow: !this.data.selectHomeMenu.isShow,
           },

@@ -154,7 +154,7 @@ ComponentWithComputed({
       this.triggerEvent('confirm')
     },
     handleCancel() {
-      this.triggerEvent('cancel')
+      this.triggerEvent('cancel', this.data.selectList)
     },
     handleRoomSelect(e: { detail: Space.allSpace[] }) {
       if (!e.detail?.length) {

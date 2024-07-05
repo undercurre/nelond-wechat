@@ -12,9 +12,9 @@ import {
 } from '../../../store/index'
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { waitingDeleteDevice, editDeviceInfo, queryDeviceInfoByDeviceId, sendDevice } from '../../../apis/index'
-import { proName, PRO_TYPE, SCREEN_PID, SENSOR_TYPE } from '../../../config/index'
+import { proName, PRO_TYPE, SCREEN_PID, PRODUCT_ID } from '../../../config/index'
 import Dialog from '@vant/weapp/dialog/dialog'
-import { emitter } from '../../../utils/index'
+import { emitter, strUtil } from '../../../utils/index'
 
 ComponentWithComputed({
   behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding, projectBinding, userBinding] }), pageBehavior],
@@ -64,7 +64,8 @@ ComponentWithComputed({
       if (data.deviceInfo.gatewayId) {
         const gateway = deviceStore.allDeviceList.find((device) => device.deviceId === data.deviceInfo.gatewayId)
         if (gateway) {
-          return `${gateway.deviceName} | ${gateway.spaceName}`
+          const gatewaySpaceName = spaceStore.getSpaceClearNameById(gateway.spaceId)
+          return gatewaySpaceName ? `${gateway.deviceName} | ${gatewaySpaceName}` : gateway.deviceName
         }
         return ''
       }
@@ -87,7 +88,7 @@ ComponentWithComputed({
       return data.deviceInfo.proType === PRO_TYPE.switch || SCREEN_PID.includes(data.deviceInfo.productId)
     },
     isLightSensor(data) {
-      return SENSOR_TYPE['lightsensor'] === data.deviceInfo.productId
+      return PRODUCT_ID.lightSensor === data.deviceInfo.productId
     },
     laundryHeight(data) {
       if (data.deviceInfo.proType === PRO_TYPE.clothesDryingRack) {
@@ -98,9 +99,9 @@ ComponentWithComputed({
     },
     spaceName(data) {
       const { spaceId } = data
-      const { allSpaceList, getSpaceFullName } = spaceStore
-      const currentSpace = allSpaceList.find((item) => item.spaceId === spaceId)
-      return currentSpace ? getSpaceFullName(currentSpace) : ''
+      if (!spaceId) return ''
+      const currentSpace = spaceBinding.store.allSpaceList.find((item) => item.spaceId === spaceId)
+      return currentSpace ? spaceBinding.store.getSpaceClearName(currentSpace) : ''
     },
   },
 
@@ -210,7 +211,7 @@ ComponentWithComputed({
     handleToOTA() {
       if (!this.data.canEditDevice) return
       wx.navigateTo({
-        url: '/package-mine/ota/index?fromDevice=1',
+        url: '/package-mine/pages/ota/index?fromDevice=1',
       })
     },
     handleDeviceDelete() {
@@ -277,6 +278,17 @@ ComponentWithComputed({
     clickMac() {
       wx.setClipboardData({
         data: this.data.mac,
+      })
+    },
+
+    /**
+     * 跳转子设备列表
+     */
+    toSubDeviceList() {
+      wx.navigateTo({
+        url: strUtil.getUrlWithParams('/package-mine/pages/subDeviceList/index', {
+          deviceId: this.data.deviceId,
+        }),
       })
     },
   },

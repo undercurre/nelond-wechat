@@ -30,7 +30,7 @@ Component({
    * 组件的初始数据
    */
   data: {
-    sceneImgDir,
+    sceneImgDir: sceneImgDir(),
     icon: '',
     // contentHeight: 0,
     autoSceneIconList,

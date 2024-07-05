@@ -184,14 +184,20 @@ export const deviceFlatten = function (originList: Device.DeviceItem[]) {
     }
   })
 
-  // 排序算法：灯组类型靠前；再按orderNum升序；再按设备id升序
+  // 排序算法：灯组类型靠前；orderNum为0时置末端；再按orderNum升序；再按入网时间createdTime升序
   return list.sort((a, b) => {
     if (a.deviceType === 4 && b.deviceType !== 4) {
       return -1
     } else if (a.deviceType !== 4 && b.deviceType === 4) {
       return 1
+    } else if (a.orderNum === 0 && b.orderNum !== 0) {
+      return 1
+    } else if (a.orderNum !== 0 && b.orderNum === 0) {
+      return -1
+    } else if (a.orderNum !== b.orderNum) {
+      return a.orderNum - b.orderNum
     } else {
-      return a.orderNum !== b.orderNum ? a.orderNum - b.orderNum : parseInt(a.deviceId) - parseInt(b.deviceId)
+      return a.createdTime?.localeCompare(b.createdTime)
     }
   })
 }

@@ -15,9 +15,9 @@ ComponentWithComputed({
    */
   data: {
     isLoaded: false,
-    defaultImgDir,
+    defaultImgDir: defaultImgDir(),
     spaceId: '0',
-    spaceName: spaceStore.currentSpaceNameFull ?? '全部',
+    spaceName: spaceStore.currentSpaceNameClear ?? '全部',
     listHeight: 0,
     roomSelectMenu: {
       x: '0px',
@@ -36,15 +36,16 @@ ComponentWithComputed({
         .filter(
           (d) => (d.proType === PRO_TYPE.switch && !SCREEN_PID.includes(d.productId)) || d.proType !== PRO_TYPE.switch,
         )
-      console.log(
-        'deviceListCompited data.spaceId',
-        data.spaceId,
-        rst.filter((d: Device.DeviceItem) => d.spaceId === data.spaceId),
-      )
+
       if (data.spaceId === '0') {
         return []
       } else {
-        return rst.filter((d: Device.DeviceItem) => d.spaceId === data.spaceId)
+        return rst
+          .filter((d: Device.DeviceItem) => d.spaceId === data.spaceId)
+          .map((d) => ({
+            ...d,
+            spaceClearName: data.spaceName,
+          }))
       }
     },
   },
@@ -288,7 +289,7 @@ ComponentWithComputed({
       const spaceInfo = e.detail[e.detail.length - 1]
       this.setData({
         spaceId: spaceInfo.spaceId,
-        spaceName: spaceStore.getSpaceFullName(spaceInfo),
+        spaceName: spaceStore.getSpaceClearName(spaceInfo),
       })
     },
     handleSpaceSelect() {

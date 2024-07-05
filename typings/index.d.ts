@@ -11,9 +11,9 @@ type IAnyObject = WechatMiniprogram.IAnyObject
 
 type AnyResType = string | IAnyObject | ArrayBuffer
 
-type ENV_TYPE = 'dev' | 'sit' | 'prod'
+type ENV_TYPE = 'dev' | 'sit' | 'prod' | 'Lan'
 
-type ConfigWithEnv<T> = Record<ENV_TYPE, T>
+type ConfigWithEnv<T> = string1
 
 /**
  * 声名 Behaviors 方法类型
@@ -34,3 +34,5 @@ declare namespace WechatMiniprogram.Component {
 type ValueOf<T> = T[keyof T]
 
 declare module 'weapp-qrcode-canvas-2d'
+
+declare module '@midea/reg-awsome'

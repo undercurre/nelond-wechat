@@ -1,0 +1,17 @@
+<view class="h-100vh bg-hex-eef2f7">
+  <nav-bar
+    title="工程模式"
+    left-arrow
+    bind:leftTap="goBack"
+  ></nav-bar>
+
+  <view class="h-24rpx"></view>
+
+  <van-cell-group inset>
+    <lan-switch-cell></lan-switch-cell>
+  </van-cell-group>
+</view>
+
+<van-toast id="van-toast" />
+
+<van-dialog id="van-dialog" />

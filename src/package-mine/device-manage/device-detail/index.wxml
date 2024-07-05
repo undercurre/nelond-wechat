@@ -31,12 +31,16 @@
             bind:click="handleDeviceNameEditPopup"
             title="设备名称"
             value="{{deviceName}}"
+            value-class="longValue"
+            title-class="shortTitle"
           ></van-cell>
           <van-cell
             is-link="{{canEditDevice}}"
             bind:click="handleDeviceRoomEditPopup"
             title="所在空间"
             value="{{spaceName}}"
+            value-class="longValue"
+            title-class="shortTitle"
           ></van-cell>
           <van-cell
             wx:if="{{isSubDevice}}"
@@ -64,6 +68,14 @@
               </view>
             </view>
           </van-cell>
+
+          <van-cell
+            wx:if="{{deviceInfo.deviceType === 1}}"
+            title="网关子设备"
+            border="{{true}}"
+            is-link
+            bind:click="toSubDeviceList"
+          ></van-cell>
 
           <van-cell
             wx:if="{{isSubDeviceOrGateway}}"

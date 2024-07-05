@@ -84,26 +84,28 @@ ComponentWithComputed({
     },
     /**
      * @description 当前选项是否可以移动空间
-     * 设备数量不能为0
+     * 设备数量不能为0，并少于 `MAX_MOVE_CARDS`
      * 设备均为子设备或WIFI设备或86网关
      * 设备均在线
      */
     canMoveRoom(data) {
-      const noScreen = data.editSelectList.every((uId: string) => {
-        const deviceId = uId.split(':')[0]
-        const device = deviceStore.deviceMap[deviceId]
-        return !SCREEN_PID.includes(device.productId)
-      })
+      const { hasScreen, selectedAmountInRange } = data
       return (
-        noScreen &&
-        data.editSelectList?.length &&
-        data.editSelectList?.length <= MAX_MOVE_CARDS &&
+        !hasScreen &&
+        selectedAmountInRange &&
         data.editSelectList.every((uId: string) => {
           const deviceId = uId.split(':')[0] // 不管有没有:
           const device = deviceStore.deviceMap[deviceId]
           return [1, 2, 3].includes(device.deviceType) && device.onLineStatus === 1
         })
       )
+    },
+    hasScreen(data) {
+      return data.editSelectList.every((uId: string) => {
+        const deviceId = uId.split(':')[0]
+        const device = deviceStore.deviceMap[deviceId]
+        return SCREEN_PID.includes(device.productId)
+      })
     },
     /**
      * @description 当前选项是否可以分组
@@ -129,13 +131,18 @@ ComponentWithComputed({
      * 非智慧屏开关
      */
     canDelete(data) {
-      const noScreenOrGateway = data.editSelectList.every((uId: string) => {
+      const { noScreenOrGateway, selectedAmountInRange } = data
+      return noScreenOrGateway && selectedAmountInRange
+    },
+    selectedAmountInRange(data) {
+      return data.editSelectList?.length && data.editSelectList?.length <= MAX_MOVE_CARDS
+    },
+    noScreenOrGateway(data) {
+      return data.editSelectList.every((uId: string) => {
         const deviceId = uId.split(':')[0]
         const device = deviceStore.deviceMap[deviceId]
         return !SCREEN_PID.includes(device.productId) && device.proType !== PRO_TYPE.gateway
       })
-
-      return noScreenOrGateway && data.editSelectList?.length && data.editSelectList?.length <= MAX_MOVE_CARDS
     },
     editDeviceNameTitle(data) {
       return data.editProType === PRO_TYPE.switch ? '面板名称' : '设备名称'
@@ -193,8 +200,12 @@ ComponentWithComputed({
     },
     // TODO 处理分组解散的交互提示
     handleDeleteDialog() {
-      if (!this.data.canDelete) {
-        Toast(`最多同时删除${MAX_MOVE_CARDS}个设备`)
+      if (!this.data.noScreenOrGateway) {
+        Toast('网关类设备需在设备管理中删除')
+        return
+      }
+      if (!this.data.selectedAmountInRange) {
+        Toast(`最多同时删除1~${MAX_MOVE_CARDS}个设备`)
         return
       }
       const hasSwitch = this.data.editSelectList.some((uniId: string) => uniId.includes(':'))
@@ -261,7 +272,25 @@ ComponentWithComputed({
     },
     handleMoveRoomPopup() {
       if (!this.data.canMoveRoom) {
-        Toast(`最多同时移动${MAX_MOVE_CARDS}个设备`)
+        if (!this.data.selectedAmountInRange) {
+          Toast(`最多同时移动1~${MAX_MOVE_CARDS}个设备`)
+          return
+        }
+        if (this.data.hasScreen) {
+          Toast(`智慧屏开关不能单独移动房间`)
+          return
+        }
+        if (
+          this.data.editSelectList.some((uId: string) => {
+            const deviceId = uId.split(':')[0] // 不管有没有:
+            const device = deviceStore.deviceMap[deviceId]
+            return device.onLineStatus !== 1
+          })
+        ) {
+          Toast('设备需在线')
+          return
+        }
+        Toast('灯组不能移动房间')
         return
       }
       const uniId = this.data.editSelectList[0]

@@ -1,0 +1,72 @@
+<van-cell
+  title="局域网模式"
+  center
+  label="{{ labelText }}"
+  border="{{false}}"
+>
+  <van-switch
+    slot="right-icon"
+    checked="{{ isLanOn }}"
+    bind:change="onChangeLanSwitch"
+  />
+</van-cell>
+
+<van-popup
+  round
+  show="{{ ishowPopup }}"
+  bind:close="onClosePopup"
+  position="bottom"
+  closeable
+>
+  <view class="pb-100rpx">
+    <text class="block pt-48rpx pb-64rpx text-center leading-50rpx text-36 text-black-2a font-medium">局域网模式</text>
+
+    <text class="block pl-48rpx pb-32rpx text-28">服务器IP：</text>
+
+    <view class="mx-32rpx">
+      <van-field
+        model:value="{{ lanIP }}"
+        placeholder="请输入"
+        custom-style="padding: 32rpx 32rpx;background-color: #F6FAFD;border-radius: 24rpx;"
+        clearable="{{true}}"
+        border="{{false}}"
+      >
+      </van-field>
+    </view>
+
+    <text class="block pl-48rpx pb-32rpx text-28">端口：</text>
+
+    <view class="mx-32rpx">
+      <van-field
+        model:value="{{ port }}"
+        placeholder="请输入"
+        custom-style="padding: 32rpx 32rpx;background-color: #F6FAFD;border-radius: 24rpx;"
+        clearable="{{true}}"
+        border="{{false}}"
+      >
+      </van-field>
+    </view>
+
+    <view class="flex flex-row gap-46rpx pt-80rpx px-32rpx">
+      <van-button
+        disabled="{{!lanIP || !port}}"
+        class="grow"
+        size="large"
+        type="primary"
+        bind:click="confirmOpenLan"
+        >开始切换</van-button
+      >
+    </view>
+  </view>
+</van-popup>
+
+<van-dialog id="van-dialog" />
+
+<camera
+  wx:show="{{false}}"
+  mode="scanCode"
+  device-position="back"
+  class="w-0 h-0"
+  bind:error="getCameraError"
+  bind:initdone="initCameraDone"
+></camera>

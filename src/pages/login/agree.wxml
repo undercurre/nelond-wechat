@@ -1,0 +1,39 @@
+<view class="mx-30rpx mt-140rpx mb-32rpx">
+  <van-checkbox
+    custom-class="items-start_el_"
+    use-icon-slot
+    class="text-24rpx"
+    value="{{ isAgree }}"
+    bind:change="onAgreeClick"
+  >
+    <text class="text-24rpx">
+      <text>我已阅读并同意</text>
+      <text
+        class="link"
+        data-value="privacyPolicy"
+        catchtap="toPage"
+        >《美的商照隐私协议》</text
+      ><text
+        class="link"
+        data-value="userService"
+        catchtap="toPage"
+        >《软件许可及用户服务协议》</text
+      ><text
+        class="link"
+        data-value="userInfoList"
+        catchtap="toPage"
+        >《已收集个人信息清单》</text
+      >和<text
+        class="link"
+        data-value="authList"
+        catchtap="toPage"
+        >《美的商照权限列表》</text
+      >
+    </text>
+    <image
+      class="h-36 w-36"
+      slot="icon"
+      src="{{ isAgree ? checkImg : uncheckImg }}"
+    />
+  </van-checkbox>
+</view>

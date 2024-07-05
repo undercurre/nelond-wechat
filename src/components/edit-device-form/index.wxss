@@ -19,3 +19,13 @@
   border-radius: 32rpx;
   background-color: #f6fafd !important;
 }
+
+.shortTitle {
+  white-space: nowrap;
+}
+
+.longValue {
+  flex: 2 !important;
+  white-space: normal !important;
+  word-break: break-all;
+}

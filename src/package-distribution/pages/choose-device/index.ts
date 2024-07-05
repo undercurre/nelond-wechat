@@ -1,7 +1,8 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import pageBehaviors from '../../../behaviors/pageBehaviors'
 import cacheData from '../../common/cacheData'
-import { productImgDir } from '../../../config/index'
+import { productImgDir, CURTAIN_PID } from '../../../config/index'
+// import { strUtil } from '../../../utils/index'
 
 ComponentWithComputed({
   options: {},
@@ -17,24 +18,29 @@ ComponentWithComputed({
   data: {
     deviceList: [
       {
-        icon: `${productImgDir}/gateway.png`,
+        icon: `${productImgDir()}/0x16.png`,
         name: '智能网关',
         path: '/package-distribution/pages/scan/index?scanType=gateway',
       },
       {
-        icon: `${productImgDir}/subdevice.png`,
+        icon: `${productImgDir()}/subdevice.png`,
         name: '开关/灯具',
         path: '/package-distribution/pages/choose-model/index?proType=0x13',
       },
       // {
-      //   icon: `${productImgDir}/screen.png`,
+      //   icon: `${productImgDir()}/screen.png`,
       //   name: '边缘服务器',
       //   path: '/package-distribution/pages/scan/index?scanType=screen',
       // },
       {
-        icon: `${productImgDir}/sensor.png`,
+        icon: `${productImgDir()}/sensor.png`,
         name: '传感器',
         path: '/package-distribution/pages/choose-model/index?proType=0xBC',
+      },
+      {
+        icon: `${productImgDir()}/0x14.png`,
+        name: '窗帘',
+        path: `/package-distribution/pages/connect-guide/index?proType=0x14&modelId=${CURTAIN_PID.join(',')}`,
       },
     ],
   },

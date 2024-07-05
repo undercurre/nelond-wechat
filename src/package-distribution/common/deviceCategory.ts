@@ -1,44 +1,57 @@
-import { ossDomain, productImgDir } from '../../config/index'
+import { guideDir, productImgDir, CURTAIN_PID } from '../../config/index'
 
 export default {
   '0x13': {
     name: '开关/灯具',
     modelList: [
       {
-        icon: `${productImgDir}/downlight.png`,
+        icon: `${productImgDir()}/downlight.png`,
         name: '筒射灯',
         tag: 'zigbee',
         path: '/package-distribution/pages/scan/index?scanType=subdevice',
       },
       {
-        icon: `${productImgDir}/mining-lamp.png`,
+        icon: `${productImgDir()}/mining-lamp.png`,
         name: '工矿灯',
         tag: 'zigbee',
         path: '/package-distribution/pages/scan/index?scanType=subdevice',
       },
       {
-        icon: `${productImgDir}/magnetic-track-light.png`,
+        icon: `${productImgDir()}/magnetic-track-light.png`,
         name: '磁吸灯',
         tag: 'zigbee',
         path: '/package-distribution/pages/scan/index?scanType=subdevice',
       },
       {
-        icon: `${productImgDir}/tape-light.png`,
+        icon: `${productImgDir()}/tape-light.png`,
         name: 'CW灯带',
         tag: 'zigbee',
         path: '/package-distribution/pages/scan/index?scanType=subdevice',
       },
       {
-        icon: `${productImgDir}/light-line.png`,
+        icon: `${productImgDir()}/light-line.png`,
         name: '线条灯',
         tag: 'zigbee',
         path: '/package-distribution/pages/scan/index?scanType=subdevice',
       },
       {
-        icon: `${productImgDir}/switch.png`,
+        icon: `${productImgDir()}/switch.png`,
         name: '智能开关',
         tag: 'zigbee',
         path: '/package-distribution/pages/scan/index?scanType=subdevice',
+      },
+    ],
+  },
+  '0x14': {
+    name: '传感器',
+    modelList: [
+      {
+        guideImg: `${guideDir()}/0x14_zigbee.gif`,
+        guideDesc: '1、将智能窗帘插上电源\n2、快速点按「SET-2」键4次，再长按「SET-2」键1次，直至指示灯闪烁',
+        productId: CURTAIN_PID.join(','),
+        icon: `${productImgDir}/0x14.png`,
+        name: '窗帘',
+        path: `/package-distribution/pages/connect-guide/index?proType=0x14&modelId=${CURTAIN_PID.join(',')}`,
       },
     ],
   },
@@ -46,31 +59,31 @@ export default {
     name: '传感器',
     modelList: [
       {
-        icon: `${productImgDir}/sensor-body.png`,
-        guideImg: `${ossDomain}/homlux/sensor_body.gif`,
+        icon: `${productImgDir()}/sensor-body.png`,
+        guideImg: `${guideDir()}/sensor_body.gif`,
         name: '人体传感器',
         guideDesc: '1、确认传感器电池已安装好\n2、长按球体顶部「配网按键」5秒以上，至指示灯开始闪烁（1秒/次）',
         path: `/package-distribution/pages/connect-guide/index?proType=0xBC&modelId=midea.ir.201`,
         productId: 'midea.ir.201',
       },
       {
-        icon: `${productImgDir}/sensor-door.png`,
-        guideImg: `${ossDomain}/homlux/sensor_door.gif`,
+        icon: `${productImgDir()}/sensor-door.png`,
+        guideImg: `${guideDir()}/sensor_door.gif`,
         name: '门磁传感器',
         guideDesc: '1、确认传感器电池已安装好\n2、长按顶部「配网按键」5秒以上，至指示灯开始闪烁（1秒/次）',
         path: `/package-distribution/pages/connect-guide/index?proType=0xBC&modelId=midea.magnet.001.201`,
         productId: 'midea.magnet.001.201',
       },
       {
-        icon: `${productImgDir}/sensor-switch.png`,
-        guideImg: `${ossDomain}/homlux/sensor_switch.gif`,
+        icon: `${productImgDir()}/sensor-switch.png`,
+        guideImg: `${guideDir()}/sensor_switch.gif`,
         name: '无线开关',
         guideDesc: '1、确认传感器电池已安装好\n2、点击「开关键」，随后立刻长按5秒以上，至指示灯开始闪烁（1秒/次）',
         path: `/package-distribution/pages/connect-guide/index?proType=0xBC&modelId=midea.freepad.001.201`,
         productId: 'midea.freepad.001.201',
       },
       {
-        icon: `${productImgDir}/sensor-lumen.png`,
+        icon: `${productImgDir()}/sensor-lumen.png`,
         name: '照度传感器',
         // tag: 'zigbee',
         path: '/package-distribution/pages/scan/index?scanType=subdevice',
