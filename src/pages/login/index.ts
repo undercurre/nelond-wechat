@@ -149,6 +149,17 @@ ComponentWithComputed({
           }
         }
 
+        if (isNative()) {
+          // IOS，获取 wifi 信息必须要用户授权 location 权限。暂时通过getLocation接口触发获取位置权限逻辑
+          const locationRes = await wx
+            .getLocation({
+              type: 'wgs84',
+            })
+            .catch((err) => err)
+
+          Logger.log('locationRes', locationRes)
+        }
+
         const res = this.data.isManualLogin
           ? await loginByMz({ mobilePhone: this.data.mobilePhone, password: this.data.pw })
           : await login(data)
