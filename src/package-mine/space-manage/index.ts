@@ -99,10 +99,10 @@ ComponentWithComputed({
       const { plevel } = data
       return plevel === SpaceLevel.area ? '当前为末级空间' : '尚未添加空间'
     },
-    // 显示编辑按钮：管理角色；或者子空间数大于1，即拥有除公共空间外的节点
+    // 显示编辑按钮：管理角色
     showEditBtn(data) {
-      const { isManager, sList } = data
-      return isManager && sList?.length > 1
+      const { isManager } = data
+      return isManager
     },
   },
 

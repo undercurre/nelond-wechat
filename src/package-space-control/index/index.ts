@@ -266,6 +266,8 @@ ComponentWithComputed({
 
           this.updateQueue(device)
 
+          this.refreshLightStatusThrottle()
+
           return
         }
         // 节流更新本地数据
@@ -293,6 +295,8 @@ ComponentWithComputed({
 
     // 响应控制弹窗中单灯/灯组的控制变化，直接按本地设备列表数值以及设置值，刷新空间灯的状态
     refreshLightStatus() {
+      if (!this.data.spaceHasLight) return
+
       let sumOfBrightness = 0,
         sumOfColorTemp = 0,
         count = 0,
@@ -330,6 +334,11 @@ ComponentWithComputed({
         'spaceLight.colorTemperature': colorTemperature,
       })
     },
+
+    // 节流更新空间灯信息
+    refreshLightStatusThrottle: throttle(function (this: IAnyObject) {
+      this.refreshLightStatus()
+    }, 2000),
 
     // 查询空间分组详情
     async queryGroupInfo() {

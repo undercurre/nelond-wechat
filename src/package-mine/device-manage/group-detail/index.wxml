@@ -26,6 +26,8 @@
         title="所在空间"
         value="{{spaceName}}"
         border="{{false}}"
+        value-class="longValue"
+        title-class="shortTitle"
       ></van-cell>
     </van-cell-group>
   </view>
