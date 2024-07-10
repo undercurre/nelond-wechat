@@ -300,18 +300,32 @@ ComponentWithComputed({
         spaceId: device.spaceId,
       })
     },
+    /**
+     * 自动生成灯组默认名称，后缀规则：
+     * 【后缀号】N=【已有灯组数】+1
+     * 当N=1时默认名称为【灯组】，N>1时；默认名称为【灯组N】
+     * 如果同空间灯组命名重复，N再+1
+     */
+    getNewGroupName() {
+      const lightGroup = deviceStore.deviceList.filter((d) => d.deviceType === 4)
+      let suffix = (lightGroup?.length ?? 0) + 1
+      while (lightGroup.some((d) => d.deviceName === `灯组${suffix}`)) {
+        suffix++
+      }
+      return suffix > 1 ? `灯组${suffix}` : ''
+    },
     handleCreateGroup() {
       if (!this.data.canGroup) {
+        Toast('请选择多个在线灯具')
         return
       }
       const lightList = this.data.editSelectList
-      const lightGroup = deviceStore.deviceList.filter((d) => d.deviceType === 4)
       wx.navigateTo({
         url: '/package-space-control/group/index',
         success: (res) => {
           res.eventChannel.emit('createGroup', {
             lightList,
-            groupName: lightGroup?.length ? `灯组${lightGroup.length + 1}` : '',
+            groupName: this.getNewGroupName(),
           })
         },
       })
