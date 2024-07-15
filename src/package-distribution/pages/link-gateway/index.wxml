@@ -129,6 +129,7 @@
       <text>2.请检查WIFI账号密码是否正确</text>
       <text>3.请确认路由器是否正常工作</text>
       <text>4.请确认手机网络是否正常</text>
+      <text>5.网关可能处于锁定状态，可在网关本地快按8下配网键后解锁</text>
     </view>
   </view>
 </van-dialog>
