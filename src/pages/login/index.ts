@@ -4,7 +4,7 @@ import { RegMobile } from '@midea/reg-awsome'
 import { login, getCaptcha, loginByMz } from '../../apis/index'
 import { projectStore, othersStore, userStore } from '../../store/index'
 import { storage, showLoading, hideLoading, Logger } from '../../utils/index'
-import { defaultImgDir, UNACTIVATED, CAPTCHA_VALID_TIME, getEnv } from '../../config/index'
+import { defaultImgDir, UNACTIVATED, CAPTCHA_VALID_TIME, isLan, isNative } from '../../config/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 
 ComponentWithComputed({
@@ -34,12 +34,16 @@ ComponentWithComputed({
     smsBtnText(data) {
       return data.validTime > 0 ? `${data.validTime}s` : '获取验证码'
     },
+    // 是否使用手动登录
+    isManualLogin(data) {
+      return data.isLan || isNative()
+    },
   },
 
   pageLifetimes: {
     show() {
       this.setData({
-        isLan: getEnv() === 'Lan',
+        isLan: isLan(),
       })
     },
   },
@@ -139,13 +143,24 @@ ComponentWithComputed({
      */
     async toLogin(data: { jsCode?: string; code?: string; captcha?: string }) {
       try {
-        if (this.data.isLan) {
+        if (this.data.isManualLogin) {
           if (!RegMobile.reg.test(this.data.mobilePhone)) {
             throw '请输入正确的手机号码'
           }
         }
 
-        const res = this.data.isLan
+        if (isNative()) {
+          // IOS，获取 wifi 信息必须要用户授权 location 权限。暂时通过getLocation接口触发获取位置权限逻辑
+          const locationRes = await wx
+            .getLocation({
+              type: 'wgs84',
+            })
+            .catch((err) => err)
+
+          Logger.log('locationRes', locationRes)
+        }
+
+        const res = this.data.isManualLogin
           ? await loginByMz({ mobilePhone: this.data.mobilePhone, password: this.data.pw })
           : await login(data)
         // 如果返回未激活状态，则自动调用获取验证码的接口

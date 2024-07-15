@@ -1,0 +1,118 @@
+{
+  "miniVersion": "v2",
+  "name": "美的商照",
+  "version": "0.0.2",
+  "i18nFilePath": "i18n",
+  "mini-android": {
+    "sdkVersion": "1.3.22",
+    "toolkitVersion": "0.10.0",
+    "useExtendedSdk": {
+      "media": false,
+      "bluetooth": true,
+      "network": true,
+      "scanner": true,
+      "xweb": false,
+      "xwebEmbed": true,
+      "open": false
+    },
+    "icons": {
+      "hdpi": "",
+      "xhdpi": "",
+      "xxhdpi": "dount/assets/logo-144.png",
+      "xxxhdpi": ""
+    },
+    "splashscreen": {
+      "hdpi": "",
+      "xhdpi": "",
+      "xxhdpi": "dount/assets/start-bg.png"
+    },
+    "enableVConsole": "open",
+    "privacy": {
+      "enable": true
+    },
+    "abi": {
+      "arm64-v8a": true,
+      "armeabi-v7a": true
+    },
+    "usePluginSdk": {
+      "map": "1.2.1"
+    },
+    "map": {
+      "qmapAPIKey": "L7HBZ-UZ6EU-7J5VU-BR54O-3ZDG5-6CFIC"
+    }
+  },
+  "mini-ios": {
+    "sdkVersion": "1.3.30",
+    "toolkitVersion": "0.0.9",
+    "useExtendedSdk": {
+      "WeAppOpenFuns": true,
+      "WeAppNetwork": true,
+      "WeAppBluetooth": true,
+      "WeAppMedia": false,
+      "WeAppLBS": true,
+      "WeAppOthers": true,
+      "WeAppIdaas": true,
+      "WeAppImage": true,
+      "WeAppCamera": true
+    },
+    "enableVConsole": "open",
+    "icons": {
+      "mainIcon120": "dount/assets/logo-120.png",
+      "mainIcon180": "",
+      "spotlightIcon80": "",
+      "spotlightIcon120": "",
+      "settingsIcon58": "",
+      "settingsIcon87": "",
+      "notificationIcon40": "",
+      "notificationIcon60": "",
+      "appStore1024": "dount/assets/logo-1024.png"
+    },
+    "splashScreen": {
+      "customImage": ""
+    },
+    "privacy": {
+      "enable": false
+    },
+    "enableOpenUrlNavigate": true,
+    "buildCloud": {
+      "useRemote": false
+    },
+    "enableDebugLog": true,
+    "gdt": {
+      "splashAd_defaultEnable": false
+    },
+    "privateDescriptions": {
+      "NSPhotoLibraryUsageDescription": "当前应用程序需要访问用户的相册，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSCameraUsageDescription": "当前应用程序需要访问用户的相机，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSMicrophoneUsageDescription": "当前应用程序需要访问用户的麦克风，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSLocationWhenInUseUsageDescription": "当前应用程序需要在使用时访问用户的位置，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSLocationAlwaysUsageDescription": "当前应用程序需要始终访问用户的位置，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSLocationAlwaysAndWhenInUseUsageDescription": "当前应用程序需要始终和在使用时访问用户的位置，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSContactsUsageDescription": "当前应用程序需要访问用户的联系人，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSCalendarsUsageDescription": "当前应用程序需要访问用户的日历，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSRemindersUsageDescription": "当前应用程序需要访问用户的提醒事项，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSHealthShareUsageDescription": "当前应用程序需要共享用户的健康数据，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSHealthUpdateUsageDescription": "当前应用程序需要更新用户的健康数据，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSBluetoothPeripheralUsageDescription": "当前应用程序需要访问用户的蓝牙，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSBluetoothAlwaysUsageDescription": "当前应用程序需要始终访问用户的蓝牙，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSMotionUsageDescription": "当前应用程序需要访问用户的运动与健身数据，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSHomeKitUsageDescription": "当前应用程序需要访问用户的HomeKit数据，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSSiriUsageDescription": "当前应用程序需要使用Siri，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSSpeechRecognitionUsageDescription": "当前应用程序需要使用语音识别，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSVideoSubscriberAccountUsageDescription": "当前应用程序需要访问用户的视频订阅账户，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSAppleMusicUsageDescription": "当前应用程序需要访问用户的Apple Music媒体库，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSFaceIDUsageDescription": "当前应用程序需要使用Face ID，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSNFCReaderUsageDescription": "当前应用程序需要使用NFC读取器，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSLocalNetworkUsageDescription": "当前应用程序需要访问本地网络，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NSSystemAdministrationUsageDescription": "当前应用程序需要进行系统管理操作，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可」",
+      "NFCReaderUsageDescription": "应用试图使用 NFC 读取器功能时被展示给用户，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可",
+      "NSHealthClinicalHealthRecordsShareUsageDescription": "应用程序访问和共享用户的临床健康记录，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可",
+      "NSPhotoLibraryAddUsageDescription": "应用程序在请求访问照片库，如需修改描述请前往「project.miniapp.json - 隐私信息访问许可描述」修改，并且关闭「自动使用默认描述补全默认隐私信息访问许可"
+    },
+    "splashscreen": {
+      "customImage": "dount/assets/start-bg.png"
+    },
+    "qmapAPIKey": "L7HBZ-UZ6EU-7J5VU-BR54O-3ZDG5-6CFIC"
+  },
+  "versionCode": 100
+}

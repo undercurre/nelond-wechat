@@ -37,6 +37,16 @@
     center
   />
 
+  <!-- #if NATIVE -->
+  <van-cell
+    title="工程模式"
+    is-link
+    center
+    link-type="navigateTo"
+    url="/package-about/pages/engineering-mode/index"
+  />
+  <!-- #endif -->
+
   <van-cell
     title="版本号"
     value="v{{version}}"

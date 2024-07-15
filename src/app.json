@@ -1,4 +1,16 @@
 {
+  "static": [
+    {
+      "pattern": "pages/donut/login/index.*",
+      "platforms": ["mini-ios", "mini-android"]
+    }
+  ],
+  "mini-ios": {
+    "pages": ["pages/index/index", "pages/login/index", "pages/automation/index", "pages/mine/index"]
+  },
+  "mini-android": {
+    "pages": ["pages/index/index", "pages/login/index", "pages/automation/index", "pages/mine/index"]
+  },
   "pages": ["pages/index/index", "pages/login/index", "pages/automation/index", "pages/mine/index"],
   "subpackages": [
     {
@@ -138,5 +150,8 @@
     "skyline": {
       "defaultDisplayBlock": true
     }
+  },
+  "miniApp": {
+    "useAuthorizePage": true
   }
 }

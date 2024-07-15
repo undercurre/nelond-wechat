@@ -1,5 +1,6 @@
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import meta from '../../../meta'
+import { isNative } from '../../../config/index'
 
 let debugTimeId = 0
 
@@ -47,10 +48,18 @@ Component({
         })
       }
       const info = wx.getAccountInfoSync()
+      let version = info.miniProgram.version
+
+      if (isNative()) {
+        const appInfo = wx.getAppBaseInfo()
+
+        // @ts-ignore
+        version = appInfo.host.appVersion
+      }
 
       this.setData({
         envVersion: info.miniProgram.envVersion,
-        version: info.miniProgram.version,
+        version: version,
       })
     },
   },

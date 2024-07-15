@@ -24,7 +24,7 @@
   >
 </view>
 
-<block wx:if="{{!isLan}}">
+<block wx:if="{{!isManualLogin}}">
   <view
     wx:if="{{needCaptcha}}"
     class="px-32rpx mt-50rpx mb-128rpx"
@@ -79,57 +79,56 @@
   </view>
 </block>
 
-<view
-  wx:else
-  class="grow px-32rpx pt-100rpx"
->
-  <van-field
-    model:value="{{ mobilePhone }}"
-    placeholder="请输入手机号"
-    type="number"
-    maxlength="11"
-    custom-style="margin-bottom: 32rpx;margin-top: 40rpx;padding: 32rpx 32rpx;border-radius: 24rpx;"
-    clearable="{{true}}"
-    border="{{false}}"
-  >
-  </van-field>
-
-  <van-field
-    model:value="{{ pw }}"
-    placeholder="请输入密码"
-    password="{{!isShowPw}}"
-    custom-style="padding: 24rpx 32rpx;border-radius: 24rpx;"
-    use-button-slot
-    border="{{false}}"
-    clearable
-  >
-    <van-button
-      slot="button"
-      bind:click="togglePw"
-      custom-style="border: 0;"
-      type="default"
-      plain
+<block wx:else>
+  <view class="grow px-32rpx pt-100rpx">
+    <van-field
+      model:value="{{ mobilePhone }}"
+      placeholder="请输入手机号"
+      type="number"
+      maxlength="11"
+      custom-style="margin-bottom: 32rpx;margin-top: 40rpx;padding: 32rpx 32rpx;border-radius: 24rpx;"
+      clearable="{{true}}"
+      border="{{false}}"
     >
-      <svg-icon
-        name="icon-park-outline:preview-{{!isShowPw ? 'close-one' : 'open'}}"
-        color="#555659"
-        height="56rpx"
-      ></svg-icon>
-    </van-button>
-  </van-field>
+    </van-field>
 
-  <include src="./agree.wxml" />
-
-  <view class="flex flex-col mt-32rpx">
-    <van-button
-      block
-      type="primary"
-      size="large"
-      bind:click="toLogin"
-      disabled="{{!isAgree || !mobilePhone || !pw}}"
-      >登录</van-button
+    <van-field
+      model:value="{{ pw }}"
+      placeholder="请输入密码"
+      password="{{!isShowPw}}"
+      custom-style="padding: 24rpx 32rpx;border-radius: 24rpx;"
+      use-button-slot
+      border="{{false}}"
+      clearable
     >
+      <van-button
+        slot="button"
+        bind:click="togglePw"
+        custom-style="border: 0;"
+        type="default"
+        plain
+      >
+        <svg-icon
+          name="icon-park-outline:preview-{{!isShowPw ? 'close-one' : 'open'}}"
+          color="#555659"
+          height="56rpx"
+        ></svg-icon>
+      </van-button>
+    </van-field>
+
+    <include src="./agree.wxml" />
+
+    <view class="flex flex-col mt-32rpx">
+      <van-button
+        block
+        type="primary"
+        size="large"
+        bind:click="toLogin"
+        disabled="{{!isAgree || !mobilePhone || !pw}}"
+        >登录</van-button
+      >
+    </view>
   </view>
-</view>
+</block>
 
 <van-toast id="van-toast" />
