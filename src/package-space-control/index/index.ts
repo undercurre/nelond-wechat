@@ -112,7 +112,7 @@ ComponentWithComputed({
     hasSpaceLightOn(data) {
       const { devicePageList } = data
       const flag = devicePageList.some((g) =>
-        g.some((d) => !!(d.proType === PRO_TYPE.light && d.mzgdPropertyDTOList['light'].power)),
+        g.some((d) => !!(d.proType === PRO_TYPE.light && d.onLineStatus === 1 && d.mzgdPropertyDTOList['light'].power)),
       )
       return flag
     },
