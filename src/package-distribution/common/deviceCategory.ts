@@ -1,4 +1,4 @@
-import { guideDir, productImgDir, CURTAIN_PID } from '../../config/index'
+import { guideDir, productImgDir, CURTAIN_PID, PRODUCT_ID } from '../../config/index'
 
 export default {
   '0x13': {
@@ -43,7 +43,7 @@ export default {
     ],
   },
   '0x14': {
-    name: '传感器',
+    name: '智能窗帘',
     modelList: [
       {
         guideImg: `${guideDir()}/0x14_zigbee.gif`,
@@ -55,6 +55,21 @@ export default {
       },
     ],
   },
+  '0x16': {
+    name: '智能网关',
+    modelList: [
+      {
+        icon: `${productImgDir()}/0x16.png`,
+        name: 'D3网关',
+        path: '/package-distribution/pages/scan/index?scanType=gateway',
+      },
+      {
+        icon: `${productImgDir()}/downlight.png`,
+        name: '边缘网关',
+        path: '/package-distribution/pages/scan/index?scanType=screen',
+      },
+    ],
+  },
   '0xBC': {
     name: '传感器',
     modelList: [
@@ -63,30 +78,38 @@ export default {
         guideImg: `${guideDir()}/sensor_body.gif`,
         name: '人体传感器',
         guideDesc: '1、确认传感器电池已安装好\n2、长按球体顶部「配网按键」5秒以上，至指示灯开始闪烁（1秒/次）',
-        path: `/package-distribution/pages/connect-guide/index?proType=0xBC&modelId=midea.ir.201`,
-        productId: 'midea.ir.201',
+        path: `/package-distribution/pages/connect-guide/index?proType=0xBC&modelId=${PRODUCT_ID.humanSensor}`,
+        productId: PRODUCT_ID.humanSensor,
       },
       {
         icon: `${productImgDir()}/sensor-door.png`,
         guideImg: `${guideDir()}/sensor_door.gif`,
         name: '门磁传感器',
         guideDesc: '1、确认传感器电池已安装好\n2、长按顶部「配网按键」5秒以上，至指示灯开始闪烁（1秒/次）',
-        path: `/package-distribution/pages/connect-guide/index?proType=0xBC&modelId=midea.magnet.001.201`,
-        productId: 'midea.magnet.001.201',
+        path: `/package-distribution/pages/connect-guide/index?proType=0xBC&modelId=${PRODUCT_ID.doorSensor}`,
+        productId: PRODUCT_ID.doorSensor,
       },
       {
         icon: `${productImgDir()}/sensor-switch.png`,
         guideImg: `${guideDir()}/sensor_switch.gif`,
         name: '无线开关',
         guideDesc: '1、确认传感器电池已安装好\n2、点击「开关键」，随后立刻长按5秒以上，至指示灯开始闪烁（1秒/次）',
-        path: `/package-distribution/pages/connect-guide/index?proType=0xBC&modelId=midea.freepad.001.201`,
-        productId: 'midea.freepad.001.201',
+        path: `/package-distribution/pages/connect-guide/index?proType=0xBC&modelId=${PRODUCT_ID.freePad}`,
+        productId: PRODUCT_ID.freePad,
       },
       {
         icon: `${productImgDir()}/sensor-lumen.png`,
         name: '照度传感器',
         // tag: 'zigbee',
         path: '/package-distribution/pages/scan/index?scanType=subdevice',
+      },
+      {
+        icon: `${productImgDir()}/sensor-body.png`,
+        guideImg: `${guideDir()}/sensor_body.gif`,
+        name: '人体存在传感器',
+        guideDesc: '长按球体顶部「配网按键」5秒以上，至指示灯开始闪烁（1秒/次）',
+        path: `/package-distribution/pages/connect-guide/index?proType=0xBC&modelId=${PRODUCT_ID.humanSensor_301}`,
+        productId: PRODUCT_ID.humanSensor_301,
       },
     ],
   },
