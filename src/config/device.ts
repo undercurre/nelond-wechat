@@ -58,7 +58,7 @@ export const PRODUCT_ID = {
   screen_4: 'zk527b6c944a454e9fb15d3cc1f4d55b', // 4寸屏
   screen_10: 'ok523b6c941a454e9fb15d3cc1f4d55b', // 10寸屏
   humanSensor: 'midea.ir.201', // 人体传感器
-  humanSensor_301: 'midea.ir.301', // 人体存在传感器，常供电
+  bodysensor: 'midea.bodysensor.003', // 人体存在传感器，常供电
   doorSensor: 'midea.magnet.001.201', // 门磁传感器
   freePad: 'midea.freepad.001.201', // 无线开关
   lightSensor: 'midea.hlightsensor.001.001', // 照度传感器
