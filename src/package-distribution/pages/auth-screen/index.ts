@@ -2,7 +2,7 @@ import Toast from '@vant/weapp/toast/toast'
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { bindDevice } from '../../../apis/index'
 import { projectBinding, spaceBinding, userStore } from '../../../store/index'
-import { getCurrentPageParams } from '../../../utils/index'
+import { getCurrentPageParams, goBackPage } from '../../../utils/index'
 import cacheData from '../../common/cacheData'
 
 Component({
@@ -46,9 +46,7 @@ Component({
         Toast({
           message: '绑定成功',
           onClose: () => {
-            wx.reLaunch({
-              url: cacheData.pageEntry,
-            })
+            goBackPage(cacheData.pageEntry)
           },
         })
       } else {

@@ -63,6 +63,22 @@ export function getCurrentPageParams() {
   return currentPage.options as IAnyObject
 }
 
+/**
+ * 找到到指定页面路径的最早栈历史位置，并返回,若找不到直接返回首页
+ * @param page 页面路径
+ */
+export function goBackPage(page: string) {
+  const pageList = getCurrentPages()
+  const index = pageList.findIndex((item) => page.includes(item.route))
+
+  console.debug('---rebackPage---', pageList, page, index)
+
+  // 寻找配网入口页面的栈历史位置，并返回
+  wx.navigateBack({
+    delta: pageList.length - index - 1,
+  })
+}
+
 let loadingNum = 0 // 正在等待loading的个数
 /**
  * 显示loading

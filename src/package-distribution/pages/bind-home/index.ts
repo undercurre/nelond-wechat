@@ -2,7 +2,7 @@ import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import Toast from '@vant/weapp/toast/toast'
 import pageBehaviors from '../../../behaviors/pageBehaviors'
-import { getCurrentPageParams, checkInputNameIllegal, Logger } from '../../../utils/index'
+import { getCurrentPageParams, checkInputNameIllegal, Logger, goBackPage } from '../../../utils/index'
 import { queryDeviceInfoByDeviceId, editDeviceInfo, batchUpdate } from '../../../apis/index'
 import { projectBinding, projectStore, spaceBinding, deviceStore, spaceStore } from '../../../store/index'
 import { PRO_TYPE, defaultImgDir } from '../../../config/index'
@@ -148,15 +148,7 @@ ComponentWithComputed({
 
         Logger.console('cacheData', cacheData)
 
-        if (cacheData.pageEntry) {
-          wx.reLaunch({
-            url: cacheData.pageEntry,
-          })
-        } else {
-          wx.navigateBack({
-            delta: 3,
-          })
-        }
+        goBackPage(cacheData.pageEntry)
       } else {
         Toast('保存失败')
       }

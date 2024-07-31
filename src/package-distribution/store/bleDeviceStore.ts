@@ -58,6 +58,7 @@ export const bleDevicesStore = observable({
 
           // 1、过滤【已经显示在列表的】
           // 2、设备配网状态没变化的同一设备不再查询，防止重复查询同一设备的云端信息接口
+          // 3、过滤已入去中心zigbee网络的子设备
           // 商照小程序
           return (
             baseInfo.isConfig !== '10' &&
@@ -256,6 +257,11 @@ async function checkBleDeviceList(list: IBleBaseInfo[]) {
 
   validDeviceList.forEach((item) => {
     const productInfo = productInfoMap[`${item.proType}${item.bluetoothPid}`]
+
+    if (!productInfo) {
+      console.warn(`${item.mac}产品品类${item.proType},${item.bluetoothPid}信息不存在`)
+      return
+    }
 
     handleBleDeviceInfo({
       ...item,
