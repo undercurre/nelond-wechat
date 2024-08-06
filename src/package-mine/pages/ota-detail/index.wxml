@@ -35,7 +35,7 @@
       enhanced
       show-scrollbar="{{false}}"
       scroll-y="{{true}}"
-      class="w-750rpx h-800rpx grow shrink"
+      class="w-750rpx h-400rpx grow shrink"
     >
       <van-cell-group
         wx:for="{{otaProductList}}"
@@ -89,44 +89,41 @@
   </block>
 
   <block wx:else>
-    <van-cell-group
-      class="w-100vw"
-      inset
-      wx:if="{{otaProductList.length === 1}}"
+    <view
+      class="w-full p-24rpx box-border"
+      v-if="{{otaProductList.lenght === 1}}"
     >
-      <van-cell>
-        <view class="flex flex-col items-center text-28rpx text-black-2a text-justify">
-          <view class="flex w-full items-center mb-32rpx">
-            <view class="flex-center flex flex-1">
-              <view class="w-96rpx h-96rpx bg-hex-f6fafd flex-center rounded-999">
-                <image
-                  src="{{otaProductList[0].icon}}"
-                  class="w-72rpx h-72rpx"
-                />
-              </view>
-              <view class="ml-32rpx flex flex-1 flex-col">
-                <text class="text-32rpx">{{otaProductList[0].productName}}</text>
-              </view>
+      <view class="flex flex-col items-center bg-white rounded-32rpx p-32rpx text-28rpx text-black-2a text-justify box-border">
+        <view class="flex w-full items-center mb-32rpx">
+          <view class="flex-center flex flex-1">
+            <view class="w-96rpx h-96rpx bg-hex-f6fafd flex-center rounded-999">
+              <image
+                src="{{otaProductList[0].icon}}"
+                class="w-72rpx h-72rpx"
+              />
             </view>
-          </view>
-          <view class="w-686rpx h-1rpx bg-hex-eef2f7"></view>
-          <view class="flex flex-col w-full">
-            <view class="mt-24rpx flex">
-              <text>最新版本：</text>
-              <view class="ml-30rpx">
-                <text>{{otaProductList[0].version}}</text>
-              </view>
-            </view>
-            <view class="mt-8rpx flex">
-              <text>升级内容：</text>
-              <text class="ml-30rpx shrink grow w-50vw whitespace-break-spaces">{{otaProductList[0].versionDesc}}</text>
+            <view class="ml-32rpx flex flex-1 flex-col">
+              <text class="text-32rpx">{{otaProductList[0].productName}}</text>
             </view>
           </view>
         </view>
-      </van-cell>
-    </van-cell-group>
+        <view class="w-full h-1rpx bg-hex-eef2f7"></view>
+        <view class="flex flex-col w-full">
+          <view class="mt-24rpx flex">
+            <text>最新版本：</text>
+            <view class="ml-30rpx">
+              <text>{{otaProductList[0].version}}</text>
+            </view>
+          </view>
+          <view class="mt-8rpx flex">
+            <text>升级内容：</text>
+            <text class="ml-30rpx shrink grow w-50vw whitespace-break-spaces">{{otaProductList[0].versionDesc}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
 
-    <view class="flex justify-between items-center w-686rpx h-56rpx mb-24rpx">
+    <view class="flex justify-between items-center w-686rpx h-56rpx pb-24rpx">
       <text class="text-28rpx text-black-59 ml-16rpx">可升级设备</text>
     </view>
 
@@ -134,7 +131,7 @@
       enhanced
       show-scrollbar="{{false}}"
       scroll-y="{{true}}"
-      class="w-750rpx h-800rpx grow shrink"
+      class="w-750rpx h-300rpx grow shrink"
     >
       <van-cell-group
         wx:for="{{otaUpdateList}}"
@@ -146,6 +143,7 @@
           title="{{item.deviceName}}"
           label="{{item.roomName}}"
           center
+          border="{{false}}"
         >
           <view
             slot="icon"
@@ -181,7 +179,7 @@
 
   <view
     wx:if="{{canOTA}}"
-    class="mb-96rpx mt-32rpx w-686rpx flex-col-center"
+    class="pb-96rpx pt-32rpx w-686rpx flex-col-center"
   >
     <text class="text-24rpx text-black-tips mb-24rpx {{isUpdating?'':'opacity-0'}}">升级完成时，设备将短暂重启</text>
 

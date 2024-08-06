@@ -443,8 +443,7 @@ page,::before,::after{--un-rotate:0;--un-rotate-x:0;--un-rotate-y:0;--un-rotate-
 .h-796rpx{height:796rpx;}
 .h-8,
 .h-8rpx{height:8rpx;}
-.h-800,
-.h-800rpx{height:800rpx;}
+.h-800{height:800rpx;}
 .h-80rpx{height:80rpx;}
 .h-85vh{height:85vh;}
 .h-88{height:88rpx;}
