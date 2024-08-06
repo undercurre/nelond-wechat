@@ -58,7 +58,7 @@
                 </view>
               </view>
 
-              <text>可升级数： </text>
+              <text>可升级数： {{item.deviceList.length}}</text>
             </view>
             <view class="w-686rpx h-1rpx bg-hex-eef2f7"></view>
             <view class="flex flex-col w-full">
@@ -163,9 +163,9 @@
             round
             size="small"
             bind:tap="handleUpdate"
-            disabled="{{isUpdating || !hasUpdate}}"
+            disabled="{{item.otaUpdateStatus === 1}}"
             data-device-id="{{item.deviceId}}"
-            >{{gatewayBtnText}}</van-button
+            >{{item.otaUpdateStatus === 1 ? '升级中' : '升级'}}</van-button
           >
         </van-cell>
       </van-cell-group>

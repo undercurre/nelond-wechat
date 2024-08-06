@@ -173,18 +173,18 @@ ComponentWithComputed({
     /**
      * 轮询当前ota进程是否完成更新
      */
-    startPollingQuery() {
-      this.data._pollingTimer = setInterval(async () => {
-        await this.queryOtaInfo()
+    async startPollingQuery() {
+      await this.queryOtaInfo()
 
-        if (!this.data.isUpdating) {
-          this.stopPolling()
-        }
-      }, 30000)
+      if (!this.data.isUpdating) {
+        this.data._pollingTimer = setTimeout(() => {
+          this.startPollingQuery()
+        }, 30000)
+      }
     },
     stopPolling() {
       if (this.data._pollingTimer) {
-        clearInterval(this.data._pollingTimer)
+        clearTimeout(this.data._pollingTimer)
         this.data._pollingTimer = 0
       }
     },

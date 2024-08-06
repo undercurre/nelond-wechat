@@ -8,7 +8,7 @@ declare namespace Ota {
     productId: string
     /** 产品名称 */
     productName: string
-    /** ota更新状态 */
+    /** ota更新状态 	ota更新状态 1：升级中 2：升级完成 3：升级失败 */
     updateStatus: number
     /** ota固件版本 */
     version: string
