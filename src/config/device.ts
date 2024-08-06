@@ -55,17 +55,24 @@ export const getModelName = (proType: string, productId?: string) => {
 
 // productId常量集合
 export const PRODUCT_ID = {
+  host: '7d531b6a944a454e9fb15d3cc1f4d55b', // 边缘网关
+  D3: '8d531b6a944a454e9fb15d3cc1f4d55b', // D3网关
   screen_4: 'zk527b6c944a454e9fb15d3cc1f4d55b', // 4寸屏
   screen_10: 'ok523b6c941a454e9fb15d3cc1f4d55b', // 10寸屏
+  /** 传感器 */
   humanSensor: 'midea.ir.201', // 人体传感器
   bodysensor: 'midea.bodysensor.003', // 人体存在传感器，常供电
   doorSensor: 'midea.magnet.001.201', // 门磁传感器
   freePad: 'midea.freepad.001.201', // 无线开关
   lightSensor: 'midea.hlightsensor.001.001', // 照度传感器
+
+  /** 485设备 */
   zhonghong_heat: 'zhonghong.heat.001', // 485地暖
   zhonghong_air: 'zhonghong.air.001', // 485新风
   zhonghong_cac: 'zhonghong.cac.002', // 485空调
+
   knob: 'midea.knob.001.003', // 一路旋钮面板
+
   // dooya.curtain.001 是一种； dooya.curtain.003/dooya.curtain.103/dooya.curtain.203是一种
   curtain_001: 'dooya.curtain.001', // zigbee窗帘
   curtain_003: 'dooya.curtain.003', // zigbee窗帘

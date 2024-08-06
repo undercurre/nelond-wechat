@@ -47,10 +47,6 @@ ComponentWithComputed({
       }
       return ''
     },
-    // 普通网关，排除智慧屏
-    isGateway(data) {
-      return data.deviceInfo.deviceType === 1 && !data.deviceInfo.isScreenGateway
-    },
     isSubDevice(data) {
       return data.deviceInfo.deviceType === 2
     },
@@ -211,7 +207,7 @@ ComponentWithComputed({
     handleToOTA() {
       if (!this.data.canEditDevice) return
       wx.navigateTo({
-        url: '/package-mine/pages/ota/index?fromDevice=1',
+        url: `/package-mine/pages/ota-detail/index?fromDevice=1&otaType=${this.data.deviceInfo.deviceType}`,
       })
     },
     handleDeviceDelete() {

@@ -34,13 +34,16 @@ Component({
     async auth() {
       const pageParams = getCurrentPageParams()
       console.debug('pageParams', pageParams)
-      const bindRes = await bindDevice({
-        projectId: projectBinding.store.currentProjectId,
-        spaceId: spaceBinding.store.currentSpace.spaceId,
-        sn: pageParams.sn,
-        nonce: pageParams.code,
-        deviceName: 'Host设备',
-      })
+      const bindRes = await bindDevice(
+        {
+          projectId: projectBinding.store.currentProjectId,
+          spaceId: spaceBinding.store.currentSpace.spaceId,
+          sn: pageParams.sn,
+          nonce: pageParams.code,
+          deviceName: '边缘网关',
+        },
+        { loading: true },
+      )
 
       if (bindRes.success) {
         Toast({

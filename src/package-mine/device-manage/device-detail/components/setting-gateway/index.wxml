@@ -5,13 +5,14 @@
   <view>
     <van-cell-group inset>
       <van-cell
-        wx:if="{{!deviceInfo.isScreenGateway && canEditDevice}}"
+        wx:if="{{isD3 && canEditDevice}}"
         title="更改Wi-Fi"
         bind:click="toChangeWifi"
         is-link
       ></van-cell>
 
       <van-cell
+        wx:if="{{isHost}}"
         title="信道"
         bind:click="toggleActionSheet"
         is-link="{{!isRelease && canEditDevice}}"

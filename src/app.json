@@ -50,7 +50,7 @@
         "help/show/index",
         "help/webview/index",
         "pages/subDeviceList/index",
-        "pages/ota-gateway/index"
+        "pages/ota-detail/index"
       ]
     },
     {

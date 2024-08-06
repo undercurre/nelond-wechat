@@ -116,13 +116,16 @@ ComponentWithComputed({
         return
       }
 
-      const res = await editDeviceInfo({
-        deviceId,
-        deviceName,
-        spaceId,
-        projectId: projectBinding.store.currentProjectId,
-        type: '2',
-      })
+      const res = await editDeviceInfo(
+        {
+          deviceId,
+          deviceName,
+          spaceId,
+          projectId: projectBinding.store.currentProjectId,
+          type: '2',
+        },
+        { loading: true },
+      )
 
       if (this.data.deviceInfo.switchList.length > 1) {
         const deviceInfoUpdateVoList = this.data.deviceInfo.switchList.map((item) => {
@@ -135,13 +138,13 @@ ComponentWithComputed({
           }
         })
 
-        await batchUpdate({ deviceInfoUpdateVoList })
+        await batchUpdate({ deviceInfoUpdateVoList }, { loading: true })
       }
 
       if (res.success) {
         projectBinding.store.updateCurrentProjectDetail()
 
-        await deviceStore.updateAllDeviceList()
+        deviceStore.updateAllDeviceList()
 
         // 关闭扫描页面可能开启的蓝牙资源
         wx.closeBluetoothAdapter()
