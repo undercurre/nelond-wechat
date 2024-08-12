@@ -34,6 +34,7 @@ export const PRO_TYPE = {
 // productId -> 设备modelName，暂时为传感器专用
 export const SENSOR_MODEL_NAME = {
   'midea.ir.201': 'irDetector',
+  'midea.bodysensor.003': 'radarDetector',
   'midea.magnet.001.201': 'magnet',
   'midea.freepad.001.201': 'freepad',
   'midea.hlightsensor.001.001': 'lightsensor',
