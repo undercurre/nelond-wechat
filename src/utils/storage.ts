@@ -6,7 +6,7 @@ interface Storage {
   set(
     key: string,
     value: IAnyObject | string | number | boolean, // 原生类型、Date、及能够通过JSON.stringify序列化的对象
-    expire?: number | null,
+    expire?: number | null, // 缓存的时间，单位：秒
     encrypt?: boolean,
   ): void | Promise<WechatMiniprogram.GeneralCallbackResult> // 异步操作Storage支持加密，支持promise，加密最低版本2.21.3
   get<T, P = undefined>(key: string, def?: P, encrypt?: boolean): T | P | Promise<T | P | undefined> | undefined // encrypt需要set和get同时为true

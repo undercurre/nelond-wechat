@@ -15,8 +15,6 @@ ComponentWithComputed({
   data: {
     isLan: false,
     isAgree: false,
-    checkImg: '/assets/img/base/check.png',
-    uncheckImg: '/assets/img/base/uncheck.png',
     marginTop: 0,
     defaultImgDir: defaultImgDir(),
     needCaptcha: false, // 是否需要验证码登录
@@ -211,16 +209,8 @@ ComponentWithComputed({
     },
 
     onAgreeClick(event: { detail: boolean }) {
-      console.log('onAgreeClick', event)
-
       this.setData({
         isAgree: event.detail,
-      })
-    },
-
-    toPage(e: WechatMiniprogram.TouchEvent) {
-      wx.navigateTo({
-        url: '/package-about/pages/protocol-show/index?protocal=' + e.currentTarget.dataset.value,
       })
     },
   },

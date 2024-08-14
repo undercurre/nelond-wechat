@@ -5,6 +5,7 @@ export * from './device'
 export * from './light'
 export * from './img'
 export * from './user'
+export * from './doc'
 
 let env: ENV_TYPE = 'dev'
 

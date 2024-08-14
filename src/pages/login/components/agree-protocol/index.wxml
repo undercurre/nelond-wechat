@@ -1,0 +1,91 @@
+<view class="mx-30rpx mt-140rpx mb-32rpx">
+  <van-checkbox
+    use-icon-slot
+    custom-class="items-start"
+    value="{{ isAgree }}"
+    bind:change="onAgreeClick"
+  >
+    <image
+      class="h-36 w-36"
+      slot="icon"
+      src="{{ isAgree ? checkImg : uncheckImg }}"
+    />
+    <text class="leading-40rpx text-24rpx">
+      <text>我已阅读并同意 </text>
+      <text
+        wx:for="{{docList}}"
+        wx:key="key"
+        class="link"
+        data-url="{{item.url}}"
+        catchtap="showDoc"
+        ><text
+          class="text-hex-555659"
+          wx:if="{{index === docList.length - 1}}"
+        >
+          和 </text
+        >{{ item.label }}</text
+      >
+    </text>
+  </van-checkbox>
+</view>
+
+<van-popup
+  show="{{ isShowPotocolModal }}"
+  custom-class="overflow-visible"
+  round
+>
+  <view class="flex flex-col items-center p-48rpx w-75vw">
+    <image
+      src="../head-logo.png"
+      mode="scaleToFill"
+      class="w-560rpx h-426rpx absolute -top-130rpx"
+    />
+
+    <view class="text-34 text-hex-27282A leading-40rpx font-medium mt-112rpx">美的照明隐私保护</view>
+
+    <view class="py-24rpx text-24 text-hex-666666 leading-40rpx">
+      <view>感谢您信任并使用美的照明！</view>
+      <view>
+        我们非常重视您的个人信息和隐私保护，请在使用美的照明的服务前，请您务必仔细阅读我们的
+        <text class="text-hex-27282A font-medium">《美的照明隐私政策》和《美的照明用户服务协议》</text>。
+      </view>
+      <view> 我们的隐私保护政策已于2024年8月13日更新。我们将按照法律法规要求，在合理、必要的范围内，向您收集个人信息，我们竭尽全力通过合理有效的信息安全技术和管理流程，采取相应的安全保护措施，防止您的信息泄露、损毁或丢失。</view>
+    </view>
+
+    <view class="text-24 leading-34rpx">
+      <text class="text-hex-27282A font-medium">点击同意即表示您已阅读并同意</text>
+      <text
+        wx:for="{{docList}}"
+        wx:key="key"
+        class="link"
+        data-url="{{item.url}}"
+        catchtap="showDoc"
+        ><text
+          class="text-hex-555659"
+          wx:if="{{index === docList.length - 1}}"
+        >
+          和 </text
+        >{{ item.label }}</text
+      >
+    </view>
+
+    <view class="flex flex-row justify-between w-full mt-24rpx">
+      <van-button
+        class="flex-1"
+        size="large"
+        bind:click="handleCancel"
+        >不同意</van-button
+      >
+      <view class="w-46rpx"></view>
+      <van-button
+        type="primary"
+        class="flex-1"
+        size="large"
+        bind:click="handleConfirm"
+        >同意</van-button
+      >
+    </view>
+  </view>
+</van-popup>
+
+<van-toast id="van-toast" />

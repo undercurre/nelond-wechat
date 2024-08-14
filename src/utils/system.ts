@@ -192,3 +192,55 @@ export function shouNoNetTips() {
     duration: 2500,
   })
 }
+
+/**
+ * 展示远程文档
+ * @param fileUrl 文件远程地址
+ */
+export async function showRemoteDoc(fileUrl: string) {
+  try {
+    console.debug('showRemoteDoc,fileUrl', fileUrl)
+    const getFileLocalPath = new Promise<string>((resolve, reject) => {
+      const filePath = (storage.get(fileUrl) as string) || '' // 文件下载后的本地路径
+
+      console.debug('showRemoteDoc,filePath', filePath)
+
+      // 检查是否已经下载过该文件
+      if (filePath) {
+        resolve(filePath)
+      } else {
+        wx.downloadFile({
+          url: fileUrl,
+          success(res) {
+            console.debug('downloadFile', res)
+            if (res.statusCode === 200) {
+              storage.set(fileUrl, res.tempFilePath, 3 * 24 * 60 * 60) // 缓存1个月
+              resolve(res.tempFilePath)
+            } else {
+              reject('下载文件失败')
+            }
+          },
+          fail(error) {
+            console.error('downloadFile-fail', error)
+            reject('下载文件失败')
+          },
+        })
+      }
+    })
+
+    const filePath = await getFileLocalPath
+
+    wx.openDocument({
+      filePath,
+      success: function (res) {
+        console.log('打开文档成功', res)
+      },
+    })
+
+    return true
+  } catch (err) {
+    Logger.error('showRemoteDoc', err)
+
+    return false
+  }
+}

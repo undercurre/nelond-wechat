@@ -64,7 +64,7 @@
     wx:else
     class="px-32rpx mt-50rpx mb-128rpx"
   >
-    <include src="./agree.wxml" />
+    <agree-protocol bind:change="onAgreeClick"></agree-protocol>
 
     <van-button
       open-type="getPhoneNumber|agreePrivacyAuthorization"
@@ -116,7 +116,7 @@
       </van-button>
     </van-field>
 
-    <include src="./agree.wxml" />
+    <agree-protocol bind:change="onAgreeClick"></agree-protocol>
 
     <view class="flex flex-col mt-32rpx">
       <van-button

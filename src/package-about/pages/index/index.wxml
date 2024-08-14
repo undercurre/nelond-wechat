@@ -13,10 +13,10 @@
 <van-cell-group inset>
   <van-cell
     wx:for="{{list}}"
-    wx:key="value"
-    title="{{item.title}}"
+    wx:key="key"
+    title="{{item.label}}"
     is-link
-    data-value="{{item.value}}"
+    data-url="{{item.url}}"
     bind:click="handleTap"
   ></van-cell>
 

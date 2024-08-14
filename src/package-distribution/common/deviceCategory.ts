@@ -104,8 +104,8 @@ export default {
         path: '/package-distribution/pages/scan/index?scanType=subdevice',
       },
       {
-        icon: `${productImgDir()}/sensor-body.png`,
-        guideImg: `${guideDir()}/sensor_body.gif`,
+        icon: `${productImgDir()}/0xBC_bodysensor.png`,
+        guideImg: `${guideDir()}/0xBC_bodysensor.gif`,
         name: '人体存在传感器',
         guideDesc: '长按球体顶部「配网按键」5秒以上，至指示灯开始闪烁（1秒/次）',
         path: `/package-distribution/pages/connect-guide/index?proType=0xBC&modelId=${PRODUCT_ID.bodysensor}`,
