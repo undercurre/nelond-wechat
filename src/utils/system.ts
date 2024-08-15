@@ -220,11 +220,12 @@ export async function showRemoteDoc(fileUrl: string) {
               storage.set(fileUrl, res.tempFilePath, 3 * 24 * 60 * 60) // 缓存1个月
               resolve(res.tempFilePath)
             } else {
+              Logger.error('downloadFile-success', res)
               reject('下载文件失败')
             }
           },
           fail(error) {
-            console.error('downloadFile-fail', error)
+            Logger.error('downloadFile-fail', error)
             reject('下载文件失败')
           },
         })
@@ -242,6 +243,10 @@ export async function showRemoteDoc(fileUrl: string) {
 
     isSuccess = true
   } catch (err) {
+    wx.showToast({
+      title: err as string,
+      icon: 'error',
+    })
     Logger.error('showRemoteDoc', err)
   }
 
