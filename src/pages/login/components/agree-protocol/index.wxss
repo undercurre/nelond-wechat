@@ -3,5 +3,9 @@
 }
 
 .overflow-visible {
-  overflow: visible;
+  overflow: visible !important;
+}
+
+.label-class {
+  line-height: 16px !important;
 }

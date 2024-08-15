@@ -198,7 +198,10 @@ export function shouNoNetTips() {
  * @param fileUrl 文件远程地址
  */
 export async function showRemoteDoc(fileUrl: string) {
+  let isSuccess = false
+
   try {
+    showLoading()
     console.debug('showRemoteDoc,fileUrl', fileUrl)
     const getFileLocalPath = new Promise<string>((resolve, reject) => {
       const filePath = (storage.get(fileUrl) as string) || '' // 文件下载后的本地路径
@@ -237,10 +240,12 @@ export async function showRemoteDoc(fileUrl: string) {
       },
     })
 
-    return true
+    isSuccess = true
   } catch (err) {
     Logger.error('showRemoteDoc', err)
-
-    return false
   }
+
+  hideLoading()
+
+  return isSuccess
 }

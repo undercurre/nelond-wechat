@@ -47,6 +47,10 @@ Component({
         const docItem = this.data.docList.find((item) => item.url === url)
 
         docItem!.hasRead = true
+
+        this.setData({
+          docList: this.data.docList,
+        })
       }
     },
 
