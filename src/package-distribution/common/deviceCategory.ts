@@ -7,37 +7,31 @@ export default {
       {
         icon: `${productImgDir()}/downlight.png`,
         name: '筒射灯',
-        tag: 'zigbee',
         path: '/package-distribution/pages/scan/index?scanType=subdevice',
       },
       {
         icon: `${productImgDir()}/mining-lamp.png`,
         name: '工矿灯',
-        tag: 'zigbee',
         path: '/package-distribution/pages/scan/index?scanType=subdevice',
       },
       {
         icon: `${productImgDir()}/magnetic-track-light.png`,
         name: '磁吸灯',
-        tag: 'zigbee',
         path: '/package-distribution/pages/scan/index?scanType=subdevice',
       },
       {
         icon: `${productImgDir()}/tape-light.png`,
         name: 'CW灯带',
-        tag: 'zigbee',
         path: '/package-distribution/pages/scan/index?scanType=subdevice',
       },
       {
         icon: `${productImgDir()}/light-line.png`,
         name: '线条灯',
-        tag: 'zigbee',
         path: '/package-distribution/pages/scan/index?scanType=subdevice',
       },
       {
         icon: `${productImgDir()}/switch.png`,
         name: '智能开关',
-        tag: 'zigbee',
         path: '/package-distribution/pages/scan/index?scanType=subdevice',
       },
     ],
