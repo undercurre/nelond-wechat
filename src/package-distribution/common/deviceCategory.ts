@@ -58,7 +58,7 @@ export default {
         path: '/package-distribution/pages/scan/index?scanType=gateway',
       },
       {
-        icon: `${productImgDir()}/downlight.png`,
+        icon: `${productImgDir()}/0x16_host.png`,
         name: '边缘网关',
         path: '/package-distribution/pages/scan/index?scanType=screen',
       },
