@@ -207,6 +207,7 @@ export async function showRemoteDoc(fileUrl: string) {
       const filePath = (storage.get(fileUrl) as string) || '' // 文件下载后的本地路径
 
       console.debug('showRemoteDoc,filePath', filePath)
+      const fileArr = fileUrl.split('/')
 
       // 检查是否已经下载过该文件
       if (filePath) {
@@ -214,6 +215,7 @@ export async function showRemoteDoc(fileUrl: string) {
       } else {
         wx.downloadFile({
           url: fileUrl,
+          filePath: `${wx.env.USER_DATA_PATH}/${fileArr[fileArr.length - 1]}`, // 指定下载的文件路径名称，防止产生随机数名称的文件显示
           success(res) {
             console.debug('downloadFile', res)
             if (res.statusCode === 200) {
