@@ -185,7 +185,14 @@ ComponentWithComputed({
             return
           }
           othersStore.setIsInit(false)
-          projectStore.spaceInit()
+          await projectStore.spaceInit()
+
+          if (!projectStore.projectList?.length) {
+            hideLoading()
+
+            Toast('请先在管理端添加或关联项目')
+            return
+          }
           wx.switchTab({
             url: '/pages/index/index',
           })
