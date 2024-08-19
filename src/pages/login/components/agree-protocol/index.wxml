@@ -16,10 +16,14 @@
       <text>我已阅读并同意 </text
       ><text
         wx:for="{{docList}}"
-        wx:key="key"
+        wx:key="url"
         class="link"
         data-url="{{item.url}}"
         catchtap="showDoc"
+        ><text
+          class="text-hex-555659 px-4rpx"
+          wx:if="{{index !==0 && index < docList.length - 1}}"
+          >、</text
         ><text
           class="text-hex-555659 px-4rpx"
           wx:if="{{index === docList.length - 1}}"
@@ -35,9 +39,9 @@
   custom-class="overflow-visible"
   round
 >
-  <view class="flex flex-col items-center p-48rpx w-75vw items-stretch">
+  <view class="flex flex-col items-center p-48rpx w-90vw items-stretch box-border">
     <image
-      src="../head-logo.png"
+      src="{{ossDomain}}/assets/login/head-logo.png"
       mode="scaleToFill"
       class="w-560rpx h-426rpx absolute -top-130rpx"
     />
@@ -50,9 +54,13 @@
         我们非常重视您的个人信息和隐私保护，请在使用美的商照的服务前，请您务必仔细阅读我们的
         <text
           wx:for="{{docList}}"
-          wx:key="key"
+          wx:key="url"
           class="text-hex-27282A font-medium"
           data-url="{{item.url}}"
+          ><text
+            class="px-4rpx"
+            wx:if="{{index !==0 && index < docList.length - 1}}"
+            >、</text
           ><text wx:if="{{index === docList.length - 1}}">和</text>《{{ item.label }}》</text
         >。
       </view>
@@ -63,7 +71,7 @@
       <text class="text-hex-27282A font-medium">请务必仔细阅读以下协议：</text>
       <view
         wx:for="{{docList}}"
-        wx:key="key"
+        wx:key="url"
         class="link leading-56rpx flex flex-row justify-between items-center"
         data-url="{{item.url}}"
         catchtap="showDoc"

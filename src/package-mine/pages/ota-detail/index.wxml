@@ -91,7 +91,7 @@
   <block wx:else>
     <view
       class="w-full p-24rpx box-border"
-      v-if="{{otaProductList.lenght === 1}}"
+      wx:if="{{otaProductList.length === 1}}"
     >
       <view class="flex flex-col items-center bg-white rounded-32rpx p-32rpx text-28rpx text-black-2a text-justify box-border">
         <view class="flex w-full items-center mb-32rpx">

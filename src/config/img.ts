@@ -1,6 +1,6 @@
 import { isHttpsDomain, getMzaioDomain } from './index'
 
-// 小程序（图片存放）
+// 小程序（静态资源存放位置根目录）
 export const ossDomain = 'https://mzgd-oss-bucket.oss-cn-shenzhen.aliyuncs.com/nelond' // ossFile根目录
 
 export function getImageBaseUrl() {

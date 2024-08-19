@@ -1,6 +1,6 @@
 import Toast from '@vant/weapp/toast/toast'
 import { storage, showRemoteDoc } from '../../../../utils/index'
-import { DOC_List } from '../../../../config/index'
+import { DOC_List, ossDomain } from '../../../../config/index'
 
 Component({
   /**
@@ -12,6 +12,7 @@ Component({
    * 组件的初始数据
    */
   data: {
+    ossDomain,
     isShowPotocolModal: false, // 是否展示协议同意弹窗
     isAgree: false, // 是否同意协议
     docList: DOC_List.filter((item) => item.isShowLogin).map((item) => ({ ...item, hasRead: false })), // 需要在登录时同意的协议列表
