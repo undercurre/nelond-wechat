@@ -126,7 +126,13 @@ export const projectStore = observable({
       })
     }
 
-    return res
+    return {
+      ...res,
+      result: {
+        ...res.result,
+        content: res.result.content.filter((p) => p.projectType === PROJECT_TYPE),
+      },
+    }
   },
 
   /**
