@@ -164,6 +164,8 @@ ComponentWithComputed({
       if (res.success) {
         // 下发升级指令成功，轮询直到完成更新
         this.startPollingQuery()
+      } else {
+        Toast(res.msg)
       }
 
       this.setData({

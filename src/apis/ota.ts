@@ -23,7 +23,7 @@ export async function execOtaUpdate(
   options?: { loading?: boolean },
 ) {
   return await mzaioRequest.post<{ otaProductList: Ota.OtaProduct[]; otaUpdateList: Ota.OtaUpdate[] }>({
-    log: false,
+    log: true,
     loading: options?.loading ?? false,
     url: '/v1/cl/device/deviceOtaUpdate',
     data,
