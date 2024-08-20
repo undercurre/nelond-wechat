@@ -194,6 +194,68 @@ export function shouNoNetTips() {
 }
 
 /**
+ * 判断文件/目录是否存在
+ * @param path
+ */
+function isFileExit(path: string) {
+  const fileManager = wx.getFileSystemManager()
+
+  return new Promise((resolve) => {
+    fileManager.access({
+      path,
+      success(res) {
+        console.log('isFileExit', res)
+        resolve(true)
+      },
+      fail(err) {
+        Logger.error('isFileExit', err)
+        resolve(false)
+      },
+    })
+  })
+}
+
+/**
+ * 封装wx.downloadFile,支持promise
+ * @param fileUrl
+ */
+function downloadFile(fileUrl: string) {
+  const fileArr = fileUrl.split('/')
+
+  return new Promise<{ success: boolean; filePath: string; msg: string }>((resolve) => {
+    wx.downloadFile({
+      url: fileUrl,
+      filePath: `${wx.env.USER_DATA_PATH}/${fileArr[fileArr.length - 1]}`, // 指定下载的文件路径名称，防止产生随机数名称的文件显示
+      success(res) {
+        console.debug('downloadFile', res)
+
+        if (res.statusCode === 200) {
+          resolve({
+            success: true,
+            filePath: res.filePath,
+            msg: '下载文件成功',
+          })
+        } else {
+          Logger.error('downloadFile-success', res)
+          resolve({
+            success: false,
+            filePath: '',
+            msg: '下载文件失败',
+          })
+        }
+      },
+      fail(error) {
+        Logger.error('downloadFile-fail', error)
+        resolve({
+          success: false,
+          filePath: '',
+          msg: '下载文件失败',
+        })
+      },
+    })
+  })
+}
+/**
  * 展示远程文档
  * @param fileUrl 文件远程地址
  */
@@ -202,48 +264,46 @@ export async function showRemoteDoc(fileUrl: string) {
 
   try {
     showLoading()
-    console.debug('showRemoteDoc,fileUrl', fileUrl)
-    const getFileLocalPath = new Promise<string>((resolve, reject) => {
-      const filePath = (storage.get(fileUrl) as string) || '' // 文件下载后的本地路径
+    let fileLocalPath = (storage.get(fileUrl) as string) || '' // 文件下载后的本地路径，检查是否已经下载过这个文件
 
-      console.debug('showRemoteDoc,filePath', filePath)
-      const fileArr = fileUrl.split('/')
+    console.debug('showRemoteDoc,fileUrl', fileUrl, 'fileLocalPath', fileLocalPath)
 
-      // 检查是否已经下载过该文件
-      if (filePath) {
-        resolve(filePath)
-      } else {
-        wx.downloadFile({
-          url: fileUrl,
-          filePath: `${wx.env.USER_DATA_PATH}/${fileArr[fileArr.length - 1]}`, // 指定下载的文件路径名称，防止产生随机数名称的文件显示
-          success(res) {
-            console.debug('downloadFile', res)
-            if (res.statusCode === 200) {
-              storage.set(fileUrl, res.tempFilePath, 3 * 24 * 60 * 60) // 缓存1个月
-              resolve(res.tempFilePath)
-            } else {
-              Logger.error('downloadFile-success', res)
-              reject('下载文件失败')
-            }
-          },
-          fail(error) {
-            Logger.error('downloadFile-fail', error)
-            reject('下载文件失败')
-          },
-        })
+    // 如已经下载过该文件，检查文件是否存在
+    if (fileLocalPath) {
+      const isExit = await isFileExit(fileLocalPath)
+
+      // 若缓存的文件不存在，清除storage标志
+      if (!isExit) {
+        fileLocalPath = ''
+        storage.remove(fileUrl)
       }
-    })
+    }
 
-    const filePath = await getFileLocalPath
+    // 下载远程文件
+    if (!fileLocalPath) {
+      const downloadRes = await downloadFile(fileUrl)
 
-    wx.openDocument({
-      filePath,
-      success: function (res) {
-        console.log('打开文档成功', res)
-      },
-    })
+      if (downloadRes.success) {
+        fileLocalPath = downloadRes.filePath
+        storage.set(fileUrl, fileLocalPath, 3 * 24 * 60 * 60) // 缓存1个月
+      } else {
+        throw downloadRes.msg
+      }
+    }
 
-    isSuccess = true
+    const openRes = await wx
+      .openDocument({
+        filePath: fileLocalPath,
+      })
+      .catch((err) => err)
+
+    if (openRes.errMsg.includes('ok')) {
+      console.log('打开文档成功', openRes)
+      isSuccess = true
+    } else {
+      Logger.error('openDocument-fail', openRes)
+      throw '打开文档失败'
+    }
   } catch (err) {
     wx.showToast({
       title: err as string,

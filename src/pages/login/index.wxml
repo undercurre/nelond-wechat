@@ -1,6 +1,6 @@
 <view class="-z-1 fixed left-0 top-0 w-100vw h-100vh">
   <image
-    src="{{defaultImgDir}}/bg-login.png"
+    src="{{defaultImgDir}}/bg-login.jpg"
     class="w-100vw h-100vh"
   ></image>
 </view>
