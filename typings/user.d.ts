@@ -16,6 +16,7 @@ declare namespace User {
     roleName: string
     roleLevel: number
     projectId: string
+    projectType: string
     defaultRoleFlag: number
   }
   interface UserInfo {

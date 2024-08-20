@@ -4,7 +4,7 @@ import { RegMobile } from '@midea/reg-awsome'
 import { login, getCaptcha, loginByMz } from '../../apis/index'
 import { projectStore, othersStore, userStore } from '../../store/index'
 import { storage, showLoading, hideLoading, Logger } from '../../utils/index'
-import { defaultImgDir, UNACTIVATED, CAPTCHA_VALID_TIME, isLan, isNative } from '../../config/index'
+import { defaultImgDir, UNACTIVATED, CAPTCHA_VALID_TIME, isLan, isNative, PROJECT_TYPE } from '../../config/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 
 ComponentWithComputed({
@@ -174,7 +174,11 @@ ComponentWithComputed({
           console.log('login res', res)
 
           storage.set('token', res.result.token, null)
-          storage.set('roleList', res.result.roleList, null)
+          storage.set(
+            'roleList',
+            res.result.roleList.filter((r) => r.projectType === PROJECT_TYPE),
+            null,
+          )
           storage.set('userName', res.result.userName, null)
           storage.set('mobilePhone', res.result.mobilePhone, null)
 

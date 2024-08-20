@@ -934,6 +934,7 @@ ComponentWithComputed({
         console.log('默认场景不可编辑场景设备数据')
         return
       }
+      console.log('handleSelectCardShow', this.data.sceneDevicelinkSelectList, this.data.deviceList)
       if (
         this.data.opearationType === 'yijian' &&
         this.data.deviceList.filter((item) => !this.data.sceneDevicelinkSelectList.includes(item.uniId)).length === 0
