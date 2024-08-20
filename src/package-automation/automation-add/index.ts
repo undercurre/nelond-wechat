@@ -694,15 +694,16 @@ ComponentWithComputed({
         }
       } else {
         console.log('当前传感器', this.data.sensorList)
+        this.setData({
+          opearationType: 'auto',
+        })
+
         if (this.data.sensorList.length) {
           this.addSensorPopup()
         } else {
           Toast({ message: '尚未添加传感器', zIndex: 9999 })
           return
         }
-        this.setData({
-          opearationType: 'auto',
-        })
       }
       this.setData({
         showEditConditionPopup: false,
