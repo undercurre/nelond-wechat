@@ -56,7 +56,7 @@ App<IAppOption>({
           mobilePhone: storage.get('mobilePhone') as string,
         }
         userStore.setUserInfo(userInfo)
-        if (!userInfo.roleList?.length || !projectStore.projectList?.length) {
+        if (!userInfo.roleList?.length) {
           console.log('已登录，但用户无权限')
           othersStore.setIsInit(true)
           return
