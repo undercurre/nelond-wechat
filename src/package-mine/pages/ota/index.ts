@@ -19,7 +19,7 @@ ComponentWithComputed({
       },
       {
         title: '边缘网关升级',
-        otaType: 6,
+        otaType: 7,
       },
     ],
   },
