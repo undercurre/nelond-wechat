@@ -4,6 +4,7 @@ import { bindDevice } from '../../../apis/index'
 import { projectBinding, spaceBinding, userStore } from '../../../store/index'
 import { getCurrentPageParams, goBackPage } from '../../../utils/index'
 import cacheData from '../../common/cacheData'
+import { productImgDir } from '../../../config/index'
 
 Component({
   behaviors: [pageBehavior],
@@ -17,6 +18,7 @@ Component({
    */
   data: {
     mobile: '',
+    productImgDir: productImgDir(),
   },
 
   lifetimes: {
