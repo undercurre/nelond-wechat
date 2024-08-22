@@ -110,10 +110,11 @@
         wx:if="{{hasSwitchSetting}}"
         bind:update="updateDeviceInfo"
       />
+      <!-- 边缘网关没有相关功能 -->
       <setting-gateway
         can-edit-device="{{canEditDevice}}"
         device-info="{{deviceInfo}}"
-        wx:if="{{prodType === 'gateway'}}"
+        wx:if="{{prodType === 'gateway' && deviceInfo.productId !== PRODUCT_ID.host}}"
         bind:update="updateDeviceInfo"
       />
     </scroll-view>

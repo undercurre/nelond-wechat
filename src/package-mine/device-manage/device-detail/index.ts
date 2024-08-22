@@ -22,6 +22,7 @@ ComponentWithComputed({
    * 页面的初始数据
    */
   data: {
+    PRODUCT_ID,
     spaceId: '',
     deviceId: '',
     deviceName: '',
@@ -106,6 +107,9 @@ ComponentWithComputed({
      * 生命周期函数--监听页面加载
      */
     onLoad({ deviceId, spaceId }: { deviceId: string; spaceId: string }) {
+      // 加载ota列表信息，ota列表展示
+      otaStore.updateList()
+
       this.setData({
         deviceId,
         spaceId,
@@ -206,8 +210,16 @@ ComponentWithComputed({
     },
     handleToOTA() {
       if (!this.data.canEditDevice) return
+
+      let otaType = this.data.deviceInfo.deviceType
+
+      // 边缘网关的deviceType和D3网关一致，需要增加PRODUCT_ID区分
+      if (this.data.deviceInfo.productId === PRODUCT_ID.host) {
+        otaType = 7
+      }
+
       wx.navigateTo({
-        url: `/package-mine/pages/ota-detail/index?fromDevice=1&otaType=${this.data.deviceInfo.deviceType}`,
+        url: `/package-mine/pages/ota-detail/index?fromDevice=1&otaType=${otaType}`,
       })
     },
     handleDeviceDelete() {
