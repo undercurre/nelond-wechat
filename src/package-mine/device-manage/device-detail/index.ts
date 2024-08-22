@@ -31,6 +31,7 @@ ComponentWithComputed({
     showEditLaundryPopup: false,
     deviceInfo: {} as Device.DeviceItem,
     firstShow: true,
+    hasOtaUpdate: false, // 是否有ota更新
   },
 
   computed: {
@@ -68,12 +69,6 @@ ComponentWithComputed({
       }
       return ''
     },
-    hasOtaUpdate(data) {
-      if (data.deviceInfo.deviceId) {
-        return !!otaStore.deviceVersionInfoMap[data.deviceInfo.deviceId]
-      }
-      return false
-    },
     canEditDevice(data) {
       return data.isManager
     },
@@ -107,9 +102,6 @@ ComponentWithComputed({
      * 生命周期函数--监听页面加载
      */
     onLoad({ deviceId, spaceId }: { deviceId: string; spaceId: string }) {
-      // 加载ota列表信息，ota列表展示
-      otaStore.updateList()
-
       this.setData({
         deviceId,
         spaceId,
@@ -252,6 +244,13 @@ ComponentWithComputed({
           spaceId: res.result.spaceId,
         })
       }
+
+      // 加载ota列表信息，ota列表展示
+      await otaStore.updateList()
+
+      this.setData({
+        hasOtaUpdate: !!otaStore.deviceVersionInfoMap[this.data.deviceInfo.deviceId],
+      })
     },
     toSetLaundry() {
       this.setData({
