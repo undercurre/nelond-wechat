@@ -1,3 +1,4 @@
+import { spaceStore } from './../../../store/space'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import pageBehaviors from '../../../behaviors/pageBehaviors'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
@@ -33,7 +34,12 @@ ComponentWithComputed({
     gatewayList(data) {
       const allDeviceList: Device.DeviceItem[] = (data as IAnyObject).allDeviceList || []
 
-      return allDeviceList.filter((item) => item.deviceType === 1)
+      return allDeviceList
+        .filter((item) => item.deviceType === 1)
+        .map((item) => ({
+          ...item,
+          spaceClearName: spaceStore.getSpaceClearNameById(item.spaceId),
+        }))
     },
   },
 
