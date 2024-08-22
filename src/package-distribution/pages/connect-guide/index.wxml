@@ -77,7 +77,7 @@
         </view>
 
         <view class="grow">
-          <text class="block leading-44rpx text-32 text-black-2a font-medium">{{ item.deviceName }} | {{ item.spaceName }}</text>
+          <text class="block leading-44rpx text-32 text-black-2a font-medium">{{ item.deviceName }} | {{ item.spaceClearName }}</text>
 
           <text class="block leading-36rpx text-26 text-black-tips pt-8rpx">{{ item.onLineStatus === 1 ? '在线' : '离线' }}</text>
         </view>
