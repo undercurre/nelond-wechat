@@ -22,6 +22,7 @@ ComponentWithComputed({
    * 页面的初始数据
    */
   data: {
+    PRODUCT_ID,
     spaceId: '',
     deviceId: '',
     deviceName: '',
@@ -30,6 +31,7 @@ ComponentWithComputed({
     showEditLaundryPopup: false,
     deviceInfo: {} as Device.DeviceItem,
     firstShow: true,
+    hasOtaUpdate: false, // 是否有ota更新
   },
 
   computed: {
@@ -46,10 +48,6 @@ ComponentWithComputed({
         return proName[data.deviceInfo.proType]
       }
       return ''
-    },
-    // 普通网关，排除智慧屏
-    isGateway(data) {
-      return data.deviceInfo.deviceType === 1 && !data.deviceInfo.isScreenGateway
     },
     isSubDevice(data) {
       return data.deviceInfo.deviceType === 2
@@ -70,12 +68,6 @@ ComponentWithComputed({
         return ''
       }
       return ''
-    },
-    hasOtaUpdate(data) {
-      if (data.deviceInfo.deviceId) {
-        return !!otaStore.deviceVersionInfoMap[data.deviceInfo.deviceId]
-      }
-      return false
     },
     canEditDevice(data) {
       return data.isManager
@@ -210,8 +202,16 @@ ComponentWithComputed({
     },
     handleToOTA() {
       if (!this.data.canEditDevice) return
+
+      let otaType = this.data.deviceInfo.deviceType
+
+      // 边缘网关的deviceType和D3网关一致，需要增加PRODUCT_ID区分
+      if (this.data.deviceInfo.productId === PRODUCT_ID.host) {
+        otaType = 7
+      }
+
       wx.navigateTo({
-        url: '/package-mine/pages/ota/index?fromDevice=1',
+        url: `/package-mine/pages/ota-detail/index?fromDevice=1&otaType=${otaType}`,
       })
     },
     handleDeviceDelete() {
@@ -244,6 +244,13 @@ ComponentWithComputed({
           spaceId: res.result.spaceId,
         })
       }
+
+      // 加载ota列表信息，ota列表展示
+      await otaStore.updateList()
+
+      this.setData({
+        hasOtaUpdate: !!otaStore.deviceVersionInfoMap[this.data.deviceInfo.deviceId],
+      })
     },
     toSetLaundry() {
       this.setData({

@@ -4,7 +4,7 @@ import { deleteScene, addScene, updateScene, findDevice, sendDevice, execScene }
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { deviceStore, sceneStore, projectStore, autosceneStore, spaceStore } from '../../store/index'
-import { PRO_TYPE, PRODUCT_ID, getModelName, sceneImgDir } from '../../config/index'
+import { PRO_TYPE, PRODUCT_ID, getModelName, sceneImgDir, SENSOR_MODEL_NAME } from '../../config/index'
 import {
   toPropertyDesc,
   storage,
@@ -234,12 +234,16 @@ ComponentWithComputed({
       ])
       const sensorList = deviceStore.allDeviceFlattenList.filter((item) => item.proType === PRO_TYPE.sensor)
       sensorList.forEach((item) => {
-        if (item.productId === PRODUCT_ID.humanSensor) {
-          item.property = { occupancy: 1, modelName: 'irDetector' }
+        if ([PRODUCT_ID.humanSensor, PRODUCT_ID.bodysensor].includes(item.productId)) {
+          item.property = { occupancy: 1, modelName: SENSOR_MODEL_NAME[item.productId] }
         } else if (item.productId === PRODUCT_ID.doorSensor) {
-          item.property = { doorStatus: 1, modelName: 'magnet' }
+          item.property = { doorStatus: 1, modelName: SENSOR_MODEL_NAME[item.productId] }
         } else if (item.productId === PRODUCT_ID.lightSensor) {
-          item.property = { illuminance: 0, illuminance_symbol: 'equalTo', modelName: 'lightsensor' }
+          item.property = {
+            illuminance: 0,
+            illuminance_symbol: 'equalTo',
+            modelName: SENSOR_MODEL_NAME[item.productId],
+          }
         } else {
           item.property = { buttonClicked: 1, modelName: 'freepad' }
         }
@@ -690,15 +694,16 @@ ComponentWithComputed({
         }
       } else {
         console.log('当前传感器', this.data.sensorList)
+        this.setData({
+          opearationType: 'auto',
+        })
+
         if (this.data.sensorList.length) {
           this.addSensorPopup()
         } else {
           Toast({ message: '尚未添加传感器', zIndex: 9999 })
           return
         }
-        this.setData({
-          opearationType: 'auto',
-        })
       }
       this.setData({
         showEditConditionPopup: false,
@@ -930,6 +935,7 @@ ComponentWithComputed({
         console.log('默认场景不可编辑场景设备数据')
         return
       }
+      console.log('handleSelectCardShow', this.data.sceneDevicelinkSelectList, this.data.deviceList)
       if (
         this.data.opearationType === 'yijian' &&
         this.data.deviceList.filter((item) => !this.data.sceneDevicelinkSelectList.includes(item.uniId)).length === 0

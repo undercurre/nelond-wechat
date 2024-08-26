@@ -1,0 +1,9 @@
+{
+  "component": true,
+  "styleIsolation": "apply-shared",
+  "usingComponents": {
+    "van-button": "@vant/weapp/button/index",
+    "van-checkbox": "@vant/weapp/checkbox/index",
+    "van-popup": "@vant/weapp/popup/index"
+  }
+}

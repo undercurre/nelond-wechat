@@ -1,9 +1,11 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
+import { SENSOR_MODEL_NAME } from '../../config/index'
 
 enum sensorProductId {
   Value1 = 'midea.ir.201',
   Value2 = 'midea.magnet.001.201',
   Value3 = 'midea.freepad.001.201',
+  Value4 = 'midea.bodysensor.003',
 }
 
 ComponentWithComputed({
@@ -30,10 +32,20 @@ ComponentWithComputed({
   data: {
     abilityList: {
       'midea.ir.201': [
-        { name: '有人移动', ability: { occupancy: 1, modelName: 'irDetector' } },
-        { name: '超时无人移动', ability: { occupancy: 0, PIRToUnoccupiedDelay: 10, modelName: 'irDetector' } },
+        { name: '有人移动', ability: { occupancy: 1, modelName: SENSOR_MODEL_NAME['midea.ir.201'] } },
+        {
+          name: '超时无人移动',
+          ability: { occupancy: 0, PIRToUnoccupiedDelay: 10, modelName: SENSOR_MODEL_NAME['midea.ir.201'] },
+        },
         // { name: '环境光亮', ability: { IlluminanceLevelStatus: 2 } },
         // { name: '环境光暗', ability: { IlluminanceLevelStatus: 1 } },
+      ],
+      'midea.bodysensor.003': [
+        { name: '有人移动', ability: { occupancy: 1, modelName: SENSOR_MODEL_NAME['midea.bodysensor.003'] } },
+        {
+          name: '超时无人移动',
+          ability: { occupancy: 0, PIRToUnoccupiedDelay: 10, modelName: SENSOR_MODEL_NAME['midea.bodysensor.003'] },
+        },
       ],
       'midea.magnet.001.201': [
         { name: '打开', ability: { doorStatus: 1, modelName: 'magnet' } },

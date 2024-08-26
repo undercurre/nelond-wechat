@@ -6,7 +6,7 @@ import { queryDeviceOnlineStatus, bindDevice, verifySn } from '../../../apis/ind
 import { projectBinding, spaceBinding, deviceBinding } from '../../../store/index'
 import { WifiSocket, getCurrentPageParams, strUtil, isAndroid, isAndroid10Plus, Logger } from '../../../utils/index'
 import { stepListForBind, stepListForChangeWiFi } from './conifg'
-import { defaultImgDir, getMzaioDomain, isLan, isHttpsDomain } from '../../../config/index'
+import { defaultImgDir, getMzaioDomain, isLan, isHttpsDomain, isNative } from '../../../config/index'
 
 let start = 0
 
@@ -163,6 +163,11 @@ ComponentWithComputed({
      * isDeny: 是否已拒绝授权，
      */
     async checkLocationPermission(isDeny?: boolean) {
+      // 微信特有交互流程，app无需调用
+      if (isNative()) {
+        return true
+      }
+
       let settingRes: IAnyObject = {}
       // 若已知未授权，省略查询权限流程，节省时间
       if (isDeny !== true) {

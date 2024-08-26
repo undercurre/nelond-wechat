@@ -1,6 +1,7 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { checkWifiSwitch, isRelease } from '../../../../../utils/index'
 import { controlDevice, uploadDeviceLog } from '../../../../../apis/index'
+import { PRODUCT_ID } from '../../../../../config/index'
 import Toast from '@vant/weapp/toast/toast'
 
 ComponentWithComputed({
@@ -27,6 +28,13 @@ ComponentWithComputed({
   },
 
   computed: {
+    isD3(data) {
+      return data.deviceInfo.productId === PRODUCT_ID.D3
+    },
+    // 是否host设备
+    isHost(data) {
+      return data.deviceInfo.productId === PRODUCT_ID.host
+    },
     channelText(data) {
       if (!data.deviceInfo.channel) {
         return ''

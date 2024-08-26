@@ -590,7 +590,7 @@ export const bleUtil = {
     wx.onBLECharacteristicValueChange((res: WechatMiniprogram.OnBLECharacteristicValueChangeCallbackResult) => {
       const bleDevice = deviceUuidMap[res.deviceId]
       if (!bleDevice) {
-        Logger.debug('非zigbee子设备蓝牙消息')
+        Logger.debug('非本次配网子设备蓝牙消息')
         return
       }
 

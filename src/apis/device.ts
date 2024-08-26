@@ -39,21 +39,21 @@ export async function allDevicePowerControl(
   data: { projectId: string; onOff: number },
   options?: { loading?: boolean },
 ) {
-  // // TODO 判断是否局域网控制
-  // if (homOs.isHostConnected()) {
-  //   const localRes = await homOs.houseControl({
-  //     projectId: data.projectId,
-  //     power: data.onOff,
-  //   })
+  // 判断是否局域网控制
+  if (homOs.isHostConnected()) {
+    const localRes = await homOs.houseControl({
+      projectId: data.projectId,
+      power: data.onOff,
+    })
 
-  //   Logger.log('localRes', localRes)
+    Logger.log('localRes', localRes)
 
-  //   if (localRes.success) {
-  //     return localRes
-  //   } else {
-  //     Logger.error('局域网调用失败，改走云端链路')
-  //   }
-  // }
+    if (localRes.success) {
+      return localRes
+    } else {
+      Logger.error('局域网调用失败，改走云端链路')
+    }
+  }
 
   return await mzaioRequest.post<IAnyObject>({
     log: false,

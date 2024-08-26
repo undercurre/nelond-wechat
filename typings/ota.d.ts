@@ -8,12 +8,14 @@ declare namespace Ota {
     productId: string
     /** 产品名称 */
     productName: string
-    /** ota更新状态 */
+    /** ota更新状态 	ota更新状态 1：升级中 2：升级完成 3：升级失败 */
     updateStatus: number
     /** ota固件版本 */
     version: string
     /** 版本描述 */
     versionDesc: string
+    /** ota类型 1：网关 2：子设备 3：wifi  6：边缘网关 */
+    otaType: number
   }
 
   interface OtaUpdate {
@@ -41,7 +43,7 @@ declare namespace Ota {
     version: string
     /** 版本更新备注 */
     versionDesc: string
-    /** 设备类型（1网关、2非网关） */
+    /** ota类型 1：网关 2：子设备 3：wifi  6：边缘网关 */
     otaType: number
   }
 

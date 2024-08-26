@@ -4,7 +4,7 @@ import { RegMobile } from '@midea/reg-awsome'
 import { login, getCaptcha, loginByMz } from '../../apis/index'
 import { projectStore, othersStore, userStore } from '../../store/index'
 import { storage, showLoading, hideLoading, Logger } from '../../utils/index'
-import { defaultImgDir, UNACTIVATED, CAPTCHA_VALID_TIME, getEnv } from '../../config/index'
+import { defaultImgDir, UNACTIVATED, CAPTCHA_VALID_TIME, isLan, isNative, PROJECT_TYPE } from '../../config/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 
 ComponentWithComputed({
@@ -15,8 +15,6 @@ ComponentWithComputed({
   data: {
     isLan: false,
     isAgree: false,
-    checkImg: '/assets/img/base/check.png',
-    uncheckImg: '/assets/img/base/uncheck.png',
     marginTop: 0,
     defaultImgDir: defaultImgDir(),
     needCaptcha: false, // 是否需要验证码登录
@@ -34,12 +32,16 @@ ComponentWithComputed({
     smsBtnText(data) {
       return data.validTime > 0 ? `${data.validTime}s` : '获取验证码'
     },
+    // 是否使用手动登录
+    isManualLogin(data) {
+      return data.isLan || isNative()
+    },
   },
 
   pageLifetimes: {
     show() {
       this.setData({
-        isLan: getEnv() === 'Lan',
+        isLan: isLan(),
       })
     },
   },
@@ -139,13 +141,24 @@ ComponentWithComputed({
      */
     async toLogin(data: { jsCode?: string; code?: string; captcha?: string }) {
       try {
-        if (this.data.isLan) {
+        if (this.data.isManualLogin) {
           if (!RegMobile.reg.test(this.data.mobilePhone)) {
             throw '请输入正确的手机号码'
           }
         }
 
-        const res = this.data.isLan
+        if (isNative()) {
+          // IOS，获取 wifi 信息必须要用户授权 location 权限。暂时通过getLocation接口触发获取位置权限逻辑
+          const locationRes = await wx
+            .getLocation({
+              type: 'wgs84',
+            })
+            .catch((err) => err)
+
+          Logger.log('locationRes', locationRes)
+        }
+
+        const res = this.data.isManualLogin
           ? await loginByMz({ mobilePhone: this.data.mobilePhone, password: this.data.pw })
           : await login(data)
         // 如果返回未激活状态，则自动调用获取验证码的接口
@@ -161,7 +174,11 @@ ComponentWithComputed({
           console.log('login res', res)
 
           storage.set('token', res.result.token, null)
-          storage.set('roleList', res.result.roleList, null)
+          storage.set(
+            'roleList',
+            res.result.roleList.filter((r) => r.projectType === PROJECT_TYPE),
+            null,
+          )
           storage.set('userName', res.result.userName, null)
           storage.set('mobilePhone', res.result.mobilePhone, null)
 
@@ -172,7 +189,14 @@ ComponentWithComputed({
             return
           }
           othersStore.setIsInit(false)
-          projectStore.spaceInit()
+          await projectStore.spaceInit()
+
+          if (!projectStore.projectList?.length) {
+            hideLoading()
+
+            Toast('请先在管理端添加或关联项目')
+            return
+          }
           wx.switchTab({
             url: '/pages/index/index',
           })
@@ -196,16 +220,8 @@ ComponentWithComputed({
     },
 
     onAgreeClick(event: { detail: boolean }) {
-      console.log('onAgreeClick', event)
-
       this.setData({
         isAgree: event.detail,
-      })
-    },
-
-    toPage(e: WechatMiniprogram.TouchEvent) {
-      wx.navigateTo({
-        url: '/package-about/pages/protocol-show/index?protocal=' + e.currentTarget.dataset.value,
       })
     },
   },

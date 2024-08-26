@@ -1,0 +1,107 @@
+<view class="mx-30rpx mt-140rpx mb-32rpx">
+  <van-checkbox
+    use-icon-slot
+    custom-class="items-start"
+    label-class="label-class"
+    value="{{ isAgree }}"
+    bind:change="onAgreeClick"
+  >
+    <image
+      class="h-16px w-16px"
+      slot="icon"
+      src="{{ isAgree ? checkImg : uncheckImg }}"
+    />
+    <text class="leading-16px text-12px">
+      <!-- text之间不可换行，否则文字会随之换行 -->
+      <text>我已阅读并同意 </text
+      ><text
+        wx:for="{{docList}}"
+        wx:key="url"
+        class="link"
+        data-url="{{item.url}}"
+        catchtap="showDoc"
+        ><text
+          class="text-hex-555659 px-4rpx"
+          wx:if="{{index !==0 && index < docList.length - 1}}"
+          >、</text
+        ><text
+          class="text-hex-555659 px-4rpx"
+          wx:if="{{index === docList.length - 1}}"
+          >和</text
+        >《{{ item.label }}》</text
+      >
+    </text>
+  </van-checkbox>
+</view>
+
+<van-popup
+  show="{{ isShowPotocolModal }}"
+  custom-class="overflow-visible"
+  round
+>
+  <view class="flex flex-col items-center p-48rpx w-90vw items-stretch box-border">
+    <image
+      src="{{ossDomain}}/assets/login/head-logo.png"
+      mode="scaleToFill"
+      class="w-560rpx h-426rpx absolute -top-130rpx"
+    />
+
+    <view class="text-center text-34 text-hex-27282A leading-40rpx font-medium mt-112rpx">美的商照隐私保护</view>
+
+    <view class="py-24rpx text-24 text-hex-666666 leading-40rpx">
+      <view>感谢您信任并使用美的商照！</view>
+      <view>
+        我们非常重视您的个人信息和隐私保护，请在使用美的商照的服务前，请您务必仔细阅读我们的
+        <text
+          wx:for="{{docList}}"
+          wx:key="url"
+          class="text-hex-27282A font-medium"
+          data-url="{{item.url}}"
+          ><text
+            class="px-4rpx"
+            wx:if="{{index !==0 && index < docList.length - 1}}"
+            >、</text
+          ><text wx:if="{{index === docList.length - 1}}">和</text>《{{ item.label }}》</text
+        >。
+      </view>
+      <view>我们的隐私保护政策已于2024年8月22日更新。我们将按照法律法规要求，在合理、必要的范围内，向您收集个人信息，我们竭尽全力通过合理有效的信息安全技术和管理流程，采取相应的安全保护措施，防止您的信息泄露、损毁或丢失。</view>
+    </view>
+
+    <view class="text-24 leading-34rpx">
+      <text class="text-hex-27282A font-medium">请务必仔细阅读以下协议：</text>
+      <view
+        wx:for="{{docList}}"
+        wx:key="url"
+        class="link leading-56rpx flex flex-row justify-between items-center"
+        data-url="{{item.url}}"
+        catchtap="showDoc"
+      >
+        <text>《{{ item.label }}》</text>
+        <image
+          class="h-16px w-16px"
+          slot="icon"
+          src="{{ item.hasRead ? checkImg : uncheckImg }}"
+        />
+      </view>
+    </view>
+
+    <view class="flex flex-row justify-between mt-40rpx">
+      <van-button
+        class="flex-1"
+        size="large"
+        bind:click="handleCancel"
+        >不同意</van-button
+      >
+      <view class="w-46rpx"></view>
+      <van-button
+        type="primary"
+        class="flex-1"
+        size="large"
+        bind:click="handleConfirm"
+        >同意</van-button
+      >
+    </view>
+  </view>
+</van-popup>
+
+<van-toast id="van-toast" />

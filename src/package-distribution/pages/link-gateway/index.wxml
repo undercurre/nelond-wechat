@@ -42,8 +42,8 @@
           size="small"
           custom-style="height: 52rpx;background: rgba(139,195,74,0.1);font-size: 24rpx;"
           bind:click="copy"
-          >复制</van-button
-        >
+          >复制
+        </van-button>
       </view>
     </view>
 
@@ -54,8 +54,8 @@
       type="primary"
       size="large"
       bind:click="connectWifi"
-      >前往连接</van-button
-    >
+      >前往连接
+    </van-button>
   </view>
 
   <view

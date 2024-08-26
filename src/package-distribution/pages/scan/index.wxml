@@ -22,7 +22,7 @@
 
   <view class="fixed left-0 right-0 top-0 bottom-0 flex flex-col">
     <view class="grow shrink h-200 camera-mask flex flex-col justify-end items-center">
-      <text class="leading-44rpx text-32 text-hex-F4F8FF pb-20rpx">扫描{{scanType === 'screen' ? '智慧屏' : '机身或说明书'}}上的二维码</text>
+      <text class="leading-44rpx text-32 text-hex-F4F8FF pb-20rpx">扫描{{scanType === 'screen' ? '边缘网关网页端' : '机身或说明书'}}上的二维码</text>
     </view>
 
     <view class="grow-0 flex flex-row items-stretch leading-0">

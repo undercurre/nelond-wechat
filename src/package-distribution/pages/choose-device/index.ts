@@ -20,18 +20,13 @@ ComponentWithComputed({
       {
         icon: `${productImgDir()}/0x16.png`,
         name: '智能网关',
-        path: '/package-distribution/pages/scan/index?scanType=gateway',
+        path: '/package-distribution/pages/choose-model/index?proType=0x16',
       },
       {
         icon: `${productImgDir()}/subdevice.png`,
         name: '开关/灯具',
         path: '/package-distribution/pages/choose-model/index?proType=0x13',
       },
-      // {
-      //   icon: `${productImgDir()}/screen.png`,
-      //   name: '边缘服务器',
-      //   path: '/package-distribution/pages/scan/index?scanType=screen',
-      // },
       {
         icon: `${productImgDir()}/sensor.png`,
         name: '传感器',

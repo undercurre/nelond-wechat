@@ -8,11 +8,9 @@
 
   <view class="flex flex-col items-center grow">
     <image
-      src="/package-distribution/assets/auth-screen/screen-icon.png"
-      class="mt-80rpx w-464 h-412"
+      src="{{productImgDir}}/0x16_host.png"
+      class="mt-80rpx w-412 h-412"
     />
-
-    <!--    <text class="leading-56rpx text-40 text-hex-000000 font-medium pt-26rpx pb-16rpx">登录智慧屏</text>-->
 
     <text class="leading-40rpx text-28 text-hex-666666">{{mobile}}</text>
   </view>

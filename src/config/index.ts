@@ -5,6 +5,7 @@ export * from './device'
 export * from './light'
 export * from './img'
 export * from './user'
+export * from './doc'
 
 let env: ENV_TYPE = 'dev'
 
@@ -44,6 +45,18 @@ export function isHttpsDomain() {
 
 export function isLan() {
   return env === 'Lan'
+}
+
+/**
+ * 判断是否dount多端app编译环境
+ */
+export function isNative() {
+  let isNative = false
+  // #if NATIVE
+  isNative = true
+  // #endif
+
+  return isNative
 }
 
 /**

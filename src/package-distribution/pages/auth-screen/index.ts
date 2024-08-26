@@ -2,8 +2,9 @@ import Toast from '@vant/weapp/toast/toast'
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { bindDevice } from '../../../apis/index'
 import { projectBinding, spaceBinding, userStore } from '../../../store/index'
-import { getCurrentPageParams } from '../../../utils/index'
+import { getCurrentPageParams, goBackPage } from '../../../utils/index'
 import cacheData from '../../common/cacheData'
+import { productImgDir } from '../../../config/index'
 
 Component({
   behaviors: [pageBehavior],
@@ -17,6 +18,7 @@ Component({
    */
   data: {
     mobile: '',
+    productImgDir: productImgDir(),
   },
 
   lifetimes: {
@@ -34,21 +36,22 @@ Component({
     async auth() {
       const pageParams = getCurrentPageParams()
       console.debug('pageParams', pageParams)
-      const bindRes = await bindDevice({
-        projectId: projectBinding.store.currentProjectId,
-        spaceId: spaceBinding.store.currentSpace.spaceId,
-        sn: pageParams.sn,
-        nonce: pageParams.code,
-        deviceName: 'Host设备',
-      })
+      const bindRes = await bindDevice(
+        {
+          projectId: projectBinding.store.currentProjectId,
+          spaceId: spaceBinding.store.currentSpace.spaceId,
+          sn: pageParams.sn,
+          nonce: pageParams.code,
+          deviceName: '边缘网关',
+        },
+        { loading: true },
+      )
 
       if (bindRes.success) {
         Toast({
           message: '绑定成功',
           onClose: () => {
-            wx.reLaunch({
-              url: cacheData.pageEntry,
-            })
+            goBackPage(cacheData.pageEntry)
           },
         })
       } else {

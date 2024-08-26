@@ -1,5 +1,7 @@
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import meta from '../../../meta'
+import { isNative, DOC_List } from '../../../config/index'
+import { showRemoteDoc } from '../../../utils/index'
 
 let debugTimeId = 0
 
@@ -14,25 +16,7 @@ Component({
    * 组件的初始数据
    */
   data: {
-    list: [
-      {
-        title: '美的商照隐私协议',
-        value: 'privacyPolicy',
-      },
-      {
-        title: '美的商照权限列表',
-        value: 'authList',
-      },
-      {
-        title: '软件许可及用户服务协议',
-        value: 'userService',
-      },
-      {
-        title: '已收集个人信息清单',
-        value: 'userInfoList',
-      },
-    ],
-
+    list: DOC_List,
     envVersion: 'release', // 当前小程序版本，体验版or 正式环境
     version: '', // 生产环境版本号
     releaseTime: '', // 版本上传时间
@@ -47,10 +31,18 @@ Component({
         })
       }
       const info = wx.getAccountInfoSync()
+      let version = info.miniProgram.version
+
+      if (isNative()) {
+        const appInfo = wx.getAppBaseInfo()
+
+        // @ts-ignore
+        version = appInfo.host.appVersion
+      }
 
       this.setData({
         envVersion: info.miniProgram.envVersion,
-        version: info.miniProgram.version,
+        version: version,
       })
     },
   },
@@ -59,9 +51,9 @@ Component({
    */
   methods: {
     handleTap(e: WechatMiniprogram.TouchEvent) {
-      wx.navigateTo({
-        url: '/package-about/pages/protocol-show/index?protocal=' + e.currentTarget.dataset.value,
-      })
+      const { url } = e.currentTarget.dataset
+
+      showRemoteDoc(url)
     },
 
     titlePress() {

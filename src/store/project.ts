@@ -102,7 +102,10 @@ export const projectStore = observable({
    */
   async updateProjectInfo(options?: IApiRequestOption) {
     const res = await this.updateProjectList(options)
-
+    if (!res.result?.content?.length) {
+      console.log('[KS]项目列表为空')
+      return
+    }
     if (res.success) {
       return await this.updateCurrentProjectDetail(options)
     } else {
@@ -123,7 +126,13 @@ export const projectStore = observable({
       })
     }
 
-    return res
+    return {
+      ...res,
+      result: {
+        ...res.result,
+        content: res.result.content.filter((p) => p.projectType === PROJECT_TYPE),
+      },
+    }
   },
 
   /**

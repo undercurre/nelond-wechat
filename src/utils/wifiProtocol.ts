@@ -80,7 +80,7 @@ export class WifiSocket {
   }
 
   async isConnectDeviceWifi() {
-    const connectedRes = await wx.getConnectedWifi().catch((err) => err)
+    const connectedRes = await wx.getConnectedWifi({ partialInfo: true }).catch((err) => err)
 
     Logger.log('获取当前wifi信息：', connectedRes)
     let reg = new RegExp(`^${this.SSID}$`)

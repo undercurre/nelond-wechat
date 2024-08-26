@@ -1,7 +1,8 @@
 {
   "component": true,
   "usingComponents": {
-    "van-checkbox": "@vant/weapp/checkbox/index"
+    "van-checkbox": "@vant/weapp/checkbox/index",
+    "agree-protocol": "./components/agree-protocol/index"
   },
   "navigationStyle": "custom"
 }
