@@ -22,10 +22,6 @@ export const DOC_List: IDoc[] = [
     label: '已收集个人信息清单',
     url: `${ossDomain}/downloadFile/已收集个人信息清单-美的商照.xlsx`,
   },
-  {
-    label: '第三方共享个人信息清单',
-    url: `${ossDomain}/downloadFile/第三方共享个人信息清单-美的商照.xlsx`,
-  },
 ]
 
 interface IDoc {
