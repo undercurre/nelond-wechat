@@ -18,6 +18,7 @@
       title="{{item.title}}"
       is-link
       center
+      border="{{index < cellList.length -1}}"
       data-ota-type="{{item.otaType}}"
       data-title="{{item.title}}"
       bind:click="toDetail"
