@@ -102,7 +102,10 @@ ComponentWithComputed({
 
         otaUpdateList = res.result.otaUpdateList.filter((item) => item.otaType === this.data.otaType)
 
-        const otaProductList = res.result.otaProductList.filter((item) => item.otaType === this.data.otaType)
+        // 兼容私有化部署，兼容旧版云端接口，接口没有返回otaType  TODO: 私有化（微清、邯郸工厂）云端版本更新后可去除【!item.otaType】空判断
+        const otaProductList = res.result.otaProductList.filter(
+          (item) => !item.otaType || item.otaType === this.data.otaType,
+        )
         // .map((item) => ({ ...item, versionDesc: item.versionDesc.replace(/ /gi, '\n') }))
 
         this.setData({

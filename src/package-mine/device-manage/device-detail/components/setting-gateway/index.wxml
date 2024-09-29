@@ -15,7 +15,7 @@
         wx:if="{{!isHost}}"
         title="信道"
         bind:click="toggleActionSheet"
-        is-link="{{!isRelease && canEditDevice}}"
+        is-link="{{(!isRelease || isNative) && canEditDevice}}"
         value="{{channelText}}"
       ></van-cell>
 

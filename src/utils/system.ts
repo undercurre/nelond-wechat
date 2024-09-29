@@ -1,4 +1,4 @@
-import { envMap, setEnv, mzaioDomain } from '../config/index'
+import { envMap, setEnv, mzaioDomain, isNative } from '../config/index'
 import { storage } from './storage'
 import { Logger } from './log'
 
@@ -104,19 +104,40 @@ export function hideLoading() {
   loadingNum === 0 && wx.hideLoading()
 }
 
+/**
+ * 是否正式版，app模式为release
+ */
 export function isRelease() {
-  return accountInfo.miniProgram.envVersion === 'release'
+  return getEnvVersion() === 'release'
 }
 
-const info = wx.getAccountInfoSync()
+/**
+ * 获取小程序环境版本  develop：开发版    trial：体验版   release：正式版
+ */
+export function getEnvVersion() {
+  return accountInfo.miniProgram.envVersion
+}
+
+/**
+ * 线上小程序版本号
+ */
+export function getVersion() {
+  let version = accountInfo.miniProgram.version
+  if (isNative()) {
+    const appInfo = wx.getAppBaseInfo()
+
+    // @ts-ignore
+    version = appInfo.host.appVersion
+  }
+
+  return version
+}
 
 /**
  * 重置当前小程序的运行环境设置
  */
 export function resetCurrentEnv() {
-  const { envVersion } = info.miniProgram
-
-  const envStr = envMap[envVersion]
+  const envStr = envMap[getEnvVersion()]
 
   setCurrentEnv(envStr)
 }
@@ -127,7 +148,7 @@ export function resetCurrentEnv() {
  * 正式版使用prod配置
  */
 export function setCurrentEnv(env?: ENV_TYPE) {
-  const { envVersion } = info.miniProgram
+  const envVersion = getEnvVersion()
   const storageKey = `${envVersion}_env`
   let envStr = env ?? (storage.get(storageKey) as ENV_TYPE)
 

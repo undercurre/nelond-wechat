@@ -171,6 +171,7 @@ ComponentWithComputed({
       // 若当前没有选择wifi，默认回填当前连接的wifi
       if (!this.data.wifiInfo.SSID) {
         wx.getConnectedWifi({
+          partialInfo: true,
           success: (res) => {
             // 过滤网关热点
             if (!res.wifi.SSID?.includes('midea_16')) {

@@ -122,7 +122,8 @@ export const projectStore = observable({
 
     if (res.success) {
       runInAction(() => {
-        projectStore.projectList = res.result.content.filter((p) => p.projectType === PROJECT_TYPE)
+        // 兼容私有化部署，兼容旧版云端接口，接口没有返回projectType  TODO: 私有化（微清、邯郸工厂）云端版本更新后可去除【!projectType】空判断
+        projectStore.projectList = res.result.content.filter((p) => p.projectType === PROJECT_TYPE || !p.projectType)
       })
     }
 

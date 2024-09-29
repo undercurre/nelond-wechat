@@ -376,7 +376,7 @@ ComponentWithComputed({
           } else {
             this.startGwAddMode(false)
           }
-        }, (expireTime - 10) * 1000)
+        }, (expireTime - 20) * 1000)
       }
 
       return res
@@ -605,7 +605,7 @@ ComponentWithComputed({
 
     async startZigbeeNet(bleDevice: Device.ISubDevice) {
       try {
-        const timeout = 60 // 等待绑定推送，超时60s
+        const timeout = 90 // 等待绑定推送，超时60s
         const deviceData = this.data._deviceMap[bleDevice.mac]
 
         Logger.log(

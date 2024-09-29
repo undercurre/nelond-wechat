@@ -3,7 +3,7 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import { RegMobile } from '@midea/reg-awsome'
 import { login, getCaptcha, loginByMz } from '../../apis/index'
 import { projectStore, othersStore, userStore } from '../../store/index'
-import { storage, showLoading, hideLoading, Logger } from '../../utils/index'
+import { storage, showLoading, hideLoading, Logger, isAndroid } from '../../utils/index'
 import { defaultImgDir, UNACTIVATED, CAPTCHA_VALID_TIME, isLan, isNative, PROJECT_TYPE } from '../../config/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
 
@@ -140,6 +140,7 @@ ComponentWithComputed({
      * 登录逻辑
      */
     async toLogin(data: { jsCode?: string; code?: string; captcha?: string }) {
+      Logger.log('toLogin')
       try {
         if (this.data.isManualLogin) {
           if (!RegMobile.reg.test(this.data.mobilePhone)) {
@@ -147,14 +148,17 @@ ComponentWithComputed({
           }
         }
 
-        if (isNative()) {
-          // IOS，获取 wifi 信息必须要用户授权 location 权限。暂时通过getLocation接口触发获取位置权限逻辑
+        if (isNative() && !isAndroid()) {
+          // 多端应用，IOS，获取 wifi 信息必须要用户授权 location 权限。暂时通过getLocation接口触发获取位置权限逻辑
+          Logger.log('getLocation')
+          showLoading()
           const locationRes = await wx
             .getLocation({
               type: 'wgs84',
             })
             .catch((err) => err)
 
+          hideLoading()
           Logger.log('locationRes', locationRes)
         }
 
@@ -173,18 +177,17 @@ ComponentWithComputed({
         else if (res.success && res.result) {
           console.log('login res', res)
 
+          // 兼容私有化部署，兼容旧版云端接口，接口没有返回projectType  TODO: 私有化（微清、邯郸工厂）云端版本更新后可去除【!projectType】空判断
+          const roleList = res.result.roleList.filter((r) => r.projectType === PROJECT_TYPE || !r.projectType)
+
           storage.set('token', res.result.token, null)
-          storage.set(
-            'roleList',
-            res.result.roleList.filter((r) => r.projectType === PROJECT_TYPE),
-            null,
-          )
+          storage.set('roleList', roleList, null)
           storage.set('userName', res.result.userName, null)
           storage.set('mobilePhone', res.result.mobilePhone, null)
 
           userStore.setUserInfo(res.result)
 
-          if (!res.result.roleList?.length) {
+          if (!roleList.length) {
             Toast('无项目权限，请联系管理员')
             return
           }

@@ -250,7 +250,7 @@ export class WifiSocket {
         resolve({ success: false, msg: 'TCP连接超时' })
       }, 10000)
 
-      const listen = (res: WechatMiniprogram.GeneralCallbackResult) => {
+      const listen: WechatMiniprogram.OnConnectCallback = (res) => {
         Logger.log(IP, 'tcpClient.onConnect port：', res)
         Logger.log('TCP连接时间：', Date.now() - start)
 

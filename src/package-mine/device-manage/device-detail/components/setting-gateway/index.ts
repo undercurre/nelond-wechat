@@ -1,7 +1,7 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { checkWifiSwitch, isRelease } from '../../../../../utils/index'
 import { controlDevice, uploadDeviceLog } from '../../../../../apis/index'
-import { PRODUCT_ID } from '../../../../../config/index'
+import { PRODUCT_ID, isNative } from '../../../../../config/index'
 import Toast from '@vant/weapp/toast/toast'
 
 ComponentWithComputed({
@@ -22,6 +22,7 @@ ComponentWithComputed({
    * 组件的初始数据
    */
   data: {
+    isNative: isNative(),
     isShowChannelList: false,
     columns: [...new Array(16)].map((_item, index) => index + 11),
     isRelease: isRelease(),
@@ -51,13 +52,13 @@ ComponentWithComputed({
    */
   methods: {
     toggleActionSheet() {
-      if (!this.data.isRelease && this.data.canEditDevice) {
+      // app环境开放
+      if ((!this.data.isRelease || this.data.isNative) && this.data.canEditDevice) {
         this.setData({ isShowChannelList: !this.data.isShowChannelList })
       }
     },
 
     async onSelectChannel(event: WechatMiniprogram.CustomEvent) {
-      console.log(event.detail)
       const { value } = event.detail
 
       this.toggleActionSheet()

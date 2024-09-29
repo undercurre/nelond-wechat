@@ -1,6 +1,6 @@
 import Toast from '@vant/weapp/toast/toast'
 import { storage, showRemoteDoc } from '../../../../utils/index'
-import { DOC_List, ossDomain } from '../../../../config/index'
+import { DOC_List, ossDomain, isNative } from '../../../../config/index'
 
 Component({
   /**
@@ -28,8 +28,8 @@ Component({
       const hasAgree = storage.get('hasAgree')
 
       console.log('hasAgree', hasAgree)
-      // 若从未阅读过协议，则弹出强制阅读提醒弹窗
-      if (!hasAgree) {
+      // 若从未阅读过协议，则弹出强制阅读提醒弹窗   app不展示协议阅读弹窗，内网环境
+      if (!hasAgree && !isNative()) {
         this.setData({ isShowPotocolModal: true })
         return
       }

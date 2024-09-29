@@ -1,7 +1,7 @@
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import meta from '../../../meta'
-import { isNative, DOC_List } from '../../../config/index'
-import { showRemoteDoc } from '../../../utils/index'
+import { DOC_List } from '../../../config/index'
+import { showRemoteDoc, getVersion, getEnvVersion } from '../../../utils/index'
 
 let debugTimeId = 0
 
@@ -17,7 +17,7 @@ Component({
    */
   data: {
     list: DOC_List,
-    envVersion: 'release', // 当前小程序版本，体验版or 正式环境
+    envVersion: getEnvVersion(), // 当前小程序版本，体验版or 正式环境
     version: '', // 生产环境版本号
     releaseTime: '', // 版本上传时间
     showVersion: false, // 是否显示版本号
@@ -30,18 +30,10 @@ Component({
           releaseTime: meta.datetime,
         })
       }
-      const info = wx.getAccountInfoSync()
-      let version = info.miniProgram.version
 
-      if (isNative()) {
-        const appInfo = wx.getAppBaseInfo()
-
-        // @ts-ignore
-        version = appInfo.host.appVersion
-      }
+      const version = getVersion()
 
       this.setData({
-        envVersion: info.miniProgram.envVersion,
         version: version,
       })
     },
