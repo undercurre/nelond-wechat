@@ -13,6 +13,13 @@ ComponentWithComputed({
     show: {
       type: Boolean,
       value: false,
+      observer(show) {
+        if (show) {
+          this.setData({
+            spaceName: spaceStore.currentSpaceNameFull ?? '全部',
+          })
+        }
+      },
     },
     choosingNew: {
       type: Boolean,
@@ -30,7 +37,7 @@ ComponentWithComputed({
     allDeviceList: Array<Device.DeviceItem>(),
     checkedDevice: {},
     spaceId: '0',
-    spaceName: spaceStore.currentSpaceNameFull ?? '全部',
+    spaceName: '',
     showSpaceSelectPopup: false,
   },
 
@@ -47,7 +54,7 @@ ComponentWithComputed({
      */
     allDeviceList(data) {
       const list = data.choosingNew ? data.list : data.allDeviceList
-      return list.filter((d) => d.deviceType === 2)
+      return list.filter((d: Device.DeviceItem) => d.deviceType === 2)
     },
 
     /**
@@ -58,7 +65,7 @@ ComponentWithComputed({
     showDeviceList(data) {
       const list = data.choosingNew ? data.list : data.allDeviceList
 
-      return list.filter((device) => {
+      return list.filter((device: Device.DeviceItem) => {
         const isScreen = SCREEN_PID.includes(device.productId)
         const isSubdevice = device.deviceType === 2
         const isCurrentSpace = data.spaceId === '0' ? true : device.spaceId === data.spaceId
