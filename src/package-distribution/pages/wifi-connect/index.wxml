@@ -14,11 +14,13 @@
 
     <view class="grow px-48rpx pt-100rpx">
       <van-field
+        disabled
         value="{{ wifiInfo.SSID }}"
         placeholder="请选择Wi-Fi"
         custom-style="margin-bottom: 32rpx;margin-top: 40rpx;padding: 32rpx 32rpx;border-radius: 24rpx;"
         clearable="{{true}}"
         bind:blur="changeWifiName"
+        bind:click-input="toggleWifi"
         border="{{false}}"
       >
         <van-button
