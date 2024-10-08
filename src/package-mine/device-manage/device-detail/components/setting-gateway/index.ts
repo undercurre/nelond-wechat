@@ -93,6 +93,8 @@ ComponentWithComputed({
       })
     },
     toChangeChannel() {
+      if (!this.data.canEditDevice) return
+
       const panId = this.data.deviceInfo.panId?.toString(16).toUpperCase()
 
       wx.navigateTo({
