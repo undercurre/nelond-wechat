@@ -44,6 +44,7 @@
         "device-manage/index",
         "device-manage/device-detail/index",
         "device-manage/group-detail/index",
+        "device-manage/wifi-channel/index",
         "guideline/index",
         "device-category/index",
         "help/list/index",

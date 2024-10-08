@@ -1,5 +1,5 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { checkWifiSwitch, isRelease } from '../../../../../utils/index'
+import { checkWifiSwitch, isRelease, strUtil } from '../../../../../utils/index'
 import { controlDevice, uploadDeviceLog } from '../../../../../apis/index'
 import { PRODUCT_ID, isNative } from '../../../../../config/index'
 import Toast from '@vant/weapp/toast/toast'
@@ -43,7 +43,7 @@ ComponentWithComputed({
 
       const panId = data.deviceInfo.panId?.toString(16).toUpperCase()
 
-      return `${data.deviceInfo.channel}(0x${panId})`
+      return `${data.deviceInfo.channel}（0x${panId}）`
     },
   },
 
@@ -86,7 +86,21 @@ ComponentWithComputed({
       }
 
       wx.navigateTo({
-        url: `/package-distribution/pages/wifi-connect/index?type=changeWifi&sn=${this.data.deviceInfo.sn}`,
+        url: strUtil.getUrlWithParams('/package-distribution/pages/wifi-connect/index', {
+          type: 'changeWifi',
+          sn: this.data.deviceInfo.sn,
+        }),
+      })
+    },
+    toChangeChannel() {
+      const panId = this.data.deviceInfo.panId?.toString(16).toUpperCase()
+
+      wx.navigateTo({
+        url: strUtil.getUrlWithParams('/package-mine/device-manage/wifi-channel/index', {
+          channel: this.data.deviceInfo.channel,
+          panId,
+          deviceId: this.data.deviceInfo.deviceId,
+        }),
       })
     },
 

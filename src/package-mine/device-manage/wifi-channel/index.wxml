@@ -1,0 +1,109 @@
+<view class="page-container flex flex-col">
+  <!-- 标题 -->
+  <nav-bar
+    title="信道"
+    left-arrow
+    bind:leftTap="goBack"
+  ></nav-bar>
+
+  <view
+    class="flex-1"
+    id="content"
+  >
+    <scroll-view
+      enhanced
+      show-scrollbar="{{false}}"
+      style="height: {{contentHeight}}px"
+      scroll-y="{{true}}"
+    >
+      <view class="flex">
+        <text class="ml-48rpx mt-24rpx text-black-59 font-normal text-28rpx">当前信道</text>
+      </view>
+
+      <van-cell-group inset>
+        <van-cell
+          title="{{channelText}}"
+          border="{{false}}"
+        >
+          <image
+            wx:if="{{channel === currentChannel}}"
+            slot="right-icon"
+            class="w-48 h-48"
+            src="/assets/img/base/checked.png"
+          ></image>
+        </van-cell>
+      </van-cell-group>
+
+      <view class="flex">
+        <text class="ml-48rpx mt-24rpx text-black-59 font-normal text-28rpx">推荐信道</text>
+      </view>
+
+      <van-cell-group
+        wx:for="{{recList}}"
+        wx:key="index"
+        inset
+      >
+        <van-cell
+          title="{{item}}"
+          bind:click="checkChannel"
+          data-value="{{item}}"
+          border="{{false}}"
+        >
+          <image
+            wx:if="{{item === currentChannel}}"
+            slot="right-icon"
+            class="w-48 h-48"
+            src="/assets/img/base/checked.png"
+          ></image>
+        </van-cell>
+      </van-cell-group>
+
+      <view class="flex">
+        <text class="ml-48rpx mt-24rpx text-black-59 font-normal text-28rpx">其他信道</text>
+      </view>
+
+      <van-cell-group
+        wx:for="{{channelList}}"
+        wx:key="index"
+        inset
+      >
+        <van-cell
+          title="{{item}}"
+          bind:click="checkChannel"
+          data-value="{{item}}"
+          border="{{false}}"
+        >
+          <image
+            wx:if="{{item === currentChannel}}"
+            slot="right-icon"
+            class="w-48 h-48"
+            src="/assets/img/base/checked.png"
+          ></image>
+        </van-cell>
+      </van-cell-group>
+    </scroll-view>
+  </view>
+
+  <!-- 隔开一点距离 -->
+  <view class="h-24rpx"></view>
+
+  <view class="flex flex-col">
+    <!-- 底部按钮 -->
+    <van-button
+      disabled="{{channel === currentChannel}}"
+      class="mx-32rpx"
+      block
+      size="large"
+      type="primary"
+      bind:click="toConfirm"
+      >切换信道</van-button
+    >
+  </view>
+</view>
+
+<van-toast id="van-toast" />
+<van-dialog
+  id="van-dialog"
+  confirm-button-color="#27282A"
+  cancel-button-color="#27282A"
+/>
