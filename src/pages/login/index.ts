@@ -114,6 +114,8 @@ ComponentWithComputed({
 
       await this.toLogin({
         captcha: this.data.captchaInput,
+        code: this.data._code,
+        jsCode: this.data._jsCode,
       })
 
       hideLoading()
@@ -139,7 +141,7 @@ ComponentWithComputed({
     /**
      * 登录逻辑
      */
-    async toLogin(data: { jsCode?: string; code?: string; captcha?: string }) {
+    async toLogin(data: { jsCode: string; code: string; captcha?: string }) {
       Logger.log('toLogin')
       try {
         if (this.data.isManualLogin) {
