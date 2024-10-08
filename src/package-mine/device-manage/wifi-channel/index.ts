@@ -24,6 +24,7 @@ ComponentWithComputed({
     contentHeight: 0,
     recList: REC_CHANNEL,
     channelList: [] as string[],
+    showMore: false,
   },
 
   computed: {
@@ -32,6 +33,10 @@ ComponentWithComputed({
         return ''
       }
       return `${data.channel}（0x${data.panId}）`
+    },
+    moreIconStyle(data) {
+      const { showMore } = data
+      return `transform: rotate(${showMore ? 0 : -90}deg)`
     },
   },
 
@@ -101,6 +106,11 @@ ComponentWithComputed({
           wx.navigateBack()
         })
         .catch(() => {})
+    },
+    toggleMore() {
+      this.setData({
+        showMore: !this.data.showMore,
+      })
     },
   },
 })

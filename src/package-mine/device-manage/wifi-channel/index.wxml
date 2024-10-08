@@ -58,11 +58,20 @@
         </van-cell>
       </van-cell-group>
 
-      <view class="flex">
+      <view
+        class="flex"
+        bind:tap="toggleMore"
+      >
         <text class="ml-48rpx mt-24rpx text-black-59 font-normal text-28rpx">其他信道</text>
+        <image
+          class="w-32 h-32 opacity-60 ml-24rpx mt-28rpx transition-all"
+          src="/assets/img/base/arrow-down.png"
+          style="{{moreIconStyle}}"
+        ></image>
       </view>
 
       <van-cell-group
+        wx:if="{{showMore}}"
         wx:for="{{channelList}}"
         wx:key="index"
         inset
