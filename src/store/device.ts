@@ -156,7 +156,10 @@ export const deviceStore = observable({
     }
 
     runInAction(() => {
-      deviceStore.allDeviceList = res.result
+      deviceStore.allDeviceList = res.result.map((device) => ({
+        ...device,
+        mac: device.deviceType === 1 ? device.sn.substring(8, 9) + device.sn.substring(17, 28) : device.deviceId, // 补充Mac地址信息
+      }))
 
       if (currentSpaceId && res.result?.length) {
         deviceStore.deviceList = res.result.filter((device) => device.spaceId === currentSpaceId)

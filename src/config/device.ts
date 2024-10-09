@@ -111,3 +111,6 @@ export const proName: Record<string, string> = {
   '0x26': 'bathHeat',
   '0xBC': 'sensor',
 } as const
+
+// 最多保存的历史记录个数
+export const MAX_HISTORY = 20

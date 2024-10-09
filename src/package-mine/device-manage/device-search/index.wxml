@@ -1,12 +1,5 @@
 <!-- 背景 -->
-<view
-  class="fixed left-0 top-0 w-100vw h-100vh bg-hex-eef2f7"
-  style="z-index: -1"
-></view>
-<view
-  class="h-100vh flex flex-col"
-  bindtap="handleFullPageTap"
->
+<view class="page-container">
   <!-- 标题 -->
   <nav-bar
     title="设备管理"
@@ -16,12 +9,15 @@
 
   <view class="w-702rpx ml-24rpx">
     <van-field
-      value=""
+      model:value="{{keyword}}"
       custom-style="padding: 32rpx; margin-top: 24rpx; border-radius: 24rpx;background-color: #F6FAFD;"
-      placeholder="搜索设备"
+      placeholder="输入设备名称、MAC地址搜索"
       border="{{false}}"
-      bind:click-input="handleInputClick"
-      disabled
+      confirm-type="搜索"
+      bind:confirm="searchConfirm"
+      bind:clear="handleChange"
+      bind:change="handleChange"
+      clearable
     >
       <image
         slot="left-icon"
@@ -30,35 +26,49 @@
       ></image>
     </van-field>
   </view>
+  <block wx:if="{{showKeywords && historyList.length}}">
+    <view class="flex">
+      <text class="ml-48rpx mt-32rpx text-black-59 font-normal text-28rpx">搜索推荐</text>
+    </view>
+    <view class="flex-col flex-wrap">
+      <van-tag
+        wx:for="{{historyList}}"
+        wx:key="index"
+        size="large"
+        color="#ffffff"
+        text-color="#333333"
+        custom-class="ml-32rpx mt-32rpx rounded-16rpx"
+        bind:tap="handleTagTap"
+        data-value="{{item}}"
+      >
+        <text class="p-16rpx">{{item}}</text>
+      </van-tag>
+    </view>
+  </block>
 
-  <van-cell-group
-    border="{{false}}"
-    inset
-  >
-    <van-cell
-      is-link
-      bind:click="handleSpaceSelect"
-      title="所在空间"
-      value="{{spaceName}}"
-      value-class="longValue"
-      title-class="shortTitle"
-      border="{{false}}"
-    ></van-cell>
-  </van-cell-group>
+  <block wx:if="{{showKeywords}}">
+    <view class="flex">
+      <text class="ml-48rpx mt-32rpx text-black-59 font-normal text-28rpx">搜索推荐</text>
+    </view>
+    <view class="flex-col flex-wrap">
+      <van-tag
+        wx:for="{{recList}}"
+        wx:key="index"
+        size="large"
+        color="#ffffff"
+        text-color="#333333"
+        custom-class="ml-32rpx mt-32rpx rounded-16rpx"
+        bind:tap="handleTagTap"
+        data-value="{{item}}"
+      >
+        <text class="p-16rpx">{{item}}</text>
+      </van-tag>
+    </view>
+  </block>
 
-  <!-- 无设备 -->
-  <view
-    wx:if="{{deviceListCompited.length === 0 && isLoaded && spaceId !=='0' }}"
-    class="w-750rpx h-100vh mt-80rpx flex flex-col items-center"
-  >
-    <image
-      src="{{defaultImgDir}}/no-device.png"
-      class="w-300rpx h-300rpx"
-    ></image>
-    <text class="text-28rpx text-black-59 mt-48rpx mb-64rpx">暂无设备</text>
-  </view>
   <!-- 设备列表 -->
   <scroll-view
+    wx:if="{{!showKeywords && deviceList.length}}"
     enable-flex
     enhanced
     scroll-y
@@ -70,7 +80,7 @@
   >
     <van-cell-group
       inset
-      wx:for="{{deviceListCompited}}"
+      wx:for="{{deviceList}}"
       wx:key="deviceId"
     >
       <van-cell
@@ -114,13 +124,3 @@
     <view class="list-bottom-placeholder"></view>
   </scroll-view>
 </view>
-
-<all-space-select
-  show="{{showSpaceSelectPopup}}"
-  showCell="{{false}}"
-  showTab="{{false}}"
-  initConfirm="{{true}}"
-  bind:confirm="handleSpaceSelectConfirm"
-></all-space-select>
-
-<van-toast id="van-toast" />

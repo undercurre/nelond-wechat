@@ -296,5 +296,10 @@ ComponentWithComputed({
       }
       this.setData({ showSpaceSelectPopup: true })
     },
+    handleInputClick() {
+      wx.navigateTo({
+        url: '/package-mine/device-manage/device-search/index',
+      })
+    },
   },
 })

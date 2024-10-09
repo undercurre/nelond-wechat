@@ -109,6 +109,8 @@ declare namespace Device {
       maxColorTemp: number
       minColorTemp: number
     }
+
+    mac?: string
   }
 
   interface MzgdPropertyDTO {
