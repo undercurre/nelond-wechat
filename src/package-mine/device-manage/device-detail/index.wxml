@@ -44,10 +44,12 @@
           ></van-cell>
           <van-cell
             wx:if="{{isSubDevice}}"
+            bind:click="handleGatewayClick"
             title="所属网关"
             value="{{belongsToGateway}}"
             value-class="longValue"
             title-class="shortTitle"
+            is-link
           ></van-cell>
           <van-cell
             wx:if="{{isSubDeviceOrGateway}}"

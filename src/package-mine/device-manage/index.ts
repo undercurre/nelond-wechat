@@ -7,6 +7,7 @@ import { queryDeviceInfoByDeviceId } from '../../apis/index'
 import { runInAction } from 'mobx-miniprogram'
 import { PRO_TYPE, SCREEN_PID, defaultImgDir } from '../../config/index'
 import Toast from '@vant/weapp/toast/toast'
+import { strUtil } from '../../utils/index'
 
 ComponentWithComputed({
   behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding, deviceBinding] }), pageBehavior],
@@ -226,7 +227,9 @@ ComponentWithComputed({
       const pageName = deviceType === 4 ? 'group-detail' : 'device-detail'
 
       wx.navigateTo({
-        url: `/package-mine/device-manage/${pageName}/index?deviceId=${deviceId}`,
+        url: strUtil.getUrlWithParams(`/package-mine/device-manage/${pageName}/index`, {
+          deviceId,
+        }),
       })
     },
 

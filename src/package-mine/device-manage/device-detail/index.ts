@@ -298,5 +298,12 @@ ComponentWithComputed({
         }),
       })
     },
+    handleGatewayClick() {
+      wx.navigateTo({
+        url: strUtil.getUrlWithParams('/package-mine/device-manage/device-detail/index', {
+          deviceId: this.data.deviceInfo.gatewayId,
+        }),
+      })
+    },
   },
 })
