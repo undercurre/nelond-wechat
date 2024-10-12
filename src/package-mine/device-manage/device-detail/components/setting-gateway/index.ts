@@ -15,6 +15,7 @@ ComponentWithComputed({
     },
     canEditDevice: {
       type: Boolean,
+      observer() {},
     },
   },
 
@@ -44,6 +45,17 @@ ComponentWithComputed({
       const panId = data.deviceInfo.panId?.toString(16).toUpperCase()
 
       return `${data.deviceInfo.channel}（0x${panId}）`
+    },
+    /**
+     * 是否无线网络
+     * @param connectType  0、有线以太网 1、wifi无线网络
+     * @returns boolean
+     */
+    hasSSID(data) {
+      return data.deviceInfo.connectType === 1
+    },
+    wifiSettingTips(data) {
+      return data.hasSSID ? data.wifiName : '当前为有线连接'
     },
   },
 
@@ -80,8 +92,8 @@ ComponentWithComputed({
     },
 
     toChangeWifi() {
-      // 预校验wifi开关是否打开
-      if (!checkWifiSwitch()) {
+      // 预校验，是否使用WIFI连接，以及wifi开关是否打开
+      if (!this.data.hasSSID || !checkWifiSwitch()) {
         return
       }
 
