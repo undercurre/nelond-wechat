@@ -27,6 +27,7 @@ ComponentWithComputed({
       this.setData({
         keyword: e.currentTarget.dataset.value,
       })
+      this.searchConfirm()
     },
     searchConfirm() {
       const { historyList, keyword } = this.data
