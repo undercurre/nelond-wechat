@@ -55,7 +55,7 @@ ComponentWithComputed({
       return data.deviceInfo.connectType === 1
     },
     wifiSettingTips(data) {
-      return data.hasSSID ? data.wifiName : '当前为有线连接'
+      return data.hasSSID ? data.deviceInfo.wifiName : '当前为有线连接'
     },
   },
 
