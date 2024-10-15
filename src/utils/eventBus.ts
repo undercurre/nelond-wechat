@@ -18,7 +18,7 @@ type Events = {
   } // 绑定子设备
   wsReceive: {
     result: {
-      eventData: IAnyObject
+      eventData: any
       eventType: keyof typeof WSEventType
     }
   }
@@ -76,6 +76,8 @@ export const WSEventType = {
   device_del: 'device_del',
   room_del: 'room_del',
   device_replace: 'device_replace', // 设备替换
+  gateway_replace_result: 'gateway_replace_result', // 网关替换
+  gateway_backup_result: 'gateway_backup_result', // 网关备份
   connect_success_status: 'connect_success_status', // webSocket连接已建立成功?
   bind_device: 'bind_device',
   invite_user_house: 'invite_user_house', // 用户加入项目

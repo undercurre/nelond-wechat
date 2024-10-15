@@ -2,12 +2,12 @@ import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import Toast from '@vant/weapp/toast/toast'
 import pageBehaviors from '../../behaviors/pageBehaviors'
-import { deviceBinding, deviceStore } from '../../store/index'
+import { deviceBinding, deviceStore, projectStore } from '../../store/index'
 import { StatusType } from './typings'
-import { deviceReplace } from '../../apis/index'
+import { deviceReplace, gatewayReplace } from '../../apis/index'
 // import { deviceReplace } from 'js-homos'
-import { emitter } from '../../utils/eventBus'
-import { SCREEN_PID, defaultImgDir } from '../../config/index'
+import { emitter, WSEventType } from '../../utils/eventBus'
+import { PRODUCT_ID, SCREEN_PID, defaultImgDir } from '../../config/index'
 
 ComponentWithComputed({
   options: {},
@@ -29,7 +29,7 @@ ComponentWithComputed({
     /**
      * @description 待选设备列表
      * choosingNew 如存在 oldDeviceItem，则当前选取新设备中
-     * isSubdevice 过滤网关设备；
+     * canDevice 过滤边缘网关设备；过滤灯组；
      *
      * isFilterDevice 如当前选取新设备中，列表只显示相同productId的项，并排除已选择的旧设备
      * oldDeviceOrNewAndOnline 如当前选取新设备中，则须排除离线项
@@ -38,13 +38,13 @@ ComponentWithComputed({
       const choosingNew = data.oldDeviceItem && data.oldDeviceItem.productId
 
       return deviceStore.allDeviceList.filter((device) => {
-        const isSubdevice = device.deviceType === 2
+        const canDevice = device.deviceType === 2 || (device.deviceType === 1 && device.productId !== PRODUCT_ID.host)
         const isScreen = SCREEN_PID.includes(device.productId)
         const isFilterDevice = choosingNew
           ? device.productId === data.oldDeviceItem.productId && device.deviceId !== data.oldDeviceItem.deviceId
           : true
         const oldDeviceOrNewAndOnline = choosingNew ? device.onLineStatus : true
-        return isSubdevice && !isScreen && isFilterDevice && oldDeviceOrNewAndOnline
+        return canDevice && !isScreen && isFilterDevice && oldDeviceOrNewAndOnline
       })
     },
     nextBtnText(data) {
@@ -113,15 +113,22 @@ ComponentWithComputed({
 
       // 进入开始替换
       if (this.data.status === 'newDevice') {
+        const isGatewayReplace = this.data.newDeviceItem.deviceType === 1
         this.setData({
           status: 'processing',
         })
 
         // 执行替换
-        const res = await deviceReplace({
-          newDevId: this.data.newDeviceItem.deviceId,
-          oldDevId: this.data.oldDeviceItem.deviceId,
-        })
+        const res = isGatewayReplace
+          ? await gatewayReplace({
+              projectId: projectStore.currentProjectId,
+              newDeviceId: this.data.newDeviceItem.deviceId,
+              oldDeviceId: this.data.oldDeviceItem.deviceId,
+            })
+          : await deviceReplace({
+              newDevId: this.data.newDeviceItem.deviceId,
+              oldDevId: this.data.oldDeviceItem.deviceId,
+            })
         console.log('deviceReplace', res)
 
         if (!res.success) {
@@ -129,9 +136,10 @@ ComponentWithComputed({
           this.setData({
             status: 'replaceFail',
           })
+          Toast(res.msg)
           return
         }
-        const WAITING = 30000
+        const WAITING = 60000
         const st = setTimeout(() => {
           this.setData({
             status: 'replaceFail',
@@ -139,8 +147,13 @@ ComponentWithComputed({
         }, WAITING)
 
         emitter.on('wsReceive', async (e) => {
-          // TODO 事件能否区分成功与失败？
-          if (e.result.eventType === 'device_replace') {
+          if (!isGatewayReplace && e.result.eventType === WSEventType.device_replace) {
+            // TODO 事件能否区分成功与失败？
+            clearTimeout(st)
+            this.setData({
+              status: 'replaceFinish',
+            })
+          } else if (isGatewayReplace && e.result.eventType === WSEventType.gateway_replace_result) {
             clearTimeout(st)
             this.setData({
               status: 'replaceFinish',

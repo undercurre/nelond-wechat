@@ -1,7 +1,7 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { spaceBinding, deviceBinding, spaceStore } from '../../../../store/index'
-import { SCREEN_PID } from '../../../../config/index'
+import { PRODUCT_ID, SCREEN_PID } from '../../../../config/index'
 
 ComponentWithComputed({
   behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding, deviceBinding] })],
@@ -34,7 +34,7 @@ ComponentWithComputed({
    * 组件的初始数据
    */
   data: {
-    allDeviceList: Array<Device.DeviceItem>(),
+    // allDeviceList: Array<Device.DeviceItem>(),
     checkedDevice: {},
     spaceId: '0',
     spaceName: '',
@@ -52,10 +52,10 @@ ComponentWithComputed({
      * 如正在选择新设备，则传入 deviceList，即使用指定列表；否则显示所有设备
      * ! 不按空间筛选
      */
-    allDeviceList(data) {
-      const list = data.choosingNew ? data.list : data.allDeviceList
-      return list.filter((d: Device.DeviceItem) => d.deviceType === 2)
-    },
+    // allDeviceList(data) {
+    //   const list = data.choosingNew ? data.list : data.allDeviceList
+    //   return list.filter((d: Device.DeviceItem) => d.deviceType === 2 || d.deviceType === 1)
+    // },
 
     /**
      * @description 显示待选设备列表
@@ -65,11 +65,11 @@ ComponentWithComputed({
     showDeviceList(data) {
       const list = data.choosingNew ? data.list : data.allDeviceList
 
-      return list.filter((device: Device.DeviceItem) => {
+      return list?.filter((device: Device.DeviceItem) => {
         const isScreen = SCREEN_PID.includes(device.productId)
-        const isSubdevice = device.deviceType === 2
+        const canDevice = device.deviceType === 2 || (device.deviceType === 1 && device.productId !== PRODUCT_ID.host)
         const isCurrentSpace = data.spaceId === '0' ? true : device.spaceId === data.spaceId
-        return isSubdevice && isCurrentSpace && !isScreen
+        return canDevice && isCurrentSpace && !isScreen
       })
     },
   },
