@@ -211,7 +211,7 @@ ComponentWithComputed({
       }
 
       wx.navigateTo({
-        url: `/package-mine/pages/ota-detail/index?fromDevice=1&otaType=${otaType}`,
+        url: `/package-mine/pages/ota-detail/index?otaType=${otaType}`,
       })
     },
     handleDeviceDelete() {

@@ -23,7 +23,6 @@ ComponentWithComputed({
     contentHeight: 0,
     otaData: [{}],
     isRequestingOta: false, // 是否正在请求下发ota
-    fromDevice: false,
     _pollingTimer: 0,
     jobStatus: 0, // 定时任务状态 0：未启动 1：启动
     otaProductList: [] as Ota.OtaProduct[], // 可更新的固件版本列表
@@ -77,7 +76,6 @@ ComponentWithComputed({
       this.setData({
         pageTitle: pageParams.title,
         otaType: parseInt(pageParams.otaType, 10),
-        fromDevice: !!pageParams.fromDevice,
       })
 
       this.queryOtaInfo()
