@@ -1,4 +1,5 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
+import { defaultImgDir } from '../../config/index'
 // import { spaceStore } from '../../store/index'
 
 ComponentWithComputed({
@@ -46,6 +47,13 @@ ComponentWithComputed({
     show: {
       type: Boolean,
       value: false,
+      observer(val) {
+        if (val) {
+          this.setData({
+            isSelectAll: false,
+          })
+        }
+      },
       //TODO: 待确认是否需要此部分逻辑，需要的话方案需更改
       // observer(value) {
       //   if (!value) return
@@ -108,8 +116,10 @@ ComponentWithComputed({
    * 组件的初始数据
    */
   data: {
+    defaultImgDir: defaultImgDir(),
     roomSelect: '',
     offlineDevice: {} as Device.DeviceItem,
+    isSelectAll: false,
   },
 
   computed: {
@@ -162,10 +172,20 @@ ComponentWithComputed({
       }
 
       this.setData({
+        isSelectAll: false,
         roomSelect: e.detail[e.detail.length - 1].spaceId,
       })
     },
-    blank() {},
+    handleSelectAll() {
+      this.setData(
+        {
+          isSelectAll: !this.data.isSelectAll,
+        },
+        () => {
+          this.triggerEvent('selectAll', this.data.isSelectAll ? this.data.roomSelect : '')
+        },
+      )
+    },
     clickTitleLeftBtn() {
       this.triggerEvent('clickTitleLeftBtn')
     },

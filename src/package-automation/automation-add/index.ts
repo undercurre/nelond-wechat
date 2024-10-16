@@ -749,11 +749,11 @@ ComponentWithComputed({
           spaceId: currentSpaceId,
           showEditRoomPopup: false,
           _isEditCondition: true,
-          sceneDevicelinkSelectList: deviceListInRoom.map((item) => item.uniId),
+          // sceneDevicelinkSelectList: deviceListInRoom.map((item) => item.uniId),
         },
-        () => {
-          this.updateSceneDeviceActionsFlatten()
-        },
+        // () => {
+        //   this.updateSceneDeviceActionsFlatten()
+        // },
       )
       this.updateSceneDeviceConditionsFlatten()
     },
@@ -986,6 +986,23 @@ ComponentWithComputed({
       } else {
         this.setData({
           tempSceneDevicelinkSelectedList: [...this.data['tempSceneDevicelinkSelectedList'], selectId],
+        })
+      }
+    },
+    handleSelectAll(e: { detail: string }) {
+      if (this.data.selectCardType !== 'device') return
+
+      const roomSelect = e.detail
+      console.log('[handleSelectAll]', roomSelect)
+      if (roomSelect) {
+        this.setData({
+          tempSceneDevicelinkSelectedList: (this.data.list as Device.DeviceItem[])
+            .filter((item) => item.spaceId === roomSelect)
+            .map((item) => item.uniId),
+        })
+      } else {
+        this.setData({
+          tempSceneDevicelinkSelectedList: [],
         })
       }
     },
