@@ -44,10 +44,12 @@
           ></van-cell>
           <van-cell
             wx:if="{{isSubDevice}}"
+            bind:click="handleGatewayClick"
             title="所属网关"
             value="{{belongsToGateway}}"
             value-class="longValue"
             title-class="shortTitle"
+            is-link
           ></van-cell>
           <van-cell
             wx:if="{{isSubDeviceOrGateway}}"
@@ -117,6 +119,30 @@
         wx:if="{{prodType === 'gateway' && deviceInfo.productId !== PRODUCT_ID.host}}"
         bind:update="updateDeviceInfo"
       />
+
+      <block wx:if="{{hasFindDevice}}">
+        <view class="w-750rpx flex">
+          <text class="ml-48rpx text-black-59 font-normal text-28rpx">辅助设置</text>
+        </view>
+        <view class="w-750rpx">
+          <van-cell-group inset>
+            <van-cell
+              title="定位设备"
+              border="{{false}}"
+            >
+              <van-button
+                slot="right-icon"
+                type="primary"
+                round
+                size="small"
+                bind:click="toFindDevice"
+                >找一找</van-button
+              >
+            </van-cell>
+          </van-cell-group>
+          <view class="h-8rpx"></view>
+        </view>
+      </block>
     </scroll-view>
   </view>
 

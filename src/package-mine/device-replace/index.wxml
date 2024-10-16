@@ -18,9 +18,11 @@
           <text class="block">1.被替换设备的名称与空间</text>
           <text class="block">2.被替换设备的参数设置</text>
           <text class="block">3.被替换设备的场景及参数</text>
+          <text class="block">4.被替换网关的网络及子设备（针对网关）</text>
         </view>
 
         <text class="block pt-64rpx text-black-2a text-28 leading-40rpx">替换完成后，被替换的设备将自动从项目中解绑</text>
+        <text class="block text-black-2a text-28 leading-40rpx">支持设备：zigbee网关及子设备</text>
       </view>
     </block>
 
@@ -79,7 +81,8 @@
     <block wx:if="{{status === 'newDevice'}}">
       <steps active="{{1}}"></steps>
       <text class="block text-center pt-60rpx pb-16rpx leading-40rpx text-28 text-black-59">选择新设备</text>
-      <text class="block text-center pb-80rpx leading-34rpx text-24 text-hex-a2a2a2">仅可选择在线，且与旧设备同类别的新设备</text>
+      <text class="block text-center leading-34rpx text-24 text-hex-a2a2a2">仅可选择在线，且与旧设备同类别的新设备</text>
+      <text class="block text-center pb-80rpx leading-34rpx text-24 text-hex-a2a2a2">如替换网关，需确保新网关不断&不断网。</text>
 
       <van-cell-group
         inset

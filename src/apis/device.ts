@@ -609,6 +609,45 @@ export async function deviceReplace(
 }
 
 /**
+ * 网关替换
+ * 需要在前端验证设备是否可替换
+ */
+export async function gatewayReplace(
+  data: {
+    newDeviceId: string
+    oldDeviceId: string
+    projectId: string
+  },
+  options?: { loading?: boolean },
+) {
+  return await mzaioRequest.post<IAnyObject>({
+    log: true,
+    loading: options?.loading ?? false,
+    url: '/v1/cl/device/gatewayReplace',
+    data,
+  })
+}
+
+/**
+ * 网关替换
+ * 需要在前端验证设备是否可替换
+ */
+export async function gatewayBackup(
+  data: {
+    deviceId: string
+    projectId: string
+  },
+  options?: { loading?: boolean },
+) {
+  return await mzaioRequest.post<IAnyObject>({
+    log: true,
+    loading: options?.loading ?? false,
+    url: '/v1/cl/device/gatewayBackup',
+    data,
+  })
+}
+
+/**
  * 获取设备（传感器）日志
  */
 export async function getSensorLogs(

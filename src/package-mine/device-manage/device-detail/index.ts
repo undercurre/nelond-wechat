@@ -11,8 +11,14 @@ import {
   userBinding,
 } from '../../../store/index'
 import pageBehavior from '../../../behaviors/pageBehaviors'
-import { waitingDeleteDevice, editDeviceInfo, queryDeviceInfoByDeviceId, sendDevice } from '../../../apis/index'
-import { proName, PRO_TYPE, SCREEN_PID, PRODUCT_ID } from '../../../config/index'
+import {
+  waitingDeleteDevice,
+  editDeviceInfo,
+  queryDeviceInfoByDeviceId,
+  sendDevice,
+  findDevice,
+} from '../../../apis/index'
+import { proName, PRO_TYPE, SCREEN_PID, PRODUCT_ID, getModelName } from '../../../config/index'
 import Dialog from '@vant/weapp/dialog/dialog'
 import { emitter, strUtil } from '../../../utils/index'
 
@@ -94,6 +100,10 @@ ComponentWithComputed({
       if (!spaceId) return ''
       const currentSpace = spaceBinding.store.allSpaceList.find((item) => item.spaceId === spaceId)
       return currentSpace ? spaceBinding.store.getSpaceClearName(currentSpace) : ''
+    },
+    hasFindDevice(data) {
+      const { proType } = data.deviceInfo
+      return proType === PRO_TYPE.light || proType === PRO_TYPE.switch
     },
   },
 
@@ -297,6 +307,23 @@ ComponentWithComputed({
           deviceId: this.data.deviceId,
         }),
       })
+    },
+    handleGatewayClick() {
+      wx.navigateTo({
+        url: strUtil.getUrlWithParams('/package-mine/device-manage/device-detail/index', {
+          deviceId: this.data.deviceInfo.gatewayId,
+        }),
+      })
+    },
+    toFindDevice() {
+      const { gatewayId, deviceId, proType, onLineStatus } = this.data.deviceInfo
+      if (!onLineStatus) {
+        Toast('设备已离线')
+        return
+      }
+
+      const modelName = getModelName(proType)
+      findDevice({ gatewayId, devId: deviceId, modelName })
     },
   },
 })

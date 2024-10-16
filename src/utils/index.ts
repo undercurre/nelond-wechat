@@ -33,10 +33,15 @@ export function delay(ms: number) {
  * @param arr
  * @param key 唯一key
  */
-export function unique<T = IAnyObject>(arr: Array<T>, key: keyof T) {
+export function unique<T = IAnyObject>(arr: Array<T>, key?: keyof T) {
   const res = new Map()
 
-  return arr.filter((item) => !res.has(item[key]) && res.set(item[key], 1))
+  return arr.filter((item) => {
+    if (key) {
+      return !res.has(item[key]) && res.set(item[key], 1)
+    }
+    return !res.has(item) && res.set(item, 1)
+  })
 }
 
 /**
