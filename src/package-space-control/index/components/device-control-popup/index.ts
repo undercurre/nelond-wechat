@@ -143,6 +143,7 @@ ComponentWithComputed({
     isScreen: false, // 当前选中项是否智慧屏
     isKnob: false, // 当前选中项是否旋钮开关
     isNoColorTemp: false, // 是否禁用色温的灯具
+    linkDeviceSpaceId: '', // 已关联的设备的空间id
   },
 
   computed: {
@@ -323,6 +324,8 @@ ComponentWithComputed({
         list = deviceStore.allDeviceFlattenList.filter((item) => item.proType === PRO_TYPE.light)
 
         linkSelectList = relInfo.lampRelList.map((device) => device.lampDeviceId.replace('group-', ''))
+        const linkDeviceSpaceId = list.find((item) => item.deviceId === linkSelectList[0])?.spaceId
+        this.setData({ linkDeviceSpaceId: linkDeviceSpaceId || '' })
       } else if (this.data.selectLinkType === 'switch') {
         list = deviceStore.allDeviceFlattenList.filter(
           (item) => item.proType === PRO_TYPE.switch && item.uniId !== switchUniId,
