@@ -18,7 +18,7 @@ ComponentWithComputed({
    */
   data: {
     pageTitle: '',
-    otaType: 2,
+    otaType: 0,
     isLoading: false,
     contentHeight: 0,
     otaData: [{}],
