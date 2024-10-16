@@ -4,6 +4,7 @@ import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import pageBehavior from '../../behaviors/pageBehaviors'
 import { PRO_TYPE, SCREEN_PID } from '../../config/index'
 import Toast from '@vant/weapp/toast/toast'
+import { isEmptyObject } from '../../utils/is'
 
 ComponentWithComputed({
   // options: {
@@ -71,34 +72,7 @@ ComponentWithComputed({
       type: String,
       value: '',
       observer(value) {
-        if (value) {
-          const space = spaceStore.allSpaceList.find((s) => {
-            return s.spaceId === value
-          })
-          if (space) {
-            const spaceIds = [space.spaceId]
-            let parentSpace = spaceStore.allSpaceList.find((s) => s.spaceId === space.pid)
-            while (parentSpace) {
-              spaceIds.unshift(parentSpace.spaceId)
-              parentSpace = spaceStore.allSpaceList.find((s) => s.spaceId === parentSpace?.pid)
-            }
-            this.setData(
-              {
-                firstSpaceId: spaceIds[0] || '',
-                _firstSpaceId: spaceIds[0] || '',
-                secondSpaceId: spaceIds[1] || '',
-                _secondSpaceId: spaceIds[1] || '',
-                thirdSpaceId: spaceIds[2] || '',
-                _thirdSpaceId: spaceIds[2] || '',
-                fourthSpaceId: spaceIds[3] || '',
-                _fourthSpaceId: spaceIds[3] || '',
-              },
-              () => {
-                if (this.data.initConfirm) this.triggerEvent('confirm', this.calcConfirmRes())
-              },
-            )
-          }
-        }
+        this.initTargetSpace(value)
       },
     },
   },
@@ -306,6 +280,9 @@ ComponentWithComputed({
       })
       const result = this.buildTree(spaceList, '0')
       this.setData({ spaceData: result }, () => {
+        if (this.data.targetSpaceId) {
+          this.initTargetSpace(this.data.targetSpaceId)
+        }
         if (this.data.init && !this.data.targetSpaceId) {
           this.initDefault()
         }
@@ -343,6 +320,65 @@ ComponentWithComputed({
           if (this.data.initConfirm) this.triggerEvent('confirm', this.calcConfirmRes())
         },
       )
+    },
+    /**
+     * 设置目标空间
+     */
+    initTargetSpace(targetSpaceId: string) {
+      if (!targetSpaceId || isEmptyObject(this.data.spaceData)) {
+        console.warn(
+          '[all-space-select]initTargetSpace失败，targetSpaceId为空或spaceData为空',
+          targetSpaceId,
+          this.data.spaceData,
+        )
+        return
+      }
+      const space = spaceStore.allSpaceList.find((s) => {
+        return s.spaceId === targetSpaceId
+      })
+      if (space) {
+        const spaceIds = [space.spaceId]
+        let parentSpace = spaceStore.allSpaceList.find((s) => s.spaceId === space.pid)
+        while (parentSpace) {
+          spaceIds.unshift(parentSpace.spaceId)
+          parentSpace = spaceStore.allSpaceList.find((s) => s.spaceId === parentSpace?.pid)
+        }
+        // 如果spaceData不存在targetSpaceId，则默认选中第一个
+        let flag = true
+        // 初始化当前层级为spaceData（顶层）
+        let currentLevel: Record<string, Space.SpaceTreeNode> = this.data.spaceData
+        // 遍历spaceIds
+        for (const id of spaceIds) {
+          // 检查当前层级是否包含当前ID
+          if (!currentLevel[id]) {
+            flag = false
+            break
+          }
+          // 更新currentLevel为当前ID对应的下一层
+          currentLevel = currentLevel[id].child
+        }
+        if (flag) {
+          console.log('[all-space-select]initTargetSpace成功')
+          this.setData(
+            {
+              firstSpaceId: spaceIds[0] || '',
+              _firstSpaceId: spaceIds[0] || '',
+              secondSpaceId: spaceIds[1] || '',
+              _secondSpaceId: spaceIds[1] || '',
+              thirdSpaceId: spaceIds[2] || '',
+              _thirdSpaceId: spaceIds[2] || '',
+              fourthSpaceId: spaceIds[3] || '',
+              _fourthSpaceId: spaceIds[3] || '',
+            },
+            () => {
+              if (this.data.initConfirm) this.triggerEvent('confirm', this.calcConfirmRes())
+            },
+          )
+        } else {
+          console.warn('[all-space-select]initTargetSpace失败，spaceData不存在targetSpaceId，已默认initDefault')
+          this.initDefault()
+        }
+      }
     },
     getKey(obj: { [key: string]: Space.SpaceTreeNode }): string[] {
       const key = Object.keys(obj)[0]
