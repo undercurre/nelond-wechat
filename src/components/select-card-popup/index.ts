@@ -182,7 +182,10 @@ ComponentWithComputed({
           isSelectAll: !this.data.isSelectAll,
         },
         () => {
-          this.triggerEvent('selectAll', this.data.isSelectAll ? this.data.roomSelect : '')
+          this.triggerEvent('selectAll', {
+            isSelect: this.data.isSelectAll,
+            roomSelect: this.data.roomSelect,
+          })
         },
       )
     },
