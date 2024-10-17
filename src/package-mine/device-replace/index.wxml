@@ -82,7 +82,7 @@
       <steps active="{{1}}"></steps>
       <text class="block text-center pt-60rpx pb-16rpx leading-40rpx text-28 text-black-59">选择新设备</text>
       <text class="block text-center leading-34rpx text-24 text-hex-a2a2a2">仅可选择在线，且与旧设备同类别的新设备</text>
-      <text class="block text-center pb-80rpx leading-34rpx text-24 text-hex-a2a2a2">如替换网关，需确保新网关不断&不断网。</text>
+      <text class="block text-center pb-80rpx leading-34rpx text-24 text-hex-a2a2a2">如替换网关，需确保新网关不断电&不断网。</text>
 
       <van-cell-group
         inset

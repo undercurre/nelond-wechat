@@ -1,5 +1,13 @@
 import { ComponentWithComputed } from 'miniprogram-computed'
-import { checkWifiSwitch, emitter, isRelease, strUtil, WSEventType } from '../../../../../utils/index'
+import {
+  checkWifiSwitch,
+  emitter,
+  hideLoading,
+  isRelease,
+  showLoading,
+  strUtil,
+  WSEventType,
+} from '../../../../../utils/index'
 import { controlDevice, gatewayBackup, uploadDeviceLog } from '../../../../../apis/index'
 import { PRODUCT_ID, isNative } from '../../../../../config/index'
 import Toast from '@vant/weapp/toast/toast'
@@ -132,6 +140,9 @@ ComponentWithComputed({
     },
 
     async backup() {
+      if (st) return // 已在备份中
+
+      showLoading()
       const res = await gatewayBackup({
         deviceId: this.data.deviceInfo.deviceId,
         projectId: projectStore.currentProjectId,
@@ -145,13 +156,15 @@ ComponentWithComputed({
         clearTimeout(st)
         st = 0
         Toast('备份失败')
+        hideLoading()
       }, WAITING)
 
       emitter.on('wsReceive', async (e) => {
         if (e.result.eventType === WSEventType.gateway_backup_result) {
           clearTimeout(st)
           st = 0
-          Toast(e.result.eventData === 0 ? '备份成功' : '备份失败')
+          Toast(e.result.eventData.result === 0 ? '备份成功' : '备份失败')
+          hideLoading()
         }
       })
     },
