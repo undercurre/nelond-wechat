@@ -13,7 +13,7 @@
       custom-style="padding: 32rpx; margin-top: 24rpx; border-radius: 24rpx;background-color: #F6FAFD;"
       placeholder="输入设备名称、MAC地址搜索"
       border="{{false}}"
-      confirm-type="搜索"
+      confirm-type="search"
       bind:confirm="searchConfirm"
       bind:clear="handleChange"
       bind:change="handleChange"

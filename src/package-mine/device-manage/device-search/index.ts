@@ -31,10 +31,17 @@ ComponentWithComputed({
       })
       this.searchConfirm()
     },
-    searchConfirm() {
+    /**
+     * 执行前端搜索逻辑
+     * @param toSave 是否保存到搜索历史
+     */
+    searchConfirm(toSave = true) {
       const { historyList, keyword } = this.data
-      historyList.unshift(keyword)
-      storage.set('SEARCH_HISTORY', unique(historyList).slice(0, MAX_HISTORY))
+
+      if (toSave) {
+        historyList.unshift(keyword)
+        storage.set('SEARCH_HISTORY', unique(historyList).slice(0, MAX_HISTORY))
+      }
 
       // 筛选操作
       const list = deviceStore.allDeviceList?.length ? [...deviceStore.allDeviceList] : []
@@ -58,7 +65,9 @@ ComponentWithComputed({
       })
     },
     handleChange() {
-      if (!this.data.keyword) {
+      if (this.data.keyword) {
+        this.searchConfirm(false)
+      } else {
         this.setData({
           deviceList: [],
           isLoaded: false,
