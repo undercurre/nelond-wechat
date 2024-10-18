@@ -113,4 +113,4 @@ export const proName: Record<string, string> = {
 } as const
 
 // 最多保存的历史记录个数
-export const MAX_HISTORY = 20
+export const MAX_HISTORY = 10

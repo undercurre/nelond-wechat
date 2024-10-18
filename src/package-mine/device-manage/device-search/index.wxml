@@ -1,5 +1,5 @@
 <!-- 背景 -->
-<view class="page-container">
+<view class="flex flex-col page-container">
   <!-- 标题 -->
   <nav-bar
     title="设备管理"
@@ -17,18 +17,20 @@
       bind:confirm="searchConfirm"
       bind:clear="handleChange"
       bind:change="handleChange"
+      clear-trigger="always"
       clearable
+      auto-focus
     >
       <image
         slot="left-icon"
         src="/assets/img/home-location/search.png"
-        class="w-48 h-48"
+        class="w-36 h-36 mr-16rpx mt-5rpx"
       ></image>
     </van-field>
   </view>
-  <block wx:if="{{showKeywords && historyList.length}}">
+  <block wx:if="{{!isLoaded && showKeywords && historyList.length}}">
     <view class="flex">
-      <text class="ml-48rpx mt-32rpx text-black-59 font-normal text-28rpx">搜索推荐</text>
+      <text class="ml-48rpx mt-32rpx text-black-59 font-normal text-28rpx">搜索历史</text>
     </view>
     <view class="flex-col flex-wrap">
       <van-tag
@@ -46,7 +48,7 @@
     </view>
   </block>
 
-  <block wx:if="{{showKeywords}}">
+  <block wx:if="{{!isLoaded && showKeywords}}">
     <view class="flex">
       <text class="ml-48rpx mt-32rpx text-black-59 font-normal text-28rpx">搜索推荐</text>
     </view>
@@ -74,9 +76,6 @@
     scroll-y
     class="h-500 grow"
     show-scrollbar="{{false}}"
-    refresher-triggered="{{isRefresh}}"
-    bindrefresherrefresh="onPullDownRefresh"
-    refresher-enabled
   >
     <van-cell-group
       inset
@@ -88,6 +87,7 @@
         bind:click="handleCardClick"
         data-device-id="{{item.deviceId}}"
         data-device-type="{{item.deviceType}}"
+        border="{{false}}"
       >
         <view class="flex item-center">
           <view class="w-96rpx h-96rpx bg-hex-F6FAFD rounded-999 flex-center">
@@ -123,4 +123,13 @@
     </van-cell-group>
     <view class="list-bottom-placeholder"></view>
   </scroll-view>
+
+  <view class="flex-1 flex-col-center">
+    <tips-box
+      wx:if="{{isLoaded && !deviceList.length}}"
+      text="未搜索到相关设备"
+      icon="{{defaultImgDir}}/searching.png"
+      size="160"
+    ></tips-box>
+  </view>
 </view>

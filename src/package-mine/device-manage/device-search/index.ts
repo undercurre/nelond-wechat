@@ -1,16 +1,18 @@
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { deviceStore, spaceStore } from '../../../store/index'
 import { storage, unique } from '../../../utils/index'
-import { PRO_TYPE, SCREEN_PID, MAX_HISTORY } from '../../../config/index'
+import { PRO_TYPE, SCREEN_PID, MAX_HISTORY, defaultImgDir } from '../../../config/index'
 import { ComponentWithComputed } from 'miniprogram-computed'
 
 ComponentWithComputed({
   behaviors: [pageBehavior],
   data: {
+    defaultImgDir: defaultImgDir(),
     keyword: '', // 已输入的关键字
     historyList: [] as string[], // 关键字搜索历史
     recList: ['网关', '筒灯', '射灯', '工矿灯', '线条灯', '开关', '传感器', '窗帘'],
     deviceList: [] as Device.DeviceItem[],
+    isLoaded: false,
   },
   computed: {
     showKeywords(data) {
@@ -51,13 +53,17 @@ ComponentWithComputed({
           spaceClearName: spaceStore.getSpaceClearNameById(d.spaceId),
         }))
       this.setData({
+        isLoaded: true,
         deviceList: rst,
       })
     },
     handleChange() {
-      this.setData({
-        deviceList: [],
-      })
+      if (!this.data.keyword) {
+        this.setData({
+          deviceList: [],
+          isLoaded: false,
+        })
+      }
     },
   },
 })

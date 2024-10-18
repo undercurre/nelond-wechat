@@ -1,10 +1,5 @@
-<!-- 背景 -->
 <view
-  class="fixed left-0 top-0 w-100vw h-100vh bg-hex-eef2f7"
-  style="z-index: -1"
-></view>
-<view
-  class="h-100vh flex flex-col"
+  class="flex flex-col page-container"
   bindtap="handleFullPageTap"
 >
   <!-- 标题 -->
@@ -26,7 +21,7 @@
       <image
         slot="left-icon"
         src="/assets/img/home-location/search.png"
-        class="w-48 h-48"
+        class="w-36 h-36 mr-16rpx mt-5rpx"
       ></image>
     </van-field>
   </view>
