@@ -942,6 +942,7 @@ ComponentWithComputed({
         return
       }
 
+      storage.set('ADD_FROM_PAGE', 'space-control') // 标记从space-control页添加设备或场景
       wx.navigateTo({ url: '/package-distribution/pages/choose-device/index' })
     },
     // ! 目前只有网关离线卡片会有重新联网操作

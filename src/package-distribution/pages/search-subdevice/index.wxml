@@ -43,7 +43,7 @@
           show-scrollbar="{{false}}"
         >
           <view
-            wx:for="{{bleDeviceList}}"
+            wx:for="{{bleDeviceListSetSpace}}"
             wx:key="deviceUuid"
             class="flex flex-row items-center bg-white rounded-32rpx mb-24rpx px-24rpx py-20rpx"
             bind:longpress="showMac"

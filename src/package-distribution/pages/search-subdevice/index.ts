@@ -2,9 +2,18 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { runInAction } from 'mobx-miniprogram'
 import Toast from '@vant/weapp/toast/toast'
-import { deviceStore, projectBinding, projectStore, spaceBinding } from '../../../store/index'
+import { deviceStore, projectBinding, projectStore, spaceBinding, spaceStore } from '../../../store/index'
 import { bleDevicesBinding, bleDevicesStore } from '../../store/bleDeviceStore'
-import { delay, emitter, getCurrentPageParams, Logger, goBackPage, connectList, closeList } from '../../../utils/index'
+import {
+  delay,
+  emitter,
+  getCurrentPageParams,
+  Logger,
+  goBackPage,
+  connectList,
+  closeList,
+  storage,
+} from '../../../utils/index'
 import pageBehaviors from '../../../behaviors/pageBehaviors'
 import { batchUpdate, bindDevice, isDeviceOnline, sendCmdAddSubdevice, queryDeviceProInfo } from '../../../apis/index'
 import lottie from 'lottie-miniprogram'
@@ -29,6 +38,7 @@ ComponentWithComputed({
     isManual: {
       type: String,
       value: '0',
+      observer() {},
     },
     // 添加的子设备的modelId
     _productId: {
@@ -120,6 +130,25 @@ ComponentWithComputed({
       const list = data.bleDeviceList || []
 
       return data.selectedList.length === list.length
+    },
+
+    // 根据配网前设置的标识，指定默认空间：在首页进入，则设置为与网关相同的空间；否则为原默认空间
+    bleDeviceListSetSpace(data) {
+      const isFromIndex = storage.get('ADD_FROM_PAGE') === 'index'
+
+      return data.bleDeviceList?.map((item: Device.DeviceItem) => {
+        const spaceId = isFromIndex
+          ? deviceStore.allDeviceMap[getCurrentPageParams().gatewayId].spaceId
+          : spaceBinding.store.currentSpace.spaceId
+        const spaceName = isFromIndex
+          ? spaceStore.getSpaceClearNameById(spaceId)
+          : spaceBinding.store.currentSpaceNameClear
+        return {
+          ...item,
+          spaceId,
+          spaceName,
+        }
+      })
     },
   },
 
