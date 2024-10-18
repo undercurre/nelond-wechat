@@ -229,7 +229,7 @@ ComponentWithComputed({
         return
       }
 
-      if (event.detail.isBackupLatest !== 1) {
+      if (event.detail.hasNewBackup === 1) {
         Dialog.confirm({
           zIndex: 10001,
           message: '当前网关备份包非最新，建议先进行网关手动备份',
