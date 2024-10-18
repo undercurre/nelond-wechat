@@ -145,6 +145,11 @@ ComponentWithComputed({
     async backup() {
       if (st) return // 已在备份中
 
+      if (!this.data.canBackup) {
+        Toast('当前网关版本不支持备份')
+        return
+      }
+
       showLoading()
       const res = await gatewayBackup({
         deviceId: this.data.deviceInfo.deviceId,
