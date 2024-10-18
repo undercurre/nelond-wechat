@@ -74,8 +74,7 @@ ComponentWithComputed({
     toConfirm() {
       Dialog.confirm({
         title: '确定切换信道',
-        message:
-          '切换信道前，请确保所有设备已上电并处于在线状态。切换信道后，部分设备可能会永久离线，需要手动重新配网。请谨慎操作！',
+        message: '切换信道前，请确保所有子设备已上电。断电子设备在切换信道后可能会永久离线，需要手动重新配网！',
         showCancelButton: true,
       })
         .then(async () => {
