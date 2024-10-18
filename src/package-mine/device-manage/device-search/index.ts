@@ -1,6 +1,6 @@
 import pageBehavior from '../../../behaviors/pageBehaviors'
 import { deviceStore, spaceStore } from '../../../store/index'
-import { storage, unique } from '../../../utils/index'
+import { storage, strUtil, unique } from '../../../utils/index'
 import { PRO_TYPE, SCREEN_PID, MAX_HISTORY, defaultImgDir } from '../../../config/index'
 import { ComponentWithComputed } from 'miniprogram-computed'
 
@@ -64,6 +64,17 @@ ComponentWithComputed({
           isLoaded: false,
         })
       }
+    },
+    handleCardClick(e: { currentTarget: { dataset: { deviceId: string; deviceType: number } } }) {
+      const { deviceId, deviceType } = e.currentTarget.dataset
+      console.log('handleCardClick', deviceId, deviceType)
+      const pageName = deviceType === 4 ? 'group-detail' : 'device-detail'
+
+      wx.navigateTo({
+        url: strUtil.getUrlWithParams(`/package-mine/device-manage/${pageName}/index`, {
+          deviceId,
+        }),
+      })
     },
   },
 })
