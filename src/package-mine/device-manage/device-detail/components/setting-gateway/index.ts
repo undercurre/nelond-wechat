@@ -68,6 +68,9 @@ ComponentWithComputed({
     wifiSettingTips(data) {
       return data.hasSSID ? data.deviceInfo.wifiName : '当前为有线连接'
     },
+    canBackup(data) {
+      return Number(data.deviceInfo?.version) >= 510
+    },
   },
 
   /**

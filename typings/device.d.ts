@@ -111,6 +111,8 @@ declare namespace Device {
     }
 
     mac?: string
+
+    isBackupLatest: 0 | 1 | never // 是否最新备份包
   }
 
   interface MzgdPropertyDTO {

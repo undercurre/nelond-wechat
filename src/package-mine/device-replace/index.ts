@@ -1,12 +1,13 @@
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import { ComponentWithComputed } from 'miniprogram-computed'
 import Toast from '@vant/weapp/toast/toast'
+import Dialog from '@vant/weapp/dialog/dialog'
 import pageBehaviors from '../../behaviors/pageBehaviors'
 import { deviceBinding, deviceStore, projectStore } from '../../store/index'
 import { StatusType } from './typings'
 import { deviceReplace, gatewayReplace } from '../../apis/index'
 // import { deviceReplace } from 'js-homos'
-import { emitter, WSEventType } from '../../utils/eventBus'
+import { emitter, WSEventType, strUtil } from '../../utils/index'
 import { PRODUCT_ID, SCREEN_PID, defaultImgDir } from '../../config/index'
 
 ComponentWithComputed({
@@ -209,10 +210,47 @@ ComponentWithComputed({
     },
 
     confirmOldDevicePopup(event: WechatMiniprogram.CustomEvent<Device.DeviceItem>) {
-      this.setData({
-        oldDeviceItem: event.detail,
-        isSelectOldDevice: false,
-      })
+      console.log('confirmOldDevicePopup', event.detail)
+
+      if (event.detail.deviceType !== 1) {
+        this.setData({
+          oldDeviceItem: event.detail,
+          isSelectOldDevice: false,
+        })
+        return
+      }
+
+      if (Number(event.detail.version) < 510) {
+        Dialog.alert({
+          zIndex: 10001,
+          message: '请升级网关版本后重试',
+          confirmButtonText: '知道了',
+        }).catch(() => {})
+        return
+      }
+
+      if (event.detail.isBackupLatest !== 1) {
+        Dialog.confirm({
+          zIndex: 10001,
+          message: '当前网关备份包非最新，建议先进行网关手动备份',
+          cancelButtonText: '去备份',
+          confirmButtonText: '忽略',
+        })
+          .then(() => {
+            this.setData({
+              oldDeviceItem: event.detail,
+              isSelectOldDevice: false,
+            })
+          })
+          .catch(() => {
+            wx.redirectTo({
+              url: strUtil.getUrlWithParams('/package-mine/device-manage/device-detail/index', {
+                deviceId: event.detail.deviceId,
+              }),
+            })
+          })
+        return
+      }
     },
 
     confirmNewDevicePopup(event: WechatMiniprogram.CustomEvent<Device.DeviceItem>) {
