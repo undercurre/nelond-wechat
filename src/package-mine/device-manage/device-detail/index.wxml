@@ -74,6 +74,7 @@
           <van-cell
             wx:if="{{deviceInfo.deviceType === 1}}"
             title="网关子设备"
+            value="{{subDeviceCount}}"
             border="{{true}}"
             is-link
             bind:click="toSubDeviceList"

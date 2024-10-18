@@ -105,6 +105,11 @@ ComponentWithComputed({
       const { proType } = data.deviceInfo
       return proType === PRO_TYPE.light || proType === PRO_TYPE.switch
     },
+    // 统计子设备数量
+    subDeviceCount(data) {
+      const subDevices = deviceStore.allDeviceList.filter((device) => device.gatewayId === data.deviceInfo.deviceId)
+      return subDevices?.length ?? 0
+    },
   },
 
   methods: {
