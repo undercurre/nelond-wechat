@@ -2090,19 +2090,11 @@ ComponentWithComputed({
         orderNum: 0,
       } as Scene.AddSceneDto
 
-      const currentSpaceId = this.data.selectedSpaceInfo.reduce((acc, cur) => {
-        if (cur.spaceLevel > acc.spaceLevel) {
-          return cur
-        } else {
-          return acc
-        }
-      }).spaceId
-
       // 将新场景排到最后,orderNum可能存在跳号的情况
       sceneStore.allRoomSceneList
-        .filter((item) => item.spaceId === currentSpaceId && item.sceneCategory === '0')
+        .filter((item) => item.spaceId === this.data.spaceId && item.sceneCategory === '0')
         .forEach((scene) => {
-          if (scene.orderNum && scene.orderNum >= newSceneData.orderNum) {
+          if (typeof scene.orderNum === 'number' && scene.orderNum >= newSceneData.orderNum) {
             newSceneData.orderNum = scene.orderNum + 1
           }
         })
