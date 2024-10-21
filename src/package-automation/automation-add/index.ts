@@ -1841,7 +1841,7 @@ ComponentWithComputed({
               //是开关面板
               const deviceId = action.uniId.split(':')[0]
               newSceneData?.deviceActions?.push({
-                controlAction: [action.value],
+                controlAction: [{ modelName: action.value.modelName, power: action.value.power }],
                 deviceId,
                 deviceType: action.type,
                 proType: action.proType,
