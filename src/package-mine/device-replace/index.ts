@@ -5,7 +5,7 @@ import Dialog from '@vant/weapp/dialog/dialog'
 import pageBehaviors from '../../behaviors/pageBehaviors'
 import { deviceBinding, deviceStore, projectStore } from '../../store/index'
 import { StatusType } from './typings'
-import { deviceReplace, gatewayReplace } from '../../apis/index'
+import { deviceReplace, gatewayReplace, queryDeviceInfoByDeviceId } from '../../apis/index'
 // import { deviceReplace } from 'js-homos'
 import { emitter, WSEventType, strUtil } from '../../utils/index'
 import { PRODUCT_ID, SCREEN_PID, defaultImgDir } from '../../config/index'
@@ -209,18 +209,20 @@ ComponentWithComputed({
       })
     },
 
-    confirmOldDevicePopup(event: WechatMiniprogram.CustomEvent<Device.DeviceItem>) {
-      console.log('confirmOldDevicePopup', event.detail)
+    async confirmOldDevicePopup(event: WechatMiniprogram.CustomEvent<Device.DeviceItem>) {
+      const device = event.detail
 
-      if (event.detail.deviceType !== 1) {
+      console.log('confirmOldDevicePopup', device)
+
+      if (device.deviceType !== 1) {
         this.setData({
-          oldDeviceItem: event.detail,
+          oldDeviceItem: device,
           isSelectOldDevice: false,
         })
         return
       }
 
-      if (Number(event.detail.version) < 510) {
+      if (Number(device.version) < 510) {
         Dialog.alert({
           zIndex: 10001,
           message: '请升级网关版本后重试',
@@ -229,28 +231,38 @@ ComponentWithComputed({
         return
       }
 
-      if (event.detail.hasNewBackup === 1) {
-        Dialog.confirm({
+      const res = await queryDeviceInfoByDeviceId({ deviceId: device.deviceId })
+
+      if (!res.success) {
+        Toast('查询设备信息失败')
+        return
+      }
+
+      if (res.result.hasNewBackup === 1) {
+        const dialogRes = await Dialog.confirm({
           zIndex: 10001,
           message: '当前网关备份包非最新，建议先进行网关手动备份',
           cancelButtonText: '去备份',
           confirmButtonText: '忽略',
         })
-          .then(() => {
-            this.setData({
-              oldDeviceItem: event.detail,
-              isSelectOldDevice: false,
-            })
+          .then(() => 'ignore')
+          .catch(() => 'backup')
+
+        console.log('dialogRes', dialogRes)
+        if (dialogRes === 'backup') {
+          wx.redirectTo({
+            url: strUtil.getUrlWithParams('/package-mine/device-manage/device-detail/index', {
+              deviceId: device.deviceId,
+            }),
           })
-          .catch(() => {
-            wx.redirectTo({
-              url: strUtil.getUrlWithParams('/package-mine/device-manage/device-detail/index', {
-                deviceId: event.detail.deviceId,
-              }),
-            })
-          })
-        return
+          return
+        }
       }
+
+      this.setData({
+        oldDeviceItem: device,
+        isSelectOldDevice: false,
+      })
     },
 
     confirmNewDevicePopup(event: WechatMiniprogram.CustomEvent<Device.DeviceItem>) {
