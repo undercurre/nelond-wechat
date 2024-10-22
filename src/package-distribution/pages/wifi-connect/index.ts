@@ -10,6 +10,17 @@ ComponentWithComputed({
   },
 
   behaviors: [pageBehaviors],
+
+  /**
+   * 组件的属性列表
+   */
+  properties: {
+    // 默认选择的wifi
+    ssid: {
+      type: String,
+      default: '',
+    },
+  },
   /**
    * 页面的初始数据
    */
@@ -92,16 +103,24 @@ ComponentWithComputed({
 
       console.log('ready', pageParams)
 
-      const cacheWifiInfo = storage.get('selected_home_wifi') as { SSID: string; pw: string }
+      let defaultWifiInfo = storage.get<string, { SSID: string; pw: string }>('selected_home_wifi', {
+        SSID: '',
+        pw: '',
+      }) as { SSID: string; pw: string }
 
       const cacheWifiList = storage.get('cacheWifiList', []) as Array<{ SSID: string; pw: string }>
 
+      // 如页面参数有指定连接的家庭wifi，则回填
+      if (this.data.ssid) {
+        defaultWifiInfo = cacheWifiList.find((item) => item.SSID === this.data.ssid) || {
+          SSID: this.data.ssid as string,
+          pw: '',
+        }
+      }
+
       this.setData({
         type: pageParams.type || 'bind',
-        wifiInfo: cacheWifiInfo || {
-          SSID: '',
-          pw: '',
-        },
+        wifiInfo: defaultWifiInfo,
         cacheWifiList: cacheWifiList,
       })
     },
@@ -188,6 +207,13 @@ ComponentWithComputed({
       if (!checkWifiSwitch()) {
         return
       }
+
+      this.setData({
+        selectWifi: {
+          SSID: this.data.wifiInfo.SSID,
+          pw: this.data.wifiInfo.pw,
+        },
+      })
 
       const hasList = this.data.cacheWifiList.length > 0 || this.data.systemWifiList.length > 0
 

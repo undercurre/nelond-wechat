@@ -7,6 +7,7 @@ import {
   showLoading,
   strUtil,
   WSEventType,
+  isNumber,
 } from '../../../../../utils/index'
 import { controlDevice, gatewayBackup, uploadDeviceLog } from '../../../../../apis/index'
 import { PRODUCT_ID, isNative } from '../../../../../config/index'
@@ -66,7 +67,7 @@ ComponentWithComputed({
       return data.deviceInfo.connectType === 1
     },
     wifiSettingTips(data) {
-      return data.hasSSID ? data.deviceInfo.wifiName : '当前为有线连接'
+      return isNumber(data.deviceInfo.connectType) ? (data.hasSSID ? data.deviceInfo.wifiName : '当前为有线连接') : ''
     },
     canBackup(data) {
       return Number(data.deviceInfo?.version) >= 510
@@ -107,7 +108,7 @@ ComponentWithComputed({
 
     toChangeWifi() {
       // 预校验，是否使用WIFI连接，以及wifi开关是否打开
-      if (!this.data.hasSSID || !checkWifiSwitch()) {
+      if (!checkWifiSwitch()) {
         return
       }
 
@@ -115,6 +116,7 @@ ComponentWithComputed({
         url: strUtil.getUrlWithParams('/package-distribution/pages/wifi-connect/index', {
           type: 'changeWifi',
           sn: this.data.deviceInfo.sn,
+          ssid: this.data.deviceInfo.wifiName || '',
         }),
       })
     },

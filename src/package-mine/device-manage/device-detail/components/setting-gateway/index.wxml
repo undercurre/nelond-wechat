@@ -8,8 +8,8 @@
         wx:if="{{isD3 && canEditDevice}}"
         title="更改Wi-Fi"
         bind:click="toChangeWifi"
-        value="{{wifiSettingTips || ''}}"
-        is-link="{{hasSSID}}"
+        value="{{wifiSettingTips}}"
+        is-link
       ></van-cell>
 
       <van-cell
