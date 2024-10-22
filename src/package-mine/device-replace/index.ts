@@ -231,7 +231,7 @@ ComponentWithComputed({
         return
       }
 
-      const res = await queryDeviceInfoByDeviceId({ deviceId: device.deviceId })
+      const res = await queryDeviceInfoByDeviceId({ deviceId: device.deviceId }, { loading: true })
 
       if (!res.success) {
         Toast('查询设备信息失败')

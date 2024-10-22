@@ -2,7 +2,6 @@ import { ComponentWithComputed } from 'miniprogram-computed'
 import { projectBinding, spaceStore, userBinding } from '../../../../store/index'
 import { BehaviorWithStore } from 'mobx-miniprogram-bindings'
 import Toast from '@vant/weapp/toast/toast'
-import { storage } from '../../../../utils/index'
 
 ComponentWithComputed({
   behaviors: [BehaviorWithStore({ storeBindings: [projectBinding, userBinding] })],
@@ -83,7 +82,6 @@ ComponentWithComputed({
         return
       }
       const url = e.currentTarget.dataset.url
-      storage.set('ADD_FROM_PAGE', 'index') // 标记从首页添加设备或场景
       this.hideAnimate(() => wx.navigateTo({ url }))
     },
     hideAnimate(callback?: () => void) {

@@ -4,6 +4,7 @@
     "tips-box": "/components/tips-box/index",
     "mz-loading": "/components/mz-loading/index",
     "mz-progress": "/components/mz-progress/index",
-    "edit-device-info": "./components/edit-device-info/index"
+    "edit-device-info": "./components/edit-device-info/index",
+    "set-default-space": "./components/set-default-space/index"
   }
 }

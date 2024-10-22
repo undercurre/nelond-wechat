@@ -4,16 +4,7 @@ import { runInAction } from 'mobx-miniprogram'
 import Toast from '@vant/weapp/toast/toast'
 import { deviceStore, projectBinding, projectStore, spaceBinding, spaceStore } from '../../../store/index'
 import { bleDevicesBinding, bleDevicesStore } from '../../store/bleDeviceStore'
-import {
-  delay,
-  emitter,
-  getCurrentPageParams,
-  Logger,
-  goBackPage,
-  connectList,
-  closeList,
-  storage,
-} from '../../../utils/index'
+import { delay, emitter, getCurrentPageParams, Logger, goBackPage, connectList, closeList } from '../../../utils/index'
 import pageBehaviors from '../../../behaviors/pageBehaviors'
 import { batchUpdate, bindDevice, isDeviceOnline, sendCmdAddSubdevice, queryDeviceProInfo } from '../../../apis/index'
 import lottie from 'lottie-miniprogram'
@@ -53,6 +44,11 @@ ComponentWithComputed({
    * 页面的初始数据
    */
   data: {
+    isShowSetDefaultSpace: false, // 是否展示选择默认房间弹窗
+    defaultSpace: {
+      spaceId: spaceStore.currentSpace.spaceId,
+      spaceName: spaceStore.currentSpaceNameClear,
+    }, // 选择的啊默认房间
     defaultImgDir: defaultImgDir(),
     _startTime: 0,
     _gatewayInfo: {
@@ -100,7 +96,7 @@ ComponentWithComputed({
       mac: '',
       isConnecting: false, // 是否正在连接
     },
-    confirmLoading: false,
+    confirmLoading: false, // 是否已经点击确定添加按钮
   },
 
   computed: {
@@ -131,30 +127,18 @@ ComponentWithComputed({
 
       return data.selectedList.length === list.length
     },
-
-    // 根据配网前设置的标识，指定默认空间：在首页进入，则设置为与网关相同的空间；否则为原默认空间
-    bleDeviceListSetSpace(data) {
-      const isFromIndex = storage.get('ADD_FROM_PAGE') === 'index'
-
-      return data.bleDeviceList?.map((item: Device.DeviceItem) => {
-        const spaceId = isFromIndex
-          ? deviceStore.allDeviceMap[getCurrentPageParams().gatewayId].spaceId
-          : spaceBinding.store.currentSpace.spaceId
-        const spaceName = isFromIndex
-          ? spaceStore.getSpaceClearNameById(spaceId)
-          : spaceBinding.store.currentSpaceNameClear
-        return {
-          ...item,
-          spaceId,
-          spaceName,
-        }
-      })
-    },
   },
 
   lifetimes: {
     // 生命周期函数，可以为函数，或一个在 methods 段中定义的方法名
     async ready() {
+      const isFromIndex = cacheData.pageEntry.includes('pages/index/index')
+
+      // 是否从首页进来，是则弹出选择默认空间弹窗
+      if (isFromIndex) {
+        this.toggleShowSetDefaultSpace()
+      }
+
       // 开始配子设备后，侧滑离开当前页面时，重置发现的蓝牙设备列表的状态，以免返回扫码页重进当前页面时状态不对
       bleDevicesStore.bleDeviceList.forEach((item) => {
         item.isChecked = false
@@ -220,6 +204,24 @@ ComponentWithComputed({
   },
 
   methods: {
+    // 切换展示
+    toggleShowSetDefaultSpace() {
+      this.setData({
+        isShowSetDefaultSpace: !this.data.isShowSetDefaultSpace,
+      })
+    },
+    confirmDefaultSpace(event: WechatMiniprogram.CustomEvent<{ spaceId: string; spaceName: string }>) {
+      const data = event.detail
+
+      Logger.log('confirmDefaultSpace', data)
+      this.setData({
+        isShowSetDefaultSpace: false,
+        defaultSpace: {
+          spaceId: data.spaceId,
+          spaceName: data.spaceName,
+        },
+      })
+    },
     /**
      * @description 主动查询已入网设备
      */
@@ -257,8 +259,8 @@ ComponentWithComputed({
         isChecked: true,
         status: 'waiting' as const,
         deviceUuid: device.deviceId,
-        spaceId: spaceBinding.store.currentSpace.spaceId,
-        spaceName: spaceBinding.store.currentSpaceNameClear,
+        spaceId: '',
+        spaceName: '',
         mac: '',
         signal: '',
         zigbeeMac: device.deviceId,
@@ -336,10 +338,13 @@ ComponentWithComputed({
     // 确认添加子设备
     async confirmAdd() {
       try {
+        this.setData({ confirmLoading: true })
         const selectedList = bleDevicesBinding.store.bleDeviceList.filter((item: Device.ISubDevice) => item.isChecked)
 
         bleDevicesBinding.store.stopBLeDiscovery()
-        this.beginAddBleDevice(selectedList)
+        await this.beginAddBleDevice(selectedList)
+
+        this.setData({ confirmLoading: false })
       } catch (err) {
         Logger.log('confirmAdd-err', err)
       }
@@ -445,7 +450,7 @@ ComponentWithComputed({
           const res = await bindDevice({
             deviceId: device.zigbeeMac,
             projectId: projectBinding.store.currentProjectId,
-            spaceId: device.spaceId,
+            spaceId: device.spaceId || this.data.defaultSpace.spaceId,
             sn: '',
             deviceName: device.name,
           })
@@ -716,7 +721,7 @@ ComponentWithComputed({
       const res = await bindDevice({
         deviceId: device.zigbeeMac,
         projectId: projectBinding.store.currentProjectId,
-        spaceId: device.spaceId,
+        spaceId: device.spaceId || this.data.defaultSpace.spaceId,
         sn: '',
         deviceName: device.name,
       })
@@ -775,8 +780,8 @@ ComponentWithComputed({
           deviceUuid: item.deviceUuid,
           deviceId: item.deviceUuid,
           deviceName: item.name,
-          spaceId: item.spaceId,
-          spaceName: item.spaceName,
+          spaceId: item.spaceId || this.data.defaultSpace.spaceId,
+          spaceName: item.spaceName || this.data.defaultSpace.spaceName,
           switchList: item.switchList,
         },
       })
@@ -899,6 +904,7 @@ ComponentWithComputed({
 
     // 重新添加
     async reAdd() {
+      this.setData({ confirmLoading: true })
       const failList = bleDevicesBinding.store.bleDeviceList.filter(
         (item: Device.ISubDevice) => item.isChecked && item.status === 'fail',
       )
@@ -909,7 +915,9 @@ ComponentWithComputed({
 
       bleDevicesStore.updateBleDeviceList()
 
-      this.beginAddBleDevice(failList)
+      await this.beginAddBleDevice(failList)
+
+      this.setData({ confirmLoading: false })
     },
 
     finish() {
