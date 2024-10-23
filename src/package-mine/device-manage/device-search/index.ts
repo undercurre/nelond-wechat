@@ -10,7 +10,7 @@ ComponentWithComputed({
     defaultImgDir: defaultImgDir(),
     keyword: '', // 已输入的关键字
     historyList: [] as string[], // 关键字搜索历史
-    recList: ['网关', '筒灯', '射灯', '工矿灯', '线条灯', '开关', '传感器', '窗帘'],
+    recList: ['网关', '筒灯', '射灯', '工矿灯', '线条灯', '面板', '灯组', '窗帘'],
     deviceList: [] as Device.DeviceItem[],
     isLoaded: false,
   },
