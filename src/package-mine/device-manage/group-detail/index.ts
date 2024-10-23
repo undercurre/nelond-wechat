@@ -6,7 +6,7 @@ import pageBehavior from '../../../behaviors/pageBehaviors'
 import { delGroup, queryGroup, renameGroup, updateGroup } from '../../../apis/index'
 import { PRO_TYPE, proName } from '../../../config/index'
 import Dialog from '@vant/weapp/dialog/dialog'
-import { emitter, Logger, storage } from '../../../utils/index'
+import { emitter, storage } from '../../../utils/index'
 ComponentWithComputed({
   behaviors: [BehaviorWithStore({ storeBindings: [spaceBinding, projectBinding, userBinding] }), pageBehavior],
   /**
@@ -169,7 +169,6 @@ ComponentWithComputed({
     async queryGroupInfo() {
       const res = await queryGroup({ groupId: this.data.groupId })
       if (res.success) {
-        Logger.log('deviceStore.allDeviceMap', deviceStore.allDeviceMap)
         res.result.groupDeviceList = res.result.groupDeviceList?.map((item) => ({
           ...item,
           spaceName: spaceStore.getSpaceClearNameById(deviceStore.allDeviceMap[item.deviceId].spaceId),
