@@ -15,6 +15,7 @@ ComponentWithComputed({
       value: false,
       observer(show) {
         if (show) {
+          // 弹窗默认显示当前空间
           this.setData({
             spaceId: spaceStore.currentSpace.spaceId,
             spaceName: spaceStore.currentSpaceNameFull ?? '全部',

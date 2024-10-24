@@ -485,7 +485,7 @@ ComponentWithComputed({
     },
 
     async queryDeviceOnlineStatus(sn: string, type?: string) {
-      const res = await queryDeviceOnlineStatus({ sn, deviceType: '1' })
+      const res = await queryDeviceOnlineStatus({ sn, deviceType: '1' }, { isDefaultErrorTips: false })
 
       Logger.log('queryDeviceOnlineStatus', res, res.result)
 
