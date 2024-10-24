@@ -36,6 +36,7 @@ ComponentWithComputed({
      * @param toSave 是否保存到搜索历史
      */
     searchConfirm(toSave = true) {
+      console.log('searchConfirm', this.data.keyword)
       const { historyList, keyword } = this.data
 
       if (toSave) {
@@ -48,13 +49,16 @@ ComponentWithComputed({
       const rst = list
         .sort((a, b) => a.orderNum - b.orderNum)
 
-        .filter(
-          (d) =>
-            // 匹配设备名或mac地址
-            (d.deviceName.indexOf(keyword) > -1 || (d.mac ?? '').indexOf(keyword) > -1) &&
+        .filter((d) => {
+          // 是否匹配mac地址，灯组设备无需匹配mac
+          const isMacMatch = d.deviceType !== 4 && (d.mac ?? '').indexOf(keyword) > -1
+          const flag =
+            (d.deviceName.indexOf(keyword) > -1 || isMacMatch) &&
             // 过滤智慧屏按键
-            ((d.proType === PRO_TYPE.switch && !SCREEN_PID.includes(d.productId)) || d.proType !== PRO_TYPE.switch),
-        )
+            ((d.proType === PRO_TYPE.switch && !SCREEN_PID.includes(d.productId)) || d.proType !== PRO_TYPE.switch)
+
+          return flag
+        })
         .map((d) => ({
           ...d,
           spaceClearName: spaceStore.getSpaceClearNameById(d.spaceId),

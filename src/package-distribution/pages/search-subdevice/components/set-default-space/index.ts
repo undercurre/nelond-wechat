@@ -31,6 +31,15 @@ Component({
     },
   },
 
+  observers: {
+    spaceId: function () {
+      this.setData({
+        'selectSpace.spaceId': this.data.spaceId,
+        'selectSpace.spaceName': this.data.spaceName,
+      })
+    },
+  },
+
   /**
    * 组件的方法列表
    */

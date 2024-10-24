@@ -74,7 +74,7 @@
     enable-flex
     enhanced
     scroll-y
-    class="h-500 grow"
+    class="h-500 grow shrink"
     show-scrollbar="{{false}}"
   >
     <van-cell-group
@@ -124,9 +124,11 @@
     <view class="list-bottom-placeholder"></view>
   </scroll-view>
 
-  <view class="flex-1 flex-col-center">
+  <view
+    class="flex-1 flex-col-center"
+    wx:if="{{isLoaded && !deviceList.length}}"
+  >
     <tips-box
-      wx:if="{{isLoaded && !deviceList.length}}"
       text="未搜索到相关设备"
       icon="{{defaultImgDir}}/searching.png"
       size="160"

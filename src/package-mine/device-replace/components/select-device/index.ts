@@ -16,6 +16,7 @@ ComponentWithComputed({
       observer(show) {
         if (show) {
           this.setData({
+            spaceId: spaceStore.currentSpace.spaceId,
             spaceName: spaceStore.currentSpaceNameFull ?? '全部',
           })
         }
