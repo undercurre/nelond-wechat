@@ -338,7 +338,10 @@ ComponentWithComputed({
     // 确认添加子设备
     async confirmAdd() {
       try {
-        this.setData({ confirmLoading: true })
+        this.setData({
+          confirmLoading: true,
+          status: 'requesting',
+        })
         const selectedList = bleDevicesBinding.store.bleDeviceList.filter((item: Device.ISubDevice) => item.isChecked)
 
         bleDevicesBinding.store.stopBLeDiscovery()
@@ -528,10 +531,6 @@ ComponentWithComputed({
           } else {
             Logger.debug(`【${data.deviceId}】非指定绑定设备推送成功`)
           }
-        })
-
-        this.setData({
-          status: 'requesting',
         })
 
         await delay(1000) // 强行延时,以免dom结构还没生成
@@ -904,7 +903,10 @@ ComponentWithComputed({
 
     // 重新添加
     async reAdd() {
-      this.setData({ confirmLoading: true })
+      this.setData({
+        confirmLoading: true,
+        status: 'requesting',
+      })
       const failList = bleDevicesBinding.store.bleDeviceList.filter(
         (item: Device.ISubDevice) => item.isChecked && item.status === 'fail',
       )
