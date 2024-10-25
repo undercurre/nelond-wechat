@@ -8,21 +8,21 @@
         wx:if="{{isD3 && canEditDevice}}"
         title="更改Wi-Fi"
         bind:click="toChangeWifi"
+        value="{{wifiSettingTips}}"
         is-link
       ></van-cell>
 
       <van-cell
         wx:if="{{!isHost}}"
         title="信道"
-        bind:click="toggleActionSheet"
-        is-link="{{!isRelease && canEditDevice}}"
+        bind:click="toChangeChannel"
+        is-link="{{canEditDevice}}"
         value="{{channelText}}"
       ></van-cell>
 
       <van-cell
         wx:if="{{canEditDevice}}"
         title="网关日志"
-        border="{{false}}"
       >
         <van-button
           slot="right-icon"
@@ -31,6 +31,21 @@
           size="small"
           bind:click="uploadDeviceLog"
           >日志上传</van-button
+        >
+      </van-cell>
+
+      <van-cell
+        wx:if="{{canEditDevice}}"
+        title="网关备份"
+        border="{{false}}"
+      >
+        <van-button
+          slot="right-icon"
+          type="primary"
+          round
+          size="small"
+          bind:click="backup"
+          >手动备份</van-button
         >
       </van-cell>
     </van-cell-group>

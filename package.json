@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "keywords": [],
-  "author": "Wyatex",
+  "author": "",
   "license": "ISC",
   "scripts": {
     "prepare": "husky install",

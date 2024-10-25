@@ -95,7 +95,7 @@
                 />
               </view>
 
-              <text class="text-26 text-black-59 opacity-95 single-text">{{ item.spaceName }}</text>
+              <text class="text-26 text-black-59 opacity-95 single-text">{{ item.spaceName || defaultSpace.spaceName }}</text>
             </view>
 
             <view
@@ -126,6 +126,8 @@
           size="large"
           bind:click="confirmAdd"
           disabled="{{selectedList.length===0}}"
+          loading="{{confirmLoading}}"
+          loading-text="添加中..."
           >确认添加（已选{{selectedList.length}}个）
         </van-button>
         <van-button
@@ -184,6 +186,8 @@
             size="small"
             type="info"
             bind:click="reAdd"
+            loading="{{confirmLoading}}"
+            loading-text="添加中..."
             >重新添加</van-button
           >
         </view>
@@ -233,7 +237,7 @@
                 />
               </view>
 
-              <text class="text-26 text-black-59 opacity-95 single-text">{{ item.spaceName }}</text>
+              <text class="text-26 text-black-59 opacity-95 single-text">{{ item.spaceName || defaultSpace.spaceName }}</text>
             </view>
 
             <view
@@ -314,5 +318,13 @@
   bind:close="cancelEditDevice"
   bind:confirm="confirmEditDevice"
 ></edit-device-info>
+
+<set-default-space
+  show="{{isShowSetDefaultSpace}}"
+  space-id="{{defaultSpace.spaceId}}"
+  space-name="{{defaultSpace.spaceName}}"
+  bind:close="toggleShowSetDefaultSpace"
+  bind:confirm="confirmDefaultSpace"
+></set-default-space>
 
 <van-toast id="van-toast" />

@@ -109,6 +109,10 @@ declare namespace Device {
       maxColorTemp: number
       minColorTemp: number
     }
+
+    mac?: string
+
+    hasNewBackup: 0 | 1 | never // 是否存在新备份包
   }
 
   interface MzgdPropertyDTO {

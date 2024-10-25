@@ -13,6 +13,7 @@ import {
 import { storage, strUtil } from '../../utils/index'
 import { ossDomain } from '../../config/index'
 import pageBehavior from '../../behaviors/pageBehaviors'
+import Dialog from '@vant/weapp/dialog/dialog'
 
 ComponentWithComputed({
   options: {
@@ -103,6 +104,23 @@ ComponentWithComputed({
           loading: true,
         })
       }
+    },
+    onReady() {
+      this.checkUpdate()
+    },
+
+    checkUpdate() {
+      const updateManager = wx.getUpdateManager()
+
+      updateManager.onUpdateReady(function () {
+        Dialog.confirm({
+          title: '更新提示',
+          message: '新版本已经准备好，是否重启应用？',
+          confirmButtonText: '马上重启',
+        })
+          .then(() => updateManager.applyUpdate())
+          .catch(() => {})
+      })
     },
 
     // 收起所有菜单

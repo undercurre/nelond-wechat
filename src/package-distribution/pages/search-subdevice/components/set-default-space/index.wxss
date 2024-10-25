@@ -1,0 +1,31 @@
+.space-checked {
+  background-image: linear-gradient(155deg, #468cfb 6%, #6ba3fc 96%);
+}
+
+.label {
+  display: block;
+  padding: 32rpx 0 32rpx 16rpx;
+  font-size: 28rpx;
+  color: #27282a;
+  line-height: 40rpx;
+}
+
+.form-box::-webkit-scrollbar {
+  display: none;
+  /* Chrome Safari */
+}
+
+.space-cell {
+  border-radius: 32rpx;
+  background-color: #f6fafd !important;
+}
+
+.shortTitle {
+  white-space: nowrap;
+}
+
+.longValue {
+  flex: 2 !important;
+  white-space: normal !important;
+  word-break: break-all;
+}

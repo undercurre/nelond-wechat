@@ -13,7 +13,7 @@ export * from './meiju'
  * @param data.jsCode 获取手机的动态令牌
  * @param data.captcha 激活验证码
  */
-export async function login(data: { jsCode?: string; code?: string; captcha?: string }) {
+export async function login(data: { jsCode: string; code: string; captcha?: string }) {
   return await mzaioRequest.post<User.UserInfo>({
     log: true,
     loading: false,

@@ -553,11 +553,11 @@ ComponentWithComputed({
             spaceId: spaceid,
             selectedSpaceInfo: spaceStore.currentSpaceSelect as Space.allSpace[],
             _isEditCondition: true,
-            sceneDevicelinkSelectList: deviceListInRoom.map((item) => item.uniId),
+            // sceneDevicelinkSelectList: deviceListInRoom.map((item) => item.uniId),
             opearationType: 'yijian',
           },
           () => {
-            this.updateSceneDeviceActionsFlatten()
+            // this.updateSceneDeviceActionsFlatten(false)
             this.updateSceneDeviceConditionsFlatten()
           },
         )
@@ -749,11 +749,11 @@ ComponentWithComputed({
           spaceId: currentSpaceId,
           showEditRoomPopup: false,
           _isEditCondition: true,
-          sceneDevicelinkSelectList: deviceListInRoom.map((item) => item.uniId),
+          // sceneDevicelinkSelectList: deviceListInRoom.map((item) => item.uniId),
         },
-        () => {
-          this.updateSceneDeviceActionsFlatten()
-        },
+        // () => {
+        //   this.updateSceneDeviceActionsFlatten()
+        // },
       )
       this.updateSceneDeviceConditionsFlatten()
     },
@@ -986,6 +986,35 @@ ComponentWithComputed({
       } else {
         this.setData({
           tempSceneDevicelinkSelectedList: [...this.data['tempSceneDevicelinkSelectedList'], selectId],
+        })
+      }
+    },
+    handleSelectAll(e: {
+      detail: {
+        isSelect: boolean
+        roomSelect: string
+      }
+    }) {
+      if (this.data.selectCardType !== 'device') return
+
+      const { isSelect, roomSelect } = e.detail
+      console.log('[handleSelectAll]', roomSelect)
+      const listType = 'tempSceneDevicelinkSelectedList'
+      const list = (this.data.list as Device.DeviceItem[])
+        .filter((item) => item.spaceId === roomSelect)
+        .map((item) => item.uniId)
+      if (isSelect) {
+        this.setData({
+          [`${listType}`]: [...this.data[listType], ...list],
+        })
+      } else {
+        list.forEach((devcieId) => {
+          const index = this.data[listType].findIndex((id) => id === devcieId)
+          console.log('找到取消选择的设备', index)
+          this.data[listType].splice(index, 1)
+        })
+        this.setData({
+          [`${listType}`]: [...this.data[listType]],
         })
       }
     },
@@ -1812,7 +1841,7 @@ ComponentWithComputed({
               //是开关面板
               const deviceId = action.uniId.split(':')[0]
               newSceneData?.deviceActions?.push({
-                controlAction: [action.value],
+                controlAction: [{ modelName: action.value.modelName, power: action.value.power }],
                 deviceId,
                 deviceType: action.type,
                 proType: action.proType,
@@ -2061,19 +2090,11 @@ ComponentWithComputed({
         orderNum: 0,
       } as Scene.AddSceneDto
 
-      const currentSpaceId = this.data.selectedSpaceInfo.reduce((acc, cur) => {
-        if (cur.spaceLevel > acc.spaceLevel) {
-          return cur
-        } else {
-          return acc
-        }
-      }).spaceId
-
       // 将新场景排到最后,orderNum可能存在跳号的情况
       sceneStore.allRoomSceneList
-        .filter((item) => item.spaceId === currentSpaceId && item.sceneCategory === '0')
+        .filter((item) => item.spaceId === this.data.spaceId && item.sceneCategory === '0')
         .forEach((scene) => {
-          if (scene.orderNum && scene.orderNum >= newSceneData.orderNum) {
+          if (typeof scene.orderNum === 'number' && scene.orderNum >= newSceneData.orderNum) {
             newSceneData.orderNum = scene.orderNum + 1
           }
         })

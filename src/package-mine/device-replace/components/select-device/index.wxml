@@ -50,7 +50,7 @@
         wx:else
         class="list-empty flex-1"
       >
-        <text class="block text-center text-24 text-black-tips">该空间暂无设备</text>
+        <text class="block text-center text-24 text-black-tips">该空间暂无可替换的同类设备</text>
       </view>
     </scroll-view>
 
@@ -63,8 +63,10 @@
 <!-- TODO:dataTypeList可优化为在选择新设备时直接传入旧设备的type，即可筛选只有该类设备的空间 -->
 <all-space-select
   show="{{showSpaceSelectPopup}}"
+  showCell="{{false}}"
   cellStyle="background-color:rgba(255,255,255,0.6);border-radius:36rpx;"
-  dataTypeList="{{['device']}}"
-  initConfirm="{{false}}"
+  data-type-list="{{['device']}}"
+  initConfirm
+  targetSpaceId="{{spaceId}}"
   bind:confirm="handleSpaceSelectConfirm"
 ></all-space-select>

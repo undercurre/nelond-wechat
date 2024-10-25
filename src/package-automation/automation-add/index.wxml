@@ -343,6 +343,7 @@
   selectList="{{linkSelectList}}"
   showCancel="{{(selectCardType !== 'sensor'||!sceneDeviceConditionsFlatten.length) && showFindBtn}}"
   bind:select="handleSelectCardSelect"
+  bind:selectAll="handleSelectAll"
   bind:close="handleSelectCardClose"
   bind:confirm="handleSelectCardConfirm"
   bind:cancel="handleSelectCardReturn"

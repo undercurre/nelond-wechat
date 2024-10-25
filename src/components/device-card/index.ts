@@ -162,6 +162,8 @@ ComponentWithComputed({
     // 特定设备，显示工作状态
     isRunning(data) {
       const modelName = getModelName(data.deviceInfo.proType, data.deviceInfo.productId)
+      if (modelName === 'gateway') return false
+
       const prop = data.deviceInfo.mzgdPropertyDTOList[modelName]
       if (data.deviceInfo.proType === PRO_TYPE.bathHeat) {
         return (

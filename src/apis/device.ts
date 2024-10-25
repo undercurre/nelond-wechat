@@ -101,7 +101,7 @@ export async function queryDeviceInfoByDeviceId(
  */
 export async function queryDeviceOnlineStatus(
   data: { deviceType: '1' | '2' | '3'; sn?: string; deviceId?: string },
-  options?: { loading?: boolean },
+  options?: IApiRequestOption,
 ) {
   // 	"onlineStatus": 在线离线状态(0:离线1:在线
   return await mzaioRequest.post<{ deviceId: string; onlineStatus: number }>({
@@ -604,6 +604,45 @@ export async function deviceReplace(
     log: true,
     loading: options?.loading ?? false,
     url: '/v1/cl/device/deviceReplace',
+    data,
+  })
+}
+
+/**
+ * 网关替换
+ * 需要在前端验证设备是否可替换
+ */
+export async function gatewayReplace(
+  data: {
+    newDeviceId: string
+    oldDeviceId: string
+    projectId: string
+  },
+  options?: { loading?: boolean },
+) {
+  return await mzaioRequest.post<IAnyObject>({
+    log: true,
+    loading: options?.loading ?? false,
+    url: '/v1/cl/device/gatewayReplace',
+    data,
+  })
+}
+
+/**
+ * 网关替换
+ * 需要在前端验证设备是否可替换
+ */
+export async function gatewayBackup(
+  data: {
+    deviceId: string
+    projectId: string
+  },
+  options?: { loading?: boolean },
+) {
+  return await mzaioRequest.post<IAnyObject>({
+    log: true,
+    loading: options?.loading ?? false,
+    url: '/v1/cl/device/gatewayBackup',
     data,
   })
 }

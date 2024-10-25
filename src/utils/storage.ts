@@ -9,7 +9,13 @@ interface Storage {
     expire?: number | null, // 缓存的时间，单位：秒
     encrypt?: boolean,
   ): void | Promise<WechatMiniprogram.GeneralCallbackResult> // 异步操作Storage支持加密，支持promise，加密最低版本2.21.3
-  get<T, P = undefined>(key: string, def?: P, encrypt?: boolean): T | P | Promise<T | P | undefined> | undefined // encrypt需要set和get同时为true
+  /**
+   * encrypt需要set和get同时为true
+   * @param key 存储的key
+   * @param def 当存储数据不存在时，返回的指定默认值，默认undefined
+   * @param encrypt  是否加密存储 encrypt需要set和get同时为true
+   */
+  get<T, P = undefined>(key: string, def?: P, encrypt?: boolean): T | P | Promise<T | P | undefined> | undefined
   remove(key: string): void | Promise<WechatMiniprogram.GeneralCallbackResult>
   clear(): void | Promise<WechatMiniprogram.GeneralCallbackResult>
 }

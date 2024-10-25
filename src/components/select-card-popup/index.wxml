@@ -91,10 +91,28 @@
             bind:offlineTap="handleOfflineTap"
           />
         </view>
+        <tips-box
+          wx:if="{{!listComputed.length}}"
+          text="当前空间已无{{cardType==='scene' ? '场景' : '设备' }}可以选择"
+          icon="{{defaultImgDir}}/searching.png"
+          size="160"
+        ></tips-box>
       </view>
     </scroll-view>
 
-    <view class="h-96rpx"></view>
+    <view
+      wx:if="{{cardType === 'device'}}"
+      class="flex w-686rpx py-48rpx"
+      bind:tap="handleSelectAll"
+    >
+      <image
+        class="w-48rpx h-48rpx"
+        src="/assets/img/base/{{ isSelectAll ? 'check' : 'uncheck' }}.png"
+      />
+      <text class="text-32 text-hex-555659 ml-24rpx">全选本页设备</text>
+    </view>
+
+    <!-- <view class="h-96rpx"></view> -->
     <view class="flex w-686rpx gap-x-46rpx">
       <van-button
         wx:if="{{showCancel}}"

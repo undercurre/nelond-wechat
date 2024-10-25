@@ -169,6 +169,10 @@ ComponentWithComputed({
     async queryGroupInfo() {
       const res = await queryGroup({ groupId: this.data.groupId })
       if (res.success) {
+        res.result.groupDeviceList = res.result.groupDeviceList?.map((item) => ({
+          ...item,
+          spaceName: spaceStore.getSpaceClearNameById(deviceStore.allDeviceMap[item.deviceId].spaceId),
+        }))
         this.setData({
           deviceInfo: res.result,
           deviceName: res.result.groupName,

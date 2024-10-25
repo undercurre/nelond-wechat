@@ -18,12 +18,11 @@ ComponentWithComputed({
    */
   data: {
     pageTitle: '',
-    otaType: 2,
+    otaType: 0,
     isLoading: false,
     contentHeight: 0,
     otaData: [{}],
     isRequestingOta: false, // 是否正在请求下发ota
-    fromDevice: false,
     _pollingTimer: 0,
     jobStatus: 0, // 定时任务状态 0：未启动 1：启动
     otaProductList: [] as Ota.OtaProduct[], // 可更新的固件版本列表
@@ -77,7 +76,6 @@ ComponentWithComputed({
       this.setData({
         pageTitle: pageParams.title,
         otaType: parseInt(pageParams.otaType, 10),
-        fromDevice: !!pageParams.fromDevice,
       })
 
       this.queryOtaInfo()
@@ -102,7 +100,10 @@ ComponentWithComputed({
 
         otaUpdateList = res.result.otaUpdateList.filter((item) => item.otaType === this.data.otaType)
 
-        const otaProductList = res.result.otaProductList.filter((item) => item.otaType === this.data.otaType)
+        // 兼容私有化部署，兼容旧版云端接口，接口没有返回otaType  TODO: 私有化（微清、邯郸工厂）云端版本更新后可去除【!item.otaType】空判断
+        const otaProductList = res.result.otaProductList.filter(
+          (item) => !item.otaType || item.otaType === this.data.otaType,
+        )
         // .map((item) => ({ ...item, versionDesc: item.versionDesc.replace(/ /gi, '\n') }))
 
         this.setData({

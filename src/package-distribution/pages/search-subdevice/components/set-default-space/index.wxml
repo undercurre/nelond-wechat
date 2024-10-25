@@ -1,0 +1,48 @@
+<van-popup
+  show="{{ show }}"
+  z-index="10000"
+  position="bottom"
+  round
+  bind:close="close"
+  close-on-click-overlay="{{false}}"
+  closeable
+>
+  <view class="px-32rpx pt-48rpx text-black-2a">
+    <text class="block font-medium text-center text-36 leading-48rpx">选择空间</text>
+
+    <view class="form-box">
+      <text class="label">空间选择</text>
+
+      <van-cell
+        is-link
+        bind:click="toggleSpaceSelect"
+        title="所在空间"
+        border="{{false}}"
+        custom-class="space-cell"
+        value-class="longValue"
+        title-class="shortTitle"
+        value="{{selectSpace.spaceName || spaceName}}"
+      ></van-cell>
+    </view>
+
+    <view class="flex flex-row gap-46rpx pt-80rpx pb-40rpx">
+      <van-button
+        class="w-full"
+        size="large"
+        type="primary"
+        disabled="{{!selectSpace.spaceId}}"
+        bind:click="handleConfirm"
+        >确定</van-button
+      >
+    </view>
+  </view>
+</van-popup>
+
+<all-space-select
+  show="{{showSpaceSelectPopup}}"
+  showCell="{{false}}"
+  showTab="{{false}}"
+  initConfirm="{{false}}"
+  targetSpaceId="{{spaceId}}"
+  bind:confirm="onSpaceSelect"
+></all-space-select>

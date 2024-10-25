@@ -1,6 +1,6 @@
 import { observable, runInAction } from 'mobx-miniprogram'
 import { BleClient, bleUtil, Logger, throttle, unique } from '../../utils/index'
-import { spaceBinding, deviceBinding } from '../../store/index'
+import { deviceStore } from '../../store/index'
 import { batchCheckDevice, batchGetProductInfoByBPid } from '../../apis/index'
 
 let _foundList = [] as IBleBaseInfo[]
@@ -127,7 +127,6 @@ export const bleDevicesStore = observable({
 
     runInAction(() => {
       this.bleDeviceList = []
-
       this.discovering = false
       this.available = systemSetting.bluetoothEnabled
     })
@@ -291,7 +290,7 @@ function handleBleDeviceInfo(
     return
   }
 
-  const bindNum = deviceBinding.store.allDeviceList.filter(
+  const bindNum = deviceStore.allDeviceList.filter(
     (item) => item.proType === proType && item.productId === modelId,
   ).length // 已绑定的相同设备数量
 
@@ -322,8 +321,8 @@ function handleBleDeviceInfo(
       proType,
       protocolVersion: deviceInfo.protocolVersion,
     }),
-    spaceId: spaceBinding.store.currentSpace.spaceId,
-    spaceName: spaceBinding.store.currentSpaceNameClear,
+    spaceId: '',
+    spaceName: '',
     switchList: [],
     status: 'waiting',
   }
